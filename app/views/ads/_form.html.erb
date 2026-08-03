@@ -1,0 +1,38 @@
+<%= form_with model: ad, class: "contents" do |form| %>
+  <% if ad.errors.any? %>
+    <div id="error_explanation" class="alert alert-error my-4">
+      <div>
+        <ul class="list-disc list-inside text-sm">
+          <% ad.errors.full_messages.each do |message| %>
+            <li><%= message %></li>
+          <% end %>
+        </ul>
+      </div>
+    </div>
+  <% end %>
+
+  <fieldset class="fieldset my-5">
+    <%= form.label :headline, class: "fieldset-label" %>
+    <%= form.text_field :headline, required: true, autofocus: true,
+        class: "input input-bordered w-full" %>
+  </fieldset>
+
+  <fieldset class="fieldset my-5">
+    <%= form.label :body, class: "fieldset-label" %>
+    <%= form.text_area :body, rows: 3,
+        class: "textarea textarea-bordered w-full" %>
+  </fieldset>
+
+  <fieldset class="fieldset my-5">
+    <%= form.label :listing_id, "Linked listing (optional)", class: "fieldset-label" %>
+    <%= form.select :listing_id,
+        Current.user.account.listings.order(:address).map { |l| [l.address, l.id] },
+        { include_blank: "None" },
+        class: "select select-bordered w-full" %>
+  </fieldset>
+
+  <div class="flex items-center gap-4">
+    <%= form.submit class: "btn btn-primary" %>
+    <%= link_to "Cancel", ads_path, class: "link link-hover text-sm" %>
+  </div>
+<% end %>

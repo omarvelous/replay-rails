@@ -117,3 +117,30 @@ if demo_account
   end
 end
 puts "Seeded #{Agent.count} agent(s)"
+
+# -----------------------------------------------------------------------
+# Ads
+# -----------------------------------------------------------------------
+if demo_account
+  fifth_ave = Listing.find_by(account: demo_account, address: "350 Fifth Ave, New York, NY 10118")
+
+  unless Ad.exists?(account: demo_account, headline: "Luxury Living on Fifth Ave")
+    Ad.create!(
+      account: demo_account,
+      listing: fifth_ave,
+      headline: "Luxury Living on Fifth Ave",
+      body: "Stunning 3BR with panoramic city views. Schedule a showing today."
+    )
+    puts "Created demo ad: Luxury Living on Fifth Ave"
+  end
+
+  unless Ad.exists?(account: demo_account, headline: "Open House This Weekend")
+    Ad.create!(
+      account: demo_account,
+      headline: "Open House This Weekend",
+      body: "Visit our featured properties Saturday & Sunday 12-4pm."
+    )
+    puts "Created demo ad: Open House This Weekend"
+  end
+end
+puts "Seeded #{Ad.count} ad(s)"

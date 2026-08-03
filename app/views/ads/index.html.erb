@@ -1,0 +1,33 @@
+<div class="mx-auto md:w-2/3 w-full">
+  <div class="flex justify-between items-center mb-5">
+    <h1 class="font-bold text-4xl">Ads</h1>
+    <%= link_to "New Ad", new_ad_path, class: "btn btn-primary btn-sm" %>
+  </div>
+
+  <% if @ads.any? %>
+    <div class="overflow-x-auto">
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Headline</th>
+            <th>Listing</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          <% @ads.each do |ad| %>
+            <tr>
+              <td><%= link_to ad.headline, ad, class: "link" %></td>
+              <td><%= ad.listing&.address || "—" %></td>
+              <td class="text-right">
+                <%= link_to "Edit", edit_ad_path(ad), class: "link link-hover text-sm" %>
+              </td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+  <% else %>
+    <p class="text-base-content/60">No ads yet. Create your first ad.</p>
+  <% end %>
+</div>
