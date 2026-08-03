@@ -1,0 +1,63 @@
+<%= form_with model: playlist, class: "contents" do |form| %>
+  <% if playlist.errors.any? %>
+    <div id="error_explanation" class="alert alert-error my-4">
+      <div>
+        <ul class="list-disc list-inside text-sm">
+          <% playlist.errors.full_messages.each do |message| %>
+            <li><%= message %></li>
+          <% end %>
+        </ul>
+      </div>
+    </div>
+  <% end %>
+
+  <fieldset class="fieldset my-5">
+    <%= form.label :name, class: "fieldset-label" %>
+    <%= form.text_field :name, required: true, autofocus: true,
+        class: "input input-bordered w-full" %>
+  </fieldset>
+
+  <fieldset class="fieldset my-5">
+    <%= form.label :status, class: "fieldset-label" %>
+    <%= form.select :status, %w[draft published archived],
+        {}, class: "select select-bordered w-full" %>
+  </fieldset>
+
+  <h3 class="font-bold text-lg mt-6 mb-2">Ads in Playlist</h3>
+
+  <% available_ads = Current.user.account.ads.order(:headline) %>
+  <% if available_ads.any? %>
+    <%= form.fields_for :playlist_ads do |pa_form| %>
+      <div class="flex gap-4 items-end my-3">
+        <fieldset class="fieldset flex-1">
+          <%= pa_form.label :ad_id, "Ad", class: "fieldset-label" %>
+          <%= pa_form.select :ad_id,
+              available_ads.map { |a| [a.headline, a.id] },
+              {}, class: "select select-bordered w-full" %>
+        </fieldset>
+
+        <fieldset class="fieldset w-24">
+          <%= pa_form.label :position, "Pos", class: "fieldset-label" %>
+          <%= pa_form.number_field :position, min: 1, class: "input input-bordered w-full" %>
+        </fieldset>
+
+        <fieldset class="fieldset w-32">
+          <%= pa_form.label :duration, "Duration (s)", class: "fieldset-label" %>
+          <%= pa_form.number_field :duration, min: 1, class: "input input-bordered w-full" %>
+        </fieldset>
+
+        <fieldset class="fieldset">
+          <label class="fieldset-label">Remove</label>
+          <%= pa_form.check_box :_destroy, class: "checkbox" %>
+        </fieldset>
+      </div>
+    <% end %>
+  <% else %>
+    <p class="text-base-content/60 my-3">No ads available. Create ads first.</p>
+  <% end %>
+
+  <div class="flex items-center gap-4 mt-6">
+    <%= form.submit class: "btn btn-primary" %>
+    <%= link_to "Cancel", playlists_path, class: "link link-hover text-sm" %>
+  </div>
+<% end %>

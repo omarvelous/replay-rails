@@ -1,0 +1,43 @@
+<div class="mx-auto md:w-2/3 w-full">
+  <div class="flex justify-between items-center mb-5">
+    <h1 class="font-bold text-4xl"><%= @playlist.name %></h1>
+    <div class="flex gap-2">
+      <%= link_to "Edit", edit_playlist_path(@playlist), class: "btn btn-ghost btn-sm" %>
+      <%= button_to "Delete", @playlist, method: :delete, class: "btn btn-error btn-sm",
+          data: { turbo_confirm: "Are you sure?" } %>
+    </div>
+  </div>
+
+  <p class="mb-5">
+    <span class="badge badge-<%= @playlist.status == 'published' ? 'success' : 'ghost' %>">
+      <%= @playlist.status.capitalize %>
+    </span>
+  </p>
+
+  <h2 class="font-bold text-2xl mb-3">Ads</h2>
+
+  <% if @playlist.playlist_ads.any? %>
+    <div class="overflow-x-auto">
+      <table class="table">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Headline</th>
+            <th>Duration</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% @playlist.playlist_ads.includes(:ad).each do |pa| %>
+            <tr>
+              <td><%= pa.position %></td>
+              <td><%= link_to pa.ad.headline, ad_path(pa.ad), class: "link" %></td>
+              <td><%= pa.duration %>s</td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+  <% else %>
+    <p class="text-base-content/60">No ads in this playlist yet. Edit to add ads.</p>
+  <% end %>
+</div>

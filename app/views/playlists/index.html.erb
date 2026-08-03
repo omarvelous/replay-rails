@@ -1,0 +1,39 @@
+<div class="mx-auto md:w-2/3 w-full">
+  <div class="flex justify-between items-center mb-5">
+    <h1 class="font-bold text-4xl">Playlists</h1>
+    <%= link_to "New Playlist", new_playlist_path, class: "btn btn-primary btn-sm" %>
+  </div>
+
+  <% if @playlists.any? %>
+    <div class="overflow-x-auto">
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Status</th>
+            <th>Ads</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          <% @playlists.each do |playlist| %>
+            <tr>
+              <td><%= link_to playlist.name, playlist, class: "link" %></td>
+              <td>
+                <span class="badge badge-<%= playlist.status == 'published' ? 'success' : 'ghost' %>">
+                  <%= playlist.status.capitalize %>
+                </span>
+              </td>
+              <td><%= playlist.playlist_ads.size %></td>
+              <td class="text-right">
+                <%= link_to "Edit", edit_playlist_path(playlist), class: "link link-hover text-sm" %>
+              </td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+  <% else %>
+    <p class="text-base-content/60">No playlists yet. Create your first playlist.</p>
+  <% end %>
+</div>

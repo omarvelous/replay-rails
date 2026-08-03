@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_08_03_221202) do
+ActiveRecord::Schema[8.1].define(version: 2026_08_03_224513) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -66,6 +66,27 @@ ActiveRecord::Schema[8.1].define(version: 2026_08_03_221202) do
     t.index ["account_id"], name: "index_listings_on_account_id"
   end
 
+  create_table "playlist_ads", force: :cascade do |t|
+    t.bigint "ad_id", null: false
+    t.datetime "created_at", null: false
+    t.integer "duration", default: 10, null: false
+    t.bigint "playlist_id", null: false
+    t.integer "position", null: false
+    t.datetime "updated_at", null: false
+    t.index ["ad_id"], name: "index_playlist_ads_on_ad_id"
+    t.index ["playlist_id", "position"], name: "index_playlist_ads_on_playlist_id_and_position", unique: true
+    t.index ["playlist_id"], name: "index_playlist_ads_on_playlist_id"
+  end
+
+  create_table "playlists", force: :cascade do |t|
+    t.bigint "account_id", null: false
+    t.datetime "created_at", null: false
+    t.string "name", null: false
+    t.string "status", default: "draft", null: false
+    t.datetime "updated_at", null: false
+    t.index ["account_id"], name: "index_playlists_on_account_id"
+  end
+
   create_table "screens", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.string "name", null: false
@@ -113,6 +134,9 @@ ActiveRecord::Schema[8.1].define(version: 2026_08_03_221202) do
   add_foreign_key "listing_agents", "agents"
   add_foreign_key "listing_agents", "listings"
   add_foreign_key "listings", "accounts"
+  add_foreign_key "playlist_ads", "ads"
+  add_foreign_key "playlist_ads", "playlists"
+  add_foreign_key "playlists", "accounts"
   add_foreign_key "screens", "sites"
   add_foreign_key "sessions", "users"
   add_foreign_key "sites", "accounts"

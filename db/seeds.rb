@@ -144,3 +144,18 @@ if demo_account
   end
 end
 puts "Seeded #{Ad.count} ad(s)"
+
+# -----------------------------------------------------------------------
+# Playlists
+# -----------------------------------------------------------------------
+if demo_account
+  unless Playlist.exists?(account: demo_account, name: "Evening Showcase")
+    playlist = Playlist.create!(account: demo_account, name: "Evening Showcase", status: "published")
+    demo_ads = Ad.where(account: demo_account).order(:id)
+    demo_ads.each_with_index do |ad, i|
+      PlaylistAd.create!(playlist: playlist, ad: ad, position: i + 1, duration: 15)
+    end
+    puts "Created demo playlist: Evening Showcase (#{demo_ads.count} ads)"
+  end
+end
+puts "Seeded #{Playlist.count} playlist(s)"

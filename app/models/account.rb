@@ -4,4 +4,5 @@ class Account < ApplicationRecord
   has_many :listings, dependent: :destroy
   has_many :agents, dependent: :destroy
   has_many :ads, dependent: :destroy
+  has_many :playlists, dependent: :destroy
 end
