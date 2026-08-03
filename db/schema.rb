@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_08_03_152057) do
+ActiveRecord::Schema[8.1].define(version: 2026_08_03_155423) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -28,6 +28,15 @@ ActiveRecord::Schema[8.1].define(version: 2026_08_03_152057) do
     t.index ["user_id"], name: "index_sessions_on_user_id"
   end
 
+  create_table "sites", force: :cascade do |t|
+    t.bigint "account_id", null: false
+    t.string "address"
+    t.datetime "created_at", null: false
+    t.string "name", null: false
+    t.datetime "updated_at", null: false
+    t.index ["account_id"], name: "index_sites_on_account_id"
+  end
+
   create_table "users", force: :cascade do |t|
     t.bigint "account_id"
     t.datetime "created_at", null: false
@@ -42,5 +51,6 @@ ActiveRecord::Schema[8.1].define(version: 2026_08_03_152057) do
   end
 
   add_foreign_key "sessions", "users"
+  add_foreign_key "sites", "accounts"
   add_foreign_key "users", "accounts"
 end

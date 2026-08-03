@@ -1,0 +1,29 @@
+<%= form_with model: site, class: "contents" do |form| %>
+  <% if site.errors.any? %>
+    <div id="error_explanation" class="alert alert-error my-4">
+      <div>
+        <ul class="list-disc list-inside text-sm">
+          <% site.errors.full_messages.each do |message| %>
+            <li><%= message %></li>
+          <% end %>
+        </ul>
+      </div>
+    </div>
+  <% end %>
+
+  <fieldset class="fieldset my-5">
+    <%= form.label :name, class: "fieldset-label" %>
+    <%= form.text_field :name, required: true, autofocus: true,
+        class: "input input-bordered w-full" %>
+  </fieldset>
+
+  <fieldset class="fieldset my-5">
+    <%= form.label :address, class: "fieldset-label" %>
+    <%= form.text_field :address, class: "input input-bordered w-full" %>
+  </fieldset>
+
+  <div class="flex items-center gap-4">
+    <%= form.submit class: "btn btn-primary" %>
+    <%= link_to "Cancel", sites_path, class: "link link-hover text-sm" %>
+  </div>
+<% end %>
