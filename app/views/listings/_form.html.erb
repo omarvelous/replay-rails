@@ -1,0 +1,53 @@
+<%= form_with model: listing, class: "contents" do |form| %>
+  <% if listing.errors.any? %>
+    <div id="error_explanation" class="alert alert-error my-4">
+      <div>
+        <ul class="list-disc list-inside text-sm">
+          <% listing.errors.full_messages.each do |message| %>
+            <li><%= message %></li>
+          <% end %>
+        </ul>
+      </div>
+    </div>
+  <% end %>
+
+  <fieldset class="fieldset my-5">
+    <%= form.label :address, class: "fieldset-label" %>
+    <%= form.text_field :address, required: true, autofocus: true,
+        class: "input input-bordered w-full" %>
+  </fieldset>
+
+  <fieldset class="fieldset my-5">
+    <%= form.label :price, class: "fieldset-label" %>
+    <%= form.number_field :price, required: true, step: 0.01, min: 0,
+        class: "input input-bordered w-full" %>
+  </fieldset>
+
+  <div class="flex gap-4">
+    <fieldset class="fieldset my-5 flex-1">
+      <%= form.label :beds, class: "fieldset-label" %>
+      <%= form.number_field :beds, min: 0, class: "input input-bordered w-full" %>
+    </fieldset>
+
+    <fieldset class="fieldset my-5 flex-1">
+      <%= form.label :baths, class: "fieldset-label" %>
+      <%= form.number_field :baths, min: 0, class: "input input-bordered w-full" %>
+    </fieldset>
+
+    <fieldset class="fieldset my-5 flex-1">
+      <%= form.label :sqft, "Sq ft", class: "fieldset-label" %>
+      <%= form.number_field :sqft, min: 0, class: "input input-bordered w-full" %>
+    </fieldset>
+  </div>
+
+  <fieldset class="fieldset my-5">
+    <%= form.label :status, class: "fieldset-label" %>
+    <%= form.select :status, %w[active pending sold],
+        {}, class: "select select-bordered w-full" %>
+  </fieldset>
+
+  <div class="flex items-center gap-4">
+    <%= form.submit class: "btn btn-primary" %>
+    <%= link_to "Cancel", listings_path, class: "link link-hover text-sm" %>
+  </div>
+<% end %>

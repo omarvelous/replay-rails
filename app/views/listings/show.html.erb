@@ -1,0 +1,18 @@
+<div class="mx-auto md:w-2/3 w-full">
+  <div class="flex justify-between items-center mb-5">
+    <h1 class="font-bold text-4xl"><%= @listing.address %></h1>
+    <div class="flex gap-2">
+      <%= link_to "Edit", edit_listing_path(@listing), class: "btn btn-ghost btn-sm" %>
+      <%= button_to "Delete", @listing, method: :delete, class: "btn btn-error btn-sm",
+          data: { turbo_confirm: "Are you sure?" } %>
+    </div>
+  </div>
+
+  <div class="flex gap-6 text-base-content/60">
+    <p><strong><%= number_to_currency(@listing.price, precision: 0) %></strong></p>
+    <% if @listing.beds %><p><%= @listing.beds %> beds</p><% end %>
+    <% if @listing.baths %><p><%= @listing.baths %> baths</p><% end %>
+    <% if @listing.sqft %><p><%= number_with_delimiter(@listing.sqft) %> sq ft</p><% end %>
+    <p>Status: <%= @listing.status.capitalize %></p>
+  </div>
+</div>

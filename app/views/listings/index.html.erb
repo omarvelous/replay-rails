@@ -1,0 +1,41 @@
+<div class="mx-auto md:w-2/3 w-full">
+  <div class="flex justify-between items-center mb-5">
+    <h1 class="font-bold text-4xl">Listings</h1>
+    <%= link_to "New Listing", new_listing_path, class: "btn btn-primary btn-sm" %>
+  </div>
+
+  <% if @listings.any? %>
+    <div class="overflow-x-auto">
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Address</th>
+            <th>Price</th>
+            <th>Beds</th>
+            <th>Baths</th>
+            <th>Sq ft</th>
+            <th>Status</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          <% @listings.each do |listing| %>
+            <tr>
+              <td><%= link_to listing.address, listing, class: "link" %></td>
+              <td><%= number_to_currency(listing.price, precision: 0) %></td>
+              <td><%= listing.beds %></td>
+              <td><%= listing.baths %></td>
+              <td><%= number_with_delimiter(listing.sqft) %></td>
+              <td><%= listing.status.capitalize %></td>
+              <td class="text-right">
+                <%= link_to "Edit", edit_listing_path(listing), class: "link link-hover text-sm" %>
+              </td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+  <% else %>
+    <p class="text-base-content/60">No listings yet. Add your first property listing.</p>
+  <% end %>
+</div>

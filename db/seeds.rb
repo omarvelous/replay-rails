@@ -56,3 +56,35 @@ if demo_account
   end
 end
 puts "Seeded #{Screen.count} screen(s)"
+
+# -----------------------------------------------------------------------
+# Listings
+# -----------------------------------------------------------------------
+if demo_account
+  unless Listing.exists?(account: demo_account, address: "350 Fifth Ave, New York, NY 10118")
+    Listing.create!(
+      account: demo_account,
+      address: "350 Fifth Ave, New York, NY 10118",
+      price: 2_500_000,
+      beds: 3,
+      baths: 2,
+      sqft: 2200,
+      status: "active"
+    )
+    puts "Created demo listing: 350 Fifth Ave"
+  end
+
+  unless Listing.exists?(account: demo_account, address: "20 W 34th St, New York, NY 10001")
+    Listing.create!(
+      account: demo_account,
+      address: "20 W 34th St, New York, NY 10001",
+      price: 1_850_000,
+      beds: 2,
+      baths: 2,
+      sqft: 1500,
+      status: "pending"
+    )
+    puts "Created demo listing: 20 W 34th St"
+  end
+end
+puts "Seeded #{Listing.count} listing(s)"
