@@ -1,0 +1,37 @@
+<div class="mx-auto md:w-2/3 w-full">
+  <% if alert = flash[:alert] %>
+    <div class="alert alert-error mb-5" id="alert">
+      <span><%= alert %></span>
+    </div>
+  <% end %>
+
+  <% if notice = flash[:notice] %>
+    <div class="alert alert-success mb-5" id="notice">
+      <span><%= notice %></span>
+    </div>
+  <% end %>
+
+  <h1 class="font-bold text-4xl">Sign in</h1>
+
+  <%= form_with url: session_url, class: "contents" do |form| %>
+    <fieldset class="fieldset my-5">
+      <%= form.label :email_address, "Email address", class: "fieldset-label" %>
+      <%= form.email_field :email_address, required: true, autofocus: true, autocomplete: "username",
+          placeholder: "Enter your email address", value: params[:email_address],
+          class: "input input-bordered w-full" %>
+    </fieldset>
+
+    <fieldset class="fieldset my-5">
+      <%= form.label :password, "Password", class: "fieldset-label" %>
+      <%= form.password_field :password, required: true, autocomplete: "current-password",
+          placeholder: "Enter your password", maxlength: 72,
+          class: "input input-bordered w-full" %>
+    </fieldset>
+
+    <div class="flex items-center gap-4">
+      <%= form.submit "Sign in", class: "btn btn-primary" %>
+      <%= link_to "Forgot password?", new_password_path, class: "link link-hover text-sm" %>
+      <%= link_to "Sign up", new_account_path, class: "link link-hover text-sm" %>
+    </div>
+  <% end %>
+</div>

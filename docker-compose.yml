@@ -1,0 +1,65 @@
+services:
+  db:
+    image: postgres:17
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  chrome:
+    image: selenium/standalone-chromium:latest
+    ports:
+      - "4444:4444"
+      - "7900:7900"
+    shm_size: 2gb
+
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    command: bin/rails server -b 0.0.0.0
+    ports:
+      - "3000:3000"
+    depends_on:
+      db:
+        condition: service_healthy
+      chrome:
+        condition: service_started
+    environment:
+      DATABASE_URL: postgres://postgres:postgres@db:5432
+      RAILS_ENV: development
+      SELENIUM_URL: http://chrome:4444/wd/hub
+      WEB_HOST: web
+    volumes:
+      - .:/rails
+      - /rails/node_modules
+      - bundle_cache:/usr/local/bundle
+    stdin_open: true
+    tty: true
+
+  css:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    command: bin/rails tailwindcss:watch
+    depends_on:
+      - web
+    environment:
+      DATABASE_URL: postgres://postgres:postgres@db:5432
+      RAILS_ENV: development
+    volumes:
+      - .:/rails
+      - /rails/node_modules
+      - bundle_cache:/usr/local/bundle
+
+volumes:
+  postgres_data:
+  bundle_cache:

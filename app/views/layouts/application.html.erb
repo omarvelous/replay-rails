@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title><%= content_for(:title) || "Replay Rails" %></title>
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="mobile-web-app-capable" content="yes">
+    <%= csrf_meta_tags %>
+    <%= csp_meta_tag %>
+
+    <%= yield :head %>
+
+    <link rel="icon" href="/icon.png" type="image/png">
+    <link rel="icon" href="/icon.svg" type="image/svg+xml">
+    <link rel="apple-touch-icon" href="/icon.png">
+
+    <%= stylesheet_link_tag :app, "data-turbo-track": "reload" %>
+    <%= javascript_importmap_tags %>
+  </head>
+
+  <body>
+    <% if authenticated? %>
+      <div class="navbar bg-base-100 border-b border-base-300 px-4">
+        <div class="flex-1">
+          <div class="flex gap-4">
+            <%= link_to "Home", root_path, class: "btn btn-ghost btn-sm" %>
+          </div>
+        </div>
+        <div class="flex-none">
+          <%= button_to "Sign out", session_path, method: :delete,
+              class: "btn btn-ghost btn-sm" %>
+        </div>
+      </div>
+    <% end %>
+
+    <main class="container mx-auto mt-10 px-5 flex flex-col">
+      <% if flash[:notice] %>
+        <div class="alert alert-success mb-5" id="notice">
+          <span><%= flash[:notice] %></span>
+        </div>
+      <% end %>
+
+      <% if flash[:alert] %>
+        <div class="alert alert-error mb-5" id="alert">
+          <span><%= flash[:alert] %></span>
+        </div>
+      <% end %>
+
+      <%= yield %>
+    </main>
+  </body>
+</html>

@@ -1,0 +1,45 @@
+# Agent OS Standards Index
+
+standards:
+  database:
+    - id: database/migrations
+      file: database/migrations.md
+      summary: "Place t.timestamps first in all create_table blocks"
+    - id: database/seeds
+      file: database/seeds.md
+      summary: "Update db/seeds.rb for every new model; reuse FactoryBot factories; always idempotent"
+
+  testing:
+    - id: testing/tdd
+      file: testing/tdd.md
+      summary: "Write failing spec before implementing (red-green cycle)"
+
+  git:
+    - id: git/commit-cadence
+      file: git/commit-cadence.md
+      summary: "Commit after every significant step; RED and GREEN are separate commits"
+
+  frontend:
+    - id: frontend/daisyui-tailwind
+      file: frontend/daisyui-tailwind.md
+      summary: "Use DaisyUI v5 component classes for UI elements; installed via @plugin in Tailwind CSS"
+
+  tooling:
+    - id: tooling/makefile
+      file: tooling/makefile.md
+      summary: "Use make targets instead of raw docker compose commands for all dev tasks"
+
+  security:
+    - id: security/environment
+      file: security/environment.md
+      summary: "CSP, parameter filtering, env vars, rate limiting, and HTTPS enforcement"
+
+  code-organization:
+    - id: code-organization/patterns
+      file: code-organization/patterns.md
+      summary: "Thin controllers, concerns, service objects, naming conventions, and tenant scoping"
+
+  error-handling:
+    - id: error-handling/conventions
+      file: error-handling/conventions.md
+      summary: "Flash messages, controller error handling, form validation, logging, and error pages"
