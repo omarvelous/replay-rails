@@ -10,13 +10,36 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_08_03_162426) do
+ActiveRecord::Schema[8.1].define(version: 2026_08_03_213120) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
   create_table "accounts", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+  end
+
+  create_table "agents", force: :cascade do |t|
+    t.bigint "account_id", null: false
+    t.datetime "created_at", null: false
+    t.string "email", null: false
+    t.string "name", null: false
+    t.string "phone"
+    t.datetime "updated_at", null: false
+    t.bigint "user_id"
+    t.index ["account_id"], name: "index_agents_on_account_id"
+    t.index ["user_id"], name: "index_agents_on_user_id"
+  end
+
+  create_table "listing_agents", force: :cascade do |t|
+    t.bigint "agent_id", null: false
+    t.datetime "created_at", null: false
+    t.bigint "listing_id", null: false
+    t.string "role", default: "listing_agent", null: false
+    t.datetime "updated_at", null: false
+    t.index ["agent_id"], name: "index_listing_agents_on_agent_id"
+    t.index ["listing_id", "agent_id"], name: "index_listing_agents_on_listing_id_and_agent_id", unique: true
+    t.index ["listing_id"], name: "index_listing_agents_on_listing_id"
   end
 
   create_table "listings", force: :cascade do |t|
@@ -72,6 +95,10 @@ ActiveRecord::Schema[8.1].define(version: 2026_08_03_162426) do
     t.index ["email_address"], name: "index_users_on_email_address", unique: true
   end
 
+  add_foreign_key "agents", "accounts"
+  add_foreign_key "agents", "users"
+  add_foreign_key "listing_agents", "agents"
+  add_foreign_key "listing_agents", "listings"
   add_foreign_key "listings", "accounts"
   add_foreign_key "screens", "sites"
   add_foreign_key "sessions", "users"

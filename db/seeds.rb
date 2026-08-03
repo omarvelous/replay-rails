@@ -88,3 +88,32 @@ if demo_account
   end
 end
 puts "Seeded #{Listing.count} listing(s)"
+
+# -----------------------------------------------------------------------
+# Agents
+# -----------------------------------------------------------------------
+demo_user = User.find_by(email_address: "demo@example.com")
+
+if demo_account
+  unless Agent.exists?(account: demo_account, email: "jane.broker@example.com")
+    Agent.create!(
+      account: demo_account,
+      user: demo_user,
+      name: "Jane Broker",
+      email: "jane.broker@example.com",
+      phone: "+12125550002"
+    )
+    puts "Created demo agent: Jane Broker (linked to demo user)"
+  end
+
+  unless Agent.exists?(account: demo_account, email: "tom.realtor@example.com")
+    Agent.create!(
+      account: demo_account,
+      name: "Tom Realtor",
+      email: "tom.realtor@example.com",
+      phone: "+12125550003"
+    )
+    puts "Created demo agent: Tom Realtor"
+  end
+end
+puts "Seeded #{Agent.count} agent(s)"

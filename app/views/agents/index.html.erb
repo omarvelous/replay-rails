@@ -1,0 +1,35 @@
+<div class="mx-auto md:w-2/3 w-full">
+  <div class="flex justify-between items-center mb-5">
+    <h1 class="font-bold text-4xl">Agents</h1>
+    <%= link_to "New Agent", new_agent_path, class: "btn btn-primary btn-sm" %>
+  </div>
+
+  <% if @agents.any? %>
+    <div class="overflow-x-auto">
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Phone</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          <% @agents.each do |agent| %>
+            <tr>
+              <td><%= link_to agent.name, agent, class: "link" %></td>
+              <td><%= agent.email %></td>
+              <td><%= agent.phone %></td>
+              <td class="text-right">
+                <%= link_to "Edit", edit_agent_path(agent), class: "link link-hover text-sm" %>
+              </td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+  <% else %>
+    <p class="text-base-content/60">No agents yet. Add your first agent.</p>
+  <% end %>
+</div>

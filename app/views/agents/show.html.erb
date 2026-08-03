@@ -1,0 +1,16 @@
+<div class="mx-auto md:w-2/3 w-full">
+  <div class="flex justify-between items-center mb-5">
+    <h1 class="font-bold text-4xl"><%= @agent.name %></h1>
+    <div class="flex gap-2">
+      <%= link_to "Edit", edit_agent_path(@agent), class: "btn btn-ghost btn-sm" %>
+      <%= button_to "Delete", @agent, method: :delete, class: "btn btn-error btn-sm",
+          data: { turbo_confirm: "Are you sure?" } %>
+    </div>
+  </div>
+
+  <div class="text-base-content/60 space-y-1">
+    <p><%= @agent.email %></p>
+    <% if @agent.phone.present? %><p><%= @agent.phone %></p><% end %>
+    <% if @agent.user %><p>Linked to: <%= @agent.user.first_name %> <%= @agent.user.last_name %></p><% end %>
+  </div>
+</div>
