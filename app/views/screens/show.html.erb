@@ -1,0 +1,13 @@
+<div class="mx-auto md:w-2/3 w-full">
+  <div class="flex justify-between items-center mb-5">
+    <h1 class="font-bold text-4xl"><%= @screen.name %></h1>
+    <div class="flex gap-2">
+      <%= link_to "Edit", edit_site_screen_path(@site, @screen), class: "btn btn-ghost btn-sm" %>
+      <%= button_to "Delete", site_screen_path(@site, @screen), method: :delete, class: "btn btn-error btn-sm",
+          data: { turbo_confirm: "Are you sure?" } %>
+    </div>
+  </div>
+
+  <p class="text-base-content/60">Orientation: <%= @screen.orientation.capitalize %></p>
+  <p class="text-base-content/60">Site: <%= link_to @site.name, site_path(@site), class: "link" %></p>
+</div>

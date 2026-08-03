@@ -34,3 +34,25 @@ if demo_account
   end
 end
 puts "Seeded #{Site.count} site(s)"
+
+# -----------------------------------------------------------------------
+# Screens
+# -----------------------------------------------------------------------
+if demo_account
+  main_office = Site.find_by(account: demo_account, name: "Main Office")
+  if main_office
+    unless Screen.exists?(site: main_office, name: "Window Display")
+      Screen.create!(site: main_office, name: "Window Display", orientation: "landscape")
+      puts "Created demo screen: Window Display (Main Office)"
+    end
+  end
+
+  gallery = Site.find_by(account: demo_account, name: "Downtown Gallery")
+  if gallery
+    unless Screen.exists?(site: gallery, name: "Gallery Entrance")
+      Screen.create!(site: gallery, name: "Gallery Entrance", orientation: "portrait")
+      puts "Created demo screen: Gallery Entrance (Downtown Gallery)"
+    end
+  end
+end
+puts "Seeded #{Screen.count} screen(s)"

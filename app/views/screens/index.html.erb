@@ -1,0 +1,37 @@
+<div class="mx-auto md:w-2/3 w-full">
+  <div class="flex justify-between items-center mb-5">
+    <h1 class="font-bold text-4xl">Screens at <%= @site.name %></h1>
+    <%= link_to "New Screen", new_site_screen_path(@site), class: "btn btn-primary btn-sm" %>
+  </div>
+
+  <% if @screens.any? %>
+    <div class="overflow-x-auto">
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Orientation</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          <% @screens.each do |screen| %>
+            <tr>
+              <td><%= link_to screen.name, site_screen_path(@site, screen), class: "link" %></td>
+              <td><%= screen.orientation.capitalize %></td>
+              <td class="text-right">
+                <%= link_to "Edit", edit_site_screen_path(@site, screen), class: "link link-hover text-sm" %>
+              </td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+  <% else %>
+    <p class="text-base-content/60">No screens yet. Add a screen to this site.</p>
+  <% end %>
+
+  <div class="mt-5">
+    <%= link_to "Back to #{@site.name}", site_path(@site), class: "link link-hover text-sm" %>
+  </div>
+</div>
