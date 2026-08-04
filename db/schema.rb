@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_08_03_224513) do
+ActiveRecord::Schema[8.1].define(version: 2026_08_04_004248) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -87,6 +87,17 @@ ActiveRecord::Schema[8.1].define(version: 2026_08_03_224513) do
     t.index ["account_id"], name: "index_playlists_on_account_id"
   end
 
+  create_table "screen_playlists", force: :cascade do |t|
+    t.boolean "active", default: true, null: false
+    t.datetime "created_at", null: false
+    t.bigint "playlist_id", null: false
+    t.bigint "screen_id", null: false
+    t.datetime "updated_at", null: false
+    t.index ["playlist_id"], name: "index_screen_playlists_on_playlist_id"
+    t.index ["screen_id", "playlist_id"], name: "index_screen_playlists_on_screen_id_and_playlist_id", unique: true
+    t.index ["screen_id"], name: "index_screen_playlists_on_screen_id"
+  end
+
   create_table "screens", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.string "name", null: false
@@ -137,6 +148,8 @@ ActiveRecord::Schema[8.1].define(version: 2026_08_03_224513) do
   add_foreign_key "playlist_ads", "ads"
   add_foreign_key "playlist_ads", "playlists"
   add_foreign_key "playlists", "accounts"
+  add_foreign_key "screen_playlists", "playlists"
+  add_foreign_key "screen_playlists", "screens"
   add_foreign_key "screens", "sites"
   add_foreign_key "sessions", "users"
   add_foreign_key "sites", "accounts"

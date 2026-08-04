@@ -159,3 +159,19 @@ if demo_account
   end
 end
 puts "Seeded #{Playlist.count} playlist(s)"
+
+# -----------------------------------------------------------------------
+# Screen ↔ Playlist Assignments
+# -----------------------------------------------------------------------
+if demo_account
+  window_display = Screen.joins(:site).find_by(name: "Window Display", sites: { account_id: demo_account.id })
+  evening_showcase = Playlist.find_by(account: demo_account, name: "Evening Showcase")
+
+  if window_display && evening_showcase
+    unless ScreenPlaylist.exists?(screen: window_display, playlist: evening_showcase)
+      ScreenPlaylist.create!(screen: window_display, playlist: evening_showcase)
+      puts "Assigned Evening Showcase to Window Display"
+    end
+  end
+end
+puts "Seeded #{ScreenPlaylist.count} screen-playlist assignment(s)"

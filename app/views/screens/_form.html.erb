@@ -23,6 +23,19 @@
         {}, class: "select select-bordered w-full" %>
   </fieldset>
 
+  <% available_playlists = Current.user.account.playlists.where(status: "published").order(:name) %>
+  <% if available_playlists.any? %>
+    <fieldset class="fieldset my-5">
+      <%= form.label :playlist_ids, "Assign playlists", class: "fieldset-label" %>
+      <%= form.collection_check_boxes :playlist_ids, available_playlists, :id, :name do |b| %>
+        <label class="flex items-center gap-2 my-1">
+          <%= b.check_box class: "checkbox checkbox-sm" %>
+          <%= b.text %>
+        </label>
+      <% end %>
+    </fieldset>
+  <% end %>
+
   <div class="flex items-center gap-4">
     <%= form.submit class: "btn btn-primary" %>
     <%= link_to "Cancel", site_path(site), class: "link link-hover text-sm" %>

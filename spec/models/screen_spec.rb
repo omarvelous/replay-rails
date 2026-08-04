@@ -10,5 +10,7 @@ RSpec.describe Screen, type: :model do
 
   describe "associations" do
     it { is_expected.to belong_to(:site) }
+    it { is_expected.to have_many(:screen_playlists).dependent(:destroy) }
+    it { is_expected.to have_many(:playlists).through(:screen_playlists) }
   end
 end
