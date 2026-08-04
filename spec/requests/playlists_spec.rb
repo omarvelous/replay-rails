@@ -47,27 +47,6 @@ RSpec.describe "Playlists", type: :request do
       end
     end
 
-    context "with ads via nested attributes" do
-      it "creates a playlist with ads" do
-        ad = create(:ad, account: account)
-        params = {
-          playlist: {
-            name: "With Ads",
-            status: "draft",
-            playlist_ads_attributes: [
-              { ad_id: ad.id, position: 1, duration: 15 }
-            ]
-          }
-        }
-
-        expect {
-          post playlists_path, params: params
-        }.to change(PlaylistAd, :count).by(1)
-
-        expect(Playlist.last.playlist_ads.first.duration).to eq(15)
-      end
-    end
-
     context "with invalid params" do
       it "does not create a playlist" do
         expect {

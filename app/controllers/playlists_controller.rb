@@ -54,9 +54,6 @@ class PlaylistsController < ApplicationController
     end
 
     def playlist_params
-      params.require(:playlist).permit(
-        :name, :status,
-        playlist_ads_attributes: %i[id ad_id position duration _destroy]
-      )
+      params.require(:playlist).permit(:name, :status)
     end
 end

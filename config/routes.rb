@@ -11,6 +11,7 @@ Rails.application.routes.draw do
     member do
       get :preview
     end
+    resources :ads, controller: "playlists/ads", only: %i[ new create edit update destroy ]
   end
   resource :session
   resources :passwords, param: :token

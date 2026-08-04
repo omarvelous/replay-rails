@@ -15,7 +15,10 @@
     </span>
   </p>
 
-  <h2 class="font-bold text-2xl mb-3">Ads</h2>
+  <div class="flex justify-between items-center mb-3">
+    <h2 class="font-bold text-2xl">Ads</h2>
+    <%= link_to "Add Ad", new_playlist_ad_path(@playlist), class: "btn btn-primary btn-sm" %>
+  </div>
 
   <% if @playlist.playlist_ads.any? %>
     <div class="overflow-x-auto">
@@ -25,6 +28,7 @@
             <th>#</th>
             <th>Headline</th>
             <th>Duration</th>
+            <th></th>
           </tr>
         </thead>
         <tbody>
@@ -33,12 +37,18 @@
               <td><%= pa.position %></td>
               <td><%= link_to pa.ad.headline, ad_path(pa.ad), class: "link" %></td>
               <td><%= pa.duration %>s</td>
+              <td class="text-right">
+                <%= link_to "Edit", edit_playlist_ad_path(@playlist, pa), class: "link link-hover text-sm mr-2" %>
+                <%= button_to "Remove", playlist_ad_path(@playlist, pa), method: :delete,
+                    class: "btn btn-error btn-xs",
+                    data: { turbo_confirm: "Remove this ad?" } %>
+              </td>
             </tr>
           <% end %>
         </tbody>
       </table>
     </div>
   <% else %>
-    <p class="text-base-content/60">No ads in this playlist yet. Edit to add ads.</p>
+    <p class="text-base-content/60">No ads in this playlist yet.</p>
   <% end %>
 </div>
