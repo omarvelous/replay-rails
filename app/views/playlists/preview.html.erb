@@ -15,6 +15,13 @@
             <p class="mt-1">
               <%= [pa.ad.listing.beds&.to_s&.+((" bed")), pa.ad.listing.baths&.to_s&.+((" bath")), pa.ad.listing.sqft ? "#{number_with_delimiter(pa.ad.listing.sqft)} sqft" : nil].compact.join(" · ") %>
             </p>
+            <% if pa.ad.listing.listing_agents.any? %>
+              <div class="mt-4 text-lg text-white/60">
+                <% pa.ad.listing.listing_agents.each do |la| %>
+                  <p><%= la.agent.name %> · <%= la.agent.phone || la.agent.email %></p>
+                <% end %>
+              </div>
+            <% end %>
           </div>
         <% end %>
       </div>

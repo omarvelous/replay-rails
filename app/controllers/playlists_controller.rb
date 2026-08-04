@@ -34,7 +34,7 @@ class PlaylistsController < ApplicationController
   end
 
   def preview
-    @playlist_ads = @playlist.playlist_ads.includes(:ad)
+    @playlist_ads = @playlist.playlist_ads.includes(ad: { listing: { listing_agents: :agent } })
     render layout: "preview"
   end
 
