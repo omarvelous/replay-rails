@@ -2,18 +2,18 @@ class AdsController < ApplicationController
   before_action :set_ad, only: %i[ show edit update destroy preview ]
 
   def index
-    @ads = current_account.ads.order(created_at: :desc)
+    @ads = Current.account.ads.order(created_at: :desc)
   end
 
   def show
   end
 
   def new
-    @ad = current_account.ads.build
+    @ad = Current.account.ads.build
   end
 
   def create
-    @ad = current_account.ads.build(ad_params)
+    @ad = Current.account.ads.build(ad_params)
 
     if @ad.save
       redirect_to @ad, notice: "Ad was successfully created."
@@ -45,7 +45,7 @@ class AdsController < ApplicationController
   private
 
     def set_ad
-      @ad = current_account.ads.find(params[:id])
+      @ad = Current.account.ads.find(params[:id])
     end
 
     def ad_params

@@ -2,18 +2,18 @@ class AgentsController < ApplicationController
   before_action :set_agent, only: %i[ show edit update destroy ]
 
   def index
-    @agents = current_account.agents.order(:name)
+    @agents = Current.account.agents.order(:name)
   end
 
   def show
   end
 
   def new
-    @agent = current_account.agents.build
+    @agent = Current.account.agents.build
   end
 
   def create
-    @agent = current_account.agents.build(agent_params)
+    @agent = Current.account.agents.build(agent_params)
 
     if @agent.save
       redirect_to @agent, notice: "Agent was successfully created."
@@ -41,7 +41,7 @@ class AgentsController < ApplicationController
   private
 
     def set_agent
-      @agent = current_account.agents.find(params[:id])
+      @agent = Current.account.agents.find(params[:id])
     end
 
     def agent_params

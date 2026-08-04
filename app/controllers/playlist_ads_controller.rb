@@ -65,12 +65,12 @@ class PlaylistAdsController < ApplicationController
   private
 
     def current_playlist
-      @current_playlist ||= current_account.playlists.find_by(id: params[:playlist_id])
+      @current_playlist ||= Current.account.playlists.find_by(id: params[:playlist_id])
     end
     helper_method :current_playlist
 
     def current_ad
-      @current_ad ||= current_account.ads.find_by(id: params[:ad_id])
+      @current_ad ||= Current.account.ads.find_by(id: params[:ad_id])
     end
     helper_method :current_ad
 
@@ -83,7 +83,7 @@ class PlaylistAdsController < ApplicationController
     end
 
     def set_playlist_ad
-      @playlist_ad = current_account.playlist_ads.find(params[:id])
+      @playlist_ad = Current.account.playlist_ads.find(params[:id])
       @current_playlist = @playlist_ad.playlist
       @current_ad = @playlist_ad.ad
     end

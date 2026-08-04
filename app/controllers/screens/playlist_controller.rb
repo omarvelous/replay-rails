@@ -3,12 +3,12 @@ module Screens
     before_action :set_screen
 
     def new
-      @playlists = current_account.playlists.where(status: "published").order(:name)
+      @playlists = Current.account.playlists.where(status: "published").order(:name)
     end
 
     def create
       @screen.screen_playlists.destroy_all
-      playlist = current_account.playlists.find(params[:screen_playlist][:playlist_id])
+      playlist = Current.account.playlists.find(params[:screen_playlist][:playlist_id])
       @screen.screen_playlists.create!(playlist: playlist, active: true)
       respond_to do |format|
         format.turbo_stream { flash.now[:notice] = "Playlist assigned to screen." }
@@ -30,7 +30,7 @@ module Screens
     private
 
       def set_screen
-        @screen = current_account.screens.find(params[:screen_id])
+        @screen = Current.account.screens.find(params[:screen_id])
         @site = @screen.site
       end
   end

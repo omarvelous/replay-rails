@@ -2,18 +2,18 @@ class PlaylistsController < ApplicationController
   before_action :set_playlist, only: %i[ show edit update destroy preview ]
 
   def index
-    @playlists = current_account.playlists.order(created_at: :desc)
+    @playlists = Current.account.playlists.order(created_at: :desc)
   end
 
   def show
   end
 
   def new
-    @playlist = current_account.playlists.build(status: "draft")
+    @playlist = Current.account.playlists.build(status: "draft")
   end
 
   def create
-    @playlist = current_account.playlists.build(playlist_params)
+    @playlist = Current.account.playlists.build(playlist_params)
 
     if @playlist.save
       redirect_to @playlist, notice: "Playlist was successfully created."
@@ -46,7 +46,7 @@ class PlaylistsController < ApplicationController
   private
 
     def set_playlist
-      @playlist = current_account.playlists.find(params[:id])
+      @playlist = Current.account.playlists.find(params[:id])
     end
 
     def playlist_params

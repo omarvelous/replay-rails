@@ -2,18 +2,18 @@ class ListingsController < ApplicationController
   before_action :set_listing, only: %i[ show edit update destroy ]
 
   def index
-    @listings = current_account.listings.order(created_at: :desc)
+    @listings = Current.account.listings.order(created_at: :desc)
   end
 
   def show
   end
 
   def new
-    @listing = current_account.listings.build(status: "active")
+    @listing = Current.account.listings.build(status: "active")
   end
 
   def create
-    @listing = current_account.listings.build(listing_params)
+    @listing = Current.account.listings.build(listing_params)
 
     if @listing.save
       redirect_to @listing, notice: "Listing was successfully created."
@@ -41,7 +41,7 @@ class ListingsController < ApplicationController
   private
 
     def set_listing
-      @listing = current_account.listings.find(params[:id])
+      @listing = Current.account.listings.find(params[:id])
     end
 
     def listing_params

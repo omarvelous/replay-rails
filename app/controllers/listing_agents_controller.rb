@@ -63,12 +63,12 @@ class ListingAgentsController < ApplicationController
   private
 
     def current_listing
-      @current_listing ||= current_account.listings.find_by(id: params[:listing_id])
+      @current_listing ||= Current.account.listings.find_by(id: params[:listing_id])
     end
     helper_method :current_listing
 
     def current_agent
-      @current_agent ||= current_account.agents.find_by(id: params[:agent_id])
+      @current_agent ||= Current.account.agents.find_by(id: params[:agent_id])
     end
     helper_method :current_agent
 
@@ -81,7 +81,7 @@ class ListingAgentsController < ApplicationController
     end
 
     def set_listing_agent
-      @listing_agent = current_account.listing_agents.find(params[:id])
+      @listing_agent = Current.account.listing_agents.find(params[:id])
       @current_listing = @listing_agent.listing
       @current_agent = @listing_agent.agent
     end

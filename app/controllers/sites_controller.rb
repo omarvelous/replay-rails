@@ -2,18 +2,18 @@ class SitesController < ApplicationController
   before_action :set_site, only: %i[ show edit update destroy ]
 
   def index
-    @sites = current_account.sites.order(:name)
+    @sites = Current.account.sites.order(:name)
   end
 
   def show
   end
 
   def new
-    @site = current_account.sites.build
+    @site = Current.account.sites.build
   end
 
   def create
-    @site = current_account.sites.build(site_params)
+    @site = Current.account.sites.build(site_params)
 
     if @site.save
       redirect_to @site, notice: "Site was successfully created."
@@ -41,7 +41,7 @@ class SitesController < ApplicationController
   private
 
     def set_site
-      @site = current_account.sites.find(params[:id])
+      @site = Current.account.sites.find(params[:id])
     end
 
     def site_params
