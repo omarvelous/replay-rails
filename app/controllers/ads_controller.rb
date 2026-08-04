@@ -44,10 +44,6 @@ class AdsController < ApplicationController
 
   private
 
-    def current_account
-      Current.user.account
-    end
-
     def set_ad
       @ad = current_account.ads.find(params[:id])
     end

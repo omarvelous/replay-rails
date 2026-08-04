@@ -14,7 +14,7 @@
   <fieldset class="fieldset my-5">
     <%= form.label :site_id, "Site", class: "fieldset-label" %>
     <%= form.select :site_id,
-        Current.user.account.sites.order(:name).map { |s| [s.name, s.id] },
+        Current.account.sites.order(:name).map { |s| [s.name, s.id] },
         { include_blank: "Select a site" },
         required: true, class: "select select-bordered w-full" %>
   </fieldset>

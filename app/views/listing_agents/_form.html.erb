@@ -16,7 +16,7 @@
     <fieldset class="fieldset my-5">
       <%= form.label :agent_id, "Agent", class: "fieldset-label" %>
       <%= form.select :agent_id,
-          Current.user.account.agents.order(:name).map { |a| [a.name, a.id] },
+          Current.account.agents.order(:name).map { |a| [a.name, a.id] },
           { include_blank: "Select an agent" },
           required: true, class: "select select-bordered w-full" %>
     </fieldset>
@@ -25,7 +25,7 @@
     <fieldset class="fieldset my-5">
       <%= form.label :listing_id, "Listing", class: "fieldset-label" %>
       <%= form.select :listing_id,
-          Current.user.account.listings.order(:address).map { |l| [l.address, l.id] },
+          Current.account.listings.order(:address).map { |l| [l.address, l.id] },
           { include_blank: "Select a listing" },
           required: true, class: "select select-bordered w-full" %>
     </fieldset>

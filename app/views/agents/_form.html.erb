@@ -31,7 +31,7 @@
   <fieldset class="fieldset my-5">
     <%= form.label :user_id, "Linked user (optional)", class: "fieldset-label" %>
     <%= form.select :user_id,
-        Current.user.account.users.order(:first_name).map { |u| ["#{u.first_name} #{u.last_name}", u.id] },
+        Current.account.users.order(:first_name).map { |u| ["#{u.first_name} #{u.last_name}", u.id] },
         { include_blank: "None" },
         class: "select select-bordered w-full" %>
   </fieldset>

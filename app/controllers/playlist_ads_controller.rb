@@ -64,10 +64,6 @@ class PlaylistAdsController < ApplicationController
 
   private
 
-    def current_account
-      Current.user.account
-    end
-
     def current_playlist
       @current_playlist ||= current_account.playlists.find_by(id: params[:playlist_id])
     end

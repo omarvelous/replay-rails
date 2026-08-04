@@ -40,10 +40,6 @@ class AgentsController < ApplicationController
 
   private
 
-    def current_account
-      Current.user.account
-    end
-
     def set_agent
       @agent = current_account.agents.find(params[:id])
     end

@@ -40,10 +40,6 @@ class SitesController < ApplicationController
 
   private
 
-    def current_account
-      Current.user.account
-    end
-
     def set_site
       @site = current_account.sites.find(params[:id])
     end

@@ -26,7 +26,7 @@
   <fieldset class="fieldset my-5">
     <%= form.label :listing_id, "Linked listing (optional)", class: "fieldset-label" %>
     <%= form.select :listing_id,
-        Current.user.account.listings.order(:address).map { |l| [l.address, l.id] },
+        Current.account.listings.order(:address).map { |l| [l.address, l.id] },
         { include_blank: "None" },
         class: "select select-bordered w-full" %>
   </fieldset>

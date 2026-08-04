@@ -16,7 +16,7 @@
     <fieldset class="fieldset my-5">
       <%= form.label :ad_id, "Ad", class: "fieldset-label" %>
       <%= form.select :ad_id,
-          Current.user.account.ads.order(:headline).map { |a| [a.headline, a.id] },
+          Current.account.ads.order(:headline).map { |a| [a.headline, a.id] },
           { include_blank: "Select an ad" },
           required: true, class: "select select-bordered w-full" %>
     </fieldset>
@@ -25,7 +25,7 @@
     <fieldset class="fieldset my-5">
       <%= form.label :playlist_id, "Playlist", class: "fieldset-label" %>
       <%= form.select :playlist_id,
-          Current.user.account.playlists.order(:name).map { |p| [p.name, p.id] },
+          Current.account.playlists.order(:name).map { |p| [p.name, p.id] },
           { include_blank: "Select a playlist" },
           required: true, class: "select select-bordered w-full" %>
     </fieldset>

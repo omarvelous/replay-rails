@@ -62,10 +62,6 @@ class ListingAgentsController < ApplicationController
 
   private
 
-    def current_account
-      Current.user.account
-    end
-
     def current_listing
       @current_listing ||= current_account.listings.find_by(id: params[:listing_id])
     end

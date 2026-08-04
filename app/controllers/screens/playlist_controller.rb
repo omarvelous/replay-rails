@@ -29,10 +29,6 @@ module Screens
 
     private
 
-      def current_account
-        Current.user.account
-      end
-
       def set_screen
         @screen = current_account.screens.find(params[:screen_id])
         @site = @screen.site

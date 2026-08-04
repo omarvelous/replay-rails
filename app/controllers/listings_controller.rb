@@ -40,10 +40,6 @@ class ListingsController < ApplicationController
 
   private
 
-    def current_account
-      Current.user.account
-    end
-
     def set_listing
       @listing = current_account.listings.find(params[:id])
     end

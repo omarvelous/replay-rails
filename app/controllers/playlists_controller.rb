@@ -45,10 +45,6 @@ class PlaylistsController < ApplicationController
 
   private
 
-    def current_account
-      Current.user.account
-    end
-
     def set_playlist
       @playlist = current_account.playlists.find(params[:id])
     end

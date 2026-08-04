@@ -45,10 +45,6 @@ class ScreensController < ApplicationController
 
   private
 
-    def current_account
-      Current.user.account
-    end
-
     def current_site
       @current_site ||= current_account.sites.find(params[:site_id]) if params[:site_id]
     end
