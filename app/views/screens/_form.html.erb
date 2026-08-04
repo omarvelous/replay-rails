@@ -25,6 +25,6 @@
 
   <div class="flex items-center gap-4">
     <%= form.submit class: "btn btn-primary" %>
-    <%= link_to "Cancel", site_path(site), class: "link link-hover text-sm" %>
+    <button type="button" class="link link-hover text-sm" data-action="click->modal#close">Cancel</button>
   </div>
 <% end %>
