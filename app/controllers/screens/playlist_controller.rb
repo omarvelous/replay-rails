@@ -12,7 +12,7 @@ module Screens
       @screen.screen_playlists.create!(playlist: playlist, active: true)
       respond_to do |format|
         format.turbo_stream { flash.now[:notice] = "Playlist assigned to screen." }
-        format.html { redirect_to site_screen_path(@screen.site, @screen), notice: "Playlist assigned to screen." }
+        format.html { redirect_to screen_path(@screen), notice: "Playlist assigned to screen." }
       end
     end
 
@@ -23,7 +23,7 @@ module Screens
           flash.now[:notice] = "Playlist removed from screen."
           render "screens/playlist/create"
         end
-        format.html { redirect_to site_screen_path(@screen.site, @screen), notice: "Playlist removed from screen." }
+        format.html { redirect_to screen_path(@screen), notice: "Playlist removed from screen." }
       end
     end
 

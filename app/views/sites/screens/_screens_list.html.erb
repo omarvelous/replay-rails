@@ -17,11 +17,11 @@
       <tbody>
         <% screens.each do |screen| %>
           <tr>
-            <td><%= link_to screen.name, site_screen_path(site, screen), class: "link", data: { turbo_frame: "_top" } %></td>
+            <td><%= link_to screen.name, screen_path(screen), class: "link", data: { turbo_frame: "_top" } %></td>
             <td><%= screen.orientation.capitalize %></td>
             <td class="text-right">
-              <%= link_to "Edit", edit_site_screen_path(site, screen), class: "link link-hover text-sm mr-2", data: { turbo_frame: "modal" } %>
-              <%= button_to "Remove", site_screen_path(site, screen), method: :delete,
+              <%= link_to "Edit", edit_screen_path(screen), class: "link link-hover text-sm mr-2", data: { turbo_frame: "_top" } %>
+              <%= button_to "Remove", screen_path(screen), method: :delete,
                   class: "btn btn-error btn-xs",
                   data: { turbo_confirm: "Remove this screen?" } %>
             </td>

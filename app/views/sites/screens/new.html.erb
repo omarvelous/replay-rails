@@ -1,4 +1,4 @@
 <%= turbo_frame_tag "modal" do %>
   <h3 class="font-bold text-lg mb-4">New Screen at <%= @site.name %></h3>
-  <%= render "form", site: @site, screen: @screen %>
+  <%= render "sites/screens/form", screen: @screen, url: site_screens_path(@site) %>
 <% end %>

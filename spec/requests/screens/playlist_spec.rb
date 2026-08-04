@@ -25,7 +25,7 @@ RSpec.describe "Screen Playlist", type: :request do
 
     it "redirects to the screen" do
       post screen_playlist_path(screen), params: { screen_playlist: { playlist_id: playlist.id } }
-      expect(response).to redirect_to(site_screen_path(site, screen))
+      expect(response).to redirect_to(screen_path(screen))
     end
 
     it "replaces an existing assignment" do
@@ -49,19 +49,19 @@ RSpec.describe "Screen Playlist", type: :request do
     it "redirects to the screen" do
       create(:screen_playlist, screen: screen, playlist: playlist)
       delete screen_playlist_path(screen)
-      expect(response).to redirect_to(site_screen_path(site, screen))
+      expect(response).to redirect_to(screen_path(screen))
     end
   end
 
   describe "screen show page" do
     it "shows the assigned playlist" do
       create(:screen_playlist, screen: screen, playlist: playlist)
-      get site_screen_path(site, screen)
+      get screen_path(screen)
       expect(response.body).to include(playlist.name)
     end
 
     it "shows assign link when no playlist" do
-      get site_screen_path(site, screen)
+      get screen_path(screen)
       expect(response.body).to include("Assign Playlist")
     end
   end
