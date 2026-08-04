@@ -19,6 +19,6 @@
     </p>
   <% end %>
 
-  <%= turbo_frame_tag "ad_playlists", src: ad_playlists_path(@ad) do %>
+  <%= turbo_frame_tag "ad_playlists", src: playlist_ads_path(ad_id: @ad.id) do %>
   <% end %>
 </div>

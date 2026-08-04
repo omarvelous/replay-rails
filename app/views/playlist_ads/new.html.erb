@@ -1,0 +1,6 @@
+<%= turbo_frame_tag "modal" do %>
+  <h3 class="font-bold text-lg mb-4">
+    <%= current_playlist ? "Add Ad to #{current_playlist.name}" : "Add to Playlist" %>
+  </h3>
+  <%= render "playlist_ads/form", playlist_ad: @playlist_ad %>
+<% end %>

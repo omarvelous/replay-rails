@@ -1,0 +1,10 @@
+<%= turbo_stream.update (current_playlist ? "playlist_ads" : "ad_playlists") do %>
+  <%= render "playlist_ads/playlist_ads_list",
+      playlist_ads: @playlist_ads,
+      playlist: current_playlist,
+      ad: current_ad %>
+<% end %>
+<%= turbo_stream.update "modal", "" %>
+<%= turbo_stream.update "flash" do %>
+  <%= render "shared/flash" %>
+<% end %>

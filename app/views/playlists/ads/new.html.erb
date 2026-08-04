@@ -1,4 +1,0 @@
-<%= turbo_frame_tag "modal" do %>
-  <h3 class="font-bold text-lg mb-4">Add Ad to <%= @playlist.name %></h3>
-  <%= render "playlists/ads/form", playlist_ad: @playlist_ad, url: playlist_ads_path(@playlist) %>
-<% end %>

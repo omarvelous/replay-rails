@@ -1,0 +1,6 @@
+<%= turbo_frame_tag "modal" do %>
+  <h3 class="font-bold text-lg mb-4">
+    <%= current_listing ? "Add Agent to Listing" : "Add Listing to Agent" %>
+  </h3>
+  <%= render "listing_agents/form", listing_agent: @listing_agent %>
+<% end %>

@@ -14,6 +14,6 @@
     <% if @agent.user %><p>Linked to: <%= @agent.user.first_name %> <%= @agent.user.last_name %></p><% end %>
   </div>
 
-  <%= turbo_frame_tag "agent_listings", src: agent_listings_path(@agent) do %>
+  <%= turbo_frame_tag "agent_listings", src: listing_agents_path(agent_id: @agent.id) do %>
   <% end %>
 </div>

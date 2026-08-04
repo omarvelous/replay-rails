@@ -16,6 +16,6 @@
     <p>Status: <%= @listing.status.capitalize %></p>
   </div>
 
-  <%= turbo_frame_tag "listing_agents", src: listing_agents_path(@listing) do %>
+  <%= turbo_frame_tag "listing_agents", src: listing_agents_path(listing_id: @listing.id) do %>
   <% end %>
 </div>

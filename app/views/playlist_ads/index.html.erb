@@ -1,0 +1,6 @@
+<%= turbo_frame_tag (current_playlist ? "playlist_ads" : "ad_playlists") do %>
+  <%= render "playlist_ads/playlist_ads_list",
+      playlist_ads: @playlist_ads,
+      playlist: current_playlist,
+      ad: current_ad %>
+<% end %>
