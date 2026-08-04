@@ -9,22 +9,22 @@ RSpec.describe "Screen Playlist", type: :request do
 
   before { sign_in(user) }
 
-  describe "GET /sites/:site_id/screens/:screen_id/playlist/new" do
+  describe "GET /screens/:screen_id/playlist/new" do
     it "returns a successful response" do
-      get new_site_screen_playlist_path(site, screen)
+      get new_screen_playlist_path(screen)
       expect(response).to be_successful
     end
   end
 
-  describe "POST /sites/:site_id/screens/:screen_id/playlist" do
+  describe "POST /screens/:screen_id/playlist" do
     it "assigns a playlist to the screen" do
       expect {
-        post site_screen_playlist_path(site, screen), params: { screen_playlist: { playlist_id: playlist.id } }
+        post screen_playlist_path(screen), params: { screen_playlist: { playlist_id: playlist.id } }
       }.to change(screen.screen_playlists, :count).by(1)
     end
 
     it "redirects to the screen" do
-      post site_screen_playlist_path(site, screen), params: { screen_playlist: { playlist_id: playlist.id } }
+      post screen_playlist_path(screen), params: { screen_playlist: { playlist_id: playlist.id } }
       expect(response).to redirect_to(site_screen_path(site, screen))
     end
 
@@ -32,23 +32,23 @@ RSpec.describe "Screen Playlist", type: :request do
       old_playlist = create(:playlist, account: account, status: "published")
       create(:screen_playlist, screen: screen, playlist: old_playlist)
 
-      post site_screen_playlist_path(site, screen), params: { screen_playlist: { playlist_id: playlist.id } }
+      post screen_playlist_path(screen), params: { screen_playlist: { playlist_id: playlist.id } }
       expect(screen.screen_playlists.where(active: true).count).to eq(1)
       expect(screen.screen_playlists.find_by(active: true).playlist).to eq(playlist)
     end
   end
 
-  describe "DELETE /sites/:site_id/screens/:screen_id/playlist" do
+  describe "DELETE /screens/:screen_id/playlist" do
     it "removes the playlist from the screen" do
       create(:screen_playlist, screen: screen, playlist: playlist)
       expect {
-        delete site_screen_playlist_path(site, screen)
+        delete screen_playlist_path(screen)
       }.to change(screen.screen_playlists, :count).by(-1)
     end
 
     it "redirects to the screen" do
       create(:screen_playlist, screen: screen, playlist: playlist)
-      delete site_screen_playlist_path(site, screen)
+      delete screen_playlist_path(screen)
       expect(response).to redirect_to(site_screen_path(site, screen))
     end
   end
@@ -68,9 +68,8 @@ RSpec.describe "Screen Playlist", type: :request do
 
   describe "tenant isolation" do
     it "returns 404 for another account's screen" do
-      other_site = create(:site)
-      other_screen = create(:screen, site: other_site)
-      get new_site_screen_playlist_path(other_site, other_screen)
+      other_screen = create(:screen)
+      get new_screen_playlist_path(other_screen)
       expect(response).to have_http_status(:not_found)
     end
   end

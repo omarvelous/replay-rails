@@ -1,5 +1,5 @@
 <%= turbo_stream.update "screen_playlist" do %>
-  <%= render "screens/playlist/playlist_section", screen: @screen, site: @site %>
+  <%= render "screens/playlist/playlist_section", screen: @screen %>
 <% end %>
 <%= turbo_stream.update "modal", "" %>
 <%= turbo_stream.update "flash" do %>

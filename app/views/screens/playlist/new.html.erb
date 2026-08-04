@@ -1,7 +1,7 @@
 <%= turbo_frame_tag "modal" do %>
   <h3 class="font-bold text-lg mb-4">Assign Playlist to <%= @screen.name %></h3>
 
-  <%= form_with url: site_screen_playlist_path(@site, @screen), method: :post, class: "contents" do |form| %>
+  <%= form_with url: screen_playlist_path(@screen), method: :post, class: "contents" do |form| %>
     <fieldset class="fieldset my-5">
       <%= form.label :playlist_id, "Playlist", class: "fieldset-label" %>
       <%= form.select :playlist_id,

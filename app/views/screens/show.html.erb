@@ -12,6 +12,6 @@
   <p class="text-base-content/60">Site: <%= link_to @site.name, site_path(@site), class: "link" %></p>
 
   <%= turbo_frame_tag "screen_playlist" do %>
-    <%= render "screens/playlist/playlist_section", screen: @screen, site: @site %>
+    <%= render "screens/playlist/playlist_section", screen: @screen %>
   <% end %>
 </div>
