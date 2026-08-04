@@ -20,7 +20,7 @@
             <tr>
               <td><%= link_to playlist.name, playlist, class: "link" %></td>
               <td>
-                <span class="badge badge-<%= playlist.status == 'published' ? 'success' : 'ghost' %>">
+                <span class="badge <%= playlist.status == 'published' ? 'badge-success' : 'badge-neutral' %>">
                   <%= playlist.status.capitalize %>
                 </span>
               </td>

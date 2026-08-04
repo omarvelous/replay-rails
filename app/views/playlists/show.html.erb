@@ -10,7 +10,7 @@
   </div>
 
   <p class="mb-5">
-    <span class="badge badge-<%= @playlist.status == 'published' ? 'success' : 'ghost' %>">
+    <span class="badge <%= @playlist.status == 'published' ? 'badge-success' : 'badge-neutral' %>">
       <%= @playlist.status.capitalize %>
     </span>
   </p>
