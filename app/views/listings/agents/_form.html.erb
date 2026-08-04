@@ -27,6 +27,6 @@
 
   <div class="flex items-center gap-4">
     <%= form.submit class: "btn btn-primary" %>
-    <%= link_to "Cancel", listing_path(listing_agent.listing), class: "link link-hover text-sm" %>
+    <button type="button" class="link link-hover text-sm" data-action="click->modal#close">Cancel</button>
   </div>
 <% end %>

@@ -39,19 +39,20 @@
     <% end %>
 
     <main class="container mx-auto mt-10 px-5 flex flex-col">
-      <% if flash[:notice] %>
-        <div class="alert alert-success mb-5" id="notice">
-          <span><%= flash[:notice] %></span>
-        </div>
-      <% end %>
-
-      <% if flash[:alert] %>
-        <div class="alert alert-error mb-5" id="alert">
-          <span><%= flash[:alert] %></span>
-        </div>
-      <% end %>
+      <div id="flash">
+        <%= render "shared/flash" %>
+      </div>
 
       <%= yield %>
     </main>
+
+    <dialog class="modal" data-controller="modal" data-modal-target="dialog">
+      <div class="modal-box">
+        <%= turbo_frame_tag "modal" %>
+      </div>
+      <form method="dialog" class="modal-backdrop">
+        <button>close</button>
+      </form>
+    </dialog>
   </body>
 </html>

@@ -1,0 +1,7 @@
+<%= turbo_stream.update "listing_agents" do %>
+  <%= render "listings/agents/agents_list", listing: @listing %>
+<% end %>
+<%= turbo_stream.update "modal", "" %>
+<%= turbo_stream.update "flash" do %>
+  <%= render "shared/flash" %>
+<% end %>

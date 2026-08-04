@@ -7,7 +7,7 @@ Rails.application.routes.draw do
     end
   end
   resources :listings do
-    resources :agents, controller: "listings/agents", only: %i[ new create edit update destroy ]
+    resources :agents, controller: "listings/agents", only: %i[ index new create edit update destroy ]
   end
   resources :agents
   resources :ads do
