@@ -1,7 +1,8 @@
-<div class="w-full h-screen flex items-center justify-center relative" data-controller="slideshow" data-slideshow-interval-value="10">
+<div class="w-full h-screen flex items-center justify-center relative" data-controller="slideshow">
   <% if @playlist_ads.any? %>
     <% @playlist_ads.each_with_index do |pa, index| %>
       <div class="slide absolute inset-0 flex flex-col items-center justify-center text-center p-12 transition-opacity duration-700 <%= index == 0 ? 'opacity-100' : 'opacity-0' %>"
+           style="z-index: 1;"
            data-slideshow-target="slide"
            data-duration="<%= pa.duration %>">
         <h1 class="text-6xl font-bold text-white mb-6"><%= pa.ad.headline %></h1>
@@ -28,5 +29,29 @@
     <% end %>
   <% else %>
     <p class="text-2xl text-white/50">No ads in this playlist.</p>
+  <% end %>
+
+  <%# Edit ad link — one per slide, visibility toggles with the slide %>
+  <% @playlist_ads.each_with_index do |pa, index| %>
+    <a href="<%= edit_ad_path(pa.ad) %>"
+       class="btn btn-ghost btn-sm text-white/30 hover:text-white/80"
+       style="position: absolute; bottom: 16px; left: 16px; z-index: 10; <%= index == 0 ? '' : 'display: none;' %>"
+       data-slideshow-target="editLink"
+       target="_blank">Edit Ad</a>
+  <% end %>
+
+  <%# Progress bar %>
+  <div style="position: absolute; bottom: 0; left: 0; width: 100%; height: 4px; background: rgba(255,255,255,0.1); z-index: 10;">
+    <div style="height: 100%; width: 0%; background: rgba(255,255,255,0.5);" data-slideshow-target="progress"></div>
+  </div>
+
+  <%# Nav controls %>
+  <% if @playlist_ads.size > 1 %>
+    <div style="position: absolute; bottom: 16px; right: 16px; display: flex; gap: 8px; z-index: 10;">
+      <button class="btn btn-ghost btn-sm text-white/30 hover:text-white/80"
+              data-action="click->slideshow#previous" aria-label="Previous">&#8592; Prev</button>
+      <button class="btn btn-ghost btn-sm text-white/30 hover:text-white/80"
+              data-action="click->slideshow#next" aria-label="Next">Next &#8594;</button>
+    </div>
   <% end %>
 </div>
