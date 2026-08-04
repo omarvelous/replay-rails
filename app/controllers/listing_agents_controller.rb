@@ -17,7 +17,7 @@ class ListingAgentsController < ApplicationController
   def create
     @listing_agent = ListingAgent.new(listing_agent_params)
 
-    if valid_tenant?(@listing_agent) && @listing_agent.save
+    if @listing_agent.save
       respond_to do |format|
         format.turbo_stream do
           flash.now[:notice] = "Agent and listing linked."
@@ -91,13 +91,6 @@ class ListingAgentsController < ApplicationController
       )
       @current_listing = @listing_agent.listing
       @current_agent = @listing_agent.agent
-    end
-
-    def valid_tenant?(listing_agent)
-      listing_agent.listing_id.present? &&
-        listing_agent.agent_id.present? &&
-        current_account.listings.exists?(listing_agent.listing_id) &&
-        current_account.agents.exists?(listing_agent.agent_id)
     end
 
     def redirect_target

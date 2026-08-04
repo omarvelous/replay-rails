@@ -19,7 +19,7 @@ class PlaylistAdsController < ApplicationController
   def create
     @playlist_ad = PlaylistAd.new(playlist_ad_params)
 
-    if valid_tenant?(@playlist_ad) && @playlist_ad.save
+    if @playlist_ad.save
       respond_to do |format|
         format.turbo_stream do
           flash.now[:notice] = "Ad and playlist linked."
@@ -93,13 +93,6 @@ class PlaylistAdsController < ApplicationController
       )
       @current_playlist = @playlist_ad.playlist
       @current_ad = @playlist_ad.ad
-    end
-
-    def valid_tenant?(playlist_ad)
-      playlist_ad.playlist_id.present? &&
-        playlist_ad.ad_id.present? &&
-        current_account.playlists.exists?(playlist_ad.playlist_id) &&
-        current_account.ads.exists?(playlist_ad.ad_id)
     end
 
     def redirect_target
