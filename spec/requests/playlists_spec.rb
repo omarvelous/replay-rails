@@ -147,4 +147,30 @@ RSpec.describe "Playlists", type: :request do
       expect(response).to redirect_to(playlists_path)
     end
   end
+
+  describe "GET /playlists/:id/preview" do
+    it "returns a successful response" do
+      playlist = create(:playlist, account: account)
+      get preview_playlist_path(playlist)
+      expect(response).to be_successful
+    end
+
+    it "includes ad headlines in order" do
+      playlist = create(:playlist, account: account)
+      ad1 = create(:ad, account: account, headline: "First Slide")
+      ad2 = create(:ad, account: account, headline: "Second Slide")
+      create(:playlist_ad, playlist: playlist, ad: ad1, position: 1, duration: 10)
+      create(:playlist_ad, playlist: playlist, ad: ad2, position: 2, duration: 15)
+
+      get preview_playlist_path(playlist)
+      expect(response.body).to include("First Slide")
+      expect(response.body).to include("Second Slide")
+    end
+
+    it "returns 404 for another account's playlist" do
+      other_playlist = create(:playlist)
+      get preview_playlist_path(other_playlist)
+      expect(response).to have_http_status(:not_found)
+    end
+  end
 end

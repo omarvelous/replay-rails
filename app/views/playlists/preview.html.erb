@@ -1,0 +1,25 @@
+<div class="w-full h-screen flex items-center justify-center relative" data-controller="slideshow" data-slideshow-interval-value="10">
+  <% if @playlist_ads.any? %>
+    <% @playlist_ads.each_with_index do |pa, index| %>
+      <div class="slide absolute inset-0 flex flex-col items-center justify-center text-center p-12 transition-opacity duration-700 <%= index == 0 ? 'opacity-100' : 'opacity-0' %>"
+           data-slideshow-target="slide"
+           data-duration="<%= pa.duration %>">
+        <h1 class="text-6xl font-bold text-white mb-6"><%= pa.ad.headline %></h1>
+        <% if pa.ad.body.present? %>
+          <p class="text-2xl text-white/70 max-w-2xl"><%= pa.ad.body %></p>
+        <% end %>
+        <% if pa.ad.listing %>
+          <div class="mt-8 text-xl text-white/50">
+            <p><%= pa.ad.listing.address %></p>
+            <p class="text-3xl font-bold text-white mt-2"><%= number_to_currency(pa.ad.listing.price, precision: 0) %></p>
+            <p class="mt-1">
+              <%= [pa.ad.listing.beds&.to_s&.+((" bed")), pa.ad.listing.baths&.to_s&.+((" bath")), pa.ad.listing.sqft ? "#{number_with_delimiter(pa.ad.listing.sqft)} sqft" : nil].compact.join(" · ") %>
+            </p>
+          </div>
+        <% end %>
+      </div>
+    <% end %>
+  <% else %>
+    <p class="text-2xl text-white/50">No ads in this playlist.</p>
+  <% end %>
+</div>

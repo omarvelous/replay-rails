@@ -7,7 +7,11 @@ Rails.application.routes.draw do
   resources :listings
   resources :agents
   resources :ads
-  resources :playlists
+  resources :playlists do
+    member do
+      get :preview
+    end
+  end
   resource :session
   resources :passwords, param: :token
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html

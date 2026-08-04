@@ -1,5 +1,5 @@
 class PlaylistsController < ApplicationController
-  before_action :set_playlist, only: %i[ show edit update destroy ]
+  before_action :set_playlist, only: %i[ show edit update destroy preview ]
 
   def index
     @playlists = current_account.playlists.order(created_at: :desc)
@@ -31,6 +31,11 @@ class PlaylistsController < ApplicationController
     else
       render :edit, status: :unprocessable_entity
     end
+  end
+
+  def preview
+    @playlist_ads = @playlist.playlist_ads.includes(:ad)
+    render layout: "preview"
   end
 
   def destroy
