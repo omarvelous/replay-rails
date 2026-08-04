@@ -1,0 +1,6 @@
+<%= turbo_stream.update "ad_playlists" do %>
+  <%= render "ads/playlists/playlists_list", ad: @ad %>
+<% end %>
+<%= turbo_stream.update "flash" do %>
+  <%= render "shared/flash" %>
+<% end %>

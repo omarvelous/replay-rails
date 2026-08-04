@@ -16,6 +16,7 @@ Rails.application.routes.draw do
     member do
       get :preview
     end
+    resources :playlists, controller: "ads/playlists", only: %i[ index destroy ]
   end
   resources :playlists do
     member do
