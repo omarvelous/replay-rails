@@ -3,6 +3,10 @@ module Playlists
     before_action :set_playlist
     before_action :set_playlist_ad, only: %i[ edit update destroy ]
 
+    def index
+      @playlist_ads = @playlist.playlist_ads.includes(:ad)
+    end
+
     def new
       next_position = (@playlist.playlist_ads.maximum(:position) || 0) + 1
       @playlist_ad = @playlist.playlist_ads.build(position: next_position, duration: 10)
@@ -12,7 +16,10 @@ module Playlists
       @playlist_ad = @playlist.playlist_ads.build(playlist_ad_params)
 
       if @playlist_ad.save
-        redirect_to @playlist, notice: "Ad was added to the playlist."
+        respond_to do |format|
+          format.turbo_stream { flash.now[:notice] = "Ad was added to the playlist." }
+          format.html { redirect_to @playlist, notice: "Ad was added to the playlist." }
+        end
       else
         render :new, status: :unprocessable_entity
       end
@@ -23,7 +30,13 @@ module Playlists
 
     def update
       if @playlist_ad.update(playlist_ad_params)
-        redirect_to @playlist, notice: "Playlist ad was updated."
+        respond_to do |format|
+          format.turbo_stream do
+            flash.now[:notice] = "Playlist ad was updated."
+            render "playlists/ads/create"
+          end
+          format.html { redirect_to @playlist, notice: "Playlist ad was updated." }
+        end
       else
         render :edit, status: :unprocessable_entity
       end
@@ -31,7 +44,13 @@ module Playlists
 
     def destroy
       @playlist_ad.destroy
-      redirect_to @playlist, notice: "Ad was removed from the playlist."
+      respond_to do |format|
+        format.turbo_stream do
+          flash.now[:notice] = "Ad was removed from the playlist."
+          render "playlists/ads/create"
+        end
+        format.html { redirect_to @playlist, notice: "Ad was removed from the playlist." }
+      end
     end
 
     private

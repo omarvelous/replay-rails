@@ -1,5 +1,5 @@
-<div class="mx-auto md:w-2/3 w-full">
-  <h1 class="font-bold text-4xl">Assign Playlist to <%= @screen.name %></h1>
+<%= turbo_frame_tag "modal" do %>
+  <h3 class="font-bold text-lg mb-4">Assign Playlist to <%= @screen.name %></h3>
 
   <%= form_with url: site_screen_playlist_path(@site, @screen), method: :post, class: "contents" do |form| %>
     <fieldset class="fieldset my-5">
@@ -13,7 +13,7 @@
 
     <div class="flex items-center gap-4">
       <%= form.submit "Assign Playlist", class: "btn btn-primary" %>
-      <%= link_to "Cancel", site_screen_path(@site, @screen), class: "link link-hover text-sm" %>
+      <button type="button" class="link link-hover text-sm" data-action="click->modal#close">Cancel</button>
     </div>
   <% end %>
-</div>
+<% end %>

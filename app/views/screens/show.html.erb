@@ -11,28 +11,7 @@
   <p class="text-base-content/60">Orientation: <%= @screen.orientation.capitalize %></p>
   <p class="text-base-content/60">Site: <%= link_to @site.name, site_path(@site), class: "link" %></p>
 
-  <% active_assignment = @screen.screen_playlists.includes(:playlist).find_by(active: true) %>
-
-  <div class="flex justify-between items-center mb-3 mt-8">
-    <h2 class="font-bold text-2xl">Playlist</h2>
-    <% if active_assignment %>
-      <%= link_to "Change", new_site_screen_playlist_path(@site, @screen), class: "btn btn-ghost btn-sm" %>
-    <% else %>
-      <%= link_to "Assign Playlist", new_site_screen_playlist_path(@site, @screen), class: "btn btn-primary btn-sm" %>
-    <% end %>
-  </div>
-
-  <% if active_assignment %>
-    <div class="flex items-center justify-between p-4 bg-base-200 rounded-lg">
-      <div>
-        <p class="font-semibold"><%= link_to active_assignment.playlist.name, playlist_path(active_assignment.playlist), class: "link" %></p>
-        <p class="text-sm text-base-content/60"><%= active_assignment.playlist.playlist_ads.size %> ads</p>
-      </div>
-      <%= button_to "Remove", site_screen_playlist_path(@site, @screen), method: :delete,
-          class: "btn btn-error btn-sm",
-          data: { turbo_confirm: "Remove playlist from this screen?" } %>
-    </div>
-  <% else %>
-    <p class="text-base-content/60">No playlist assigned to this screen.</p>
+  <%= turbo_frame_tag "screen_playlist" do %>
+    <%= render "screens/playlist/playlist_section", screen: @screen, site: @site %>
   <% end %>
 </div>

@@ -1,0 +1,24 @@
+<% active_assignment = screen.screen_playlists.includes(:playlist).find_by(active: true) %>
+
+<div class="flex justify-between items-center mb-3 mt-8">
+  <h2 class="font-bold text-2xl">Playlist</h2>
+  <% if active_assignment %>
+    <%= link_to "Change", new_site_screen_playlist_path(site, screen), class: "btn btn-ghost btn-sm", data: { turbo_frame: "modal" } %>
+  <% else %>
+    <%= link_to "Assign Playlist", new_site_screen_playlist_path(site, screen), class: "btn btn-primary btn-sm", data: { turbo_frame: "modal" } %>
+  <% end %>
+</div>
+
+<% if active_assignment %>
+  <div class="flex items-center justify-between p-4 bg-base-200 rounded-lg">
+    <div>
+      <p class="font-semibold"><%= link_to active_assignment.playlist.name, playlist_path(active_assignment.playlist), class: "link", data: { turbo_frame: "_top" } %></p>
+      <p class="text-sm text-base-content/60"><%= active_assignment.playlist.playlist_ads.size %> ads</p>
+    </div>
+    <%= button_to "Remove", site_screen_playlist_path(site, screen), method: :delete,
+        class: "btn btn-error btn-sm",
+        data: { turbo_confirm: "Remove playlist from this screen?" } %>
+  </div>
+<% else %>
+  <p class="text-base-content/60">No playlist assigned to this screen.</p>
+<% end %>

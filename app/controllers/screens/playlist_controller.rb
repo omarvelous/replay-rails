@@ -11,12 +11,21 @@ module Screens
       @screen.screen_playlists.destroy_all
       playlist = current_account.playlists.find(params[:screen_playlist][:playlist_id])
       @screen.screen_playlists.create!(playlist: playlist, active: true)
-      redirect_to site_screen_path(@site, @screen), notice: "Playlist assigned to screen."
+      respond_to do |format|
+        format.turbo_stream { flash.now[:notice] = "Playlist assigned to screen." }
+        format.html { redirect_to site_screen_path(@site, @screen), notice: "Playlist assigned to screen." }
+      end
     end
 
     def destroy
       @screen.screen_playlists.destroy_all
-      redirect_to site_screen_path(@site, @screen), notice: "Playlist removed from screen."
+      respond_to do |format|
+        format.turbo_stream do
+          flash.now[:notice] = "Playlist removed from screen."
+          render "screens/playlist/create"
+        end
+        format.html { redirect_to site_screen_path(@site, @screen), notice: "Playlist removed from screen." }
+      end
     end
 
     private
