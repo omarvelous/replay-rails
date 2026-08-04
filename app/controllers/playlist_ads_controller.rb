@@ -87,10 +87,7 @@ class PlaylistAdsController < ApplicationController
     end
 
     def set_playlist_ad
-      @playlist_ad = PlaylistAd.joins(playlist: :account).find_by!(
-        id: params[:id],
-        accounts: { id: current_account.id }
-      )
+      @playlist_ad = current_account.playlist_ads.find(params[:id])
       @current_playlist = @playlist_ad.playlist
       @current_ad = @playlist_ad.ad
     end

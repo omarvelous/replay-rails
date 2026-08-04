@@ -34,7 +34,7 @@ module Screens
       end
 
       def set_screen
-        @screen = Screen.joins(:site).find_by!(id: params[:screen_id], sites: { account_id: current_account.id })
+        @screen = current_account.screens.find(params[:screen_id])
         @site = @screen.site
       end
   end

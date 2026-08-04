@@ -85,10 +85,7 @@ class ListingAgentsController < ApplicationController
     end
 
     def set_listing_agent
-      @listing_agent = ListingAgent.joins(:listing).find_by!(
-        id: params[:id],
-        listings: { account_id: current_account.id }
-      )
+      @listing_agent = current_account.listing_agents.find(params[:id])
       @current_listing = @listing_agent.listing
       @current_agent = @listing_agent.agent
     end
