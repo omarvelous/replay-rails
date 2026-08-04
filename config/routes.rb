@@ -2,7 +2,7 @@ Rails.application.routes.draw do
   root "home#index"
   resources :accounts, only: [ :new, :create ]
   resources :sites do
-    resources :screens
+    resources :screens, controller: "sites/screens"
   end
   resources :screens, only: [] do
     resource :playlist, controller: "screens/playlist", only: %i[ new create destroy ]
