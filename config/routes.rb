@@ -4,7 +4,9 @@ Rails.application.routes.draw do
   resources :sites do
     resources :screens
   end
-  resources :listings
+  resources :listings do
+    resources :agents, controller: "listings/agents", only: %i[ new create edit update destroy ]
+  end
   resources :agents
   resources :ads
   resources :playlists do
