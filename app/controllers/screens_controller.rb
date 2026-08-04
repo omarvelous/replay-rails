@@ -54,6 +54,6 @@ class ScreensController < ApplicationController
     end
 
     def screen_params
-      params.require(:screen).permit(:name, :orientation, playlist_ids: [])
+      params.require(:screen).permit(:name, :orientation)
     end
 end

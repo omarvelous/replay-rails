@@ -116,28 +116,6 @@ RSpec.describe "Screens", type: :request do
     end
   end
 
-  describe "playlist assignment" do
-    let(:screen) { create(:screen, site: site) }
-    let(:playlist) { create(:playlist, account: account, status: "published") }
-
-    it "assigns a playlist to a screen" do
-      patch site_screen_path(site, screen), params: { screen: { playlist_ids: [ playlist.id ] } }
-      expect(screen.reload.playlists).to include(playlist)
-    end
-
-    it "removes a playlist from a screen" do
-      create(:screen_playlist, screen: screen, playlist: playlist)
-      patch site_screen_path(site, screen), params: { screen: { playlist_ids: [ "" ] } }
-      expect(screen.reload.playlists).to be_empty
-    end
-
-    it "shows assigned playlist on the screen page" do
-      create(:screen_playlist, screen: screen, playlist: playlist)
-      get site_screen_path(site, screen)
-      expect(response.body).to include(playlist.name)
-    end
-  end
-
   describe "tenant isolation" do
     it "returns 404 for a screen on another account's site" do
       other_site = create(:site)
