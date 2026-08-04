@@ -129,4 +129,36 @@ RSpec.describe "Ads", type: :request do
       expect(response).to redirect_to(ads_path)
     end
   end
+
+  describe "GET /ads/:id/preview" do
+    it "returns a successful response" do
+      ad = create(:ad, account: account, headline: "Preview Me")
+      get preview_ad_path(ad)
+      expect(response).to be_successful
+      expect(response.body).to include("Preview Me")
+    end
+
+    it "includes listing details when linked" do
+      listing = create(:listing, account: account, address: "123 Main St")
+      ad = create(:ad, account: account, listing: listing)
+      get preview_ad_path(ad)
+      expect(response.body).to include("123 Main St")
+    end
+
+    it "includes agent info from linked listing" do
+      listing = create(:listing, account: account)
+      agent = create(:agent, account: account, name: "Jane Broker")
+      create(:listing_agent, listing: listing, agent: agent)
+      ad = create(:ad, account: account, listing: listing)
+
+      get preview_ad_path(ad)
+      expect(response.body).to include("Jane Broker")
+    end
+
+    it "returns 404 for another account's ad" do
+      other_ad = create(:ad)
+      get preview_ad_path(other_ad)
+      expect(response).to have_http_status(:not_found)
+    end
+  end
 end

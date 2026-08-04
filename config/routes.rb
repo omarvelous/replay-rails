@@ -8,7 +8,11 @@ Rails.application.routes.draw do
     resources :agents, controller: "listings/agents", only: %i[ new create edit update destroy ]
   end
   resources :agents
-  resources :ads
+  resources :ads do
+    member do
+      get :preview
+    end
+  end
   resources :playlists do
     member do
       get :preview

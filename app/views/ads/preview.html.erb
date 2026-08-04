@@ -1,0 +1,26 @@
+<div class="w-full h-screen flex flex-col items-center justify-center text-center p-12">
+  <h1 class="text-6xl font-bold text-white mb-6"><%= @ad.headline %></h1>
+  <% if @ad.body.present? %>
+    <p class="text-2xl text-white/70 max-w-2xl"><%= @ad.body %></p>
+  <% end %>
+  <% if @ad.listing %>
+    <div class="mt-8 text-xl text-white/50">
+      <p><%= @ad.listing.address %></p>
+      <p class="text-3xl font-bold text-white mt-2"><%= number_to_currency(@ad.listing.price, precision: 0) %></p>
+      <p class="mt-1">
+        <%= [
+          @ad.listing.beds&.to_s&.+(" bed"),
+          @ad.listing.baths&.to_s&.+(" bath"),
+          @ad.listing.sqft ? "#{number_with_delimiter(@ad.listing.sqft)} sqft" : nil
+        ].compact.join(" · ") %>
+      </p>
+      <% if @ad.listing.listing_agents.any? %>
+        <div class="mt-4 text-lg text-white/60">
+          <% @ad.listing.listing_agents.includes(:agent).each do |la| %>
+            <p><%= la.agent.name %> · <%= la.agent.phone || la.agent.email %></p>
+          <% end %>
+        </div>
+      <% end %>
+    </div>
+  <% end %>
+</div>

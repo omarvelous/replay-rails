@@ -1,5 +1,5 @@
 class AdsController < ApplicationController
-  before_action :set_ad, only: %i[ show edit update destroy ]
+  before_action :set_ad, only: %i[ show edit update destroy preview ]
 
   def index
     @ads = current_account.ads.order(created_at: :desc)
@@ -31,6 +31,10 @@ class AdsController < ApplicationController
     else
       render :edit, status: :unprocessable_entity
     end
+  end
+
+  def preview
+    render layout: "preview"
   end
 
   def destroy
