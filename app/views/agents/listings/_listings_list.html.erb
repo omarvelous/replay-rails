@@ -1,0 +1,33 @@
+<div class="flex justify-between items-center mb-3 mt-8">
+  <h2 class="font-bold text-2xl">Listings</h2>
+</div>
+
+<% listing_agents = agent.listing_agents.includes(:listing) %>
+<% if listing_agents.any? %>
+  <div class="overflow-x-auto">
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Address</th>
+          <th>Role</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        <% listing_agents.each do |la| %>
+          <tr>
+            <td><%= link_to la.listing.address, listing_path(la.listing), class: "link", data: { turbo_frame: "_top" } %></td>
+            <td><%= la.role.titleize %></td>
+            <td class="text-right">
+              <%= button_to "Remove", agent_listing_path(agent, la), method: :delete,
+                  class: "btn btn-error btn-xs",
+                  data: { turbo_confirm: "Remove this listing?" } %>
+            </td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+<% else %>
+  <p class="text-base-content/60">No listings assigned to this agent yet.</p>
+<% end %>

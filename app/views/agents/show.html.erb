@@ -13,4 +13,7 @@
     <% if @agent.phone.present? %><p><%= @agent.phone %></p><% end %>
     <% if @agent.user %><p>Linked to: <%= @agent.user.first_name %> <%= @agent.user.last_name %></p><% end %>
   </div>
+
+  <%= turbo_frame_tag "agent_listings", src: agent_listings_path(@agent) do %>
+  <% end %>
 </div>

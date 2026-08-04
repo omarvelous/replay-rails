@@ -9,7 +9,9 @@ Rails.application.routes.draw do
   resources :listings do
     resources :agents, controller: "listings/agents", only: %i[ index new create edit update destroy ]
   end
-  resources :agents
+  resources :agents do
+    resources :listings, controller: "agents/listings", only: %i[ index destroy ]
+  end
   resources :ads do
     member do
       get :preview
