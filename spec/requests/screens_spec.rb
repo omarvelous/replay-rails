@@ -7,44 +7,51 @@ RSpec.describe "Screens", type: :request do
 
   before { sign_in(user) }
 
-  # --- Collection (nested under /sites/:site_id) ---
-
-  describe "GET /sites/:site_id/screens" do
+  describe "GET /screens" do
     it "returns a successful response" do
-      get site_screens_path(site)
+      get screens_path
       expect(response).to be_successful
     end
 
-    it "lists screens for the site" do
-      screen = create(:screen, site: site, name: "Lobby Display")
+    it "lists all screens for the account" do
+      create(:screen, site: site, name: "Lobby Display")
+      other_account_screen = create(:screen)
+
+      get screens_path
+      expect(response.body).to include("Lobby Display")
+      expect(response.body).not_to include(other_account_screen.name)
+    end
+
+    it "filters by site_id when provided" do
+      create(:screen, site: site, name: "Lobby Display")
       other_site = create(:site, account: account)
       create(:screen, site: other_site, name: "Other Display")
 
-      get site_screens_path(site)
+      get screens_path(site_id: site.id)
       expect(response.body).to include("Lobby Display")
       expect(response.body).not_to include("Other Display")
     end
   end
 
-  describe "GET /sites/:site_id/screens/new" do
+  describe "GET /screens/new" do
     it "returns a successful response" do
-      get new_site_screen_path(site)
+      get new_screen_path(site_id: site.id)
       expect(response).to be_successful
     end
   end
 
-  describe "POST /sites/:site_id/screens" do
-    let(:valid_params) { { screen: { name: "Window Display", orientation: "landscape" } } }
+  describe "POST /screens" do
+    let(:valid_params) { { screen: { site_id: site.id, name: "Window Display", orientation: "landscape" } } }
 
     context "with valid params" do
       it "creates a screen scoped to the site" do
         expect {
-          post site_screens_path(site), params: valid_params
+          post screens_path, params: valid_params
         }.to change(site.screens, :count).by(1)
       end
 
       it "redirects to the screen" do
-        post site_screens_path(site), params: valid_params
+        post screens_path, params: valid_params
         expect(response).to redirect_to(screen_path(Screen.last))
       end
     end
@@ -52,18 +59,16 @@ RSpec.describe "Screens", type: :request do
     context "with invalid params" do
       it "does not create a screen" do
         expect {
-          post site_screens_path(site), params: { screen: { name: "" } }
+          post screens_path, params: { screen: { site_id: site.id, name: "" } }
         }.not_to change(Screen, :count)
       end
 
       it "returns 422" do
-        post site_screens_path(site), params: { screen: { name: "" } }
+        post screens_path, params: { screen: { site_id: site.id, name: "" } }
         expect(response).to have_http_status(:unprocessable_entity)
       end
     end
   end
-
-  # --- Member (flat at /screens/:id) ---
 
   describe "GET /screens/:id" do
     it "shows the screen" do

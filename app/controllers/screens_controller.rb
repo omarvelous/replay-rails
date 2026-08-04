@@ -1,7 +1,29 @@
 class ScreensController < ApplicationController
-  before_action :set_screen
+  before_action :set_screen, only: %i[ show edit update destroy ]
+
+  def index
+    @screens = scope.order(:name)
+  end
 
   def show
+  end
+
+  def new
+    @screen = scope.build
+  end
+
+  def create
+    @site = current_account.sites.find(params[:screen][:site_id])
+    @screen = @site.screens.build(screen_params)
+
+    if @screen.save
+      respond_to do |format|
+        format.turbo_stream { flash.now[:notice] = "Screen was successfully created." }
+        format.html { redirect_to @screen, notice: "Screen was successfully created." }
+      end
+    else
+      render :new, status: :unprocessable_entity
+    end
   end
 
   def edit
@@ -27,8 +49,17 @@ class ScreensController < ApplicationController
       Current.user.account
     end
 
+    def current_site
+      @current_site ||= current_account.sites.find(params[:site_id]) if params[:site_id]
+    end
+    helper_method :current_site
+
+    def scope
+      current_site&.screens || current_account.screens
+    end
+
     def set_screen
-      @screen = Screen.joins(:site).find_by!(id: params[:id], sites: { account_id: current_account.id })
+      @screen = current_account.screens.find(params[:id])
       @site = @screen.site
     end
 

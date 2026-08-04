@@ -1,0 +1,38 @@
+<% if current_site %>
+  <%# Filtered by site — rendered inside a Turbo Frame on the site show page %>
+  <%= turbo_frame_tag "site_screens" do %>
+    <%= render "screens/screens_list", site: current_site %>
+  <% end %>
+<% else %>
+  <%# All screens for the account %>
+  <div class="mx-auto md:w-2/3 w-full">
+    <div class="flex justify-between items-center mb-5">
+      <h1 class="font-bold text-4xl">All Screens</h1>
+    </div>
+
+    <% if @screens.any? %>
+      <div class="overflow-x-auto">
+        <table class="table">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Site</th>
+              <th>Orientation</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% @screens.includes(:site).each do |screen| %>
+              <tr>
+                <td><%= link_to screen.name, screen_path(screen), class: "link" %></td>
+                <td><%= link_to screen.site.name, site_path(screen.site), class: "link" %></td>
+                <td><%= screen.orientation.capitalize %></td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+      </div>
+    <% else %>
+      <p class="text-base-content/60">No screens yet.</p>
+    <% end %>
+  </div>
+<% end %>

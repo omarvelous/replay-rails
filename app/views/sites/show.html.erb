@@ -12,6 +12,6 @@
     <p class="text-base-content/60 mb-5"><%= @site.address %></p>
   <% end %>
 
-  <%= turbo_frame_tag "site_screens", src: site_screens_path(@site) do %>
+  <%= turbo_frame_tag "site_screens", src: screens_path(site_id: @site.id) do %>
   <% end %>
 </div>
