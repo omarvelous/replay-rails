@@ -40,3 +40,5 @@
 # Claude Code
 /.claude/skills/
 /.claude/settings.local.json
+
+/.tailwindplus-downloader-session.json
