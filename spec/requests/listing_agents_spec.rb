@@ -8,96 +8,103 @@ RSpec.describe "ListingAgents", type: :request do
 
   before { sign_in(user) }
 
-  describe "GET /listing_agents (from listing)" do
-    it "returns agents for a listing" do
-      create(:listing_agent, listing: listing, agent: agent)
-      get listing_agents_path(listing_id: listing.id)
-      expect(response).to be_successful
-      expect(response.body).to include(agent.name)
+  describe "from listing context" do
+    describe "GET /listings/:id/listing_agents" do
+      it "returns agents for a listing" do
+        create(:listing_agent, listing: listing, agent: agent)
+        get listing_listing_agents_path(listing)
+        expect(response).to be_successful
+        expect(response.body).to include(agent.name)
+      end
     end
-  end
 
-  describe "GET /listing_agents (from agent)" do
-    it "returns listings for an agent" do
-      create(:listing_agent, listing: listing, agent: agent)
-      get listing_agents_path(agent_id: agent.id)
-      expect(response).to be_successful
-      expect(response.body).to include(listing.address)
+    describe "GET /listings/:id/listing_agents/new" do
+      it "returns a successful response" do
+        get new_listing_listing_agent_path(listing)
+        expect(response).to be_successful
+      end
     end
-  end
 
-  describe "GET /listing_agents/new" do
-    it "returns a successful response with listing context" do
-      get new_listing_agent_path(listing_id: listing.id)
-      expect(response).to be_successful
-    end
-  end
-
-  describe "POST /listing_agents" do
-    let(:valid_params) { { listing_agent: { listing_id: listing.id, agent_id: agent.id, role: "listing_agent" } } }
-
-    context "with valid params" do
+    describe "POST /listings/:id/listing_agents" do
       it "creates a listing agent" do
         expect {
-          post listing_agents_path, params: valid_params
+          post listing_listing_agents_path(listing), params: { listing_agent: { agent_id: agent.id, role: "listing_agent" } }
         }.to change(ListingAgent, :count).by(1)
       end
 
       it "redirects to the listing" do
-        post listing_agents_path(listing_id: listing.id), params: valid_params
+        post listing_listing_agents_path(listing), params: { listing_agent: { agent_id: agent.id, role: "listing_agent" } }
         expect(response).to redirect_to(listing_path(listing))
       end
-    end
 
-    context "with invalid params" do
       it "returns 422 when agent is missing" do
-        post listing_agents_path, params: { listing_agent: { listing_id: listing.id, agent_id: "", role: "listing_agent" } }
+        post listing_listing_agents_path(listing), params: { listing_agent: { agent_id: "", role: "listing_agent" } }
         expect(response).to have_http_status(:unprocessable_entity)
       end
     end
-  end
 
-  describe "GET /listing_agents/:id/edit" do
-    it "returns a successful response" do
-      la = create(:listing_agent, listing: listing, agent: agent)
-      get edit_listing_agent_path(la)
-      expect(response).to be_successful
+    describe "GET /listings/:id/listing_agents/:id/edit" do
+      it "returns a successful response" do
+        la = create(:listing_agent, listing: listing, agent: agent)
+        get edit_listing_listing_agent_path(listing, la)
+        expect(response).to be_successful
+      end
+    end
+
+    describe "PATCH /listings/:id/listing_agents/:id" do
+      it "updates the listing agent" do
+        la = create(:listing_agent, listing: listing, agent: agent, role: "listing_agent")
+        patch listing_listing_agent_path(listing, la), params: { listing_agent: { role: "selling_agent" } }
+        expect(la.reload.role).to eq("selling_agent")
+      end
+    end
+
+    describe "DELETE /listings/:id/listing_agents/:id" do
+      it "destroys the listing agent" do
+        la = create(:listing_agent, listing: listing, agent: agent)
+        expect {
+          delete listing_listing_agent_path(listing, la)
+        }.to change(ListingAgent, :count).by(-1)
+      end
+
+      it "redirects to the listing" do
+        la = create(:listing_agent, listing: listing, agent: agent)
+        delete listing_listing_agent_path(listing, la)
+        expect(response).to redirect_to(listing_path(listing))
+      end
     end
   end
 
-  describe "PATCH /listing_agents/:id" do
-    let(:listing_agent) { create(:listing_agent, listing: listing, agent: agent, role: "listing_agent") }
-
-    it "updates the listing agent" do
-      patch listing_agent_path(listing_agent), params: { listing_agent: { role: "selling_agent" } }
-      expect(listing_agent.reload.role).to eq("selling_agent")
+  describe "from agent context" do
+    describe "GET /agents/:id/listing_agents" do
+      it "returns listings for an agent" do
+        create(:listing_agent, listing: listing, agent: agent)
+        get agent_listing_agents_path(agent)
+        expect(response).to be_successful
+        expect(response.body).to include(listing.address)
+      end
     end
 
-    it "redirects to the listing" do
-      patch listing_agent_path(listing_agent), params: { listing_agent: { role: "selling_agent" } }
-      expect(response).to redirect_to(listing_path(listing))
-    end
-  end
+    describe "DELETE /agents/:id/listing_agents/:id" do
+      it "destroys the listing agent" do
+        la = create(:listing_agent, listing: listing, agent: agent)
+        expect {
+          delete agent_listing_agent_path(agent, la)
+        }.to change(ListingAgent, :count).by(-1)
+      end
 
-  describe "DELETE /listing_agents/:id" do
-    it "destroys the listing agent" do
-      la = create(:listing_agent, listing: listing, agent: agent)
-      expect {
-        delete listing_agent_path(la)
-      }.to change(ListingAgent, :count).by(-1)
-    end
-
-    it "redirects to the listing" do
-      la = create(:listing_agent, listing: listing, agent: agent)
-      delete listing_agent_path(la)
-      expect(response).to redirect_to(listing_path(listing))
+      it "redirects to the agent" do
+        la = create(:listing_agent, listing: listing, agent: agent)
+        delete agent_listing_agent_path(agent, la)
+        expect(response).to redirect_to(agent_path(agent))
+      end
     end
   end
 
   describe "tenant isolation" do
     it "returns 404 for another account's listing" do
       other_listing = create(:listing)
-      get listing_agents_path(listing_id: other_listing.id)
+      get listing_listing_agents_path(other_listing)
       expect(response).to have_http_status(:not_found)
     end
   end

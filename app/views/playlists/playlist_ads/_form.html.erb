@@ -1,4 +1,4 @@
-<%= form_with model: playlist_ad, url: (playlist_ad.persisted? ? playlist_ad_path(playlist_ad) : playlist_ads_path), class: "contents" do |form| %>
+<%= form_with model: playlist_ad, url: url, class: "contents" do |form| %>
   <% if playlist_ad.errors.any? %>
     <div id="error_explanation" class="alert alert-error my-4">
       <div>
@@ -11,25 +11,13 @@
     </div>
   <% end %>
 
-  <% if playlist_ad.playlist_id %>
-    <%= form.hidden_field :playlist_id %>
-    <fieldset class="fieldset my-5">
-      <%= form.label :ad_id, "Ad", class: "fieldset-label" %>
-      <%= form.select :ad_id,
-          Current.account.ads.order(:headline).map { |a| [a.headline, a.id] },
-          { include_blank: "Select an ad" },
-          required: true, class: "select select-bordered w-full" %>
-    </fieldset>
-  <% else %>
-    <%= form.hidden_field :ad_id %>
-    <fieldset class="fieldset my-5">
-      <%= form.label :playlist_id, "Playlist", class: "fieldset-label" %>
-      <%= form.select :playlist_id,
-          Current.account.playlists.order(:name).map { |p| [p.name, p.id] },
-          { include_blank: "Select a playlist" },
-          required: true, class: "select select-bordered w-full" %>
-    </fieldset>
-  <% end %>
+  <fieldset class="fieldset my-5">
+    <%= form.label :ad_id, "Ad", class: "fieldset-label" %>
+    <%= form.select :ad_id,
+        Current.account.ads.order(:headline).map { |a| [a.headline, a.id] },
+        { include_blank: "Select an ad" },
+        required: true, class: "select select-bordered w-full" %>
+  </fieldset>
 
   <div class="flex gap-4">
     <fieldset class="fieldset my-5 flex-1">

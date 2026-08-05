@@ -1,0 +1,4 @@
+<%= turbo_stream.remove dom_id(@playlist_ad) %>
+<%= turbo_stream.update "flash" do %>
+  <%= render "shared/flash" %>
+<% end %>

@@ -1,4 +1,4 @@
-<%= turbo_stream.append "playlist_ads_rows" do %>
+<%= turbo_stream.replace dom_id(@playlist_ad) do %>
   <%= render "playlist_ad", pa: @playlist_ad %>
 <% end %>
 <%= turbo_stream.update "modal", "" %>

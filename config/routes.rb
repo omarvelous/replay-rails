@@ -5,20 +5,24 @@ Rails.application.routes.draw do
   resources :screens do
     resource :playlist, controller: "screens/playlist", only: %i[ new create destroy ]
   end
-  resources :listings
-  resources :agents
-  resources :listing_agents, only: %i[ index new create edit update destroy ]
+  resources :listings do
+    resources :listing_agents, controller: "listings/listing_agents"
+  end
+  resources :agents do
+    resources :listing_agents, controller: "agents/listing_agents"
+  end
   resources :ads do
     member do
       get :preview
     end
+    resources :playlist_ads, controller: "ads/playlist_ads"
   end
   resources :playlists do
     member do
       get :preview
     end
+    resources :playlist_ads, controller: "playlists/playlist_ads"
   end
-  resources :playlist_ads, only: %i[ index new create edit update destroy ]
   resource :session
   resources :passwords, param: :token
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html

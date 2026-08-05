@@ -1,6 +1,4 @@
 <%= turbo_frame_tag "modal" do %>
-  <h3 class="font-bold text-lg mb-4">
-    <%= current_listing ? "Add Agent to Listing" : "Add Listing to Agent" %>
-  </h3>
-  <%= render "listing_agents/form", listing_agent: @listing_agent %>
+  <h3 class="font-bold text-lg mb-4">Add <%= parent.model_name.human %> Association</h3>
+  <%= render "form", listing_agent: @listing_agent, url: polymorphic_path([parent, @listing_agent.class]) %>
 <% end %>

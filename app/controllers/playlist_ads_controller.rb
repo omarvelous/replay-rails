@@ -2,30 +2,20 @@ class PlaylistAdsController < ApplicationController
   before_action :set_playlist_ad, only: %i[ edit update destroy ]
 
   def index
-    raise ActiveRecord::RecordNotFound unless scope
-    @playlist_ads = scope.includes(:playlist, :ad)
+    @playlist_ads = parent.playlist_ads.includes(:playlist, :ad)
   end
 
   def new
-    next_position = current_playlist ? (current_playlist.playlist_ads.maximum(:position) || 0) + 1 : 1
-    @playlist_ad = PlaylistAd.new(
-      playlist_id: current_playlist&.id,
-      ad_id: current_ad&.id,
-      position: next_position,
-      duration: 10
-    )
+    @playlist_ad = parent.playlist_ads.build(position: next_position, duration: 10)
   end
 
   def create
-    @playlist_ad = PlaylistAd.new(playlist_ad_params)
+    @playlist_ad = parent.playlist_ads.build(playlist_ad_params)
 
     if @playlist_ad.save
       respond_to do |format|
-        format.turbo_stream do
-          flash.now[:notice] = "Ad and playlist linked."
-          @playlist_ads = scope.includes(:playlist, :ad)
-        end
-        format.html { redirect_to redirect_target, notice: "Ad and playlist linked." }
+        format.turbo_stream { flash.now[:notice] = "Ad and playlist linked." }
+        format.html { redirect_to parent, notice: "Ad and playlist linked." }
       end
     else
       render :new, status: :unprocessable_entity
@@ -38,12 +28,8 @@ class PlaylistAdsController < ApplicationController
   def update
     if @playlist_ad.update(playlist_ad_params)
       respond_to do |format|
-        format.turbo_stream do
-          flash.now[:notice] = "Playlist ad was updated."
-          @playlist_ads = scope.includes(:playlist, :ad)
-          render "playlist_ads/create"
-        end
-        format.html { redirect_to redirect_target, notice: "Playlist ad was updated." }
+        format.turbo_stream { flash.now[:notice] = "Playlist ad was updated." }
+        format.html { redirect_to parent, notice: "Playlist ad was updated." }
       end
     else
       render :edit, status: :unprocessable_entity
@@ -53,43 +39,24 @@ class PlaylistAdsController < ApplicationController
   def destroy
     @playlist_ad.destroy
     respond_to do |format|
-      format.turbo_stream do
-        flash.now[:notice] = "Ad and playlist unlinked."
-        @playlist_ads = scope.includes(:playlist, :ad)
-        render "playlist_ads/create"
-      end
-      format.html { redirect_to redirect_target, notice: "Ad and playlist unlinked." }
+      format.turbo_stream { flash.now[:notice] = "Ad and playlist unlinked." }
+      format.html { redirect_to parent, notice: "Ad and playlist unlinked." }
     end
   end
 
   private
 
-    def current_playlist
-      @current_playlist ||= Current.account.playlists.find_by(id: params[:playlist_id])
+    def parent
+      raise NotImplementedError
     end
-    helper_method :current_playlist
+    helper_method :parent
 
-    def current_ad
-      @current_ad ||= Current.account.ads.find_by(id: params[:ad_id])
-    end
-    helper_method :current_ad
-
-    def scope
-      if current_playlist
-        current_playlist.playlist_ads
-      elsif current_ad
-        current_ad.playlist_ads
-      end
+    def next_position
+      1
     end
 
     def set_playlist_ad
       @playlist_ad = Current.account.playlist_ads.find(params[:id])
-      @current_playlist = @playlist_ad.playlist
-      @current_ad = @playlist_ad.ad
-    end
-
-    def redirect_target
-      current_playlist || current_ad || @playlist_ad&.playlist
     end
 
     def playlist_ad_params

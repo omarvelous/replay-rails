@@ -8,96 +8,103 @@ RSpec.describe "PlaylistAds", type: :request do
 
   before { sign_in(user) }
 
-  describe "GET /playlist_ads (from playlist)" do
-    it "returns ads for a playlist" do
-      create(:playlist_ad, playlist: playlist, ad: ad)
-      get playlist_ads_path(playlist_id: playlist.id)
-      expect(response).to be_successful
-      expect(response.body).to include(ad.headline)
+  describe "from playlist context" do
+    describe "GET /playlists/:id/playlist_ads" do
+      it "returns ads for a playlist" do
+        create(:playlist_ad, playlist: playlist, ad: ad)
+        get playlist_playlist_ads_path(playlist)
+        expect(response).to be_successful
+        expect(response.body).to include(ad.headline)
+      end
     end
-  end
 
-  describe "GET /playlist_ads (from ad)" do
-    it "returns playlists for an ad" do
-      create(:playlist_ad, playlist: playlist, ad: ad)
-      get playlist_ads_path(ad_id: ad.id)
-      expect(response).to be_successful
-      expect(response.body).to include(playlist.name)
+    describe "GET /playlists/:id/playlist_ads/new" do
+      it "returns a successful response" do
+        get new_playlist_playlist_ad_path(playlist)
+        expect(response).to be_successful
+      end
     end
-  end
 
-  describe "GET /playlist_ads/new" do
-    it "returns a successful response with playlist context" do
-      get new_playlist_ad_path(playlist_id: playlist.id)
-      expect(response).to be_successful
-    end
-  end
-
-  describe "POST /playlist_ads" do
-    let(:valid_params) { { playlist_ad: { playlist_id: playlist.id, ad_id: ad.id, position: 1, duration: 15 } } }
-
-    context "with valid params" do
+    describe "POST /playlists/:id/playlist_ads" do
       it "creates a playlist ad" do
         expect {
-          post playlist_ads_path, params: valid_params
+          post playlist_playlist_ads_path(playlist), params: { playlist_ad: { ad_id: ad.id, position: 1, duration: 15 } }
         }.to change(PlaylistAd, :count).by(1)
       end
 
       it "redirects to the playlist" do
-        post playlist_ads_path(playlist_id: playlist.id), params: valid_params
+        post playlist_playlist_ads_path(playlist), params: { playlist_ad: { ad_id: ad.id, position: 1, duration: 15 } }
         expect(response).to redirect_to(playlist_path(playlist))
       end
-    end
 
-    context "with invalid params" do
       it "returns 422 when ad is missing" do
-        post playlist_ads_path, params: { playlist_ad: { playlist_id: playlist.id, ad_id: "", position: 1, duration: 10 } }
+        post playlist_playlist_ads_path(playlist), params: { playlist_ad: { ad_id: "", position: 1, duration: 10 } }
         expect(response).to have_http_status(:unprocessable_entity)
       end
     end
-  end
 
-  describe "GET /playlist_ads/:id/edit" do
-    it "returns a successful response" do
-      pa = create(:playlist_ad, playlist: playlist, ad: ad)
-      get edit_playlist_ad_path(pa)
-      expect(response).to be_successful
+    describe "GET /playlists/:id/playlist_ads/:id/edit" do
+      it "returns a successful response" do
+        pa = create(:playlist_ad, playlist: playlist, ad: ad)
+        get edit_playlist_playlist_ad_path(playlist, pa)
+        expect(response).to be_successful
+      end
+    end
+
+    describe "PATCH /playlists/:id/playlist_ads/:id" do
+      it "updates the playlist ad" do
+        pa = create(:playlist_ad, playlist: playlist, ad: ad, duration: 10)
+        patch playlist_playlist_ad_path(playlist, pa), params: { playlist_ad: { duration: 20 } }
+        expect(pa.reload.duration).to eq(20)
+      end
+    end
+
+    describe "DELETE /playlists/:id/playlist_ads/:id" do
+      it "destroys the playlist ad" do
+        pa = create(:playlist_ad, playlist: playlist, ad: ad)
+        expect {
+          delete playlist_playlist_ad_path(playlist, pa)
+        }.to change(PlaylistAd, :count).by(-1)
+      end
+
+      it "redirects to the playlist" do
+        pa = create(:playlist_ad, playlist: playlist, ad: ad)
+        delete playlist_playlist_ad_path(playlist, pa)
+        expect(response).to redirect_to(playlist_path(playlist))
+      end
     end
   end
 
-  describe "PATCH /playlist_ads/:id" do
-    let(:playlist_ad) { create(:playlist_ad, playlist: playlist, ad: ad, duration: 10) }
-
-    it "updates the playlist ad" do
-      patch playlist_ad_path(playlist_ad), params: { playlist_ad: { duration: 20 } }
-      expect(playlist_ad.reload.duration).to eq(20)
+  describe "from ad context" do
+    describe "GET /ads/:id/playlist_ads" do
+      it "returns playlists for an ad" do
+        create(:playlist_ad, playlist: playlist, ad: ad)
+        get ad_playlist_ads_path(ad)
+        expect(response).to be_successful
+        expect(response.body).to include(playlist.name)
+      end
     end
 
-    it "redirects to the playlist" do
-      patch playlist_ad_path(playlist_ad), params: { playlist_ad: { duration: 20 } }
-      expect(response).to redirect_to(playlist_path(playlist))
-    end
-  end
+    describe "DELETE /ads/:id/playlist_ads/:id" do
+      it "destroys the playlist ad" do
+        pa = create(:playlist_ad, playlist: playlist, ad: ad)
+        expect {
+          delete ad_playlist_ad_path(ad, pa)
+        }.to change(PlaylistAd, :count).by(-1)
+      end
 
-  describe "DELETE /playlist_ads/:id" do
-    it "destroys the playlist ad" do
-      pa = create(:playlist_ad, playlist: playlist, ad: ad)
-      expect {
-        delete playlist_ad_path(pa)
-      }.to change(PlaylistAd, :count).by(-1)
-    end
-
-    it "redirects to the playlist" do
-      pa = create(:playlist_ad, playlist: playlist, ad: ad)
-      delete playlist_ad_path(pa)
-      expect(response).to redirect_to(playlist_path(playlist))
+      it "redirects to the ad" do
+        pa = create(:playlist_ad, playlist: playlist, ad: ad)
+        delete ad_playlist_ad_path(ad, pa)
+        expect(response).to redirect_to(ad_path(ad))
+      end
     end
   end
 
   describe "tenant isolation" do
     it "returns 404 for another account's playlist" do
       other_playlist = create(:playlist)
-      get playlist_ads_path(playlist_id: other_playlist.id)
+      get playlist_playlist_ads_path(other_playlist)
       expect(response).to have_http_status(:not_found)
     end
   end

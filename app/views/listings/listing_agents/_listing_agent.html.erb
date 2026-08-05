@@ -1,0 +1,10 @@
+<tr id="<%= dom_id(la) %>">
+  <td><%= link_to la.agent.name, agent_path(la.agent), class: "link", data: { turbo_frame: "_top" } %></td>
+  <td><%= la.role.titleize %></td>
+  <td class="text-right">
+    <%= link_to "Edit", edit_listing_listing_agent_path(la.listing, la), class: "link link-hover text-sm mr-2", data: { turbo_frame: "modal" } %>
+    <%= button_to "Remove", listing_listing_agent_path(la.listing, la), method: :delete,
+        class: "btn btn-error btn-xs",
+        data: { turbo_confirm: "Remove this agent?" } %>
+  </td>
+</tr>
