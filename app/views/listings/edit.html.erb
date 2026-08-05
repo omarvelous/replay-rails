@@ -1,4 +1,5 @@
-<div class="mx-auto md:w-2/3 w-full">
-  <h1 class="font-bold text-4xl">Edit Listing</h1>
+<%= turbo_frame_tag "modal" do %>
+  <h3 class="font-bold text-lg">Edit listing</h3>
+  <p class="text-sm text-base-content/50 mb-4">Update the property record used across RePlay signage.</p>
   <%= render "form", listing: @listing %>
-</div>
+<% end %>

@@ -1,6 +1,7 @@
 <%= form_with model: listing, class: "contents" do |form| %>
   <% if listing.errors.any? %>
-    <div id="error_explanation" class="alert alert-error my-4">
+    <div role="alert" class="alert alert-error mb-4">
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 shrink-0 stroke-current" fill="none" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
       <div>
         <ul class="list-disc list-inside text-sm">
           <% listing.errors.full_messages.each do |message| %>
@@ -11,43 +12,76 @@
     </div>
   <% end %>
 
-  <fieldset class="fieldset my-5">
-    <%= form.label :address, class: "fieldset-label" %>
-    <%= form.text_field :address, required: true, autofocus: true,
-        class: "input input-bordered w-full" %>
-  </fieldset>
+  <div class="max-h-[min(72vh,600px)] overflow-y-auto pr-1">
+    <%# Property section %>
+    <p class="text-xs font-semibold uppercase tracking-wider text-base-content/40 mb-3">Property</p>
 
-  <fieldset class="fieldset my-5">
-    <%= form.label :price, class: "fieldset-label" %>
-    <%= form.number_field :price, required: true, step: 0.01, min: 0,
-        class: "input input-bordered w-full" %>
-  </fieldset>
-
-  <div class="flex gap-4">
-    <fieldset class="fieldset my-5 flex-1">
-      <%= form.label :beds, class: "fieldset-label" %>
-      <%= form.number_field :beds, min: 0, class: "input input-bordered w-full" %>
+    <fieldset class="fieldset mb-3">
+      <%= form.label :address, class: "fieldset-label" %>
+      <%= form.text_field :address, required: true, autofocus: true, placeholder: "Street address",
+          class: "input input-bordered w-full" %>
     </fieldset>
 
-    <fieldset class="fieldset my-5 flex-1">
-      <%= form.label :baths, class: "fieldset-label" %>
-      <%= form.number_field :baths, min: 0, class: "input input-bordered w-full" %>
+    <div class="grid grid-cols-3 gap-3 mb-5">
+      <fieldset class="fieldset">
+        <%= form.label :status, class: "fieldset-label" %>
+        <%= form.select :status, [["Active", "active"], ["For Rent", "pending"], ["Sold", "sold"]],
+            {}, class: "select select-bordered w-full" %>
+      </fieldset>
+      <fieldset class="fieldset">
+        <%= form.label :beds, "Bedrooms", class: "fieldset-label" %>
+        <%= form.number_field :beds, min: 0, step: 1, class: "input input-bordered w-full" %>
+      </fieldset>
+      <fieldset class="fieldset">
+        <%= form.label :baths, "Bathrooms", class: "fieldset-label" %>
+        <%= form.number_field :baths, min: 0, step: 1, class: "input input-bordered w-full" %>
+      </fieldset>
+    </div>
+
+    <%# Pricing & size section %>
+    <p class="text-xs font-semibold uppercase tracking-wider text-base-content/40 mb-3">Pricing & size</p>
+
+    <div class="grid grid-cols-3 gap-3 mb-5">
+      <fieldset class="fieldset">
+        <%= form.label :price, "List price ($)", class: "fieldset-label" %>
+        <%= form.number_field :price, required: true, min: 0, step: 0.01, class: "input input-bordered w-full" %>
+      </fieldset>
+      <fieldset class="fieldset">
+        <%= form.label :sqft, "Interior sq ft", class: "fieldset-label" %>
+        <%= form.number_field :sqft, min: 0, class: "input input-bordered w-full" %>
+      </fieldset>
+      <fieldset class="fieldset">
+        <label class="fieldset-label">MLS #</label>
+        <input type="text" class="input input-bordered w-full font-mono" placeholder="auto" disabled
+               value="RP-<%= listing.persisted? ? listing.id.to_s.rjust(5, '0') : '' %>" />
+      </fieldset>
+    </div>
+
+    <%# Description section %>
+    <p class="text-xs font-semibold uppercase tracking-wider text-base-content/40 mb-3">Description</p>
+
+    <fieldset class="fieldset mb-5">
+      <%= form.text_area :address, rows: 3,
+          placeholder: "A few sentences buyers will see on the QR landing page…",
+          class: "textarea textarea-bordered w-full",
+          name: nil, id: nil, disabled: true %>
     </fieldset>
 
-    <fieldset class="fieldset my-5 flex-1">
-      <%= form.label :sqft, "Sq ft", class: "fieldset-label" %>
-      <%= form.number_field :sqft, min: 0, class: "input input-bordered w-full" %>
-    </fieldset>
+    <%# Photos section %>
+    <p class="text-xs font-semibold uppercase tracking-wider text-base-content/40 mb-3">Photos</p>
+
+    <div class="border-2 border-dashed border-base-300 rounded-lg p-6 text-center bg-base-200/30 mb-2">
+      <div class="flex flex-col items-center gap-2 text-base-content/40">
+        <svg xmlns="http://www.w3.org/2000/svg" class="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5m-13.5-9L12 3m0 0l4.5 4.5M12 3v13.5"/></svg>
+        <p class="text-sm">Drag photos here or <span class="font-semibold text-base-content/60">browse</span></p>
+        <p class="text-xs">JPG or PNG · first image becomes the signage hero</p>
+      </div>
+    </div>
   </div>
 
-  <fieldset class="fieldset my-5">
-    <%= form.label :status, class: "fieldset-label" %>
-    <%= form.select :status, %w[active pending sold],
-        {}, class: "select select-bordered w-full" %>
-  </fieldset>
-
-  <div class="flex items-center gap-4">
-    <%= form.submit class: "btn btn-primary" %>
-    <%= link_to "Cancel", listings_path, class: "link link-hover text-sm" %>
+  <%# Footer %>
+  <div class="flex items-center justify-end gap-3 pt-4 mt-4 border-t border-base-200">
+    <button type="button" class="btn" data-action="click->modal#close">Cancel</button>
+    <%= form.submit listing.persisted? ? "Save changes" : "Create listing", class: "btn btn-primary" %>
   </div>
 <% end %>

@@ -1,7 +1,7 @@
 <% content_for(:page_title) { @listing.address } %>
 <% content_for(:page_subtitle) { "Listing" } %>
 <% content_for(:page_actions) do %>
-  <%= link_to edit_listing_path(@listing), class: "btn btn-sm" do %>Edit listing<% end %>
+  <%= link_to edit_listing_path(@listing), class: "btn btn-sm", data: { turbo_frame: "modal" } do %>Edit listing<% end %>
   <%= link_to new_ad_path(listing_id: @listing.id), class: "btn btn-primary btn-sm" do %>Use in ad<% end %>
 <% end %>
 
