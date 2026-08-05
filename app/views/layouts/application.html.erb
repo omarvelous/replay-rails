@@ -23,30 +23,19 @@
       <div class="drawer lg:drawer-open">
         <input id="app-drawer" type="checkbox" class="drawer-toggle" />
 
-        <%# Main content area — wraps a right-side drawer for detail slide-overs %>
+        <%# Main content area %>
         <div class="drawer-content flex flex-col min-h-screen">
           <%= render "shared/topbar" %>
 
-          <div class="drawer drawer-end flex-1" data-controller="drawer">
-            <input id="detail-drawer" type="checkbox" class="drawer-toggle" data-drawer-target="toggle" />
-
-            <main class="drawer-content p-6">
-              <div id="flash">
-                <%= render "shared/flash" %>
-              </div>
-
-              <div class="mx-auto max-w-5xl">
-                <%= yield %>
-              </div>
-            </main>
-
-            <div class="drawer-side z-20">
-              <label for="detail-drawer" aria-label="close detail" class="drawer-overlay"></label>
-              <div class="bg-base-100 min-h-full flex flex-col" style="width: min(580px, 100%);">
-                <%= turbo_frame_tag "drawer" %>
-              </div>
+          <main class="flex-1 p-6">
+            <div id="flash">
+              <%= render "shared/flash" %>
             </div>
-          </div>
+
+            <div class="mx-auto max-w-5xl">
+              <%= yield %>
+            </div>
+          </main>
         </div>
 
         <%# Left sidebar %>
@@ -65,6 +54,16 @@
         </div>
       </main>
     <% end %>
+
+    <%# Right slide-over drawer (detail panels) %>
+    <div data-controller="drawer">
+      <%# Backdrop %>
+      <div class="fixed inset-0 bg-black/50 hidden" style="z-index: 9998;" data-drawer-target="backdrop" data-action="click->drawer#close"></div>
+      <%# Panel %>
+      <div class="fixed inset-y-0 right-0 w-full bg-base-100 shadow-2xl flex flex-col translate-x-full transition-transform duration-200 ease-out" style="z-index: 9999; max-width: 580px;" data-drawer-target="panel">
+        <%= turbo_frame_tag "drawer" %>
+      </div>
+    </div>
 
     <%# Centered modal %>
     <dialog class="modal" data-controller="modal" data-modal-target="dialog">
