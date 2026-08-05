@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RePlay — Mobile QR Landing</title>
+<link rel="stylesheet" href="../assets/replay.css">
+<link rel="stylesheet" href="mobile.css">
+<style> body { background: #f0eee9; } </style>
+</head>
+<body>
+<div id="root"></div>
+
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+
+<script type="text/babel" src="../playback/design-canvas.jsx"></script>
+<script type="text/babel" src="js/screens.jsx"></script>
+<script type="text/babel">
+const PW = 366, PH = 792; // phone screen
+
+function Board() {
+  return (
+    <DesignCanvas>
+      <DCSection id="flow" title="The scan-to-landing connection" subtitle="When a pedestrian scans the QR on a storefront screen, this is where they land — in under a second, mobile-first. It inherits the signage's brand and the exact listing they saw, so the experience feels continuous, not like a generic search result.">
+        <DCArtboard id="land" label="A · Listing detail (above fold)" width={PW} height={PH}><Landing/></DCArtboard>
+        <DCArtboard id="land-scroll" label="A · Scrolled — map, agent, more" width={PW} height={PH}><LandingScroll/></DCArtboard>
+        <DCArtboard id="gallery" label="Photo gallery" width={PW} height={PH}><Gallery/></DCArtboard>
+        <DCArtboard id="schedule" label="Schedule a viewing" width={PW} height={PH}><Schedule/></DCArtboard>
+      </DCSection>
+
+      <DCSection id="alt" title="Alternate direction — Editorial" subtitle="A calmer, centered, light treatment for luxury listings where restraint signals premium. Same data, different feeling — drag either direction into the system depending on the brokerage's brand.">
+        <DCArtboard id="editorial" label="B · Editorial / light" width={PW} height={PH}><LandingEditorial/></DCArtboard>
+      </DCSection>
+    </DesignCanvas>
+  );
+}
+ReactDOM.createRoot(document.getElementById('root')).render(<Board/>);
+</script>
+</body>
+</html>

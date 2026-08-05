@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RePlay — Screen Playback</title>
+<link rel="stylesheet" href="../assets/replay.css">
+<link rel="stylesheet" href="playback.css">
+<style> body { background: #f0eee9; } </style>
+</head>
+<body>
+<div id="root"></div>
+
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+
+<script type="text/babel" src="design-canvas.jsx"></script>
+<script type="text/babel" src="js/screens.jsx"></script>
+<script type="text/babel">
+const W = 640, H = 360;   // 16:9 landscape window
+const PW = 300, PH = 533; // 9:16 portrait window
+
+function Board() {
+  return (
+    <DesignCanvas>
+      <DCSection id="hook" title="Hook Screens" subtitle="Purpose: stop the pedestrian in under 2 seconds. Giant type, high contrast, and one idea. These rotate first in every loop — they earn the glance that the hero listing then converts.">
+        <DCArtboard id="hook-kinetic" label="A · Kinetic type" width={W} height={H}><HookKinetic/></DCArtboard>
+        <DCArtboard id="hook-photo" label="B · Photo + count" width={W} height={H}><HookPhoto/></DCArtboard>
+        <DCArtboard id="hook-minimal" label="C · Minimal / light" width={W} height={H}><HookMinimal/></DCArtboard>
+      </DCSection>
+
+      <DCSection id="hero" title="Hero Listing" subtitle="Full-screen showcase of a single property — the conversion moment. Price is the hero (largest element), specs are glanceable pills, and the QR is always bottom-right where the eye lands last. Three treatments: cinematic, editorial, and luxury split.">
+        <DCArtboard id="hero-cine" label="A · Cinematic (dark)" width={W} height={H}><HeroCinematic/></DCArtboard>
+        <DCArtboard id="hero-edit" label="B · Editorial (light)" width={W} height={H}><HeroEditorial/></DCArtboard>
+        <DCArtboard id="hero-lux" label="C · Luxury split" width={W} height={H}><HeroLuxury/></DCArtboard>
+      </DCSection>
+
+      <DCSection id="browse" title="Browse Grid" subtitle="Multiple listings for passers-by who want options. Designed to read from a distance: three large cards, price-first, with a single shared call-to-scan. Each card's QR deep-links to that specific property.">
+        <DCArtboard id="browse-3" label="3-up · dark" width={W} height={H}><BrowseGrid/></DCArtboard>
+      </DCSection>
+
+      <DCSection id="openhouse" title="Open House Ad" subtitle="Promotes a time-bound event, so the date and time are the largest type on screen. Brand-gradient background signals 'event,' distinct from the dark listing screens, and the RSVP QR captures intent before the visitor even arrives.">
+        <DCArtboard id="open-bold" label="Bold / gradient" width={W} height={H}><OpenHouse/></DCArtboard>
+      </DCSection>
+
+      <DCSection id="branding" title="Branding Ad" subtitle="Brokerage promotion between listings — builds trust and recall. Two angles: hard proof (awards & sales stats) and soft proof (a client testimonial). Used to fill the loop and reinforce the brand the QR pages inherit.">
+        <DCArtboard id="brand-awards" label="A · Awards & stats" width={W} height={H}><BrandAwards/></DCArtboard>
+        <DCArtboard id="brand-test" label="B · Testimonial" width={W} height={H}><BrandTestimonial/></DCArtboard>
+      </DCSection>
+
+      <DCSection id="recruiting" title="Recruiting Ad" subtitle="Storefront windows double as a recruiting channel — agents walk past competitors' offices daily. Professional, benefit-led, and confidential: the QR opens a short private application, not a public form.">
+        <DCArtboard id="recruit" label="Modern / benefit-led" width={W} height={H}><Recruiting/></DCArtboard>
+      </DCSection>
+
+      <DCSection id="cta" title="CTA Screen" subtitle="The closer: one giant QR, one instruction. Appears last in the loop and after a hero listing. Maximum scannability from across the sidewalk — minimal copy, maximal code.">
+        <DCArtboard id="cta-giant" label="A · Giant QR" width={W} height={H}><CtaGiant/></DCArtboard>
+        <DCArtboard id="cta-split" label="B · Split / gradient" width={W} height={H}><CtaSplit/></DCArtboard>
+      </DCSection>
+
+      <DCSection id="portrait" title="Portrait Windows" subtitle="Many storefront displays are mounted vertically. The same system reflows to 9:16 — proof the design language is orientation-agnostic, not bolted on.">
+        <DCArtboard id="hero-port" label="Hero · portrait" width={PW} height={PH}><HeroPortrait/></DCArtboard>
+        <DCArtboard id="cta-port" label="CTA · portrait" width={PW} height={PH}><CtaPortrait/></DCArtboard>
+      </DCSection>
+    </DesignCanvas>
+  );
+}
+ReactDOM.createRoot(document.getElementById('root')).render(<Board/>);
+</script>
+</body>
+</html>
