@@ -1,39 +1,76 @@
-<div class="mx-auto md:w-2/3 w-full">
-  <div class="flex justify-between items-center mb-5">
-    <h1 class="font-bold text-4xl">Playlists</h1>
-    <%= link_to "New Playlist", new_playlist_path, class: "btn btn-primary btn-sm" %>
-  </div>
-
-  <% if @playlists.any? %>
-    <div class="overflow-x-auto">
-      <table class="table">
-        <thead>
-          <tr>
-            <th>Name</th>
-            <th>Status</th>
-            <th>Ads</th>
-            <th></th>
-          </tr>
-        </thead>
-        <tbody>
-          <% @playlists.each do |playlist| %>
-            <tr>
-              <td><%= link_to playlist.name, playlist, class: "link" %></td>
-              <td>
-                <span class="badge <%= playlist.status == 'published' ? 'badge-success' : 'badge-neutral' %>">
-                  <%= playlist.status.capitalize %>
-                </span>
-              </td>
-              <td><%= playlist.playlist_ads.size %></td>
-              <td class="text-right">
-                <%= link_to "Edit", edit_playlist_path(playlist), class: "link link-hover text-sm" %>
-              </td>
-            </tr>
-          <% end %>
-        </tbody>
-      </table>
-    </div>
-  <% else %>
-    <p class="text-base-content/60">No playlists yet. Create your first playlist.</p>
+<% content_for(:page_title) { "Playlists" } %>
+<% content_for(:page_subtitle) { "#{@playlists.size} playlists" } %>
+<% content_for(:page_actions) do %>
+  <%= link_to new_playlist_path, class: "btn btn-primary btn-sm" do %>
+    <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15"/></svg>
+    New playlist
   <% end %>
+<% end %>
+
+<div class="flex flex-wrap items-center gap-3 mb-5">
+  <div class="flex gap-1">
+    <button class="btn btn-xs btn-active">All</button>
+    <button class="btn btn-xs">Published</button>
+    <button class="btn btn-xs">Drafts</button>
+  </div>
 </div>
+
+<% if @playlists.any? %>
+  <div class="flex flex-col gap-2">
+    <% @playlists.each do |playlist| %>
+      <% tone = %w[#2f6bff #0fb5a6 #7c5cff #e8990f #1f9d57][playlist.id % 5] %>
+      <%= link_to playlist_path(playlist), class: "card bg-base-100 shadow-sm hover:shadow-md transition-shadow", data: { turbo_frame: "_top" } do %>
+        <div class="card-body p-4 flex-row items-center gap-4">
+          <%# Playlist icon %>
+          <div class="w-9 h-9 rounded-lg flex-none grid place-items-center" style="background: <%= tone %>18; color: <%= tone %>;">
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-4.25 h-4.25" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 12h16.5m-16.5 3.75h16.5M3.75 19.5h16.5M5.625 4.5h12.75a1.875 1.875 0 010 3.75H5.625a1.875 1.875 0 010-3.75z"/></svg>
+          </div>
+
+          <%# Name + site %>
+          <div class="w-52 flex-none">
+            <p class="font-semibold text-sm truncate"><%= playlist.name %></p>
+            <p class="text-xs text-base-content/40">
+              <%= playlist.playlist_ads.size %> slides · <%= playlist.playlist_ads.sum(&:duration) %>s loop
+            </p>
+          </div>
+
+          <%# Mini loop timeline %>
+          <div class="flex-1 min-w-0 hidden sm:block">
+            <% total_dur = playlist.playlist_ads.sum(&:duration) %>
+            <% if total_dur > 0 %>
+              <div class="flex h-2 rounded-full overflow-hidden bg-base-200 gap-px">
+                <% playlist.playlist_ads.order(:position).each do |pa| %>
+                  <% seg_tone = %w[#2f6bff #0fb5a6 #7c5cff #e8990f #1f9d57 #e5484d][pa.ad_id % 6] %>
+                  <div style="width: <%= (pa.duration.to_f / total_dur * 100).round(1) %>%; background: <%= seg_tone %>; opacity: 0.7;"
+                       class="rounded-sm"></div>
+                <% end %>
+              </div>
+            <% end %>
+          </div>
+
+          <%# Stats %>
+          <div class="flex items-center gap-4 flex-none">
+            <div class="text-center">
+              <p class="font-bold text-sm tabular-nums"><%= playlist.screen_playlists.count %></p>
+              <p class="text-xs text-base-content/40">Screens</p>
+            </div>
+            <span class="badge badge-sm <%= playlist.status == 'published' ? 'badge-success' : 'badge-neutral' %>">
+              <%= playlist.status.capitalize %>
+            </span>
+          </div>
+        </div>
+      <% end %>
+    <% end %>
+  </div>
+<% else %>
+  <div class="card bg-base-100 border-2 border-dashed border-base-300 p-10 text-center">
+    <div class="flex flex-col items-center gap-3">
+      <div class="w-12 h-12 rounded-xl bg-primary/10 grid place-items-center">
+        <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15"/></svg>
+      </div>
+      <p class="font-semibold">No playlists yet</p>
+      <p class="text-sm text-base-content/50">Create your first playlist to sequence ads on screens.</p>
+      <%= link_to "New playlist", new_playlist_path, class: "btn btn-primary btn-sm" %>
+    </div>
+  </div>
+<% end %>

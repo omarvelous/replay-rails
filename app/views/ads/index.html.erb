@@ -1,33 +1,104 @@
-<div class="mx-auto md:w-2/3 w-full">
-  <div class="flex justify-between items-center mb-5">
-    <h1 class="font-bold text-4xl">Ads</h1>
-    <%= link_to "New Ad", new_ad_path, class: "btn btn-primary btn-sm" %>
+<% content_for(:page_title) { "Ads" } %>
+<% content_for(:page_subtitle) { "#{@ads.size} ads" } %>
+<% content_for(:page_actions) do %>
+  <%= link_to new_ad_path, class: "btn btn-primary btn-sm" do %>
+    <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15"/></svg>
+    New ad
+  <% end %>
+<% end %>
+
+<div data-controller="view-toggle">
+  <div class="flex flex-wrap items-center gap-3 mb-5">
+    <div class="flex-1 min-w-50 max-w-xs">
+      <input type="text" placeholder="Search ads…" class="input input-sm input-bordered w-full" />
+    </div>
+
+    <div class="ml-auto join">
+      <button class="btn btn-xs join-item btn-active" data-view-btn data-view="grid" data-action="click->view-toggle#switch">
+        <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6A2.25 2.25 0 016 3.75h2.25A2.25 2.25 0 0110.5 6v2.25a2.25 2.25 0 01-2.25 2.25H6a2.25 2.25 0 01-2.25-2.25V6zM3.75 15.75A2.25 2.25 0 016 13.5h2.25a2.25 2.25 0 012.25 2.25V18a2.25 2.25 0 01-2.25 2.25H6A2.25 2.25 0 013.75 18v-2.25zM13.5 6a2.25 2.25 0 012.25-2.25H18A2.25 2.25 0 0120.25 6v2.25A2.25 2.25 0 0118 10.5h-2.25a2.25 2.25 0 01-2.25-2.25V6zM13.5 15.75a2.25 2.25 0 012.25-2.25H18a2.25 2.25 0 012.25 2.25V18A2.25 2.25 0 0118 20.25h-2.25A2.25 2.25 0 0113.5 18v-2.25z"/></svg>
+      </button>
+      <button class="btn btn-xs join-item" data-view-btn data-view="table" data-action="click->view-toggle#switch">
+        <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 5.25h16.5m-16.5 4.5h16.5m-16.5 4.5h16.5m-16.5 4.5h16.5"/></svg>
+      </button>
+    </div>
   </div>
 
-  <% if @ads.any? %>
-    <div class="overflow-x-auto">
-      <table class="table">
-        <thead>
-          <tr>
-            <th>Headline</th>
-            <th>Listing</th>
-            <th></th>
-          </tr>
-        </thead>
-        <tbody>
-          <% @ads.each do |ad| %>
-            <tr>
-              <td><%= link_to ad.headline, ad, class: "link" %></td>
-              <td><%= ad.listing&.address || "—" %></td>
-              <td class="text-right">
-                <%= link_to "Edit", edit_ad_path(ad), class: "link link-hover text-sm" %>
-              </td>
-            </tr>
+  <%# Grid view %>
+  <div data-view-toggle-target="view" data-view="grid">
+    <% if @ads.any? %>
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        <% @ads.each do |ad| %>
+          <% tone = %w[#2f6bff #0fb5a6 #7c5cff #e8990f #1f9d57 #e5484d][ad.id % 6] %>
+          <%= link_to ad_path(ad), class: "card bg-base-100 shadow-sm hover:shadow-md transition-shadow cursor-pointer", data: { turbo_frame: "_top" } do %>
+            <%# Gradient thumbnail %>
+            <div class="aspect-video rounded-t-[inherit] relative overflow-hidden flex items-end p-4"
+                 style="background: linear-gradient(135deg, #0b0d12, <%= tone %>cc);">
+              <div class="text-white">
+                <p class="text-xs font-semibold uppercase tracking-wider opacity-60">
+                  <%= ad.listing ? "FOR SALE" : "AD" %>
+                </p>
+                <p class="text-lg font-bold leading-tight"><%= ad.headline %></p>
+              </div>
+            </div>
+            <div class="card-body p-4 gap-1">
+              <p class="font-semibold text-sm truncate"><%= ad.headline %></p>
+              <p class="text-xs text-base-content/40"><%= ad.listing&.address || "Standalone ad" %></p>
+            </div>
           <% end %>
-        </tbody>
-      </table>
-    </div>
-  <% else %>
-    <p class="text-base-content/60">No ads yet. Create your first ad.</p>
-  <% end %>
+        <% end %>
+      </div>
+    <% else %>
+      <div class="card bg-base-100 border-2 border-dashed border-base-300 p-10 text-center">
+        <div class="flex flex-col items-center gap-3">
+          <div class="w-12 h-12 rounded-xl bg-primary/10 grid place-items-center">
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15"/></svg>
+          </div>
+          <p class="font-semibold">No ads yet</p>
+          <p class="text-sm text-base-content/50">Create your first ad to get started.</p>
+          <%= link_to "New ad", new_ad_path, class: "btn btn-primary btn-sm" %>
+        </div>
+      </div>
+    <% end %>
+  </div>
+
+  <%# Table view %>
+  <div data-view-toggle-target="view" data-view="table" class="hidden">
+    <% if @ads.any? %>
+      <div class="card bg-base-100 shadow-sm">
+        <div class="overflow-x-auto">
+          <table class="table">
+            <thead>
+              <tr>
+                <th>Ad</th>
+                <th>Listing</th>
+                <th>Playlists</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>
+              <% @ads.each do |ad| %>
+                <% tone = %w[#2f6bff #0fb5a6 #7c5cff #e8990f #1f9d57 #e5484d][ad.id % 6] %>
+                <tr class="hover cursor-pointer" onclick="Turbo.visit('<%= ad_path(ad) %>')">
+                  <td>
+                    <div class="flex items-center gap-3">
+                      <div class="w-14 h-8 rounded flex-none flex items-end p-1"
+                           style="background: linear-gradient(135deg, #0b0d12, <%= tone %>cc);">
+                        <span class="text-white text-[8px] font-bold leading-none truncate"><%= ad.headline %></span>
+                      </div>
+                      <span class="font-medium text-sm"><%= ad.headline %></span>
+                    </div>
+                  </td>
+                  <td class="text-sm text-base-content/60"><%= ad.listing&.address || "—" %></td>
+                  <td class="font-mono text-sm"><%= ad.playlist_ads.count %></td>
+                  <td class="text-right">
+                    <%= link_to "Edit", edit_ad_path(ad), class: "btn btn-ghost btn-xs", onclick: "event.stopPropagation()" %>
+                  </td>
+                </tr>
+              <% end %>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    <% end %>
+  </div>
 </div>

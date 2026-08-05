@@ -1,33 +1,36 @@
-<div class="mx-auto md:w-2/3 w-full">
-  <div class="flex justify-between items-center mb-5">
-    <h1 class="font-bold text-4xl">Sites</h1>
-    <%= link_to "New Site", new_site_path, class: "btn btn-primary btn-sm" %>
-  </div>
-
-  <% if @sites.any? %>
-    <div class="overflow-x-auto">
-      <table class="table">
-        <thead>
-          <tr>
-            <th>Name</th>
-            <th>Address</th>
-            <th></th>
-          </tr>
-        </thead>
-        <tbody>
-          <% @sites.each do |site| %>
-            <tr>
-              <td><%= link_to site.name, site, class: "link" %></td>
-              <td><%= site.address %></td>
-              <td class="text-right">
-                <%= link_to "Edit", edit_site_path(site), class: "link link-hover text-sm" %>
-              </td>
-            </tr>
-          <% end %>
-        </tbody>
-      </table>
-    </div>
-  <% else %>
-    <p class="text-base-content/60">No sites yet. Create your first site to get started.</p>
+<% content_for(:page_title) { "Sites" } %>
+<% content_for(:page_subtitle) { "#{@sites.size} locations · #{@sites.sum { |s| s.screens.count }} screens" } %>
+<% content_for(:page_actions) do %>
+  <%= link_to new_site_path, class: "btn btn-primary btn-sm" do %>
+    <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15"/></svg>
+    New site
   <% end %>
-</div>
+<% end %>
+
+<% if @sites.any? %>
+  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+    <% @sites.each do |site| %>
+      <%= render "sites/site_card", site: site %>
+    <% end %>
+
+    <%= link_to new_site_path, class: "card border-2 border-dashed border-base-300 hover:border-base-content/20 transition-colors cursor-pointer flex items-center justify-center min-h-48" do %>
+      <div class="flex flex-col items-center gap-2 text-base-content/40">
+        <div class="w-10 h-10 rounded-lg bg-base-200 grid place-items-center">
+          <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15"/></svg>
+        </div>
+        <span class="text-sm font-medium">Add a site</span>
+      </div>
+    <% end %>
+  </div>
+<% else %>
+  <div class="card bg-base-100 border-2 border-dashed border-base-300 p-10 text-center">
+    <div class="flex flex-col items-center gap-3">
+      <div class="w-12 h-12 rounded-xl bg-primary/10 grid place-items-center">
+        <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15"/></svg>
+      </div>
+      <p class="font-semibold">No sites yet</p>
+      <p class="text-sm text-base-content/50">Add your first location to get started.</p>
+      <%= link_to "New site", new_site_path, class: "btn btn-primary btn-sm" %>
+    </div>
+  </div>
+<% end %>

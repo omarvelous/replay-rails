@@ -1,39 +1,125 @@
 <% if current_site %>
-  <%# Filtered by site — rendered inside a Turbo Frame on the site show page %>
   <%= turbo_frame_tag "site_screens" do %>
     <%= render "screens/screens_list", site: current_site %>
   <% end %>
 <% else %>
-  <%# All screens for the account %>
-  <div class="mx-auto md:w-2/3 w-full">
-    <div class="flex justify-between items-center mb-5">
-      <h1 class="font-bold text-4xl">All Screens</h1>
-      <%= link_to "New Screen", new_screen_path, class: "btn btn-primary btn-sm", data: { turbo_frame: "modal" } %>
+  <% content_for(:page_title) { "Screens" } %>
+  <% content_for(:page_subtitle) { "#{@screens.size} screens" } %>
+  <% content_for(:page_actions) do %>
+    <%= link_to new_screen_path, class: "btn btn-primary btn-sm", data: { turbo_frame: "modal" } do %>
+      <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15"/></svg>
+      Add screen
+    <% end %>
+  <% end %>
+
+  <div data-controller="view-toggle">
+    <div class="flex flex-wrap items-center gap-3 mb-5">
+      <div class="flex-1 min-w-50 max-w-xs">
+        <input type="text" placeholder="Search screens…" class="input input-sm input-bordered w-full" />
+      </div>
+
+      <div class="flex gap-1">
+        <button class="btn btn-xs btn-active">All</button>
+        <button class="btn btn-xs">Live</button>
+        <button class="btn btn-xs">Issues</button>
+      </div>
+
+      <div class="ml-auto join">
+        <button class="btn btn-xs join-item btn-active" data-view-btn data-view="grid" data-action="click->view-toggle#switch">
+          <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6A2.25 2.25 0 016 3.75h2.25A2.25 2.25 0 0110.5 6v2.25a2.25 2.25 0 01-2.25 2.25H6a2.25 2.25 0 01-2.25-2.25V6zM3.75 15.75A2.25 2.25 0 016 13.5h2.25a2.25 2.25 0 012.25 2.25V18a2.25 2.25 0 01-2.25 2.25H6A2.25 2.25 0 013.75 18v-2.25zM13.5 6a2.25 2.25 0 012.25-2.25H18A2.25 2.25 0 0120.25 6v2.25A2.25 2.25 0 0118 10.5h-2.25a2.25 2.25 0 01-2.25-2.25V6zM13.5 15.75a2.25 2.25 0 012.25-2.25H18a2.25 2.25 0 012.25 2.25V18A2.25 2.25 0 0118 20.25h-2.25A2.25 2.25 0 0113.5 18v-2.25z"/></svg>
+          </button>
+        <button class="btn btn-xs join-item" data-view-btn data-view="table" data-action="click->view-toggle#switch">
+          <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 5.25h16.5m-16.5 4.5h16.5m-16.5 4.5h16.5m-16.5 4.5h16.5"/></svg>
+        </button>
+      </div>
     </div>
 
-    <% if @screens.any? %>
-      <div class="overflow-x-auto">
-        <table class="table">
-          <thead>
-            <tr>
-              <th>Name</th>
-              <th>Site</th>
-              <th>Orientation</th>
-            </tr>
-          </thead>
-          <tbody>
-            <% @screens.includes(:site).each do |screen| %>
-              <tr>
-                <td><%= link_to screen.name, screen_path(screen), class: "link" %></td>
-                <td><%= link_to screen.site.name, site_path(screen.site), class: "link" %></td>
-                <td><%= screen.orientation.capitalize %></td>
-              </tr>
+    <%# Grid view %>
+    <div data-view-toggle-target="view" data-view="grid">
+      <% if @screens.any? %>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+          <% @screens.includes(:site, screen_playlists: :playlist).each do |screen| %>
+            <% active_playlist = screen.screen_playlists.find { |sp| sp.active }&.playlist %>
+            <%= link_to screen_path(screen), class: "card bg-base-100 shadow-sm hover:shadow-md transition-shadow cursor-pointer", data: { turbo_frame: "_top" } do %>
+              <%# Preview placeholder %>
+              <div class="aspect-video bg-neutral rounded-t-[inherit] flex items-center justify-center relative">
+                <% if active_playlist %>
+                  <span class="text-neutral-content/30 text-xs">Preview</span>
+                  <div class="absolute top-2 right-2">
+                    <span class="badge badge-sm badge-success">Live</span>
+                  </div>
+                <% else %>
+                  <span class="text-neutral-content/20 text-2xl">—</span>
+                  <div class="absolute top-2 right-2">
+                    <span class="badge badge-sm badge-neutral">Idle</span>
+                  </div>
+                <% end %>
+              </div>
+              <div class="card-body p-3 gap-0.5">
+                <div class="flex items-center gap-2">
+                  <span class="font-semibold text-sm truncate"><%= screen.name %></span>
+                  <span class="badge badge-xs badge-neutral"><%= screen.orientation.capitalize %></span>
+                </div>
+                <p class="text-xs text-base-content/40"><%= screen.site.name %></p>
+                <% if active_playlist %>
+                  <p class="text-xs text-base-content/50 mt-1 flex items-center gap-1">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 12h16.5m-16.5 3.75h16.5M3.75 19.5h16.5M5.625 4.5h12.75a1.875 1.875 0 010 3.75H5.625a1.875 1.875 0 010-3.75z"/></svg>
+                    <%= active_playlist.name %>
+                  </p>
+                <% end %>
+              </div>
             <% end %>
-          </tbody>
-        </table>
-      </div>
-    <% else %>
-      <p class="text-base-content/60">No screens yet.</p>
-    <% end %>
+          <% end %>
+        </div>
+      <% else %>
+        <div class="card bg-base-100 border-2 border-dashed border-base-300 p-10 text-center">
+          <div class="flex flex-col items-center gap-3">
+            <div class="w-12 h-12 rounded-xl bg-primary/10 grid place-items-center">
+              <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15"/></svg>
+            </div>
+            <p class="font-semibold">No screens yet</p>
+            <p class="text-sm text-base-content/50">Add a screen to start displaying content.</p>
+            <%= link_to "Add screen", new_screen_path, class: "btn btn-primary btn-sm", data: { turbo_frame: "modal" } %>
+          </div>
+        </div>
+      <% end %>
+    </div>
+
+    <%# Table view %>
+    <div data-view-toggle-target="view" data-view="table" class="hidden">
+      <% if @screens.any? %>
+        <div class="card bg-base-100 shadow-sm">
+          <div class="overflow-x-auto">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th>Screen</th>
+                  <th>Site</th>
+                  <th>Orientation</th>
+                  <th>Playlist</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody>
+                <% @screens.includes(:site, screen_playlists: :playlist).each do |screen| %>
+                  <% active_playlist = screen.screen_playlists.find { |sp| sp.active }&.playlist %>
+                  <tr class="hover cursor-pointer" onclick="Turbo.visit('<%= screen_path(screen) %>')">
+                    <td class="font-medium text-sm"><%= screen.name %></td>
+                    <td class="text-sm"><%= screen.site.name %></td>
+                    <td><span class="badge badge-xs badge-neutral"><%= screen.orientation.capitalize %></span></td>
+                    <td class="text-sm text-base-content/60"><%= active_playlist&.name || "—" %></td>
+                    <td>
+                      <span class="badge badge-sm <%= active_playlist ? 'badge-success' : 'badge-neutral' %>">
+                        <%= active_playlist ? "Live" : "Idle" %>
+                      </span>
+                    </td>
+                  </tr>
+                <% end %>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      <% end %>
+    </div>
   </div>
 <% end %>
