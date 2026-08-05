@@ -1,86 +1,83 @@
-<label for="app-drawer" aria-label="close sidebar" class="drawer-overlay"></label>
-<aside class="flex flex-col min-h-full w-64 bg-neutral text-neutral-content">
+<div class="flex grow flex-col gap-y-5 overflow-y-auto bg-gray-900 px-6 pb-4 ring-1 ring-white/10">
   <%# Logo %>
-  <div class="px-5 pt-5 pb-3">
+  <div class="flex h-16 shrink-0 items-center">
     <div class="flex items-center gap-2.5">
-      <span class="w-8 h-8 rounded-lg flex-none grid place-items-center"
-            style="background: linear-gradient(135deg, oklch(var(--p)), oklch(var(--a)));">
-        <svg viewBox="0 0 24 24" fill="none" class="w-4 h-4"><path d="M8 6.5v11l9-5.5-9-5.5z" fill="#fff"/></svg>
+      <span class="flex size-8 items-center justify-center rounded-lg bg-linear-to-br from-indigo-500 to-teal-400">
+        <svg viewBox="0 0 24 24" fill="none" class="size-4"><path d="M8 6.5v11l9-5.5-9-5.5z" fill="#fff"/></svg>
       </span>
-      <span class="text-lg font-bold tracking-tight text-neutral-content">Re<b class="text-primary">Play</b></span>
+      <span class="text-lg font-bold tracking-tight text-white">Re<b class="text-indigo-400">Play</b></span>
     </div>
   </div>
 
-  <%# Account switcher %>
-  <div class="mx-3 mb-1.5 p-2.5 rounded-lg flex items-center gap-2.5 cursor-pointer bg-base-300/10 border border-base-300/20">
-    <div class="w-8 h-8 rounded-lg flex-none grid place-items-center text-xs font-bold"
-         style="background: linear-gradient(135deg, oklch(var(--p)), oklch(var(--a))); color: #fff;">
-      <%= Current.account&.id.to_s.first(2).upcase || "RP" %>
-    </div>
-    <div class="flex-1 min-w-0">
-      <div class="text-sm font-semibold text-neutral-content truncate">RePlay Account</div>
-      <div class="text-xs opacity-50"><%= Current.account&.sites&.count || 0 %> sites</div>
-    </div>
-  </div>
-
-  <%# Navigation %>
-  <nav class="flex-1 overflow-y-auto px-3 py-2.5">
-    <ul class="menu menu-sm gap-0.5 p-0">
+  <nav class="flex flex-1 flex-col">
+    <ul role="list" class="flex flex-1 flex-col gap-y-7">
       <%# Network group %>
-      <li class="menu-title text-xs tracking-wider opacity-50 px-2.5 pb-1.5">Network</li>
       <li>
-        <%= link_to sites_path, class: "flex items-center gap-2.5 #{'menu-active' if controller_name == 'sites'}" do %>
-          <svg xmlns="http://www.w3.org/2000/svg" class="w-[18px] h-[18px]" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 21h19.5m-18-18v18m10.5-18v18m6-13.5V21M6.75 6.75h.75m-.75 3h.75m-.75 3h.75m3-6h.75m-.75 3h.75m-.75 3h.75M6.75 21v-3.375c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21M3 3h12m-.75 4.5H21m-3.75 7.5h.008v.008h-.008v-.008z"/></svg>
-          <span>Sites</span>
-        <% end %>
-      </li>
-      <li>
-        <%= link_to screens_path, class: "flex items-center gap-2.5 #{'menu-active' if controller_name == 'screens'}" do %>
-          <svg xmlns="http://www.w3.org/2000/svg" class="w-[18px] h-[18px]" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8"><path stroke-linecap="round" stroke-linejoin="round" d="M9 17.25v1.007a3 3 0 01-.879 2.122L7.5 21h9l-.621-.621A3 3 0 0115 18.257V17.25m6-12V15a2.25 2.25 0 01-2.25 2.25h-13.5A2.25 2.25 0 013 15V5.25m18 0A2.25 2.25 0 0018.75 3H5.25A2.25 2.25 0 003 5.25m18 0V12a2.25 2.25 0 01-2.25 2.25H5.25A2.25 2.25 0 013 12V5.25"/></svg>
-          <span>Screens</span>
-        <% end %>
-      </li>
-      <li>
-        <%= link_to agents_path, class: "flex items-center gap-2.5 #{'menu-active' if controller_name == 'agents'}" do %>
-          <svg xmlns="http://www.w3.org/2000/svg" class="w-[18px] h-[18px]" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19.128a9.38 9.38 0 002.625.372 9.337 9.337 0 004.121-.952 4.125 4.125 0 00-7.533-2.493M15 19.128v-.003c0-1.113-.285-2.16-.786-3.07M15 19.128v.106A12.318 12.318 0 018.624 21c-2.331 0-4.512-.645-6.374-1.766l-.001-.109a6.375 6.375 0 0111.964-3.07M12 6.375a3.375 3.375 0 11-6.75 0 3.375 3.375 0 016.75 0zm8.25 2.25a2.625 2.625 0 11-5.25 0 2.625 2.625 0 015.25 0z"/></svg>
-          <span>Agents</span>
-        <% end %>
+        <div class="text-xs/6 font-semibold text-gray-400">Network</div>
+        <ul role="list" class="-mx-2 mt-2 space-y-1">
+          <li>
+            <% active = controller_name == 'sites' %>
+            <%= link_to sites_path, class: "group flex gap-x-3 rounded-md p-2 text-sm/6 font-semibold #{active ? 'bg-white/5 text-white' : 'text-gray-400 hover:bg-white/5 hover:text-white'}" do %>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true" class="size-6 shrink-0"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 21h19.5m-18-18v18m10.5-18v18m6-13.5V21M6.75 6.75h.75m-.75 3h.75m-.75 3h.75m3-6h.75m-.75 3h.75m-.75 3h.75M6.75 21v-3.375c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21M3 3h12m-.75 4.5H21m-3.75 7.5h.008v.008h-.008v-.008z"/></svg>
+              Sites
+            <% end %>
+          </li>
+          <li>
+            <% active = controller_name == 'screens' %>
+            <%= link_to screens_path, class: "group flex gap-x-3 rounded-md p-2 text-sm/6 font-semibold #{active ? 'bg-white/5 text-white' : 'text-gray-400 hover:bg-white/5 hover:text-white'}" do %>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true" class="size-6 shrink-0"><path stroke-linecap="round" stroke-linejoin="round" d="M9 17.25v1.007a3 3 0 01-.879 2.122L7.5 21h9l-.621-.621A3 3 0 0115 18.257V17.25m6-12V15a2.25 2.25 0 01-2.25 2.25h-13.5A2.25 2.25 0 013 15V5.25m18 0A2.25 2.25 0 0018.75 3H5.25A2.25 2.25 0 003 5.25m18 0V12a2.25 2.25 0 01-2.25 2.25H5.25A2.25 2.25 0 013 12V5.25"/></svg>
+              Screens
+            <% end %>
+          </li>
+          <li>
+            <% active = controller_name == 'agents' %>
+            <%= link_to agents_path, class: "group flex gap-x-3 rounded-md p-2 text-sm/6 font-semibold #{active ? 'bg-white/5 text-white' : 'text-gray-400 hover:bg-white/5 hover:text-white'}" do %>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true" class="size-6 shrink-0"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19.128a9.38 9.38 0 002.625.372 9.337 9.337 0 004.121-.952 4.125 4.125 0 00-7.533-2.493M15 19.128v-.003c0-1.113-.285-2.16-.786-3.07M15 19.128v.106A12.318 12.318 0 018.624 21c-2.331 0-4.512-.645-6.374-1.766l-.001-.109a6.375 6.375 0 0111.964-3.07M12 6.375a3.375 3.375 0 11-6.75 0 3.375 3.375 0 016.75 0zm8.25 2.25a2.625 2.625 0 11-5.25 0 2.625 2.625 0 015.25 0z"/></svg>
+              Agents
+            <% end %>
+          </li>
+        </ul>
       </li>
 
       <%# Content group %>
-      <li class="menu-title text-xs tracking-wider opacity-50 px-2.5 pb-1.5 mt-4">Content</li>
       <li>
-        <%= link_to listings_path, class: "flex items-center gap-2.5 #{'menu-active' if controller_name == 'listings' || controller_name == 'listing_agents'}" do %>
-          <svg xmlns="http://www.w3.org/2000/svg" class="w-[18px] h-[18px]" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8"><path stroke-linecap="round" stroke-linejoin="round" d="M8.25 21v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21m0 0h4.5V3.545M12.75 21h7.5V10.75M2.25 21h1.5m18 0h-18M2.25 9l4.5-1.636M18.75 3l-1.5.545m0 6.205l3 1m1.5.5l-1.5-.5M6.75 7.364V3h-3v18m3-13.636l10.5-3.819"/></svg>
-          <span>Listings</span>
-        <% end %>
+        <div class="text-xs/6 font-semibold text-gray-400">Content</div>
+        <ul role="list" class="-mx-2 mt-2 space-y-1">
+          <li>
+            <% active = controller_name.in?(%w[listings listing_agents]) %>
+            <%= link_to listings_path, class: "group flex gap-x-3 rounded-md p-2 text-sm/6 font-semibold #{active ? 'bg-white/5 text-white' : 'text-gray-400 hover:bg-white/5 hover:text-white'}" do %>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true" class="size-6 shrink-0"><path stroke-linecap="round" stroke-linejoin="round" d="M8.25 21v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21m0 0h4.5V3.545M12.75 21h7.5V10.75M2.25 21h1.5m18 0h-18M2.25 9l4.5-1.636M18.75 3l-1.5.545m0 6.205l3 1m1.5.5l-1.5-.5M6.75 7.364V3h-3v18m3-13.636l10.5-3.819"/></svg>
+              Listings
+            <% end %>
+          </li>
+          <li>
+            <% active = controller_name.in?(%w[ads playlist_ads]) %>
+            <%= link_to ads_path, class: "group flex gap-x-3 rounded-md p-2 text-sm/6 font-semibold #{active ? 'bg-white/5 text-white' : 'text-gray-400 hover:bg-white/5 hover:text-white'}" do %>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true" class="size-6 shrink-0"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 15.75l5.159-5.159a2.25 2.25 0 013.182 0l5.159 5.159m-1.5-1.5l1.409-1.409a2.25 2.25 0 013.182 0l2.909 2.909M3.75 21h16.5a2.25 2.25 0 002.25-2.25V5.25a2.25 2.25 0 00-2.25-2.25H3.75a2.25 2.25 0 00-2.25 2.25v13.5A2.25 2.25 0 003.75 21z"/></svg>
+              Ads
+            <% end %>
+          </li>
+          <li>
+            <% active = controller_name == 'playlists' %>
+            <%= link_to playlists_path, class: "group flex gap-x-3 rounded-md p-2 text-sm/6 font-semibold #{active ? 'bg-white/5 text-white' : 'text-gray-400 hover:bg-white/5 hover:text-white'}" do %>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true" class="size-6 shrink-0"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 12h16.5m-16.5 3.75h16.5M3.75 19.5h16.5M5.625 4.5h12.75a1.875 1.875 0 010 3.75H5.625a1.875 1.875 0 010-3.75z"/></svg>
+              Playlists
+            <% end %>
+          </li>
+        </ul>
       </li>
-      <li>
-        <%= link_to ads_path, class: "flex items-center gap-2.5 #{'menu-active' if controller_name == 'ads' || controller_name == 'playlist_ads'}" do %>
-          <svg xmlns="http://www.w3.org/2000/svg" class="w-[18px] h-[18px]" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 15.75l5.159-5.159a2.25 2.25 0 013.182 0l5.159 5.159m-1.5-1.5l1.409-1.409a2.25 2.25 0 013.182 0l2.909 2.909M3.75 21h16.5a2.25 2.25 0 002.25-2.25V5.25a2.25 2.25 0 00-2.25-2.25H3.75a2.25 2.25 0 00-2.25 2.25v13.5A2.25 2.25 0 003.75 21z"/></svg>
-          <span>Ads</span>
-        <% end %>
-      </li>
-      <li>
-        <%= link_to playlists_path, class: "flex items-center gap-2.5 #{'menu-active' if controller_name == 'playlists'}" do %>
-          <svg xmlns="http://www.w3.org/2000/svg" class="w-[18px] h-[18px]" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 12h16.5m-16.5 3.75h16.5M3.75 19.5h16.5M5.625 4.5h12.75a1.875 1.875 0 010 3.75H5.625a1.875 1.875 0 010-3.75z"/></svg>
-          <span>Playlists</span>
-        <% end %>
+
+      <%# User at bottom %>
+      <li class="-mx-6 mt-auto">
+        <div class="flex items-center gap-x-4 px-6 py-3 text-sm/6 font-semibold text-white">
+          <span class="flex size-8 shrink-0 items-center justify-center rounded-full bg-gray-800 text-xs font-bold text-gray-300">
+            <%= Current.user&.first_name&.first || "U" %><%= Current.user&.last_name&.first || "" %>
+          </span>
+          <span class="flex-1 truncate"><%= Current.user&.first_name %> <%= Current.user&.last_name %></span>
+        </div>
+        <%= button_to "Sign out", session_path, method: :delete,
+            class: "flex w-full items-center gap-x-4 px-6 py-2 text-sm text-gray-400 hover:text-white hover:bg-white/5" %>
       </li>
     </ul>
   </nav>
-
-  <%# Bottom: user %>
-  <div class="px-3 py-3 border-t border-base-300/20">
-    <div class="flex items-center gap-2.5 px-2.5 py-2 rounded-lg cursor-pointer hover:bg-base-300/10">
-      <div class="w-8 h-8 rounded-full flex-none grid place-items-center text-xs font-bold bg-primary/20 text-primary">
-        <%= Current.user&.first_name&.first || "U" %><%= Current.user&.last_name&.first || "" %>
-      </div>
-      <div class="flex-1 min-w-0">
-        <div class="text-sm font-semibold text-neutral-content truncate"><%= Current.user&.first_name %> <%= Current.user&.last_name %></div>
-        <div class="text-xs opacity-50"><%= Current.user&.email_address %></div>
-      </div>
-    </div>
-    <%= button_to "Sign out", session_path, method: :delete, class: "btn btn-ghost btn-sm w-full mt-1 text-neutral-content/60" %>
-  </div>
-</aside>
+</div>
