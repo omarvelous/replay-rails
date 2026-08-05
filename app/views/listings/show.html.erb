@@ -1,15 +1,15 @@
 <% content_for(:page_title) { @listing.address } %>
 <% content_for(:page_subtitle) { "Listing" } %>
 <% content_for(:page_actions) do %>
-  <%= link_to edit_listing_path(@listing), class: "btn btn-sm", data: { turbo_frame: "modal" } do %>Edit listing<% end %>
-  <%= link_to new_ad_path(listing_id: @listing.id), class: "btn btn-primary btn-sm" do %>Use in ad<% end %>
+  <%= link_to edit_listing_path(@listing), class: "rounded-md bg-white px-2.5 py-1.5 text-sm font-semibold text-gray-900 shadow-xs ring-1 ring-gray-300 ring-inset hover:bg-gray-50", data: { turbo_frame: "modal" } do %>Edit listing<% end %>
+  <%= link_to new_ad_path(listing_id: @listing.id), class: "rounded-md bg-indigo-600 px-2.5 py-1.5 text-sm font-semibold text-white shadow-xs hover:bg-indigo-500" do %>Use in ad<% end %>
 <% end %>
 
 <% tone = %w[#2f6bff #0fb5a6 #7c5cff #e8990f #1f9d57 #e5484d][@listing.id % 6] %>
 <% is_rental = @listing.price && @listing.price < 100_000 %>
 
 <%# Back link %>
-<%= link_to listings_path, class: "inline-flex items-center gap-1 text-sm font-semibold text-base-content/50 hover:text-base-content mb-2" do %>
+<%= link_to listings_path, class: "inline-flex items-center gap-1 text-sm font-semibold text-gray-500 hover:text-gray-900 mb-2" do %>
   <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5"/></svg>
   Listings
 <% end %>
@@ -19,11 +19,15 @@
   <div>
     <div class="flex items-center gap-3 mb-1">
       <h2 class="text-xl font-bold tracking-tight"><%= @listing.address %></h2>
-      <span class="badge badge-sm <%= @listing.status == 'active' ? 'badge-success' : @listing.status == 'pending' ? 'badge-warning' : 'badge-neutral' %>">
-        <%= @listing.status.capitalize %>
-      </span>
+      <% if @listing.status == 'active' %>
+        <span class="inline-flex items-center rounded-full bg-green-50 px-2 py-1 text-xs font-medium text-green-700 ring-1 ring-green-600/20 ring-inset"><%= @listing.status.capitalize %></span>
+      <% elsif @listing.status == 'pending' %>
+        <span class="inline-flex items-center rounded-full bg-yellow-50 px-2 py-1 text-xs font-medium text-yellow-800 ring-1 ring-yellow-600/20 ring-inset"><%= @listing.status.capitalize %></span>
+      <% else %>
+        <span class="inline-flex items-center rounded-full bg-gray-50 px-2 py-1 text-xs font-medium text-gray-600 ring-1 ring-gray-500/10 ring-inset"><%= @listing.status.capitalize %></span>
+      <% end %>
     </div>
-    <p class="text-xs text-base-content/40 flex items-center gap-1">
+    <p class="text-xs text-gray-400 flex items-center gap-1">
       <svg xmlns="http://www.w3.org/2000/svg" class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z"/></svg>
       Apartment · <span class="font-mono">RP-<%= @listing.id.to_s.rjust(5, "0") %></span>
     </p>
@@ -50,31 +54,31 @@
 </div>
 
 <%# Spec strip %>
-<div class="card bg-base-100 shadow-sm mb-5 p-0 overflow-hidden">
+<div class="rounded-lg bg-white shadow-sm ring-1 ring-gray-900/5 mb-5 p-0 overflow-hidden">
   <div class="flex flex-wrap">
-    <div class="flex-1 min-w-[33%] p-4 bg-base-200/50" style="flex: 1.3;">
-      <p class="text-2xl font-bold tabular-nums text-primary"><%= number_to_currency(@listing.price, precision: 0) %></p>
-      <p class="text-xs text-base-content/40 mt-1"><%= is_rental ? "Asking rent" : "List price" %></p>
+    <div class="flex-1 min-w-[33%] p-4 bg-gray-50" style="flex: 1.3;">
+      <p class="text-2xl font-bold tabular-nums text-indigo-600"><%= number_to_currency(@listing.price, precision: 0) %></p>
+      <p class="text-xs text-gray-400 mt-1"><%= is_rental ? "Asking rent" : "List price" %></p>
     </div>
-    <div class="flex-1 min-w-[33%] p-4 border-l border-base-200">
+    <div class="flex-1 min-w-[33%] p-4 border-l border-gray-200">
       <p class="text-xl font-bold tabular-nums"><%= @listing.beds || "—" %></p>
-      <p class="text-xs text-base-content/40 mt-1">Bedrooms</p>
+      <p class="text-xs text-gray-400 mt-1">Bedrooms</p>
     </div>
-    <div class="flex-1 min-w-[33%] p-4 border-l border-base-200">
+    <div class="flex-1 min-w-[33%] p-4 border-l border-gray-200">
       <p class="text-xl font-bold tabular-nums"><%= @listing.baths || "—" %></p>
-      <p class="text-xs text-base-content/40 mt-1">Bathrooms</p>
+      <p class="text-xs text-gray-400 mt-1">Bathrooms</p>
     </div>
-    <div class="flex-1 min-w-[33%] p-4 border-l border-base-200">
+    <div class="flex-1 min-w-[33%] p-4 border-l border-gray-200">
       <p class="text-xl font-bold tabular-nums"><%= @listing.sqft ? number_with_delimiter(@listing.sqft) : "—" %></p>
-      <p class="text-xs text-base-content/40 mt-1">Interior sq ft</p>
+      <p class="text-xs text-gray-400 mt-1">Interior sq ft</p>
     </div>
-    <div class="flex-1 min-w-[33%] p-4 border-l border-base-200">
+    <div class="flex-1 min-w-[33%] p-4 border-l border-gray-200">
       <% if is_rental %>
         <p class="text-xl font-bold tabular-nums">12 mo</p>
-        <p class="text-xs text-base-content/40 mt-1">Lease term</p>
+        <p class="text-xs text-gray-400 mt-1">Lease term</p>
       <% else %>
         <p class="text-xl font-bold tabular-nums"><%= @listing.sqft && @listing.sqft > 0 ? number_to_currency(@listing.price / @listing.sqft, precision: 0) : "—" %></p>
-        <p class="text-xs text-base-content/40 mt-1">Price / sq ft</p>
+        <p class="text-xs text-gray-400 mt-1">Price / sq ft</p>
       <% end %>
     </div>
   </div>
@@ -85,10 +89,10 @@
   <%# Main column %>
   <div class="flex flex-col gap-4">
     <%# About %>
-    <div class="card bg-base-100 shadow-sm">
-      <div class="card-body">
+    <div class="rounded-lg bg-white shadow-sm ring-1 ring-gray-900/5">
+      <div class="p-5">
         <h3 class="font-semibold text-base mb-2">About this property</h3>
-        <p class="text-sm leading-relaxed text-base-content/70">
+        <p class="text-sm leading-relaxed text-gray-600">
           This <%= @listing.beds || 0 %>-bedroom, <%= @listing.baths || 0 %>-bathroom apartment offers
           <%= @listing.sqft ? "#{number_with_delimiter(@listing.sqft)} square feet of" : "" %> living space.
           Located at <%= @listing.address %>, this property is currently <%= @listing.status %>.
@@ -97,13 +101,13 @@
     </div>
 
     <%# Features & amenities (stubbed) %>
-    <div class="card bg-base-100 shadow-sm">
-      <div class="card-body">
+    <div class="rounded-lg bg-white shadow-sm ring-1 ring-gray-900/5">
+      <div class="p-5">
         <h3 class="font-semibold text-base mb-3">Features & amenities</h3>
         <div class="flex flex-wrap gap-2">
           <% %w[In-unit\ laundry Stainless\ appliances Hardwood\ floors Pet\ friendly High\ ceilings Dishwasher].each do |feat| %>
-            <span class="inline-flex items-center gap-1.5 text-xs font-medium px-3 py-1.5 rounded-full bg-base-200 border border-base-300 text-base-content/70">
-              <svg xmlns="http://www.w3.org/2000/svg" class="w-3 h-3 text-success" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/></svg>
+            <span class="inline-flex items-center gap-1.5 text-xs font-medium px-3 py-1.5 rounded-full bg-gray-100 border border-gray-200 text-gray-600">
+              <svg xmlns="http://www.w3.org/2000/svg" class="w-3 h-3 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/></svg>
               <%= feat %>
             </span>
           <% end %>
@@ -112,10 +116,10 @@
     </div>
 
     <%# Property details %>
-    <div class="card bg-base-100 shadow-sm">
-      <div class="card-body">
+    <div class="rounded-lg bg-white shadow-sm ring-1 ring-gray-900/5">
+      <div class="p-5">
         <h3 class="font-semibold text-base mb-3">Property details</h3>
-        <div class="divide-y divide-base-200">
+        <div class="divide-y divide-gray-200">
           <% details = [
             ["Property type", "Apartment"],
             ["Status", @listing.status.capitalize],
@@ -130,7 +134,7 @@
           ] %>
           <% details.each do |label, value| %>
             <div class="flex justify-between py-2.5 text-sm">
-              <span class="text-base-content/50"><%= label %></span>
+              <span class="text-gray-500"><%= label %></span>
               <span class="font-semibold <%= label == 'MLS #' ? 'font-mono' : '' %>"><%= value %></span>
             </div>
           <% end %>
@@ -139,8 +143,8 @@
     </div>
 
     <%# Ads from this listing %>
-    <div class="card bg-base-100 shadow-sm">
-      <div class="card-body">
+    <div class="rounded-lg bg-white shadow-sm ring-1 ring-gray-900/5">
+      <div class="p-5">
         <div class="flex justify-between items-center mb-3">
           <h3 class="font-semibold text-base">Ads built from this listing</h3>
         </div>
@@ -149,27 +153,27 @@
           <div class="flex flex-col gap-2">
             <% ads.each do |ad| %>
               <% ad_tone = %w[#2f6bff #0fb5a6 #7c5cff #e8990f #1f9d57 #e5484d][ad.id % 6] %>
-              <%= link_to ad_path(ad), class: "flex items-center gap-3 p-2.5 rounded-lg border border-base-200 hover:border-base-300 hover:bg-base-200/50 transition-colors" do %>
+              <%= link_to ad_path(ad), class: "flex items-center gap-3 p-2.5 rounded-lg border border-gray-200 hover:border-gray-200 hover:bg-gray-50 transition-colors" do %>
                 <div class="w-16 h-10 rounded flex-none flex items-end p-1"
                      style="background: linear-gradient(135deg, #0b0d12, <%= ad_tone %>cc);">
                   <span class="text-white text-[7px] font-bold leading-none truncate"><%= ad.headline %></span>
                 </div>
                 <div class="flex-1 min-w-0">
                   <p class="text-sm font-medium truncate"><%= ad.headline %></p>
-                  <p class="text-xs text-base-content/40">Ad</p>
+                  <p class="text-xs text-gray-400">Ad</p>
                 </div>
               <% end %>
             <% end %>
           </div>
         <% else %>
-          <div class="border-2 border-dashed border-base-300 rounded-lg p-6 text-center">
+          <div class="border-2 border-dashed border-gray-200 rounded-lg p-6 text-center">
             <div class="flex flex-col items-center gap-2">
-              <div class="w-10 h-10 rounded-lg bg-primary/10 grid place-items-center">
-                <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 15.75l5.159-5.159a2.25 2.25 0 013.182 0l5.159 5.159m-1.5-1.5l1.409-1.409a2.25 2.25 0 013.182 0l2.909 2.909M3.75 21h16.5a2.25 2.25 0 002.25-2.25V5.25a2.25 2.25 0 00-2.25-2.25H3.75a2.25 2.25 0 00-2.25 2.25v13.5A2.25 2.25 0 003.75 21z"/></svg>
+              <div class="w-10 h-10 rounded-lg bg-indigo-50 grid place-items-center">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-indigo-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 15.75l5.159-5.159a2.25 2.25 0 013.182 0l5.159 5.159m-1.5-1.5l1.409-1.409a2.25 2.25 0 013.182 0l2.909 2.909M3.75 21h16.5a2.25 2.25 0 002.25-2.25V5.25a2.25 2.25 0 00-2.25-2.25H3.75a2.25 2.25 0 00-2.25 2.25v13.5A2.25 2.25 0 003.75 21z"/></svg>
               </div>
               <p class="text-sm font-semibold">No ads yet</p>
-              <p class="text-xs text-base-content/50">Turn this listing into signage in one step.</p>
-              <%= link_to "Create ad", new_ad_path(listing_id: @listing.id), class: "btn btn-primary btn-sm mt-1" %>
+              <p class="text-xs text-gray-500">Turn this listing into signage in one step.</p>
+              <%= link_to "Create ad", new_ad_path(listing_id: @listing.id), class: "rounded-md bg-indigo-600 px-2.5 py-1.5 text-sm font-semibold text-white shadow-xs hover:bg-indigo-500 mt-1" %>
             </div>
           </div>
         <% end %>
@@ -180,50 +184,50 @@
   <%# Sidebar column %>
   <div class="flex flex-col gap-4">
     <%# Signage performance (stubbed) %>
-    <div class="card bg-base-100 shadow-sm">
-      <div class="card-body">
+    <div class="rounded-lg bg-white shadow-sm ring-1 ring-gray-900/5">
+      <div class="p-5">
         <p class="text-3xl font-bold tabular-nums">0</p>
-        <p class="text-xs text-base-content/40">QR scans · 30d</p>
-        <div class="h-10 bg-base-200 rounded mt-3"></div>
-        <div class="flex gap-4 pt-3 mt-3 border-t border-base-200">
+        <p class="text-xs text-gray-400">QR scans · 30d</p>
+        <div class="h-10 bg-gray-100 rounded mt-3"></div>
+        <div class="flex gap-4 pt-3 mt-3 border-t border-gray-200">
           <div class="flex-1 text-center">
             <p class="font-bold text-sm font-mono tabular-nums">0%</p>
-            <p class="text-xs text-base-content/40">Scan-through</p>
+            <p class="text-xs text-gray-400">Scan-through</p>
           </div>
           <div class="flex-1 text-center">
             <p class="font-bold text-sm font-mono tabular-nums"><%= @listing.ads.count %></p>
-            <p class="text-xs text-base-content/40">Active ads</p>
+            <p class="text-xs text-gray-400">Active ads</p>
           </div>
           <div class="flex-1 text-center">
             <p class="font-bold text-sm font-mono tabular-nums">0</p>
-            <p class="text-xs text-base-content/40">On screens</p>
+            <p class="text-xs text-gray-400">On screens</p>
           </div>
         </div>
       </div>
     </div>
 
     <%# Listing agent %>
-    <div class="card bg-base-100 shadow-sm">
-      <div class="card-body">
+    <div class="rounded-lg bg-white shadow-sm ring-1 ring-gray-900/5">
+      <div class="p-5">
         <h3 class="font-semibold text-base mb-3">Listing agent</h3>
         <% agent = @listing.agents.first %>
         <% if agent %>
           <div class="flex items-center gap-3 mb-3">
-            <div class="w-10 h-10 rounded-full flex-none grid place-items-center text-sm font-bold bg-primary/10 text-primary">
+            <div class="w-10 h-10 rounded-full flex-none grid place-items-center text-sm font-bold bg-indigo-50 text-indigo-600">
               <%= agent.name.split.map(&:first).join.first(2).upcase %>
             </div>
             <div>
               <p class="font-semibold text-sm"><%= agent.name %></p>
-              <p class="text-xs text-base-content/40">RePlay Account</p>
+              <p class="text-xs text-gray-400">RePlay Account</p>
             </div>
           </div>
           <div class="flex gap-2">
-            <button class="btn btn-sm flex-1">Message</button>
-            <%= link_to "Profile", agent_path(agent), class: "btn btn-sm flex-1" %>
+            <button class="rounded-md bg-white px-2.5 py-1.5 text-sm font-semibold text-gray-900 shadow-xs ring-1 ring-gray-300 ring-inset hover:bg-gray-50 flex-1">Message</button>
+            <%= link_to "Profile", agent_path(agent), class: "rounded-md bg-white px-2.5 py-1.5 text-sm font-semibold text-gray-900 shadow-xs ring-1 ring-gray-300 ring-inset hover:bg-gray-50 flex-1 text-center" %>
           </div>
         <% else %>
-          <p class="text-sm text-base-content/50">No agent assigned.</p>
-          <%= link_to "Add agent", new_listing_listing_agent_path(@listing), class: "btn btn-sm btn-primary mt-2", data: { turbo_frame: "modal" } %>
+          <p class="text-sm text-gray-500">No agent assigned.</p>
+          <%= link_to "Add agent", new_listing_listing_agent_path(@listing), class: "rounded-md bg-indigo-600 px-2.5 py-1.5 text-sm font-semibold text-white shadow-xs hover:bg-indigo-500 mt-2 inline-block", data: { turbo_frame: "modal" } %>
         <% end %>
       </div>
     </div>
@@ -233,16 +237,16 @@
     <% end %>
 
     <%# Note %>
-    <div class="card bg-base-100 shadow-sm">
-      <div class="card-body text-sm text-base-content/60">
-        <strong class="text-base-content/80">Synced from MLS.</strong> Property facts update automatically on the next sync — edits here only affect how the listing appears in RePlay signage.
+    <div class="rounded-lg bg-white shadow-sm ring-1 ring-gray-900/5">
+      <div class="p-5 text-sm text-gray-500">
+        <strong class="text-gray-700">Synced from MLS.</strong> Property facts update automatically on the next sync — edits here only affect how the listing appears in RePlay signage.
       </div>
     </div>
   </div>
 </div>
 
 <%# Delete action %>
-<div class="mt-8 pt-4 border-t border-base-200">
-  <%= button_to "Delete listing", @listing, method: :delete, class: "btn btn-error btn-sm btn-outline",
+<div class="mt-8 pt-4 border-t border-gray-200">
+  <%= button_to "Delete listing", @listing, method: :delete, class: "rounded-md bg-white px-2.5 py-1.5 text-sm font-semibold text-red-600 shadow-xs ring-1 ring-red-300 ring-inset hover:bg-red-50",
       data: { turbo_confirm: "Are you sure you want to delete this listing?" } %>
 </div>

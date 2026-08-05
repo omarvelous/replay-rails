@@ -1,87 +1,91 @@
-<%= form_with model: listing, class: "contents" do |form| %>
+<%= form_with model: listing do |form| %>
   <% if listing.errors.any? %>
-    <div role="alert" class="alert alert-error mb-4">
-      <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 shrink-0 stroke-current" fill="none" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-      <div>
-        <ul class="list-disc list-inside text-sm">
-          <% listing.errors.full_messages.each do |message| %>
-            <li><%= message %></li>
-          <% end %>
-        </ul>
+    <div class="rounded-md bg-red-50 p-4 mb-4">
+      <div class="flex">
+        <div class="shrink-0">
+          <svg viewBox="0 0 20 20" fill="currentColor" aria-hidden="true" class="size-5 text-red-400"><path d="M10 18a8 8 0 1 0 0-16 8 8 0 0 0 0 16ZM8.28 7.22a.75.75 0 0 0-1.06 1.06L8.94 10l-1.72 1.72a.75.75 0 1 0 1.06 1.06L10 11.06l1.72 1.72a.75.75 0 1 0 1.06-1.06L11.06 10l1.72-1.72a.75.75 0 0 0-1.06-1.06L10 8.94 8.28 7.22Z" clip-rule="evenodd" fill-rule="evenodd" /></svg>
+        </div>
+        <div class="ml-3">
+          <ul class="list-disc list-inside text-sm text-red-700">
+            <% listing.errors.full_messages.each do |message| %>
+              <li><%= message %></li>
+            <% end %>
+          </ul>
+        </div>
       </div>
     </div>
   <% end %>
 
   <div class="max-h-[min(72vh,600px)] overflow-y-auto pr-1">
     <%# Property section %>
-    <p class="text-xs font-semibold uppercase tracking-wider text-base-content/40 mb-3">Property</p>
+    <p class="text-xs font-semibold uppercase tracking-wider text-gray-400 mb-3">Property</p>
 
-    <fieldset class="fieldset mb-3">
-      <%= form.label :address, class: "fieldset-label" %>
+    <div class="mb-3">
+      <%= form.label :address, class: "block text-sm/6 font-medium text-gray-900" %>
       <%= form.text_field :address, required: true, autofocus: true, placeholder: "Street address",
-          class: "input input-bordered w-full" %>
-    </fieldset>
+          class: "block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6" %>
+    </div>
 
     <div class="grid grid-cols-3 gap-3 mb-5">
-      <fieldset class="fieldset">
-        <%= form.label :status, class: "fieldset-label" %>
+      <div>
+        <%= form.label :status, class: "block text-sm/6 font-medium text-gray-900" %>
         <%= form.select :status, [["Active", "active"], ["For Rent", "pending"], ["Sold", "sold"]],
-            {}, class: "select select-bordered w-full" %>
-      </fieldset>
-      <fieldset class="fieldset">
-        <%= form.label :beds, "Bedrooms", class: "fieldset-label" %>
-        <%= form.number_field :beds, min: 0, step: 1, class: "input input-bordered w-full" %>
-      </fieldset>
-      <fieldset class="fieldset">
-        <%= form.label :baths, "Bathrooms", class: "fieldset-label" %>
-        <%= form.number_field :baths, min: 0, step: 1, class: "input input-bordered w-full" %>
-      </fieldset>
+            {}, class: "block w-full rounded-md bg-white py-1.5 pl-3 pr-8 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6" %>
+      </div>
+      <div>
+        <%= form.label :beds, "Bedrooms", class: "block text-sm/6 font-medium text-gray-900" %>
+        <%= form.number_field :beds, min: 0, step: 1, class: "block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6" %>
+      </div>
+      <div>
+        <%= form.label :baths, "Bathrooms", class: "block text-sm/6 font-medium text-gray-900" %>
+        <%= form.number_field :baths, min: 0, step: 1, class: "block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6" %>
+      </div>
     </div>
 
     <%# Pricing & size section %>
-    <p class="text-xs font-semibold uppercase tracking-wider text-base-content/40 mb-3">Pricing & size</p>
+    <p class="text-xs font-semibold uppercase tracking-wider text-gray-400 mb-3">Pricing & size</p>
 
     <div class="grid grid-cols-3 gap-3 mb-5">
-      <fieldset class="fieldset">
-        <%= form.label :price, "List price ($)", class: "fieldset-label" %>
-        <%= form.number_field :price, required: true, min: 0, step: 0.01, class: "input input-bordered w-full" %>
-      </fieldset>
-      <fieldset class="fieldset">
-        <%= form.label :sqft, "Interior sq ft", class: "fieldset-label" %>
-        <%= form.number_field :sqft, min: 0, class: "input input-bordered w-full" %>
-      </fieldset>
-      <fieldset class="fieldset">
-        <label class="fieldset-label">MLS #</label>
-        <input type="text" class="input input-bordered w-full font-mono" placeholder="auto" disabled
+      <div>
+        <%= form.label :price, "List price ($)", class: "block text-sm/6 font-medium text-gray-900" %>
+        <%= form.number_field :price, required: true, min: 0, step: 0.01, class: "block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6" %>
+      </div>
+      <div>
+        <%= form.label :sqft, "Interior sq ft", class: "block text-sm/6 font-medium text-gray-900" %>
+        <%= form.number_field :sqft, min: 0, class: "block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6" %>
+      </div>
+      <div>
+        <label class="block text-sm/6 font-medium text-gray-900">MLS #</label>
+        <input type="text" class="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6 font-mono" placeholder="auto" disabled
                value="RP-<%= listing.persisted? ? listing.id.to_s.rjust(5, '0') : '' %>" />
-      </fieldset>
+      </div>
     </div>
 
     <%# Description section %>
-    <p class="text-xs font-semibold uppercase tracking-wider text-base-content/40 mb-3">Description</p>
+    <p class="text-xs font-semibold uppercase tracking-wider text-gray-400 mb-3">Description</p>
 
-    <fieldset class="fieldset mb-5">
+    <div class="mb-5">
       <%= form.text_area :address, rows: 3,
           placeholder: "A few sentences buyers will see on the QR landing page…",
-          class: "textarea textarea-bordered w-full",
+          class: "block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6",
           name: nil, id: nil, disabled: true %>
-    </fieldset>
+    </div>
 
     <%# Photos section %>
-    <p class="text-xs font-semibold uppercase tracking-wider text-base-content/40 mb-3">Photos</p>
+    <p class="text-xs font-semibold uppercase tracking-wider text-gray-400 mb-3">Photos</p>
 
-    <div class="border-2 border-dashed border-base-300 rounded-lg p-6 text-center bg-base-200/30 mb-2">
-      <div class="flex flex-col items-center gap-2 text-base-content/40">
+    <div class="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center bg-gray-50 mb-2">
+      <div class="flex flex-col items-center gap-2 text-gray-400">
         <svg xmlns="http://www.w3.org/2000/svg" class="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5m-13.5-9L12 3m0 0l4.5 4.5M12 3v13.5"/></svg>
-        <p class="text-sm">Drag photos here or <span class="font-semibold text-base-content/60">browse</span></p>
+        <p class="text-sm">Drag photos here or <span class="font-semibold text-gray-600">browse</span></p>
         <p class="text-xs">JPG or PNG · first image becomes the signage hero</p>
       </div>
     </div>
   </div>
 
   <%# Footer %>
-  <div class="flex items-center justify-end gap-3 pt-4 mt-4 border-t border-base-200">
-    <button type="button" class="btn" data-action="click->modal#close">Cancel</button>
-    <%= form.submit listing.persisted? ? "Save changes" : "Create listing", class: "btn btn-primary" %>
+  <div class="flex items-center justify-end gap-3 pt-4 mt-4 border-t border-gray-200">
+    <button type="button" class="rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-xs ring-1 ring-gray-300 ring-inset hover:bg-gray-50" data-action="click->modal#close">Cancel</button>
+    <%= form.submit listing.persisted? ? "Save changes" : "Create listing", class: "rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-xs hover:bg-indigo-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600" %>
   </div>
 <% end %>

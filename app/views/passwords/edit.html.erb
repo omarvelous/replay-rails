@@ -1,27 +1,34 @@
 <div class="mx-auto md:w-2/3 w-full">
   <% if alert = flash[:alert] %>
-    <div class="alert alert-error mb-5" id="alert">
-      <span><%= alert %></span>
+    <div class="mb-5 rounded-md bg-red-50 p-4" id="alert">
+      <div class="flex">
+        <div class="shrink-0">
+          <svg viewBox="0 0 20 20" fill="currentColor" aria-hidden="true" class="size-5 text-red-400"><path d="M10 18a8 8 0 1 0 0-16 8 8 0 0 0 0 16ZM8.28 7.22a.75.75 0 0 0-1.06 1.06L8.94 10l-1.72 1.72a.75.75 0 1 0 1.06 1.06L10 11.06l1.72 1.72a.75.75 0 1 0 1.06-1.06L11.06 10l1.72-1.72a.75.75 0 0 0-1.06-1.06L10 8.94 8.28 7.22Z" clip-rule="evenodd" fill-rule="evenodd" /></svg>
+        </div>
+        <div class="ml-3">
+          <p class="text-sm font-medium text-red-800"><%= alert %></p>
+        </div>
+      </div>
     </div>
   <% end %>
 
   <h1 class="font-bold text-4xl">Update your password</h1>
 
   <%= form_with url: password_path(params[:token]), method: :put, class: "contents" do |form| %>
-    <fieldset class="fieldset my-5">
+    <div class="my-5">
       <%= form.password_field :password, required: true, autocomplete: "new-password",
           placeholder: "Enter new password", maxlength: 72,
-          class: "input input-bordered w-full" %>
-    </fieldset>
+          class: "block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6" %>
+    </div>
 
-    <fieldset class="fieldset my-5">
+    <div class="my-5">
       <%= form.password_field :password_confirmation, required: true, autocomplete: "new-password",
           placeholder: "Repeat new password", maxlength: 72,
-          class: "input input-bordered w-full" %>
-    </fieldset>
+          class: "block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6" %>
+    </div>
 
     <div>
-      <%= form.submit "Save", class: "btn btn-primary" %>
+      <%= form.submit "Save", class: "rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-xs hover:bg-indigo-500" %>
     </div>
   <% end %>
 </div>

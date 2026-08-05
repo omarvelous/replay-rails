@@ -16,7 +16,13 @@ export default class extends Controller {
 
     this.element.querySelectorAll("[data-view-btn]").forEach(btn => {
       const active = btn.dataset.view === this.currentValue
-      btn.classList.toggle("btn-active", active)
+      if (active) {
+        btn.classList.add("bg-gray-100", "text-gray-900")
+        btn.classList.remove("text-gray-400")
+      } else {
+        btn.classList.remove("bg-gray-100", "text-gray-900")
+        btn.classList.add("text-gray-400")
+      }
     })
   }
 

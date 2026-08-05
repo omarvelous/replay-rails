@@ -34,7 +34,7 @@
   <%# Edit ad link — one per slide, visibility toggles with the slide %>
   <% @playlist_ads.each_with_index do |pa, index| %>
     <a href="<%= edit_ad_path(pa.ad) %>"
-       class="btn btn-ghost btn-sm text-white/30 hover:text-white/80"
+       class="text-sm font-semibold text-white/30 hover:text-white/80"
        style="position: absolute; bottom: 16px; left: 16px; z-index: 10; <%= index == 0 ? '' : 'display: none;' %>"
        data-slideshow-target="editLink"
        target="_blank">Edit Ad</a>
@@ -48,9 +48,9 @@
   <%# Nav controls %>
   <% if @playlist_ads.size > 1 %>
     <div style="position: absolute; bottom: 16px; right: 16px; display: flex; gap: 8px; z-index: 10;">
-      <button class="btn btn-ghost btn-sm text-white/30 hover:text-white/80"
+      <button class="text-sm font-semibold text-white/30 hover:text-white/80"
               data-action="click->slideshow#previous" aria-label="Previous">&#8592; Prev</button>
-      <button class="btn btn-ghost btn-sm text-white/30 hover:text-white/80"
+      <button class="text-sm font-semibold text-white/30 hover:text-white/80"
               data-action="click->slideshow#next" aria-label="Next">Next &#8594;</button>
     </div>
   <% end %>

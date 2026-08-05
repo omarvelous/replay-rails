@@ -5,16 +5,16 @@
 
   <% if @playlist_ads.any? %>
     <div class="overflow-x-auto">
-      <table class="table">
+      <table class="min-w-full divide-y divide-gray-300">
         <thead>
           <tr>
-            <th>Playlist</th>
-            <th>Position</th>
-            <th>Duration</th>
-            <th></th>
+            <th class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Playlist</th>
+            <th class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Position</th>
+            <th class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Duration</th>
+            <th class="px-3 py-3.5 text-right text-sm font-semibold text-gray-900"></th>
           </tr>
         </thead>
-        <tbody id="playlist_ads_rows">
+        <tbody id="playlist_ads_rows" class="divide-y divide-gray-200">
           <% @playlist_ads.each do |pa| %>
             <%= render "ads/playlist_ads/playlist_ad", pa: pa %>
           <% end %>
@@ -22,6 +22,6 @@
       </table>
     </div>
   <% else %>
-    <p class="text-base-content/60">This ad is not in any playlists yet.</p>
+    <p class="text-gray-500">This ad is not in any playlists yet.</p>
   <% end %>
 <% end %>

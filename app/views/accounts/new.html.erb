@@ -3,9 +3,9 @@
 
   <%= form_with model: @user, url: accounts_path, class: "contents" do |form| %>
     <% if @user.errors.any? %>
-      <div id="error_explanation" class="alert alert-error my-4">
+      <div id="error_explanation" class="my-4 rounded-md bg-red-50 p-4">
         <div>
-          <ul class="list-disc list-inside text-sm">
+          <ul class="list-disc list-inside text-sm text-red-700">
             <% @user.errors.full_messages.each do |message| %>
               <li><%= message %></li>
             <% end %>
@@ -14,45 +14,45 @@
       </div>
     <% end %>
 
-    <fieldset class="fieldset my-5">
-      <%= form.label :first_name, "First name", class: "fieldset-label" %>
+    <div class="my-5">
+      <%= form.label :first_name, "First name", class: "block text-sm/6 font-medium text-gray-900" %>
       <%= form.text_field :first_name, required: true, autofocus: true,
-          class: "input input-bordered w-full" %>
-    </fieldset>
+          class: "block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6" %>
+    </div>
 
-    <fieldset class="fieldset my-5">
-      <%= form.label :last_name, "Last name", class: "fieldset-label" %>
+    <div class="my-5">
+      <%= form.label :last_name, "Last name", class: "block text-sm/6 font-medium text-gray-900" %>
       <%= form.text_field :last_name, required: true,
-          class: "input input-bordered w-full" %>
-    </fieldset>
+          class: "block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6" %>
+    </div>
 
-    <fieldset class="fieldset my-5">
-      <%= form.label :email_address, "Email address", class: "fieldset-label" %>
+    <div class="my-5">
+      <%= form.label :email_address, "Email address", class: "block text-sm/6 font-medium text-gray-900" %>
       <%= form.email_field :email_address, required: true, autocomplete: "username",
-          class: "input input-bordered w-full" %>
-    </fieldset>
+          class: "block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6" %>
+    </div>
 
-    <fieldset class="fieldset my-5">
-      <%= form.label :phone, "Phone", class: "fieldset-label" %>
+    <div class="my-5">
+      <%= form.label :phone, "Phone", class: "block text-sm/6 font-medium text-gray-900" %>
       <%= form.telephone_field :phone,
-          class: "input input-bordered w-full" %>
-    </fieldset>
+          class: "block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6" %>
+    </div>
 
-    <fieldset class="fieldset my-5">
-      <%= form.label :password, "Password", class: "fieldset-label" %>
+    <div class="my-5">
+      <%= form.label :password, "Password", class: "block text-sm/6 font-medium text-gray-900" %>
       <%= form.password_field :password, required: true, autocomplete: "new-password",
-          class: "input input-bordered w-full" %>
-    </fieldset>
+          class: "block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6" %>
+    </div>
 
-    <fieldset class="fieldset my-5">
-      <%= form.label :password_confirmation, "Password confirmation", class: "fieldset-label" %>
+    <div class="my-5">
+      <%= form.label :password_confirmation, "Password confirmation", class: "block text-sm/6 font-medium text-gray-900" %>
       <%= form.password_field :password_confirmation, required: true, autocomplete: "new-password",
-          class: "input input-bordered w-full" %>
-    </fieldset>
+          class: "block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6" %>
+    </div>
 
     <div class="flex items-center gap-4">
-      <%= form.submit "Sign up", class: "btn btn-primary" %>
-      <%= link_to "Already have an account? Sign in", new_session_path, class: "link link-hover text-sm" %>
+      <%= form.submit "Sign up", class: "rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-xs hover:bg-indigo-500" %>
+      <%= link_to "Already have an account? Sign in", new_session_path, class: "text-sm text-gray-600 hover:text-gray-900" %>
     </div>
   <% end %>
 </div>

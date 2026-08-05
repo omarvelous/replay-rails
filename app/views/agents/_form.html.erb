@@ -1,43 +1,48 @@
-<%= form_with model: agent, class: "contents" do |form| %>
+<%= form_with model: agent do |form| %>
   <% if agent.errors.any? %>
-    <div id="error_explanation" class="alert alert-error my-4">
-      <div>
-        <ul class="list-disc list-inside text-sm">
-          <% agent.errors.full_messages.each do |message| %>
-            <li><%= message %></li>
-          <% end %>
-        </ul>
+    <div id="error_explanation" class="rounded-md bg-red-50 p-4 my-4">
+      <div class="flex">
+        <div class="shrink-0">
+          <svg viewBox="0 0 20 20" fill="currentColor" aria-hidden="true" class="size-5 text-red-400"><path d="M10 18a8 8 0 1 0 0-16 8 8 0 0 0 0 16ZM8.28 7.22a.75.75 0 0 0-1.06 1.06L8.94 10l-1.72 1.72a.75.75 0 1 0 1.06 1.06L10 11.06l1.72 1.72a.75.75 0 1 0 1.06-1.06L11.06 10l1.72-1.72a.75.75 0 0 0-1.06-1.06L10 8.94 8.28 7.22Z" clip-rule="evenodd" fill-rule="evenodd" /></svg>
+        </div>
+        <div class="ml-3">
+          <ul class="list-disc list-inside text-sm text-red-700">
+            <% agent.errors.full_messages.each do |message| %>
+              <li><%= message %></li>
+            <% end %>
+          </ul>
+        </div>
       </div>
     </div>
   <% end %>
 
-  <fieldset class="fieldset my-5">
-    <%= form.label :name, class: "fieldset-label" %>
+  <div class="my-5">
+    <%= form.label :name, class: "block text-sm/6 font-medium text-gray-900" %>
     <%= form.text_field :name, required: true, autofocus: true,
-        class: "input input-bordered w-full" %>
-  </fieldset>
+        class: "block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6" %>
+  </div>
 
-  <fieldset class="fieldset my-5">
-    <%= form.label :email, class: "fieldset-label" %>
+  <div class="my-5">
+    <%= form.label :email, class: "block text-sm/6 font-medium text-gray-900" %>
     <%= form.email_field :email, required: true,
-        class: "input input-bordered w-full" %>
-  </fieldset>
+        class: "block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6" %>
+  </div>
 
-  <fieldset class="fieldset my-5">
-    <%= form.label :phone, class: "fieldset-label" %>
-    <%= form.telephone_field :phone, class: "input input-bordered w-full" %>
-  </fieldset>
+  <div class="my-5">
+    <%= form.label :phone, class: "block text-sm/6 font-medium text-gray-900" %>
+    <%= form.telephone_field :phone, class: "block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6" %>
+  </div>
 
-  <fieldset class="fieldset my-5">
-    <%= form.label :user_id, "Linked user (optional)", class: "fieldset-label" %>
+  <div class="my-5">
+    <%= form.label :user_id, "Linked user (optional)", class: "block text-sm/6 font-medium text-gray-900" %>
     <%= form.select :user_id,
         Current.account.users.order(:first_name).map { |u| ["#{u.first_name} #{u.last_name}", u.id] },
         { include_blank: "None" },
-        class: "select select-bordered w-full" %>
-  </fieldset>
+        class: "block w-full rounded-md bg-white py-1.5 pl-3 pr-8 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6" %>
+  </div>
 
   <div class="flex items-center gap-4">
-    <%= form.submit class: "btn btn-primary" %>
-    <%= link_to "Cancel", agents_path, class: "link link-hover text-sm" %>
+    <%= form.submit class: "rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-xs hover:bg-indigo-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600" %>
+    <%= link_to "Cancel", agents_path, class: "text-sm font-semibold text-gray-600 hover:text-gray-900" %>
   </div>
 <% end %>
