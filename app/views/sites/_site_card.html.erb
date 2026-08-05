@@ -1,5 +1,5 @@
 <% tone = %w[#2f6bff #0fb5a6 #7c5cff #e8990f #1f9d57 #e5484d][site.id % 6] %>
-<%= link_to site_path(site), class: "card bg-base-100 shadow-sm hover:shadow-md transition-shadow cursor-pointer group", data: { turbo_frame: "_top" } do %>
+<%= link_to site_path(site), class: "card bg-base-100 shadow-sm hover:shadow-md transition-shadow cursor-pointer group", data: { turbo_frame: "drawer" } do %>
   <%# Tinted header %>
   <div class="h-28 rounded-t-[inherit] relative overflow-hidden" style="background: <%= tone %>14;">
     <div class="absolute inset-0" style="background: linear-gradient(150deg, <%= tone %>30, transparent 65%);"></div>
