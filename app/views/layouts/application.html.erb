@@ -23,22 +23,33 @@
       <div class="drawer lg:drawer-open">
         <input id="app-drawer" type="checkbox" class="drawer-toggle" />
 
-        <%# Main content area %>
+        <%# Main content area — wraps a right-side drawer for detail slide-overs %>
         <div class="drawer-content flex flex-col min-h-screen">
           <%= render "shared/topbar" %>
 
-          <main class="flex-1 p-6">
-            <div id="flash">
-              <%= render "shared/flash" %>
-            </div>
+          <div class="drawer drawer-end flex-1" data-controller="drawer">
+            <input id="detail-drawer" type="checkbox" class="drawer-toggle" data-drawer-target="toggle" />
 
-            <div class="mx-auto max-w-5xl">
-              <%= yield %>
+            <main class="drawer-content p-6">
+              <div id="flash">
+                <%= render "shared/flash" %>
+              </div>
+
+              <div class="mx-auto max-w-5xl">
+                <%= yield %>
+              </div>
+            </main>
+
+            <div class="drawer-side z-20">
+              <label for="detail-drawer" aria-label="close detail" class="drawer-overlay"></label>
+              <div class="bg-base-100 min-h-full flex flex-col" style="width: min(580px, 100%);">
+                <%= turbo_frame_tag "drawer" %>
+              </div>
             </div>
-          </main>
+          </div>
         </div>
 
-        <%# Sidebar %>
+        <%# Left sidebar %>
         <div class="drawer-side z-30">
           <%= render "shared/sidebar" %>
         </div>
@@ -55,6 +66,7 @@
       </main>
     <% end %>
 
+    <%# Centered modal %>
     <dialog class="modal" data-controller="modal" data-modal-target="dialog">
       <div class="modal-box max-w-2xl">
         <%= turbo_frame_tag "modal" %>

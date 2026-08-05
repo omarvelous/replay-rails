@@ -40,7 +40,7 @@
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
           <% @screens.includes(:site, screen_playlists: :playlist).each do |screen| %>
             <% active_playlist = screen.screen_playlists.find { |sp| sp.active }&.playlist %>
-            <%= link_to screen_path(screen), class: "card bg-base-100 shadow-sm hover:shadow-md transition-shadow cursor-pointer", data: { turbo_frame: "_top" } do %>
+            <%= link_to screen_path(screen), class: "card bg-base-100 shadow-sm hover:shadow-md transition-shadow cursor-pointer", data: { turbo_frame: "drawer" } do %>
               <%# Preview placeholder %>
               <div class="aspect-video bg-neutral rounded-t-[inherit] flex items-center justify-center relative">
                 <% if active_playlist %>
@@ -103,8 +103,8 @@
               <tbody>
                 <% @screens.includes(:site, screen_playlists: :playlist).each do |screen| %>
                   <% active_playlist = screen.screen_playlists.find { |sp| sp.active }&.playlist %>
-                  <tr class="hover cursor-pointer" onclick="Turbo.visit('<%= screen_path(screen) %>')">
-                    <td class="font-medium text-sm"><%= screen.name %></td>
+                  <tr class="hover">
+                    <td class="font-medium text-sm"><%= link_to screen.name, screen_path(screen), data: { turbo_frame: "drawer" }, class: "link link-hover" %></td>
                     <td class="text-sm"><%= screen.site.name %></td>
                     <td><span class="badge badge-xs badge-neutral"><%= screen.orientation.capitalize %></span></td>
                     <td class="text-sm text-base-content/60"><%= active_playlist&.name || "—" %></td>
