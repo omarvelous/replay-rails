@@ -21,7 +21,11 @@ Rails.application.routes.draw do
     member do
       get :preview
     end
-    resources :playlist_ads, controller: "playlists/playlist_ads"
+    resources :playlist_ads, controller: "playlists/playlist_ads" do
+      collection do
+        get :timeline
+      end
+    end
   end
   resource :session
   resources :passwords, param: :token

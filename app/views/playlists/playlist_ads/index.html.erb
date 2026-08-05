@@ -1,28 +1,24 @@
 <%= turbo_frame_tag "playlist_ads" do %>
-  <div class="flex justify-between items-center mb-3 mt-8">
-    <h2 class="font-bold text-2xl">Ads</h2>
-    <%= link_to "Add Ad", new_playlist_playlist_ad_path(parent), class: "rounded-md bg-indigo-600 px-2.5 py-1.5 text-sm font-semibold text-white shadow-xs hover:bg-indigo-500", data: { turbo_frame: "modal" } %>
-  </div>
-
-  <% if @playlist_ads.any? %>
-    <div class="overflow-x-auto">
-      <table class="min-w-full divide-y divide-gray-300">
-        <thead>
-          <tr>
-            <th class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">#</th>
-            <th class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Headline</th>
-            <th class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Duration</th>
-            <th class="px-3 py-3.5 text-right text-sm font-semibold text-gray-900"></th>
-          </tr>
-        </thead>
-        <tbody id="playlist_ads_rows" class="divide-y divide-gray-200">
-          <% @playlist_ads.each do |pa| %>
-            <%= render "playlists/playlist_ads/playlist_ad", pa: pa %>
-          <% end %>
-        </tbody>
-      </table>
+  <div class="rounded-lg bg-white shadow-sm ring-1 ring-gray-900/5">
+    <div class="flex items-center justify-between p-4 border-b border-gray-200">
+      <h3 class="text-sm font-semibold">Sequence</h3>
+      <%= link_to new_playlist_playlist_ad_path(parent), class: "rounded-md bg-indigo-600 px-2.5 py-1.5 text-sm font-semibold text-white shadow-xs hover:bg-indigo-500 inline-flex items-center gap-1.5", data: { turbo_frame: "modal" } do %>
+        <svg viewBox="0 0 20 20" fill="currentColor" class="size-4"><path d="M10.75 4.75a.75.75 0 0 0-1.5 0v4.5h-4.5a.75.75 0 0 0 0 1.5h4.5v4.5a.75.75 0 0 0 1.5 0v-4.5h4.5a.75.75 0 0 0 0-1.5h-4.5v-4.5Z"/></svg>
+        Add content
+      <% end %>
     </div>
-  <% else %>
-    <p class="text-gray-500">No ads in this playlist yet.</p>
-  <% end %>
+
+    <div id="playlist_ads_rows" class="divide-y divide-gray-100">
+      <% @playlist_ads.order(:position).each do |pa| %>
+        <%= render "playlist_ads/playlist_ad_row", pa: pa %>
+      <% end %>
+    </div>
+
+    <% unless @playlist_ads.any? %>
+      <div id="playlist_ads_empty" class="p-8 text-center">
+        <p class="text-sm text-gray-500">No content in this playlist yet.</p>
+        <p class="text-xs text-gray-400 mt-1">Add ads to build your signage loop.</p>
+      </div>
+    <% end %>
+  </div>
 <% end %>

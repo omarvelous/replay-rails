@@ -1,5 +1,11 @@
 <%= turbo_stream.append "playlist_ads_rows" do %>
-  <%= render "playlist_ad", pa: @playlist_ad %>
+  <%= render "playlist_ads/playlist_ad_row", pa: @playlist_ad %>
+<% end %>
+<%= turbo_stream.remove "playlist_ads_empty" %>
+<%= turbo_stream.replace "playlist_timeline" do %>
+  <%= turbo_frame_tag "playlist_timeline" do %>
+    <%= render "playlist_ads/playlist_timeline", playlist_ads: parent.playlist_ads.includes(:ad).order(:position) %>
+  <% end %>
 <% end %>
 <%= turbo_stream.update "modal", "" %>
 <%= turbo_stream.update "flash" do %>

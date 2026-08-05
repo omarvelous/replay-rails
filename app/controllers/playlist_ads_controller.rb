@@ -5,6 +5,10 @@ class PlaylistAdsController < ApplicationController
     @playlist_ads = parent.playlist_ads.includes(:playlist, :ad)
   end
 
+  def timeline
+    @playlist_ads = parent.playlist_ads.includes(:ad).order(:position)
+  end
+
   def new
     @playlist_ad = parent.playlist_ads.build(duration: 10)
   end
