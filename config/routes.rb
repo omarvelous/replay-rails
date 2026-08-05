@@ -14,14 +14,15 @@ Rails.application.routes.draw do
   resources :ads do
     member do
       get :preview
+      get :playlists
     end
-    resources :playlist_ads, controller: "ads/playlist_ads", only: %i[ index destroy ]
   end
   resources :playlists do
     member do
       get :preview
+      get :screens
     end
-    resources :playlist_ads, controller: "playlists/playlist_ads" do
+    resources :playlist_ads do
       collection do
         get :timeline
       end

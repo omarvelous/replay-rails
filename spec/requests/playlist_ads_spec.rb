@@ -76,27 +76,12 @@ RSpec.describe "PlaylistAds", type: :request do
   end
 
   describe "from ad context" do
-    describe "GET /ads/:id/playlist_ads" do
+    describe "GET /ads/:id/playlists" do
       it "returns playlists for an ad" do
         create(:playlist_ad, playlist: playlist, ad: ad)
-        get ad_playlist_ads_path(ad)
+        get playlists_ad_path(ad)
         expect(response).to be_successful
         expect(response.body).to include(playlist.name)
-      end
-    end
-
-    describe "DELETE /ads/:id/playlist_ads/:id" do
-      it "destroys the playlist ad" do
-        pa = create(:playlist_ad, playlist: playlist, ad: ad)
-        expect {
-          delete ad_playlist_ad_path(ad, pa)
-        }.to change(PlaylistAd, :count).by(-1)
-      end
-
-      it "redirects to the ad" do
-        pa = create(:playlist_ad, playlist: playlist, ad: ad)
-        delete ad_playlist_ad_path(ad, pa)
-        expect(response).to redirect_to(ad_path(ad))
       end
     end
   end

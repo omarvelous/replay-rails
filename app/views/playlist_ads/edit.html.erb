@@ -22,7 +22,7 @@
     </div>
   </div>
 
-  <%= form_with model: @playlist_ad, url: polymorphic_path([parent, @playlist_ad]) do |form| %>
+  <%= form_with model: @playlist_ad, url: playlist_playlist_ad_path(@playlist, @playlist_ad) do |form| %>
     <% if @playlist_ad.errors.any? %>
       <div class="rounded-md bg-red-50 p-4 mb-4">
         <div class="flex">

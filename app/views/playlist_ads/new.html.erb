@@ -9,7 +9,7 @@
     <p class="text-sm text-gray-500 mb-4">Pick an ad and set its duration, then add it to your loop.</p>
 
     <% ads = Current.account.ads.order(:headline) %>
-    <% existing_ad_ids = parent.playlist_ads.pluck(:ad_id) %>
+    <% existing_ad_ids = @playlist.playlist_ads.pluck(:ad_id) %>
 
     <% if ads.any? %>
       <%# Card grid %>
@@ -48,7 +48,7 @@
       </div>
 
       <%# Duration slider + submit %>
-      <%= form_with model: PlaylistAd.new, url: polymorphic_path([parent, PlaylistAd]) do |form| %>
+      <%= form_with model: PlaylistAd.new, url: polymorphic_path([@playlist, PlaylistAd]) do |form| %>
         <%= form.hidden_field :ad_id, value: "", data: { content_picker_target: "adIdField" } %>
         <%= form.hidden_field :duration, value: 10, data: { content_picker_target: "durationField" } %>
 

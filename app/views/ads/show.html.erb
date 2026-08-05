@@ -65,8 +65,7 @@
       <div class="p-4 border-b border-gray-200">
         <h3 class="text-sm font-semibold">In playlists</h3>
       </div>
-      <%= turbo_frame_tag "playlist_ads", src: ad_playlist_ads_path(@ad) do %>
-      <% end %>
+      <%= turbo_frame_tag "ad_playlists", src: playlists_ad_path(@ad), loading: :lazy %>
     </div>
   </div>
 

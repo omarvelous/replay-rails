@@ -2,7 +2,7 @@
   <div class="rounded-lg bg-white shadow-sm ring-1 ring-gray-900/5">
     <div class="flex items-center justify-between p-4 border-b border-gray-200">
       <h3 class="text-sm font-semibold">Sequence</h3>
-      <%= link_to new_playlist_playlist_ad_path(parent), class: "rounded-md bg-indigo-600 px-2.5 py-1.5 text-sm font-semibold text-white shadow-xs hover:bg-indigo-500 inline-flex items-center gap-1.5", data: { turbo_frame: "modal" } do %>
+      <%= link_to new_playlist_playlist_ad_path(@playlist), class: "rounded-md bg-indigo-600 px-2.5 py-1.5 text-sm font-semibold text-white shadow-xs hover:bg-indigo-500 inline-flex items-center gap-1.5", data: { turbo_frame: "modal" } do %>
         <svg viewBox="0 0 20 20" fill="currentColor" class="size-4"><path d="M10.75 4.75a.75.75 0 0 0-1.5 0v4.5h-4.5a.75.75 0 0 0 0 1.5h4.5v4.5a.75.75 0 0 0 1.5 0v-4.5h4.5a.75.75 0 0 0 0-1.5h-4.5v-4.5Z"/></svg>
         Add content
       <% end %>
