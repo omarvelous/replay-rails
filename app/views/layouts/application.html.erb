@@ -1,7 +1,7 @@
 <!DOCTYPE html>
-<html>
+<html data-theme="light">
   <head>
-    <title><%= content_for(:title) || "Replay Rails" %></title>
+    <title><%= content_for(:title) || "RePlay" %></title>
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="mobile-web-app-capable" content="yes">
@@ -18,34 +18,42 @@
     <%= javascript_importmap_tags %>
   </head>
 
-  <body>
+  <body class="bg-base-200">
     <% if authenticated? %>
-      <div class="navbar bg-base-100 border-b border-base-300 px-4">
-        <div class="flex-1">
-          <div class="flex gap-4">
-            <%= link_to "Home", root_path, class: "btn btn-ghost btn-sm" %>
-            <%= link_to "Sites", sites_path, class: "btn btn-ghost btn-sm" %>
-            <%= link_to "Screens", screens_path, class: "btn btn-ghost btn-sm" %>
-            <%= link_to "Listings", listings_path, class: "btn btn-ghost btn-sm" %>
-            <%= link_to "Agents", agents_path, class: "btn btn-ghost btn-sm" %>
-            <%= link_to "Ads", ads_path, class: "btn btn-ghost btn-sm" %>
-            <%= link_to "Playlists", playlists_path, class: "btn btn-ghost btn-sm" %>
+      <div class="drawer lg:drawer-open">
+        <input id="app-drawer" type="checkbox" class="drawer-toggle" />
+
+        <%# Main content area %>
+        <div class="drawer-content flex flex-col min-h-screen">
+          <%= render "shared/topbar" %>
+
+          <main class="flex-1 p-6">
+            <div id="flash">
+              <%= render "shared/flash" %>
+            </div>
+
+            <div class="mx-auto max-w-5xl">
+              <%= yield %>
+            </div>
+          </main>
+        </div>
+
+        <%# Sidebar %>
+        <div class="drawer-side z-30">
+          <%= render "shared/sidebar" %>
+        </div>
+      </div>
+    <% else %>
+      <main class="min-h-screen flex items-center justify-center p-5">
+        <div class="w-full max-w-md">
+          <div id="flash">
+            <%= render "shared/flash" %>
           </div>
+
+          <%= yield %>
         </div>
-        <div class="flex-none">
-          <%= button_to "Sign out", session_path, method: :delete,
-              class: "btn btn-ghost btn-sm" %>
-        </div>
-      </div>
+      </main>
     <% end %>
-
-    <main class="container mx-auto mt-10 px-5 flex flex-col">
-      <div id="flash">
-        <%= render "shared/flash" %>
-      </div>
-
-      <%= yield %>
-    </main>
 
     <dialog class="modal" data-controller="modal" data-modal-target="dialog">
       <div class="modal-box">
