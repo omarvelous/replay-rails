@@ -2,7 +2,8 @@ class PlaylistAd < ApplicationRecord
   belongs_to :playlist
   belongs_to :ad
 
-  validates :position, presence: true
+  positioned on: :playlist
+
   validates :duration, presence: true, numericality: { greater_than: 0 }
   validate :same_account
 

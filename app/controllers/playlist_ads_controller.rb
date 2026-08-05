@@ -6,7 +6,7 @@ class PlaylistAdsController < ApplicationController
   end
 
   def new
-    @playlist_ad = parent.playlist_ads.build(position: next_position, duration: 10)
+    @playlist_ad = parent.playlist_ads.build(duration: 10)
   end
 
   def create
@@ -50,10 +50,6 @@ class PlaylistAdsController < ApplicationController
       raise NotImplementedError
     end
     helper_method :parent
-
-    def next_position
-      1
-    end
 
     def set_playlist_ad
       @playlist_ad = Current.account.playlist_ads.find(params[:id])
