@@ -8,6 +8,7 @@
   <div class="mx-auto md:w-2/3 w-full">
     <div class="flex justify-between items-center mb-5">
       <h1 class="font-bold text-4xl">All Screens</h1>
+      <%= link_to "New Screen", new_screen_path, class: "btn btn-primary btn-sm", data: { turbo_frame: "modal" } %>
     </div>
 
     <% if @screens.any? %>
