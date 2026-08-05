@@ -9,13 +9,13 @@ Rails.application.routes.draw do
     resources :listing_agents, controller: "listings/listing_agents"
   end
   resources :agents do
-    resources :listing_agents, controller: "agents/listing_agents"
+    resources :listing_agents, controller: "agents/listing_agents", only: %i[ index destroy ]
   end
   resources :ads do
     member do
       get :preview
     end
-    resources :playlist_ads, controller: "ads/playlist_ads"
+    resources :playlist_ads, controller: "ads/playlist_ads", only: %i[ index destroy ]
   end
   resources :playlists do
     member do

@@ -3,7 +3,6 @@
   <td><%= pa.position %></td>
   <td><%= pa.duration %>s</td>
   <td class="text-right">
-    <%= link_to "Edit", edit_ad_playlist_ad_path(pa.ad, pa), class: "link link-hover text-sm mr-2", data: { turbo_frame: "modal" } %>
     <%= button_to "Remove", ad_playlist_ad_path(pa.ad, pa), method: :delete,
         class: "btn btn-error btn-xs",
         data: { turbo_confirm: "Remove from this playlist?" } %>

@@ -1,7 +1,6 @@
 <%= turbo_frame_tag "listing_agents" do %>
   <div class="flex justify-between items-center mb-3 mt-8">
     <h2 class="font-bold text-2xl">Listings</h2>
-    <%= link_to "Add Listing", new_agent_listing_agent_path(parent), class: "btn btn-primary btn-sm", data: { turbo_frame: "modal" } %>
   </div>
 
   <% if @listing_agents.any? %>
