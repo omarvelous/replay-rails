@@ -3,6 +3,7 @@ Capybara.register_driver :headless_chrome_custom do |app|
   options.add_argument("--headless=new")
   options.add_argument("--no-sandbox")
   options.add_argument("--disable-dev-shm-usage")
+  options.add_argument("--window-size=1280,800")
 
   if ENV["SELENIUM_URL"]
     Capybara::Selenium::Driver.new(

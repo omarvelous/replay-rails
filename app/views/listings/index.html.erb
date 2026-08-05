@@ -1,41 +1,103 @@
-<div class="mx-auto md:w-2/3 w-full">
-  <div class="flex justify-between items-center mb-5">
-    <h1 class="font-bold text-4xl">Listings</h1>
-    <%= link_to "New Listing", new_listing_path, class: "btn btn-primary btn-sm" %>
+<% content_for(:page_title) { "Listings" } %>
+<% content_for(:page_subtitle) { "#{@listings.size} properties" } %>
+<% content_for(:page_actions) do %>
+  <%= link_to new_listing_path, class: "btn btn-primary btn-sm" do %>
+    <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15"/></svg>
+    New listing
+  <% end %>
+<% end %>
+
+<div data-controller="view-toggle">
+  <%# Filter bar %>
+  <div class="flex flex-wrap items-center gap-3 mb-5">
+    <div class="flex-1 min-w-50 max-w-xs">
+      <input type="text" placeholder="Search by address…" class="input input-sm input-bordered w-full" />
+    </div>
+
+    <div class="flex gap-1">
+      <button class="btn btn-xs btn-active">All</button>
+      <button class="btn btn-xs">Active</button>
+      <button class="btn btn-xs">Pending</button>
+      <button class="btn btn-xs">Sold</button>
+    </div>
+
+    <div class="ml-auto join">
+      <button class="btn btn-xs join-item btn-active" data-view-btn data-view="grid" data-action="click->view-toggle#switch">
+        <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6A2.25 2.25 0 016 3.75h2.25A2.25 2.25 0 0110.5 6v2.25a2.25 2.25 0 01-2.25 2.25H6a2.25 2.25 0 01-2.25-2.25V6zM3.75 15.75A2.25 2.25 0 016 13.5h2.25a2.25 2.25 0 012.25 2.25V18a2.25 2.25 0 01-2.25 2.25H6A2.25 2.25 0 013.75 18v-2.25zM13.5 6a2.25 2.25 0 012.25-2.25H18A2.25 2.25 0 0120.25 6v2.25A2.25 2.25 0 0118 10.5h-2.25a2.25 2.25 0 01-2.25-2.25V6zM13.5 15.75a2.25 2.25 0 012.25-2.25H18a2.25 2.25 0 012.25 2.25V18A2.25 2.25 0 0118 20.25h-2.25A2.25 2.25 0 0113.5 18v-2.25z"/></svg>
+      </button>
+      <button class="btn btn-xs join-item" data-view-btn data-view="table" data-action="click->view-toggle#switch">
+        <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 5.25h16.5m-16.5 4.5h16.5m-16.5 4.5h16.5m-16.5 4.5h16.5"/></svg>
+      </button>
+    </div>
   </div>
 
-  <% if @listings.any? %>
-    <div class="overflow-x-auto">
-      <table class="table">
-        <thead>
-          <tr>
-            <th>Address</th>
-            <th>Price</th>
-            <th>Beds</th>
-            <th>Baths</th>
-            <th>Sq ft</th>
-            <th>Status</th>
-            <th></th>
-          </tr>
-        </thead>
-        <tbody>
-          <% @listings.each do |listing| %>
-            <tr>
-              <td><%= link_to listing.address, listing, class: "link" %></td>
-              <td><%= number_to_currency(listing.price, precision: 0) %></td>
-              <td><%= listing.beds %></td>
-              <td><%= listing.baths %></td>
-              <td><%= number_with_delimiter(listing.sqft) %></td>
-              <td><%= listing.status.capitalize %></td>
-              <td class="text-right">
-                <%= link_to "Edit", edit_listing_path(listing), class: "link link-hover text-sm" %>
-              </td>
-            </tr>
-          <% end %>
-        </tbody>
-      </table>
-    </div>
-  <% else %>
-    <p class="text-base-content/60">No listings yet. Add your first property listing.</p>
-  <% end %>
+  <%# Gallery view %>
+  <div data-view-toggle-target="view" data-view="grid">
+    <% if @listings.any? %>
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+        <% @listings.each do |listing| %>
+          <%= render "listings/listing_card", listing: listing %>
+        <% end %>
+      </div>
+    <% else %>
+      <div class="card bg-base-100 border-2 border-dashed border-base-300 p-10 text-center">
+        <div class="flex flex-col items-center gap-3">
+          <div class="w-12 h-12 rounded-xl bg-primary/10 grid place-items-center">
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15"/></svg>
+          </div>
+          <p class="font-semibold">No listings yet</p>
+          <p class="text-sm text-base-content/50">Add your first property to get started.</p>
+          <%= link_to "New listing", new_listing_path, class: "btn btn-primary btn-sm" %>
+        </div>
+      </div>
+    <% end %>
+  </div>
+
+  <%# Table view %>
+  <div data-view-toggle-target="view" data-view="table" class="hidden">
+    <% if @listings.any? %>
+      <div class="card bg-base-100 shadow-sm">
+        <div class="overflow-x-auto">
+          <table class="table">
+            <thead>
+              <tr>
+                <th>Property</th>
+                <th>Price</th>
+                <th>Beds</th>
+                <th>Baths</th>
+                <th>Sq ft</th>
+                <th>Status</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>
+              <% @listings.each do |listing| %>
+                <% tone = %w[#2f6bff #0fb5a6 #7c5cff #e8990f #1f9d57 #e5484d][listing.id % 6] %>
+                <tr class="hover cursor-pointer" onclick="Turbo.visit('<%= listing_path(listing) %>')">
+                  <td>
+                    <div class="flex items-center gap-3">
+                      <div class="w-12 h-9 rounded flex-none" style="background: <%= tone %>22;"></div>
+                      <span class="font-medium text-sm"><%= listing.address %></span>
+                    </div>
+                  </td>
+                  <td class="font-mono text-sm"><%= number_to_currency(listing.price, precision: 0) %></td>
+                  <td class="font-mono text-sm"><%= listing.beds %></td>
+                  <td class="font-mono text-sm"><%= listing.baths %></td>
+                  <td class="font-mono text-sm"><%= number_with_delimiter(listing.sqft) %></td>
+                  <td>
+                    <span class="badge badge-sm <%= listing.status == 'active' ? 'badge-success' : listing.status == 'pending' ? 'badge-warning' : 'badge-neutral' %>">
+                      <%= listing.status.capitalize %>
+                    </span>
+                  </td>
+                  <td class="text-right">
+                    <%= link_to "Edit", edit_listing_path(listing), class: "btn btn-ghost btn-xs", onclick: "event.stopPropagation()" %>
+                  </td>
+                </tr>
+              <% end %>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    <% end %>
+  </div>
 </div>
