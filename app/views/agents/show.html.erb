@@ -1,16 +1,9 @@
-<% content_for(:page_title) { @agent.name } %>
-<% content_for(:page_subtitle) { "Agent" } %>
-<% content_for(:page_actions) do %>
+<% actions = capture do %>
   <%= link_to edit_agent_path(@agent), class: "rounded-md bg-white px-2.5 py-1.5 text-sm font-semibold text-gray-900 shadow-xs ring-1 ring-gray-300 ring-inset hover:bg-gray-50 inline-flex items-center gap-1.5", data: { turbo_frame: "modal" } do %>
     Edit
   <% end %>
 <% end %>
-
-<%# Back link %>
-<%= link_to agents_path, class: "inline-flex items-center gap-1 text-sm font-semibold text-gray-500 hover:text-gray-900 mb-3" do %>
-  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="size-4"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5"/></svg>
-  Agents
-<% end %>
+<%= render "shared/page_header", title: @agent.name, subtitle: "Agent", actions: actions, back_link: { label: "← Agents", path: agents_path } %>
 
 <div class="grid grid-cols-1 lg:grid-cols-[1fr_320px] gap-5 items-start">
   <%# Main column %>

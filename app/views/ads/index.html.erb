@@ -1,11 +1,10 @@
-<% content_for(:page_title) { "Ads" } %>
-<% content_for(:page_subtitle) { "#{@ads.size} ads · #{@ads.size} live · 0 drafts" } %>
-<% content_for(:page_actions) do %>
+<% actions = capture do %>
   <%= link_to new_ad_path, class: "rounded-md bg-indigo-600 px-2.5 py-1.5 text-sm font-semibold text-white shadow-xs hover:bg-indigo-500 inline-flex items-center gap-1.5" do %>
     <svg viewBox="0 0 20 20" fill="currentColor" class="size-4"><path d="M10.75 4.75a.75.75 0 0 0-1.5 0v4.5h-4.5a.75.75 0 0 0 0 1.5h4.5v4.5a.75.75 0 0 0 1.5 0v-4.5h4.5a.75.75 0 0 0 0-1.5h-4.5v-4.5Z"/></svg>
     New ad
   <% end %>
 <% end %>
+<%= render "shared/page_header", title: "Ads", subtitle: "#{@ads.size} ads · #{@ads.size} live · 0 drafts", actions: actions %>
 
 <div data-controller="view-toggle">
   <div class="flex flex-wrap items-center gap-3 mb-5">

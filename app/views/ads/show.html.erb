@@ -1,6 +1,4 @@
-<% content_for(:page_title) { @ad.headline } %>
-<% content_for(:page_subtitle) { "Ad" } %>
-<% content_for(:page_actions) do %>
+<% actions = capture do %>
   <%= link_to preview_ad_path(@ad), class: "rounded-md bg-white px-2.5 py-1.5 text-sm font-semibold text-gray-900 shadow-xs ring-1 ring-gray-300 ring-inset hover:bg-gray-50 inline-flex items-center gap-1.5", target: "_blank" do %>
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" class="size-4"><path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z"/><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
     Preview
@@ -9,14 +7,9 @@
     Edit
   <% end %>
 <% end %>
+<%= render "shared/page_header", title: @ad.headline, subtitle: "Ad", actions: actions, back_link: { label: "← Ads", path: ads_path } %>
 
 <% tone = %w[#2f6bff #0fb5a6 #7c5cff #e8990f #1f9d57 #e5484d][@ad.id % 6] %>
-
-<%# Back link %>
-<%= link_to ads_path, class: "inline-flex items-center gap-1 text-sm font-semibold text-gray-500 hover:text-gray-900 mb-3" do %>
-  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="size-4"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5"/></svg>
-  Ads
-<% end %>
 
 <div class="grid grid-cols-1 lg:grid-cols-[1fr_320px] gap-5 items-start">
   <%# Main column %>

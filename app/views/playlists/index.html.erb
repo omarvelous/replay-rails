@@ -1,15 +1,14 @@
-<% content_for(:page_title) { "Playlists" } %>
 <%
   pub_count = @playlists.count { |p| p.status == "published" }
   draft_count = @playlists.count { |p| p.status == "draft" }
 %>
-<% content_for(:page_subtitle) { "#{@playlists.size} playlists · #{pub_count} published · #{draft_count} drafts" } %>
-<% content_for(:page_actions) do %>
+<% actions = capture do %>
   <%= link_to new_playlist_path, class: "rounded-md bg-indigo-600 px-2.5 py-1.5 text-sm font-semibold text-white shadow-xs hover:bg-indigo-500 inline-flex items-center gap-1.5" do %>
     <svg viewBox="0 0 20 20" fill="currentColor" class="size-4"><path d="M10.75 4.75a.75.75 0 0 0-1.5 0v4.5h-4.5a.75.75 0 0 0 0 1.5h4.5v4.5a.75.75 0 0 0 1.5 0v-4.5h4.5a.75.75 0 0 0 0-1.5h-4.5v-4.5Z"/></svg>
     New playlist
   <% end %>
 <% end %>
+<%= render "shared/page_header", title: "Playlists", subtitle: "#{@playlists.size} playlists · #{pub_count} published · #{draft_count} drafts", actions: actions %>
 
 <div class="flex flex-wrap items-center gap-3 mb-5">
   <div class="flex-1 min-w-50 max-w-xs">

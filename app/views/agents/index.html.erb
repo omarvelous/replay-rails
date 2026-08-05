@@ -1,11 +1,10 @@
-<% content_for(:page_title) { "Agents" } %>
-<% content_for(:page_subtitle) { "#{@agents.size} agents" } %>
-<% content_for(:page_actions) do %>
+<% actions = capture do %>
   <%= link_to new_agent_path, class: "rounded-md bg-indigo-600 px-2.5 py-1.5 text-sm font-semibold text-white shadow-xs hover:bg-indigo-500" do %>
     <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15"/></svg>
     New agent
   <% end %>
 <% end %>
+<%= render "shared/page_header", title: "Agents", subtitle: "#{@agents.size} agents", actions: actions %>
 
 <% if @agents.any? %>
   <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
