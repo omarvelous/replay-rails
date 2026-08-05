@@ -62,7 +62,7 @@ RSpec.describe "Screen Playlist", type: :request do
 
     it "shows assign link when no playlist" do
       get screen_path(screen)
-      expect(response.body).to include("Assign Playlist")
+      expect(response.body).to include("Assign one")
     end
   end
 

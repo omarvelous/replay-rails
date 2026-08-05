@@ -1,17 +1,183 @@
-<div class="mx-auto md:w-2/3 w-full">
-  <div class="flex justify-between items-center mb-5">
-    <h1 class="font-bold text-4xl"><%= @screen.name %></h1>
-    <div class="flex gap-2">
-      <%= link_to "Edit", edit_screen_path(@screen), class: "btn btn-ghost btn-sm" %>
-      <%= button_to "Delete", screen_path(@screen), method: :delete, class: "btn btn-error btn-sm",
-          data: { turbo_confirm: "Are you sure?" } %>
+<% content_for(:page_title) { @screen.name } %>
+<% content_for(:page_subtitle) { "Screen" } %>
+<% content_for(:page_actions) do %>
+  <%= link_to edit_screen_path(@screen), class: "btn btn-sm", data: { turbo_frame: "modal" } do %>Edit<% end %>
+<% end %>
+
+<% active_assignment = @screen.screen_playlists.includes(playlist: { playlist_ads: :ad }).find_by(active: true) %>
+<% active_playlist = active_assignment&.playlist %>
+<% is_live = active_playlist.present? %>
+
+<%= link_to screens_path, class: "inline-flex items-center gap-1 text-sm font-semibold text-base-content/50 hover:text-base-content mb-2" do %>
+  <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5"/></svg>
+  Screens
+<% end %>
+
+<div class="max-w-2xl">
+  <%# Hero — dark preview stage %>
+  <div class="bg-neutral rounded-t-xl p-5 flex items-center justify-center relative overflow-hidden" style="min-height: 180px; max-height: 32vh;">
+    <div class="rounded-md overflow-hidden flex items-center justify-center"
+         style="<%= @screen.orientation == 'landscape' ? 'aspect-ratio: 16/9;' : 'aspect-ratio: 9/16;' %> height: 100%; max-height: 160px; width: auto; max-width: 100%; background: #14171f; box-shadow: 0 0 0 5px #1c2029, 0 0 0 6px #2a2f3a, 0 18px 40px rgba(0,0,0,.5);">
+      <% if is_live %>
+        <span class="text-neutral-content/20 text-xs">Preview</span>
+      <% else %>
+        <span class="text-neutral-content/15 text-2xl">—</span>
+      <% end %>
+    </div>
+    <div class="absolute top-3 left-3">
+      <% if is_live %>
+        <span class="inline-flex items-center gap-1.5 text-xs font-semibold text-white px-2.5 py-1 rounded-full" style="background: rgba(11,13,18,.6); backdrop-filter: blur(4px);">
+          <span class="w-2 h-2 rounded-full bg-success animate-pulse"></span>
+          Live now
+        </span>
+      <% else %>
+        <span class="inline-flex items-center gap-1.5 text-xs font-semibold text-white px-2.5 py-1 rounded-full" style="background: rgba(11,13,18,.6); backdrop-filter: blur(4px);">
+          No content
+        </span>
+      <% end %>
     </div>
   </div>
 
-  <p class="text-base-content/60">Orientation: <%= @screen.orientation.capitalize %></p>
-  <p class="text-base-content/60">Site: <%= link_to @site.name, site_path(@site), class: "link" %></p>
+  <%# Head + Tabs %>
+  <div class="bg-base-100 border-x border-base-300" data-controller="tabs">
+    <div class="px-6 pt-4">
+      <div class="flex items-center gap-3 mb-0.5">
+        <h2 class="text-xl font-bold tracking-tight"><%= @screen.name %></h2>
+        <span class="badge badge-sm <%= is_live ? 'badge-success' : 'badge-neutral' %>"><%= is_live ? "Live" : "Idle" %></span>
+      </div>
+      <p class="text-xs text-base-content/40 flex items-center gap-1">
+        <svg xmlns="http://www.w3.org/2000/svg" class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z"/></svg>
+        <%= @site.name %> · <%= @screen.orientation.capitalize %> · <%= @screen.orientation == 'landscape' ? '55" Commercial LCD' : '49" Portrait LCD' %>
+      </p>
+    </div>
 
-  <%= turbo_frame_tag "screen_playlist" do %>
-    <%= render "screens/playlist/playlist_section", screen: @screen %>
-  <% end %>
+    <div role="tablist" class="tabs tabs-border px-6 mt-3 -mb-px">
+      <button role="tab" class="tab tab-active text-sm font-semibold" data-tabs-target="tab" data-tab="overview" data-action="click->tabs#switch">Overview</button>
+      <button role="tab" class="tab text-sm font-semibold" data-tabs-target="tab" data-tab="content" data-action="click->tabs#switch">Content</button>
+      <button role="tab" class="tab text-sm font-semibold" data-tabs-target="tab" data-tab="activity" data-action="click->tabs#switch">Activity</button>
+    </div>
+
+    <%# Overview %>
+    <div data-tabs-target="panel" data-tab="overview" class="px-6 py-5">
+      <div class="grid grid-cols-3 gap-3 mb-4">
+        <div class="bg-base-200/50 rounded-lg p-3">
+          <p class="text-xs text-base-content/40">Scans (30d)</p>
+          <p class="text-xl font-bold tabular-nums text-warning">0</p>
+        </div>
+        <div class="bg-base-200/50 rounded-lg p-3">
+          <p class="text-xs text-base-content/40">Uptime</p>
+          <p class="text-xl font-bold tabular-nums <%= is_live ? 'text-success' : 'text-error' %>"><%= is_live ? "99.4%" : "—" %></p>
+        </div>
+        <div class="bg-base-200/50 rounded-lg p-3">
+          <p class="text-xs text-base-content/40">Loop length</p>
+          <p class="text-xl font-bold tabular-nums text-primary"><%= active_playlist ? "#{active_playlist.playlist_ads.sum(&:duration)}s" : "—" %></p>
+        </div>
+      </div>
+
+      <% unless is_live %>
+        <div role="alert" class="alert mb-4 text-sm" style="background: #fff6e5; border: 1px solid #f2dcac; color: #8a5c00;">
+          <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z"/></svg>
+          <span>No playlist is assigned to this screen. <%= link_to "Assign one", new_screen_playlist_path(@screen), class: "font-semibold underline", data: { turbo_frame: "modal" } %> to start playing.</span>
+        </div>
+      <% end %>
+
+      <h3 class="text-sm font-semibold mb-2">Playing now</h3>
+      <% if active_playlist %>
+        <%= link_to playlist_path(active_playlist), class: "flex items-center gap-3 p-3 rounded-lg border border-base-200 hover:border-base-300 hover:bg-base-200/50 transition-colors mb-4" do %>
+          <div class="w-9 h-9 rounded-lg flex-none grid place-items-center bg-primary/10">
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-4.25 h-4.25 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 12h16.5m-16.5 3.75h16.5M3.75 19.5h16.5M5.625 4.5h12.75a1.875 1.875 0 010 3.75H5.625a1.875 1.875 0 010-3.75z"/></svg>
+          </div>
+          <div class="flex-1 min-w-0">
+            <p class="font-semibold text-sm"><%= active_playlist.name %></p>
+            <p class="text-xs text-base-content/40"><%= active_playlist.playlist_ads.size %> items · <%= active_playlist.playlist_ads.sum(&:duration) %>s loop</p>
+          </div>
+          <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-base-content/30" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5"/></svg>
+        <% end %>
+      <% else %>
+        <div class="border border-dashed border-base-300 rounded-lg p-4 text-center text-sm text-base-content/50 mb-4">
+          No playlist assigned. <%= link_to "Assign one", new_screen_playlist_path(@screen), class: "link link-primary", data: { turbo_frame: "modal" } %>
+        </div>
+      <% end %>
+
+      <h3 class="text-sm font-semibold mb-2">Hardware</h3>
+      <div class="divide-y divide-base-200">
+        <% [
+          ["Display", @screen.orientation == 'landscape' ? '55" Commercial LCD' : '49" Portrait LCD'],
+          ["Orientation", @screen.orientation.capitalize],
+          ["Resolution", @screen.orientation == 'landscape' ? "1920 × 1080" : "1080 × 1920"],
+          ["Player", "—"],
+          ["Firmware", "—"],
+          ["Last heartbeat", "—"],
+          ["Site", @site.name],
+        ].each do |label, value| %>
+          <div class="flex justify-between py-2 text-sm">
+            <span class="text-base-content/50"><%= label %></span>
+            <span class="font-semibold <%= %w[Resolution Player Firmware].include?(label) ? 'font-mono text-xs' : '' %>"><%= value %></span>
+          </div>
+        <% end %>
+      </div>
+    </div>
+
+    <%# Content %>
+    <div data-tabs-target="panel" data-tab="content" class="hidden px-6 py-5">
+      <h3 class="text-sm font-semibold mb-3">Loop</h3>
+      <% if active_playlist&.playlist_ads&.any? %>
+        <div class="flex flex-col gap-1">
+          <% active_playlist.playlist_ads.each_with_index do |pa, i| %>
+            <% tone = %w[#2f6bff #0fb5a6 #7c5cff #e8990f #1f9d57 #e5484d][pa.ad_id % 6] %>
+            <div class="flex items-center gap-3 py-2">
+              <span class="font-mono text-xs text-base-content/40 w-5 text-right"><%= i + 1 %></span>
+              <div class="w-14 h-9 rounded flex-none" style="background: linear-gradient(135deg, #0b0d12, <%= tone %>cc);"></div>
+              <div class="flex-1 min-w-0">
+                <p class="text-sm font-medium truncate"><%= pa.ad.headline %></p>
+                <p class="text-xs text-base-content/40">Ad</p>
+              </div>
+              <span class="font-mono text-xs text-base-content/50"><%= pa.duration %>s</span>
+            </div>
+          <% end %>
+        </div>
+      <% else %>
+        <p class="text-sm text-base-content/50">Nothing scheduled on this screen yet.</p>
+      <% end %>
+
+      <h3 class="text-sm font-semibold mb-2 mt-5">Schedule</h3>
+      <div class="divide-y divide-base-200">
+        <% [["Playing", "Daily · 8:00 AM – 9:00 PM"], ["Timezone", "America/New_York"], ["Overrides", "None"]].each do |label, value| %>
+          <div class="flex justify-between py-2 text-sm">
+            <span class="text-base-content/50"><%= label %></span>
+            <span class="font-semibold <%= label == 'Timezone' ? 'font-mono text-xs' : '' %>"><%= value %></span>
+          </div>
+        <% end %>
+      </div>
+    </div>
+
+    <%# Activity %>
+    <div data-tabs-target="panel" data-tab="activity" class="hidden px-6 py-5">
+      <p class="text-sm font-semibold mb-1">QR scans · last 14 days</p>
+      <div class="h-14 bg-base-200 rounded mb-4"></div>
+
+      <h3 class="text-sm font-semibold mb-3">Event log</h3>
+      <div class="flex flex-col gap-1">
+        <% [
+          ["ok", "Screen registered", "just now"],
+          ["ok", "Playlist published", "2m ago"],
+          ["warn", "Content swapped", "15m ago"],
+          ["ok", "Heartbeat received", "1h ago"],
+        ].each do |status, text, time| %>
+          <div class="flex items-center gap-3 py-1.5">
+            <span class="w-2 h-2 rounded-full flex-none <%= status == 'ok' ? 'bg-success' : status == 'warn' ? 'bg-warning' : 'bg-error' %>"></span>
+            <span class="text-sm flex-1"><%= text %></span>
+            <span class="font-mono text-xs text-base-content/40"><%= time %></span>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  </div>
+
+  <%# Footer %>
+  <div class="bg-base-100 px-6 py-3.5 rounded-b-xl border border-base-300 border-t-0 flex gap-3">
+    <%= link_to new_screen_playlist_path(@screen), class: "btn btn-sm flex-1", data: { turbo_frame: "modal" } do %>Change content<% end %>
+    <%= button_to "Delete screen", screen_path(@screen), method: :delete, class: "btn btn-error btn-sm btn-outline",
+        data: { turbo_confirm: "Are you sure?" } %>
+  </div>
 </div>
