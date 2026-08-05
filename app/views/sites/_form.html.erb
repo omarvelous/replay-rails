@@ -1,6 +1,7 @@
 <%= form_with model: site, class: "contents" do |form| %>
   <% if site.errors.any? %>
-    <div id="error_explanation" class="alert alert-error my-4">
+    <div role="alert" class="alert alert-error mb-4">
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 shrink-0 stroke-current" fill="none" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
       <div>
         <ul class="list-disc list-inside text-sm">
           <% site.errors.full_messages.each do |message| %>
@@ -11,19 +12,20 @@
     </div>
   <% end %>
 
-  <fieldset class="fieldset my-5">
-    <%= form.label :name, class: "fieldset-label" %>
-    <%= form.text_field :name, required: true, autofocus: true,
+  <fieldset class="fieldset mb-3">
+    <%= form.label :name, "Site name", class: "fieldset-label" %>
+    <%= form.text_field :name, required: true, autofocus: true, placeholder: "e.g. Main Office",
         class: "input input-bordered w-full" %>
   </fieldset>
 
-  <fieldset class="fieldset my-5">
-    <%= form.label :address, class: "fieldset-label" %>
-    <%= form.text_field :address, class: "input input-bordered w-full" %>
+  <fieldset class="fieldset mb-3">
+    <%= form.label :address, "Street address", class: "fieldset-label" %>
+    <%= form.text_field :address, placeholder: "123 Main St, New York, NY",
+        class: "input input-bordered w-full" %>
   </fieldset>
 
-  <div class="flex items-center gap-4">
-    <%= form.submit class: "btn btn-primary" %>
-    <%= link_to "Cancel", sites_path, class: "link link-hover text-sm" %>
+  <div class="flex items-center justify-end gap-3 pt-4 mt-4 border-t border-base-200">
+    <button type="button" class="btn" data-action="click->modal#close">Cancel</button>
+    <%= form.submit site.persisted? ? "Save changes" : "Create site", class: "btn btn-primary" %>
   </div>
 <% end %>
