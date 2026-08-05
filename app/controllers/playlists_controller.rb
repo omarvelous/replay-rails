@@ -16,7 +16,7 @@ class PlaylistsController < ApplicationController
     @playlist = Current.account.playlists.build(playlist_params)
 
     if @playlist.save
-      redirect_to @playlist, notice: "Playlist was successfully created."
+      redirect_to @playlist, notice: t(".success")
     else
       render :new, status: :unprocessable_entity
     end
@@ -27,7 +27,7 @@ class PlaylistsController < ApplicationController
 
   def update
     if @playlist.update(playlist_params)
-      redirect_to @playlist, notice: "Playlist was successfully updated."
+      redirect_to @playlist, notice: t(".success")
     else
       render :edit, status: :unprocessable_entity
     end
@@ -40,7 +40,7 @@ class PlaylistsController < ApplicationController
 
   def destroy
     @playlist.destroy
-    redirect_to playlists_path, notice: "Playlist was successfully deleted."
+    redirect_to playlists_path, notice: t(".success")
   end
 
   private

@@ -14,8 +14,8 @@ class PlaylistAdsController < ApplicationController
 
     if @playlist_ad.save
       respond_to do |format|
-        format.turbo_stream { flash.now[:notice] = "Ad and playlist linked." }
-        format.html { redirect_to parent, notice: "Ad and playlist linked." }
+        format.turbo_stream { flash.now[:notice] = t(".success") }
+        format.html { redirect_to parent, notice: t(".success") }
       end
     else
       render :new, status: :unprocessable_entity
@@ -28,8 +28,8 @@ class PlaylistAdsController < ApplicationController
   def update
     if @playlist_ad.update(playlist_ad_params)
       respond_to do |format|
-        format.turbo_stream { flash.now[:notice] = "Playlist ad was updated." }
-        format.html { redirect_to parent, notice: "Playlist ad was updated." }
+        format.turbo_stream { flash.now[:notice] = t(".success") }
+        format.html { redirect_to parent, notice: t(".success") }
       end
     else
       render :edit, status: :unprocessable_entity
@@ -39,8 +39,8 @@ class PlaylistAdsController < ApplicationController
   def destroy
     @playlist_ad.destroy
     respond_to do |format|
-      format.turbo_stream { flash.now[:notice] = "Ad and playlist unlinked." }
-      format.html { redirect_to parent, notice: "Ad and playlist unlinked." }
+      format.turbo_stream { flash.now[:notice] = t(".success") }
+      format.html { redirect_to parent, notice: t(".success") }
     end
   end
 

@@ -16,7 +16,7 @@ class AdsController < ApplicationController
     @ad = Current.account.ads.build(ad_params)
 
     if @ad.save
-      redirect_to @ad, notice: "Ad was successfully created."
+      redirect_to @ad, notice: t(".success")
     else
       render :new, status: :unprocessable_entity
     end
@@ -27,7 +27,7 @@ class AdsController < ApplicationController
 
   def update
     if @ad.update(ad_params)
-      redirect_to @ad, notice: "Ad was successfully updated."
+      redirect_to @ad, notice: t(".success")
     else
       render :edit, status: :unprocessable_entity
     end
@@ -39,7 +39,7 @@ class AdsController < ApplicationController
 
   def destroy
     @ad.destroy
-    redirect_to ads_path, notice: "Ad was successfully deleted."
+    redirect_to ads_path, notice: t(".success")
   end
 
   private

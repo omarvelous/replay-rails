@@ -14,8 +14,8 @@ class ListingAgentsController < ApplicationController
 
     if @listing_agent.save
       respond_to do |format|
-        format.turbo_stream { flash.now[:notice] = "Agent and listing linked." }
-        format.html { redirect_to parent, notice: "Agent and listing linked." }
+        format.turbo_stream { flash.now[:notice] = t(".success") }
+        format.html { redirect_to parent, notice: t(".success") }
       end
     else
       render :new, status: :unprocessable_entity
@@ -28,8 +28,8 @@ class ListingAgentsController < ApplicationController
   def update
     if @listing_agent.update(listing_agent_params)
       respond_to do |format|
-        format.turbo_stream { flash.now[:notice] = "Listing agent was updated." }
-        format.html { redirect_to parent, notice: "Listing agent was updated." }
+        format.turbo_stream { flash.now[:notice] = t(".success") }
+        format.html { redirect_to parent, notice: t(".success") }
       end
     else
       render :edit, status: :unprocessable_entity
@@ -39,8 +39,8 @@ class ListingAgentsController < ApplicationController
   def destroy
     @listing_agent.destroy
     respond_to do |format|
-      format.turbo_stream { flash.now[:notice] = "Agent and listing unlinked." }
-      format.html { redirect_to parent, notice: "Agent and listing unlinked." }
+      format.turbo_stream { flash.now[:notice] = t(".success") }
+      format.html { redirect_to parent, notice: t(".success") }
     end
   end
 

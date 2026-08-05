@@ -16,7 +16,7 @@ class SitesController < ApplicationController
     @site = Current.account.sites.build(site_params)
 
     if @site.save
-      redirect_to @site, notice: "Site was successfully created."
+      redirect_to @site, notice: t(".success")
     else
       render :new, status: :unprocessable_entity
     end
@@ -27,7 +27,7 @@ class SitesController < ApplicationController
 
   def update
     if @site.update(site_params)
-      redirect_to @site, notice: "Site was successfully updated."
+      redirect_to @site, notice: t(".success")
     else
       render :edit, status: :unprocessable_entity
     end
@@ -35,7 +35,7 @@ class SitesController < ApplicationController
 
   def destroy
     @site.destroy
-    redirect_to sites_path, notice: "Site was successfully deleted."
+    redirect_to sites_path, notice: t(".success")
   end
 
   private

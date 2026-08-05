@@ -18,8 +18,8 @@ class ScreensController < ApplicationController
 
     if @screen.save
       respond_to do |format|
-        format.turbo_stream { flash.now[:notice] = "Screen was successfully created." }
-        format.html { redirect_to @screen, notice: "Screen was successfully created." }
+        format.turbo_stream { flash.now[:notice] = t(".success") }
+        format.html { redirect_to @screen, notice: t(".success") }
       end
     else
       render :new, status: :unprocessable_entity
@@ -31,7 +31,7 @@ class ScreensController < ApplicationController
 
   def update
     if @screen.update(screen_params)
-      redirect_to @screen, notice: "Screen was successfully updated."
+      redirect_to @screen, notice: t(".success")
     else
       render :edit, status: :unprocessable_entity
     end
@@ -40,7 +40,7 @@ class ScreensController < ApplicationController
   def destroy
     site = @screen.site
     @screen.destroy
-    redirect_to site_path(site), notice: "Screen was successfully deleted."
+    redirect_to site_path(site), notice: t(".success")
   end
 
   private

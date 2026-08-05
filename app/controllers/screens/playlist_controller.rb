@@ -11,8 +11,8 @@ module Screens
       playlist = Current.account.playlists.find(params[:screen_playlist][:playlist_id])
       @screen.screen_playlists.create!(playlist: playlist, active: true)
       respond_to do |format|
-        format.turbo_stream { flash.now[:notice] = "Playlist assigned to screen." }
-        format.html { redirect_to screen_path(@screen), notice: "Playlist assigned to screen." }
+        format.turbo_stream { flash.now[:notice] = t(".success") }
+        format.html { redirect_to screen_path(@screen), notice: t(".success") }
       end
     end
 
@@ -20,10 +20,10 @@ module Screens
       @screen.screen_playlists.destroy_all
       respond_to do |format|
         format.turbo_stream do
-          flash.now[:notice] = "Playlist removed from screen."
+          flash.now[:notice] = t(".success")
           render "screens/playlist/create"
         end
-        format.html { redirect_to screen_path(@screen), notice: "Playlist removed from screen." }
+        format.html { redirect_to screen_path(@screen), notice: t(".success") }
       end
     end
 

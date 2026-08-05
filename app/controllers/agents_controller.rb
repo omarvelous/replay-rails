@@ -16,7 +16,7 @@ class AgentsController < ApplicationController
     @agent = Current.account.agents.build(agent_params)
 
     if @agent.save
-      redirect_to @agent, notice: "Agent was successfully created."
+      redirect_to @agent, notice: t(".success")
     else
       render :new, status: :unprocessable_entity
     end
@@ -27,7 +27,7 @@ class AgentsController < ApplicationController
 
   def update
     if @agent.update(agent_params)
-      redirect_to @agent, notice: "Agent was successfully updated."
+      redirect_to @agent, notice: t(".success")
     else
       render :edit, status: :unprocessable_entity
     end
@@ -35,7 +35,7 @@ class AgentsController < ApplicationController
 
   def destroy
     @agent.destroy
-    redirect_to agents_path, notice: "Agent was successfully deleted."
+    redirect_to agents_path, notice: t(".success")
   end
 
   private

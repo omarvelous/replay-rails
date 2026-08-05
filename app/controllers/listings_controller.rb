@@ -16,7 +16,7 @@ class ListingsController < ApplicationController
     @listing = Current.account.listings.build(listing_params)
 
     if @listing.save
-      redirect_to @listing, notice: "Listing was successfully created."
+      redirect_to @listing, notice: t(".success")
     else
       render :new, status: :unprocessable_entity
     end
@@ -27,7 +27,7 @@ class ListingsController < ApplicationController
 
   def update
     if @listing.update(listing_params)
-      redirect_to @listing, notice: "Listing was successfully updated."
+      redirect_to @listing, notice: t(".success")
     else
       render :edit, status: :unprocessable_entity
     end
@@ -35,7 +35,7 @@ class ListingsController < ApplicationController
 
   def destroy
     @listing.destroy
-    redirect_to listings_path, notice: "Listing was successfully deleted."
+    redirect_to listings_path, notice: t(".success")
   end
 
   private
