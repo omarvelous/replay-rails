@@ -82,8 +82,8 @@
         </div>
       <% end %>
 
-      <%# Playing now + loop — lazy-loaded from screen_playlist#show %>
-      <%= turbo_frame_tag "screen_playlist", src: screen_screen_playlist_path(@screen), loading: :lazy %>
+      <%# Playing now — lazy-loaded from screens#playlist %>
+      <%= turbo_frame_tag "screen_playlist_info", src: playlist_screen_path(@screen), loading: :lazy %>
 
       <h3 class="text-sm font-semibold mb-2">Hardware</h3>
       <div class="divide-y divide-gray-200">
@@ -106,7 +106,10 @@
 
     <%# Content %>
     <div data-tabs-target="panel" data-tab="content" class="hidden px-6 py-5">
-      <h3 class="text-sm font-semibold mb-2">Schedule</h3>
+      <%# Loop — lazy-loaded from screen_playlist#show %>
+      <%= turbo_frame_tag "screen_playlist", src: screen_screen_playlist_path(@screen), loading: :lazy %>
+
+      <h3 class="text-sm font-semibold mb-2 mt-5">Schedule</h3>
       <div class="divide-y divide-gray-200">
         <% [["Playing", "Daily · 8:00 AM – 9:00 PM"], ["Timezone", "America/New_York"], ["Overrides", "None"]].each do |label, value| %>
           <div class="flex justify-between py-2 text-sm">

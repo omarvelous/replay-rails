@@ -7,6 +7,9 @@ Rails.application.routes.draw do
     end
   end
   resources :screens do
+    member do
+      get :playlist
+    end
     resource :screen_playlist, only: %i[ show new create destroy ]
   end
   resources :listings do
