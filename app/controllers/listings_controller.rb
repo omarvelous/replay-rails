@@ -27,7 +27,10 @@ class ListingsController < ApplicationController
 
   def update
     if @listing.update(listing_params)
-      redirect_to @listing, notice: t(".success")
+      respond_to do |format|
+        format.turbo_stream { flash.now[:notice] = t(".success") }
+        format.html { redirect_to @listing, notice: t(".success") }
+      end
     else
       render :edit, status: :unprocessable_entity
     end

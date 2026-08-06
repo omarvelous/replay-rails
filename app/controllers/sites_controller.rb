@@ -27,7 +27,10 @@ class SitesController < ApplicationController
 
   def update
     if @site.update(site_params)
-      redirect_to @site, notice: t(".success")
+      respond_to do |format|
+        format.turbo_stream { flash.now[:notice] = t(".success") }
+        format.html { redirect_to @site, notice: t(".success") }
+      end
     else
       render :edit, status: :unprocessable_entity
     end
