@@ -1,5 +1,5 @@
 <%= turbo_stream.replace dom_id(@listing_agent) do %>
-  <%= render "listing_agent", la: @listing_agent %>
+  <%= render "listing_agents/listing_agent_row", la: @listing_agent %>
 <% end %>
 <%= turbo_stream.update "modal", "" %>
 <%= turbo_stream.update "flash" do %>

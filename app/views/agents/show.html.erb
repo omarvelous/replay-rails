@@ -52,8 +52,7 @@
       <div class="p-4 border-b border-gray-200">
         <h3 class="text-sm font-semibold">Listings</h3>
       </div>
-      <%= turbo_frame_tag "listing_agents", src: agent_listing_agents_path(@agent) do %>
-      <% end %>
+      <%= turbo_frame_tag "agent_listings", src: listings_agent_path(@agent), loading: :lazy %>
     </div>
   </div>
 

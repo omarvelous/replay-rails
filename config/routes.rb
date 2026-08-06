@@ -6,10 +6,12 @@ Rails.application.routes.draw do
     resource :playlist, controller: "screens/playlist", only: %i[ new create destroy ]
   end
   resources :listings do
-    resources :listing_agents, controller: "listings/listing_agents"
+    resources :listing_agents
   end
   resources :agents do
-    resources :listing_agents, controller: "agents/listing_agents", only: %i[ index destroy ]
+    member do
+      get :listings
+    end
   end
   resources :ads do
     member do

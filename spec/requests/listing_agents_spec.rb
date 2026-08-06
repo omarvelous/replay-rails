@@ -76,27 +76,12 @@ RSpec.describe "ListingAgents", type: :request do
   end
 
   describe "from agent context" do
-    describe "GET /agents/:id/listing_agents" do
+    describe "GET /agents/:id/listings" do
       it "returns listings for an agent" do
         create(:listing_agent, listing: listing, agent: agent)
-        get agent_listing_agents_path(agent)
+        get listings_agent_path(agent)
         expect(response).to be_successful
         expect(response.body).to include(listing.address)
-      end
-    end
-
-    describe "DELETE /agents/:id/listing_agents/:id" do
-      it "destroys the listing agent" do
-        la = create(:listing_agent, listing: listing, agent: agent)
-        expect {
-          delete agent_listing_agent_path(agent, la)
-        }.to change(ListingAgent, :count).by(-1)
-      end
-
-      it "redirects to the agent" do
-        la = create(:listing_agent, listing: listing, agent: agent)
-        delete agent_listing_agent_path(agent, la)
-        expect(response).to redirect_to(agent_path(agent))
       end
     end
   end

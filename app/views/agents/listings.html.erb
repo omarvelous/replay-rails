@@ -1,0 +1,27 @@
+<%= turbo_frame_tag "agent_listings" do %>
+  <% if @listings.any? %>
+    <div class="divide-y divide-gray-100">
+      <% @listings.each do |listing| %>
+        <% tone = %w[#2f6bff #0fb5a6 #7c5cff #e8990f #1f9d57 #e5484d][listing.id % 6] %>
+        <%= link_to listing_path(listing), class: "flex items-center gap-3 px-4 py-3 hover:bg-gray-50 transition-colors" do %>
+          <div class="w-12 h-9 rounded flex-none" style="background: <%= tone %>22;"></div>
+          <div class="flex-1 min-w-0">
+            <p class="text-sm font-medium truncate"><%= listing.address %></p>
+            <p class="text-xs text-gray-400"><%= number_to_currency(listing.price, precision: 0) %> · <%= listing.beds %> bd · <%= listing.baths %> ba</p>
+          </div>
+          <% if listing.status == "active" %>
+            <span class="inline-flex items-center rounded-full bg-green-50 px-2 py-0.5 text-xs font-medium text-green-700 ring-1 ring-green-600/20 ring-inset"><%= listing.status.capitalize %></span>
+          <% elsif listing.status == "pending" %>
+            <span class="inline-flex items-center rounded-full bg-yellow-50 px-2 py-0.5 text-xs font-medium text-yellow-800 ring-1 ring-yellow-600/20 ring-inset"><%= listing.status.capitalize %></span>
+          <% else %>
+            <span class="inline-flex items-center rounded-full bg-gray-50 px-2 py-0.5 text-xs font-medium text-gray-600 ring-1 ring-gray-500/10 ring-inset"><%= listing.status.capitalize %></span>
+          <% end %>
+        <% end %>
+      <% end %>
+    </div>
+  <% else %>
+    <div class="p-6 text-center">
+      <p class="text-sm text-gray-500">No listings assigned yet.</p>
+    </div>
+  <% end %>
+<% end %>

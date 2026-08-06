@@ -1,5 +1,5 @@
 class AgentsController < ApplicationController
-  before_action :set_agent, only: %i[ show edit update destroy ]
+  before_action :set_agent, only: %i[ show edit update destroy listings ]
 
   def index
     @agents = Current.account.agents.order(:name)
@@ -36,6 +36,10 @@ class AgentsController < ApplicationController
   def destroy
     @agent.destroy
     redirect_to agents_path, notice: t(".success")
+  end
+
+  def listings
+    @listings = @agent.listings.distinct
   end
 
   private
