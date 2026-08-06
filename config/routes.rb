@@ -7,7 +7,7 @@ Rails.application.routes.draw do
     end
   end
   resources :screens do
-    resource :playlist, controller: "screens/playlist", only: %i[ new create destroy ]
+    resource :screen_playlist, only: %i[ show new create destroy ]
   end
   resources :listings do
     resources :listing_agents

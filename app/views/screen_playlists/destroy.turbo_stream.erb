@@ -1,0 +1,8 @@
+<%= turbo_stream.replace "screen_playlist" do %>
+  <%= turbo_frame_tag "screen_playlist" do %>
+    <%= render "screen_playlists/content", screen: @screen, screen_playlist: nil %>
+  <% end %>
+<% end %>
+<%= turbo_stream.update "flash" do %>
+  <%= render "shared/flash" %>
+<% end %>
