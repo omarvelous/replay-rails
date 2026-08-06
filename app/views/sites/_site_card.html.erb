@@ -1,6 +1,6 @@
 <% tone = %w[#2f6bff #0fb5a6 #7c5cff #e8990f #1f9d57 #e5484d][site.id % 6] %>
 <% screen_count = site.screens.count %>
-<%= link_to site_path(site), class: "rounded-lg bg-white shadow-sm ring-1 ring-gray-900/5 hover:shadow-md transition-shadow cursor-pointer group overflow-hidden", data: { turbo_frame: "drawer" } do %>
+<%= link_to site_path(site), class: "rounded-lg bg-white shadow-sm ring-1 ring-gray-900/5 hover:shadow-md transition-shadow cursor-pointer group overflow-hidden" do %>
   <%# Tinted header — 124px per spec %>
   <div class="relative overflow-hidden" style="height: 124px; background: <%= tone %>14;">
     <div class="absolute inset-0" style="background: linear-gradient(135deg, <%= tone %>26, transparent);"></div>
