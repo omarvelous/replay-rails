@@ -74,10 +74,6 @@
         </div>
 
         <div class="px-4 py-6 sm:px-6 lg:px-8">
-          <div id="flash">
-            <%= render "shared/flash" %>
-          </div>
-
           <div class="mx-auto max-w-5xl">
             <%= yield %>
           </div>
@@ -86,9 +82,6 @@
     <% else %>
       <main class="min-h-screen flex items-center justify-center p-5 bg-gray-50">
         <div class="w-full max-w-md">
-          <div id="flash">
-            <%= render "shared/flash" %>
-          </div>
           <%= yield %>
         </div>
       </main>
@@ -121,5 +114,12 @@
         </div>
       </dialog>
     </el-dialog>
+
+    <%# Flash notifications — fixed overlay, top-right %>
+    <div aria-live="assertive" class="pointer-events-none fixed inset-0 z-50 flex items-end px-4 py-6 sm:items-start sm:p-6">
+      <div id="flash" class="flex w-full flex-col items-center space-y-4 sm:items-end">
+        <%= render "shared/flash" %>
+      </div>
+    </div>
   </body>
 </html>
