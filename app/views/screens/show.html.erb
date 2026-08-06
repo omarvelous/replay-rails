@@ -1,8 +1,17 @@
-<%= turbo_frame_tag "drawer" do %>
+<% actions = capture do %>
+  <%= link_to new_screen_screen_playlist_path(@screen), class: "rounded-md bg-white px-2.5 py-1.5 text-sm font-semibold text-gray-900 shadow-xs ring-1 ring-gray-300 ring-inset hover:bg-gray-50 inline-flex items-center gap-1.5", data: { turbo_frame: "modal" } do %>
+    Change content
+  <% end %>
+  <%= link_to edit_screen_path(@screen), class: "rounded-md bg-white px-2.5 py-1.5 text-sm font-semibold text-gray-900 shadow-xs ring-1 ring-gray-300 ring-inset hover:bg-gray-50 inline-flex items-center gap-1.5", data: { turbo_frame: "modal" } do %>
+    Edit screen
+  <% end %>
+<% end %>
+<%= render "shared/page_header", title: @screen.name, subtitle: "Screen", actions: actions, back_link: { label: "← Screens", path: screens_path } %>
+
 <% is_live = @screen.screen_playlists.where(active: true).exists? %>
 
-<%# Hero — dark preview stage %>
-<div class="bg-gray-900 p-5 flex items-center justify-center relative overflow-hidden flex-none" style="min-height: 180px; max-height: 32vh;">
+<%# Dark preview hero %>
+<div class="rounded-xl bg-gray-900 p-6 flex items-center justify-center relative overflow-hidden mb-5" style="min-height: 180px;">
   <div class="rounded-md overflow-hidden flex items-center justify-center"
        style="<%= @screen.orientation == 'landscape' ? 'aspect-ratio: 16/9;' : 'aspect-ratio: 9/16;' %> height: 100%; max-height: 160px; width: auto; max-width: 100%; background: #14171f; box-shadow: 0 0 0 5px #1c2029, 0 0 0 6px #2a2f3a, 0 18px 40px rgba(0,0,0,.5);">
     <% if is_live %>
@@ -11,7 +20,7 @@
       <span class="text-white/15 text-2xl">—</span>
     <% end %>
   </div>
-  <div class="absolute top-3 left-3">
+  <div class="absolute top-4 left-4">
     <% if is_live %>
       <span class="inline-flex items-center gap-1.5 text-xs font-semibold text-white px-2.5 py-1 rounded-full" style="background: rgba(11,13,18,.6); backdrop-filter: blur(4px);">
         <span class="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span>
@@ -23,106 +32,51 @@
       </span>
     <% end %>
   </div>
-  <button class="absolute top-3 right-3 w-7 h-7 rounded-full grid place-items-center cursor-pointer" style="background: rgba(255,255,255,.9);"
-          data-action="click->drawer#close">
-    <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-gray-900" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
-  </button>
 </div>
 
-<%# Head + Tabs — flex-none so it stays pinned %>
-<div class="flex-none border-b border-gray-200" data-controller="tabs">
-  <div class="px-6 pt-4">
-    <div class="flex items-center gap-3 mb-0.5">
-      <h2 class="text-xl font-bold tracking-tight"><%= @screen.name %></h2>
-      <% if is_live %>
-        <span class="inline-flex items-center rounded-full bg-green-50 px-2 py-1 text-xs font-medium text-green-700 ring-1 ring-green-600/20 ring-inset">Live</span>
-      <% else %>
-        <span class="inline-flex items-center rounded-full bg-gray-50 px-2 py-1 text-xs font-medium text-gray-600 ring-1 ring-gray-500/10 ring-inset">Idle</span>
-      <% end %>
+<%# Stats strip %>
+<div class="grid grid-cols-3 gap-4 mb-5">
+  <div class="rounded-lg bg-white shadow-sm ring-1 ring-gray-900/5 p-4">
+    <p class="text-xs text-gray-400">Scans (30d)</p>
+    <p class="text-2xl font-bold tabular-nums text-yellow-600">0</p>
+  </div>
+  <div class="rounded-lg bg-white shadow-sm ring-1 ring-gray-900/5 p-4">
+    <p class="text-xs text-gray-400">Uptime</p>
+    <p class="text-2xl font-bold tabular-nums <%= is_live ? 'text-green-600' : 'text-red-600' %>"><%= is_live ? "99.4%" : "—" %></p>
+  </div>
+  <div class="rounded-lg bg-white shadow-sm ring-1 ring-gray-900/5 p-4">
+    <p class="text-xs text-gray-400">Loop length</p>
+    <p class="text-2xl font-bold tabular-nums text-indigo-600">—</p>
+  </div>
+</div>
+
+<% unless is_live %>
+  <div role="alert" class="mb-5 text-sm rounded-md p-3" style="background: #fff6e5; border: 1px solid #f2dcac; color: #8a5c00;">
+    <div class="flex items-start gap-2">
+      <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z"/></svg>
+      <span>No playlist is assigned to this screen. <%= link_to "Assign one", new_screen_screen_playlist_path(@screen), class: "font-semibold underline", data: { turbo_frame: "modal" } %> to start playing.</span>
     </div>
-    <p class="text-xs text-gray-400 flex items-center gap-1">
-      <svg xmlns="http://www.w3.org/2000/svg" class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z"/></svg>
-      <%= @site.name %> · <%= @screen.orientation.capitalize %> · <%= @screen.orientation == 'landscape' ? '55" Commercial LCD' : '49" Portrait LCD' %>
-    </p>
   </div>
+<% end %>
 
-  <div class="border-b border-gray-200">
-    <nav class="-mb-px flex gap-x-6 px-6 mt-3" aria-label="Tabs">
-      <button class="border-b-2 border-indigo-500 px-1 py-3 text-sm font-semibold text-indigo-600" data-tabs-target="tab" data-tab="overview" data-action="click->tabs#switch">Overview</button>
-      <button class="border-b-2 border-transparent px-1 py-3 text-sm font-semibold text-gray-500 hover:border-gray-300 hover:text-gray-700" data-tabs-target="tab" data-tab="content" data-action="click->tabs#switch">Content</button>
-      <button class="border-b-2 border-transparent px-1 py-3 text-sm font-semibold text-gray-500 hover:border-gray-300 hover:text-gray-700" data-tabs-target="tab" data-tab="activity" data-action="click->tabs#switch">Activity</button>
-    </nav>
-  </div>
-
-  <%# Scrolling body — the critical layout constraint %>
-  <div class="flex-1 overflow-y-auto min-h-0">
-    <%# Overview %>
-    <div data-tabs-target="panel" data-tab="overview" class="px-6 py-5">
-      <div class="grid grid-cols-3 gap-3 mb-4">
-        <div class="bg-gray-50 rounded-lg p-3">
-          <p class="text-xs text-gray-400">Scans (30d)</p>
-          <p class="text-xl font-bold tabular-nums text-yellow-600">0</p>
-        </div>
-        <div class="bg-gray-50 rounded-lg p-3">
-          <p class="text-xs text-gray-400">Uptime</p>
-          <p class="text-xl font-bold tabular-nums <%= is_live ? 'text-green-600' : 'text-red-600' %>"><%= is_live ? "99.4%" : "—" %></p>
-        </div>
-        <div class="bg-gray-50 rounded-lg p-3">
-          <p class="text-xs text-gray-400">Loop length</p>
-          <p class="text-xl font-bold tabular-nums text-indigo-600">—</p>
-        </div>
-      </div>
-
-      <% unless is_live %>
-        <div role="alert" class="mb-4 text-sm rounded-md p-3" style="background: #fff6e5; border: 1px solid #f2dcac; color: #8a5c00;">
-          <div class="flex items-start gap-2">
-            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z"/></svg>
-            <span>No playlist is assigned to this screen. <%= link_to "Assign one", new_screen_screen_playlist_path(@screen), class: "font-semibold underline", data: { turbo_frame: "modal" } %> to start playing.</span>
-          </div>
-        </div>
-      <% end %>
-
-      <%# Playing now — lazy-loaded from screens#playlist %>
+<%# Body grid: main + sidebar %>
+<div class="grid grid-cols-1 lg:grid-cols-[1fr_320px] gap-5 items-start">
+  <%# Main column %>
+  <div class="flex flex-col gap-5">
+    <%# Playing now — lazy-loaded %>
+    <div class="rounded-lg bg-white shadow-sm ring-1 ring-gray-900/5 p-5">
       <%= turbo_frame_tag "screen_playlist_info", src: playlist_screen_path(@screen), loading: :lazy %>
-
-      <h3 class="text-sm font-semibold mb-2">Hardware</h3>
-      <div class="divide-y divide-gray-200">
-        <% [
-          ["Display", @screen.orientation == 'landscape' ? '55" Commercial LCD' : '49" Portrait LCD'],
-          ["Orientation", @screen.orientation.capitalize],
-          ["Resolution", @screen.orientation == 'landscape' ? "1920 × 1080" : "1080 × 1920"],
-          ["Player", "—"],
-          ["Firmware", "—"],
-          ["Last heartbeat", "—"],
-          ["Site", @site.name],
-        ].each do |label, value| %>
-          <div class="flex justify-between py-2 text-sm">
-            <span class="text-gray-500"><%= label %></span>
-            <span class="font-semibold <%= %w[Resolution Player Firmware].include?(label) ? 'font-mono text-xs' : '' %>"><%= value %></span>
-          </div>
-        <% end %>
-      </div>
     </div>
 
-    <%# Content %>
-    <div data-tabs-target="panel" data-tab="content" class="hidden px-6 py-5">
-      <%# Loop — lazy-loaded from screen_playlist#show %>
+    <%# Content loop — lazy-loaded %>
+    <div class="rounded-lg bg-white shadow-sm ring-1 ring-gray-900/5 p-5">
       <%= turbo_frame_tag "screen_playlist", src: screen_screen_playlist_path(@screen), loading: :lazy %>
-
-      <h3 class="text-sm font-semibold mb-2 mt-5">Schedule</h3>
-      <div class="divide-y divide-gray-200">
-        <% [["Playing", "Daily · 8:00 AM – 9:00 PM"], ["Timezone", "America/New_York"], ["Overrides", "None"]].each do |label, value| %>
-          <div class="flex justify-between py-2 text-sm">
-            <span class="text-gray-500"><%= label %></span>
-            <span class="font-semibold <%= label == 'Timezone' ? 'font-mono text-xs' : '' %>"><%= value %></span>
-          </div>
-        <% end %>
-      </div>
     </div>
 
     <%# Activity %>
-    <div data-tabs-target="panel" data-tab="activity" class="hidden px-6 py-5">
-      <p class="text-sm font-semibold mb-1">QR scans · last 14 days</p>
+    <div class="rounded-lg bg-white shadow-sm ring-1 ring-gray-900/5 p-5">
+      <h3 class="text-sm font-semibold mb-3">Activity</h3>
+      <p class="text-sm font-semibold mb-1 text-gray-500">QR scans · last 14 days</p>
       <div class="h-14 bg-gray-100 rounded mb-4"></div>
 
       <h3 class="text-sm font-semibold mb-3">Event log</h3>
@@ -142,11 +96,63 @@
       </div>
     </div>
   </div>
+
+  <%# Sidebar %>
+  <div class="flex flex-col gap-5">
+    <%# Hardware %>
+    <div class="rounded-lg bg-white shadow-sm ring-1 ring-gray-900/5 p-5">
+      <h3 class="text-sm font-semibold mb-3">Hardware</h3>
+      <div class="divide-y divide-gray-200">
+        <% [
+          ["Display", @screen.orientation == 'landscape' ? '55" Commercial LCD' : '49" Portrait LCD'],
+          ["Orientation", @screen.orientation.capitalize],
+          ["Resolution", @screen.orientation == 'landscape' ? "1920 × 1080" : "1080 × 1920"],
+          ["Player", "—"],
+          ["Firmware", "—"],
+          ["Last heartbeat", "—"],
+        ].each do |label, value| %>
+          <div class="flex justify-between py-2 text-sm">
+            <span class="text-gray-500"><%= label %></span>
+            <span class="font-semibold <%= %w[Resolution Player Firmware].include?(label) ? 'font-mono text-xs' : '' %>"><%= value %></span>
+          </div>
+        <% end %>
+      </div>
+    </div>
+
+    <%# Site %>
+    <div class="rounded-lg bg-white shadow-sm ring-1 ring-gray-900/5 p-5">
+      <h3 class="text-sm font-semibold mb-3">Site</h3>
+      <%= link_to site_path(@site), class: "flex items-center gap-3 p-3 -mx-1 rounded-lg border border-gray-200 hover:bg-gray-50 transition-colors" do %>
+        <div class="w-10 h-10 rounded-lg flex-none grid place-items-center" style="background: #2f6bff14; color: #2f6bff;">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" class="size-5"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 21h19.5m-18-18v18m10.5-18v18m6-13.5V21M6.75 6.75h.75m-.75 3h.75m-.75 3h.75m3-6h.75m-.75 3h.75m-.75 3h.75M6.75 21v-3.375c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21M3 3h12m-.75 4.5H21m-3.75 3H21"/></svg>
+        </div>
+        <div class="flex-1 min-w-0">
+          <p class="text-sm font-medium truncate"><%= @site.name %></p>
+          <% if @site.address.present? %>
+            <p class="text-xs text-gray-400"><%= @site.address %></p>
+          <% end %>
+        </div>
+      <% end %>
+    </div>
+
+    <%# Schedule %>
+    <div class="rounded-lg bg-white shadow-sm ring-1 ring-gray-900/5 p-5">
+      <h3 class="text-sm font-semibold mb-3">Schedule</h3>
+      <div class="divide-y divide-gray-200">
+        <% [["Playing", "Daily · 8:00 AM – 9:00 PM"], ["Timezone", "America/New_York"], ["Overrides", "None"]].each do |label, value| %>
+          <div class="flex justify-between py-2 text-sm">
+            <span class="text-gray-500"><%= label %></span>
+            <span class="font-semibold <%= label == 'Timezone' ? 'font-mono text-xs' : '' %>"><%= value %></span>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  </div>
 </div>
 
-<%# Footer — flex-none, pinned at bottom %>
-<div class="flex-none px-6 py-3.5 border-t border-gray-200 flex gap-3">
-  <%= link_to new_screen_screen_playlist_path(@screen), class: "rounded-md bg-white px-2.5 py-1.5 text-sm font-semibold text-gray-900 shadow-xs ring-1 ring-gray-300 ring-inset hover:bg-gray-50 flex-1 text-center", data: { turbo_frame: "modal" } do %>Change content<% end %>
-  <%= link_to edit_screen_path(@screen), class: "rounded-md bg-white px-2.5 py-1.5 text-sm font-semibold text-gray-900 shadow-xs ring-1 ring-gray-300 ring-inset hover:bg-gray-50 flex-1 text-center", data: { turbo_frame: "modal" } do %>Edit screen<% end %>
+<%# Danger zone %>
+<div class="mt-8 pt-4 border-t border-gray-200">
+  <%= button_to "Delete screen", @screen, method: :delete,
+      class: "rounded-md bg-white px-2.5 py-1.5 text-sm font-semibold text-red-600 shadow-xs ring-1 ring-red-300 ring-inset hover:bg-red-50",
+      data: { turbo_confirm: "Are you sure you want to delete this screen?" } %>
 </div>
-<% end %>
