@@ -16,7 +16,10 @@ class SitesController < ApplicationController
     @site = Current.account.sites.build(site_params)
 
     if @site.save
-      redirect_to @site, notice: t(".success")
+      respond_to do |format|
+        format.turbo_stream { flash.now[:notice] = t(".success") }
+        format.html { redirect_to @site, notice: t(".success") }
+      end
     else
       render :new, status: :unprocessable_entity
     end
