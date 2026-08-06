@@ -1,7 +1,0 @@
-<%= turbo_stream.before "new_site_tile" do %>
-  <%= render "sites/site_card", site: @site %>
-<% end %>
-<%= turbo_stream.update "modal", "" %>
-<%= turbo_stream.update "flash" do %>
-  <%= render "shared/flash" %>
-<% end %>

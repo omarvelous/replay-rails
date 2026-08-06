@@ -2,7 +2,7 @@
   <%= link_to screens_path(site_id: @site.id), class: "rounded-md bg-white px-2.5 py-1.5 text-sm font-semibold text-gray-900 shadow-xs ring-1 ring-gray-300 ring-inset hover:bg-gray-50 inline-flex items-center gap-1.5" do %>
     Manage screens
   <% end %>
-  <%= link_to edit_site_path(@site), class: "rounded-md bg-white px-2.5 py-1.5 text-sm font-semibold text-gray-900 shadow-xs ring-1 ring-gray-300 ring-inset hover:bg-gray-50 inline-flex items-center gap-1.5", data: { turbo_frame: "modal" } do %>
+  <%= link_to edit_site_path(@site), class: "rounded-md bg-white px-2.5 py-1.5 text-sm font-semibold text-gray-900 shadow-xs ring-1 ring-gray-300 ring-inset hover:bg-gray-50 inline-flex items-center gap-1.5" do %>
     Edit site
   <% end %>
 <% end %>
