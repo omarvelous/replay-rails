@@ -1,0 +1,30 @@
+<%= turbo_frame_tag "listing_ads" do %>
+  <% if @ads.any? %>
+    <div class="flex flex-col gap-2">
+      <% @ads.each do |ad| %>
+        <% ad_tone = %w[#2f6bff #0fb5a6 #7c5cff #e8990f #1f9d57 #e5484d][ad.id % 6] %>
+        <%= link_to ad_path(ad), class: "flex items-center gap-3 p-2.5 rounded-lg border border-gray-200 hover:bg-gray-50 transition-colors" do %>
+          <div class="w-16 h-10 rounded flex-none flex items-end p-1"
+               style="background: linear-gradient(135deg, #0b0d12, <%= ad_tone %>cc);">
+            <span class="text-white text-[7px] font-bold leading-none truncate"><%= ad.headline %></span>
+          </div>
+          <div class="flex-1 min-w-0">
+            <p class="text-sm font-medium truncate"><%= ad.headline %></p>
+            <p class="text-xs text-gray-400">Ad</p>
+          </div>
+        <% end %>
+      <% end %>
+    </div>
+  <% else %>
+    <div class="border-2 border-dashed border-gray-200 rounded-lg p-6 text-center">
+      <div class="flex flex-col items-center gap-2">
+        <div class="w-10 h-10 rounded-lg bg-indigo-50 grid place-items-center">
+          <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-indigo-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 15.75l5.159-5.159a2.25 2.25 0 013.182 0l5.159 5.159m-1.5-1.5l1.409-1.409a2.25 2.25 0 013.182 0l2.909 2.909M3.75 21h16.5a2.25 2.25 0 002.25-2.25V5.25a2.25 2.25 0 00-2.25-2.25H3.75a2.25 2.25 0 00-2.25 2.25v13.5A2.25 2.25 0 003.75 21z"/></svg>
+        </div>
+        <p class="text-sm font-semibold">No ads yet</p>
+        <p class="text-xs text-gray-500">Turn this listing into signage in one step.</p>
+        <%= link_to "Create ad", new_ad_path(listing_id: @listing.id), class: "rounded-md bg-indigo-600 px-2.5 py-1.5 text-sm font-semibold text-white shadow-xs hover:bg-indigo-500 mt-1" %>
+      </div>
+    </div>
+  <% end %>
+<% end %>

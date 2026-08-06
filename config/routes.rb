@@ -13,6 +13,9 @@ Rails.application.routes.draw do
     resource :screen_playlist, only: %i[ show new create destroy ]
   end
   resources :listings do
+    member do
+      get :ads
+    end
     resources :listing_agents
   end
   resources :agents do

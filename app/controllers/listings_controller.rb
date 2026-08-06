@@ -1,5 +1,5 @@
 class ListingsController < ApplicationController
-  before_action :set_listing, only: %i[ show edit update destroy ]
+  before_action :set_listing, only: %i[ show edit update destroy ads ]
 
   def index
     @listings = Current.account.listings.order(created_at: :desc)
@@ -36,6 +36,10 @@ class ListingsController < ApplicationController
   def destroy
     @listing.destroy
     redirect_to listings_path, notice: t(".success")
+  end
+
+  def ads
+    @ads = @listing.ads
   end
 
   private
