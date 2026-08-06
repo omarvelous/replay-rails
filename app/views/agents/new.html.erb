@@ -1,4 +1,10 @@
-<div class="mx-auto md:w-2/3 w-full">
-  <h1 class="font-bold text-4xl">New Agent</h1>
+<%= turbo_frame_tag "modal" do %>
+  <div class="flex items-center justify-between mb-1">
+    <h3 class="font-semibold text-lg">New agent</h3>
+    <button type="button" class="text-gray-400 hover:text-gray-600 p-1" data-action="click->modal#close">
+      <svg viewBox="0 0 20 20" fill="currentColor" class="size-5"><path d="M6.28 5.22a.75.75 0 0 0-1.06 1.06L8.94 10l-3.72 3.72a.75.75 0 1 0 1.06 1.06L10 11.06l3.72 3.72a.75.75 0 1 0 1.06-1.06L11.06 10l3.72-3.72a.75.75 0 0 0-1.06-1.06L10 8.94 6.28 5.22Z"/></svg>
+    </button>
+  </div>
+  <p class="text-sm text-gray-500 mb-4">Add a new agent to your account.</p>
   <%= render "form", agent: @agent %>
-</div>
+<% end %>
