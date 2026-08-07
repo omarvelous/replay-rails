@@ -75,17 +75,6 @@ RSpec.describe "ListingAgents", type: :request do
     end
   end
 
-  describe "from agent context" do
-    describe "GET /agents/:id/listings" do
-      it "returns listings for an agent" do
-        create(:listing_agent, listing: listing, agent: agent)
-        get listings_agent_path(agent)
-        expect(response).to be_successful
-        expect(response.body).to include(listing.address)
-      end
-    end
-  end
-
   describe "tenant isolation" do
     it "returns 404 for another account's listing" do
       other_listing = create(:listing)

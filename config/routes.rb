@@ -14,11 +14,7 @@ Rails.application.routes.draw do
     end
     resources :listing_agents
   end
-  resources :agents do
-    member do
-      get :listings
-    end
-  end
+  resources :agents
   resources :ads do
     member do
       get :preview
