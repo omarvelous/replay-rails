@@ -1,6 +1,6 @@
 <%= form_with model: screen, url: url do |form| %>
   <% if screen.errors.any? %>
-    <div id="error_explanation" class="rounded-md bg-red-50 p-4 my-4">
+    <div class="rounded-md bg-red-50 p-4 mb-4">
       <div class="flex">
         <div class="shrink-0">
           <svg viewBox="0 0 20 20" fill="currentColor" aria-hidden="true" class="size-5 text-red-400"><path d="M10 18a8 8 0 1 0 0-16 8 8 0 0 0 0 16ZM8.28 7.22a.75.75 0 0 0-1.06 1.06L8.94 10l-1.72 1.72a.75.75 0 1 0 1.06 1.06L10 11.06l1.72 1.72a.75.75 0 1 0 1.06-1.06L11.06 10l1.72-1.72a.75.75 0 0 0-1.06-1.06L10 8.94 8.28 7.22Z" clip-rule="evenodd" fill-rule="evenodd" /></svg>
@@ -16,28 +16,29 @@
     </div>
   <% end %>
 
-  <div class="my-5">
-    <%= form.label :site_id, "Site", class: "block text-sm/6 font-medium text-gray-900" %>
+  <div class="mb-3">
+    <%= form.label :site_id, "Site", class: "block text-sm font-medium text-gray-700 mb-1" %>
     <%= form.select :site_id,
         Current.account.sites.order(:name).map { |s| [s.name, s.id] },
         { include_blank: "Select a site" },
-        required: true, class: "block w-full rounded-md bg-white py-1.5 pl-3 pr-8 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6" %>
+        required: true, class: "block w-full rounded-md bg-white py-2 pl-3 pr-8 text-sm text-gray-900 outline-1 -outline-offset-1 outline-gray-300 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600" %>
   </div>
 
-  <div class="my-5">
-    <%= form.label :name, class: "block text-sm/6 font-medium text-gray-900" %>
-    <%= form.text_field :name, required: true, autofocus: true,
-        class: "block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6" %>
+  <div class="mb-3">
+    <%= form.label :name, class: "block text-sm font-medium text-gray-700 mb-1" %>
+    <%= form.text_field :name, required: true, autofocus: true, placeholder: "e.g. Lobby Display",
+        class: "block w-full rounded-md bg-white px-3 py-2 text-sm text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600" %>
   </div>
 
-  <div class="my-5">
-    <%= form.label :orientation, class: "block text-sm/6 font-medium text-gray-900" %>
-    <%= form.select :orientation, %w[landscape portrait],
-        {}, class: "block w-full rounded-md bg-white py-1.5 pl-3 pr-8 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6" %>
+  <div class="mb-4">
+    <%= form.label :orientation, class: "block text-sm font-medium text-gray-700 mb-1" %>
+    <%= form.select :orientation, [["Landscape", "landscape"], ["Portrait", "portrait"]],
+        {}, class: "block w-full rounded-md bg-white py-2 pl-3 pr-8 text-sm text-gray-900 outline-1 -outline-offset-1 outline-gray-300 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600" %>
   </div>
 
-  <div class="flex items-center gap-4">
-    <%= form.submit class: "rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-xs hover:bg-indigo-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600" %>
-    <button type="button" class="text-sm font-semibold text-gray-600 hover:text-gray-900" data-action="click->modal#close">Cancel</button>
+  <div class="flex items-center justify-between pt-4 border-t border-gray-200">
+    <%= link_to "Cancel", screen.persisted? ? screen_path(screen) : screens_path, class: "text-sm font-semibold text-gray-600 hover:text-gray-900" %>
+    <%= form.submit screen.persisted? ? "Save changes" : "Add screen",
+        class: "rounded-md bg-indigo-600 px-4 py-2 text-sm font-semibold text-white shadow-xs hover:bg-indigo-500" %>
   </div>
 <% end %>

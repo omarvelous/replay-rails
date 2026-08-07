@@ -1,4 +1,5 @@
-<%= turbo_frame_tag "modal" do %>
-  <h3 class="font-bold text-lg mb-4">Edit Screen</h3>
+<%= render "shared/page_header", title: @screen.name, subtitle: "Edit screen", back_link: { label: "← Screen", path: screen_path(@screen) } %>
+
+<div class="rounded-lg bg-white shadow-sm ring-1 ring-gray-900/5 p-5">
   <%= render "screens/form", screen: @screen, url: screen_path(@screen) %>
-<% end %>
+</div>

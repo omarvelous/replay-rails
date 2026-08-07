@@ -17,10 +17,7 @@ class ScreensController < ApplicationController
     @screen = @site.screens.build(screen_params)
 
     if @screen.save
-      respond_to do |format|
-        format.turbo_stream { flash.now[:notice] = t(".success") }
-        format.html { redirect_to @screen, notice: t(".success") }
-      end
+      redirect_to @screen, notice: t(".success")
     else
       render :new, status: :unprocessable_entity
     end
@@ -31,10 +28,7 @@ class ScreensController < ApplicationController
 
   def update
     if @screen.update(screen_params)
-      respond_to do |format|
-        format.turbo_stream { flash.now[:notice] = t(".success") }
-        format.html { redirect_to @screen, notice: t(".success") }
-      end
+      redirect_to @screen, notice: t(".success")
     else
       render :edit, status: :unprocessable_entity
     end

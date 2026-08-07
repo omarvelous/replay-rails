@@ -9,7 +9,7 @@
     idle_count = total - live_count
   %>
   <% actions = capture do %>
-    <%= link_to new_screen_path, class: "rounded-md bg-indigo-600 px-2.5 py-1.5 text-sm font-semibold text-white shadow-xs hover:bg-indigo-500 inline-flex items-center gap-1.5", data: { turbo_frame: "modal" } do %>
+    <%= link_to new_screen_path, class: "rounded-md bg-indigo-600 px-2.5 py-1.5 text-sm font-semibold text-white shadow-xs hover:bg-indigo-500 inline-flex items-center gap-1.5" do %>
       <svg viewBox="0 0 20 20" fill="currentColor" class="size-4"><path d="M10.75 4.75a.75.75 0 0 0-1.5 0v4.5h-4.5a.75.75 0 0 0 0 1.5h4.5v4.5a.75.75 0 0 0 1.5 0v-4.5h4.5a.75.75 0 0 0 0-1.5h-4.5v-4.5Z"/></svg>
       Add screen
     <% end %>
@@ -113,7 +113,7 @@
             </div>
             <p class="font-semibold">No screens yet</p>
             <p class="text-sm text-gray-500">Add a screen to start displaying content.</p>
-            <%= link_to "Add screen", new_screen_path, class: "rounded-md bg-indigo-600 px-2.5 py-1.5 text-sm font-semibold text-white shadow-xs hover:bg-indigo-500", data: { turbo_frame: "modal" } %>
+            <%= link_to "Add screen", new_screen_path, class: "rounded-md bg-indigo-600 px-2.5 py-1.5 text-sm font-semibold text-white shadow-xs hover:bg-indigo-500" %>
           </div>
         </div>
       <% end %>

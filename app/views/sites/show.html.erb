@@ -56,8 +56,8 @@
   </div>
 </div>
 
-<%# Screens at this site — lazy-loaded %>
-<%= turbo_frame_tag "site_screens", src: screens_site_path(@site), loading: :lazy %>
+<%# Screens at this site %>
+<%= render "sites/screens_list", site: @site, screens: @site.screens.includes(screen_playlists: :playlist).order(:name) %>
 
 <%# Danger zone %>
 <div class="mt-8 pt-4 border-t border-gray-200">

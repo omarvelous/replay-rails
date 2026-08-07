@@ -1,11 +1,7 @@
 Rails.application.routes.draw do
   root "home#index"
   resources :accounts, only: [ :new, :create ]
-  resources :sites do
-    member do
-      get :screens
-    end
-  end
+  resources :sites
   resources :screens do
     member do
       get :playlist

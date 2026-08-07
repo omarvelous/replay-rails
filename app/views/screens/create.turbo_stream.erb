@@ -1,9 +1,0 @@
-<%= turbo_stream.update "modal", "" %>
-<%= turbo_stream.update "flash" do %>
-  <%= render "shared/flash" %>
-<% end %>
-<%= turbo_stream.replace "site_screens" do %>
-  <%= turbo_frame_tag "site_screens" do %>
-    <%= render "sites/screens_list", site: @site, screens: @site.screens.includes(screen_playlists: :playlist).order(:name) %>
-  <% end %>
-<% end %>

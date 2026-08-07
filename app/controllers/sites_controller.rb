@@ -1,5 +1,5 @@
 class SitesController < ApplicationController
-  before_action :set_site, only: %i[ show edit update destroy screens ]
+  before_action :set_site, only: %i[ show edit update destroy ]
 
   def index
     @sites = Current.account.sites.order(:name)
@@ -36,10 +36,6 @@ class SitesController < ApplicationController
   def destroy
     @site.destroy
     redirect_to sites_path, notice: t(".success")
-  end
-
-  def screens
-    @screens = @site.screens.includes(screen_playlists: :playlist).order(:name)
   end
 
   private
