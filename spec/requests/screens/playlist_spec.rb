@@ -9,13 +9,6 @@ RSpec.describe "Screen Playlist", type: :request do
 
   before { sign_in(user) }
 
-  describe "GET /screens/:screen_id/screen_playlist" do
-    it "returns a successful response" do
-      get screen_screen_playlist_path(screen)
-      expect(response).to be_successful
-    end
-  end
-
   describe "GET /screens/:screen_id/screen_playlist/new" do
     it "returns a successful response" do
       get new_screen_screen_playlist_path(screen)

@@ -1,5 +1,5 @@
 <% actions = capture do %>
-  <%= link_to new_screen_screen_playlist_path(@screen), class: "rounded-md bg-white px-2.5 py-1.5 text-sm font-semibold text-gray-900 shadow-xs ring-1 ring-gray-300 ring-inset hover:bg-gray-50 inline-flex items-center gap-1.5", data: { turbo_frame: "modal" } do %>
+  <%= link_to new_screen_screen_playlist_path(@screen), class: "rounded-md bg-white px-2.5 py-1.5 text-sm font-semibold text-gray-900 shadow-xs ring-1 ring-gray-300 ring-inset hover:bg-gray-50 inline-flex items-center gap-1.5" do %>
     Change content
   <% end %>
   <%= link_to edit_screen_path(@screen), class: "rounded-md bg-white px-2.5 py-1.5 text-sm font-semibold text-gray-900 shadow-xs ring-1 ring-gray-300 ring-inset hover:bg-gray-50 inline-flex items-center gap-1.5" do %>
@@ -8,7 +8,9 @@
 <% end %>
 <%= render "shared/page_header", title: @screen.name, subtitle: "Screen", actions: actions, back_link: { label: "← Screens", path: screens_path } %>
 
-<% is_live = @screen.screen_playlists.where(active: true).exists? %>
+<% active_assignment = @screen.screen_playlists.includes(playlist: { playlist_ads: :ad }).find_by(active: true) %>
+<% active_playlist = active_assignment&.playlist %>
+<% is_live = active_playlist.present? %>
 
 <%# Dark preview hero %>
 <div class="rounded-xl bg-gray-900 p-6 flex items-center justify-center relative overflow-hidden mb-5" style="min-height: 180px;">
@@ -46,7 +48,7 @@
   </div>
   <div class="rounded-lg bg-white shadow-sm ring-1 ring-gray-900/5 p-4">
     <p class="text-xs text-gray-400">Loop length</p>
-    <p class="text-2xl font-bold tabular-nums text-indigo-600">—</p>
+    <p class="text-2xl font-bold tabular-nums text-indigo-600"><%= active_playlist ? "#{active_playlist.playlist_ads.sum(&:duration)}s" : "—" %></p>
   </div>
 </div>
 
@@ -54,7 +56,7 @@
   <div role="alert" class="mb-5 text-sm rounded-md p-3" style="background: #fff6e5; border: 1px solid #f2dcac; color: #8a5c00;">
     <div class="flex items-start gap-2">
       <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z"/></svg>
-      <span>No playlist is assigned to this screen. <%= link_to "Assign one", new_screen_screen_playlist_path(@screen), class: "font-semibold underline", data: { turbo_frame: "modal" } %> to start playing.</span>
+      <span>No playlist is assigned to this screen. <%= link_to "Assign one", new_screen_screen_playlist_path(@screen), class: "font-semibold underline" %> to start playing.</span>
     </div>
   </div>
 <% end %>
@@ -63,14 +65,48 @@
 <div class="grid grid-cols-1 lg:grid-cols-[1fr_320px] gap-5 items-start">
   <%# Main column %>
   <div class="flex flex-col gap-5">
-    <%# Playing now — lazy-loaded %>
+    <%# Playing now %>
     <div class="rounded-lg bg-white shadow-sm ring-1 ring-gray-900/5 p-5">
-      <%= turbo_frame_tag "screen_playlist_info", src: playlist_screen_path(@screen), loading: :lazy %>
+      <h3 class="text-sm font-semibold mb-2">Playing now</h3>
+      <% if active_playlist %>
+        <%= link_to playlist_path(active_playlist), class: "flex items-center gap-3 p-3 rounded-lg border border-gray-200 hover:bg-gray-50 transition-colors mb-4" do %>
+          <div class="w-9 h-9 rounded-lg flex-none grid place-items-center bg-indigo-50">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" class="size-4 text-indigo-600"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 12h16.5m-16.5 3.75h16.5M3.75 19.5h16.5M5.625 4.5h12.75a1.875 1.875 0 010 3.75H5.625a1.875 1.875 0 010-3.75z"/></svg>
+          </div>
+          <div class="flex-1 min-w-0">
+            <p class="font-semibold text-sm"><%= active_playlist.name %></p>
+            <p class="text-xs text-gray-400"><%= active_playlist.playlist_ads.size %> items · <%= active_playlist.playlist_ads.sum(&:duration) %>s loop</p>
+          </div>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="size-4 text-gray-400"><path stroke-linecap="round" stroke-linejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5"/></svg>
+        <% end %>
+      <% else %>
+        <div class="border border-dashed border-gray-200 rounded-lg p-4 text-center text-sm text-gray-500">
+          No playlist assigned. <%= link_to "Assign one", new_screen_screen_playlist_path(@screen), class: "font-semibold text-indigo-600 hover:text-indigo-500" %>
+        </div>
+      <% end %>
     </div>
 
-    <%# Content loop — lazy-loaded %>
+    <%# Content loop %>
     <div class="rounded-lg bg-white shadow-sm ring-1 ring-gray-900/5 p-5">
-      <%= turbo_frame_tag "screen_playlist", src: screen_screen_playlist_path(@screen), loading: :lazy %>
+      <% if active_playlist&.playlist_ads&.any? %>
+        <h3 class="text-sm font-semibold mb-3">Loop</h3>
+        <div class="flex flex-col gap-1">
+          <% active_playlist.playlist_ads.order(:position).each_with_index do |pa, i| %>
+            <% tone = %w[#2f6bff #0fb5a6 #7c5cff #e8990f #1f9d57 #e5484d][pa.ad_id % 6] %>
+            <div class="flex items-center gap-3 py-2">
+              <span class="font-mono text-xs text-gray-400 w-5 text-right"><%= i + 1 %></span>
+              <div class="w-14 h-9 rounded flex-none" style="background: linear-gradient(135deg, #0b0d12, <%= tone %>cc);"></div>
+              <div class="flex-1 min-w-0">
+                <p class="text-sm font-medium truncate"><%= pa.ad.headline %></p>
+                <p class="text-xs text-gray-400">Ad</p>
+              </div>
+              <span class="font-mono text-xs text-gray-500"><%= pa.duration %>s</span>
+            </div>
+          <% end %>
+        </div>
+      <% else %>
+        <p class="text-sm text-gray-500">Nothing scheduled on this screen yet.</p>
+      <% end %>
     </div>
 
     <%# Activity %>

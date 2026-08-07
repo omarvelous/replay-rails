@@ -3,10 +3,7 @@ Rails.application.routes.draw do
   resources :accounts, only: [ :new, :create ]
   resources :sites
   resources :screens do
-    member do
-      get :playlist
-    end
-    resource :screen_playlist, only: %i[ show new create destroy ]
+    resource :screen_playlist, only: %i[ new create destroy ]
   end
   resources :listings do
     member do

@@ -1,5 +1,5 @@
 class ScreensController < ApplicationController
-  before_action :set_screen, only: %i[ show edit update destroy playlist ]
+  before_action :set_screen, only: %i[ show edit update destroy ]
 
   def index
     @screens = scope.order(:name)
@@ -38,10 +38,6 @@ class ScreensController < ApplicationController
     site = @screen.site
     @screen.destroy
     redirect_to site_path(site), notice: t(".success")
-  end
-
-  def playlist
-    @screen_playlist = @screen.screen_playlists.includes(:playlist).find_by(active: true)
   end
 
   private
