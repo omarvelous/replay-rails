@@ -1,7 +1,0 @@
-<%= turbo_stream.append "agents_grid" do %>
-  <%= render "agents/agent_card", agent: @agent %>
-<% end %>
-<%= turbo_stream.update "modal", "" %>
-<%= turbo_stream.update "flash" do %>
-  <%= render "shared/flash" %>
-<% end %>

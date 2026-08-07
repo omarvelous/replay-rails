@@ -16,10 +16,7 @@ class AgentsController < ApplicationController
     @agent = Current.account.agents.build(agent_params)
 
     if @agent.save
-      respond_to do |format|
-        format.turbo_stream { flash.now[:notice] = t(".success") }
-        format.html { redirect_to @agent, notice: t(".success") }
-      end
+      redirect_to @agent, notice: t(".success")
     else
       render :new, status: :unprocessable_entity
     end
@@ -30,10 +27,7 @@ class AgentsController < ApplicationController
 
   def update
     if @agent.update(agent_params)
-      respond_to do |format|
-        format.turbo_stream { flash.now[:notice] = t(".success") }
-        format.html { redirect_to @agent, notice: t(".success") }
-      end
+      redirect_to @agent, notice: t(".success")
     else
       render :edit, status: :unprocessable_entity
     end
