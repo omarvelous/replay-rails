@@ -65,7 +65,36 @@
       <div class="p-4 border-b border-gray-200">
         <h3 class="text-sm font-semibold">In playlists</h3>
       </div>
-      <%= turbo_frame_tag "ad_playlists", src: playlists_ad_path(@ad), loading: :lazy %>
+      <% if @playlists.any? %>
+        <div class="divide-y divide-gray-100">
+          <% @playlists.each do |playlist| %>
+            <%= link_to playlist_path(playlist), class: "flex items-center gap-3 px-4 py-3 hover:bg-gray-50 transition-colors" do %>
+              <div class="w-10 h-10 rounded-lg grid place-items-center shrink-0" style="background: #2f6bff14; color: #2f6bff;">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" class="size-5"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 12h16.5m-16.5 3.75h16.5M3.75 19.5h16.5M5.625 4.5h12.75a1.875 1.875 0 010 3.75H5.625a1.875 1.875 0 010-3.75z"/></svg>
+              </div>
+              <div class="flex-1 min-w-0">
+                <p class="text-sm font-medium truncate"><%= playlist.name %></p>
+                <p class="text-xs text-gray-400"><%= playlist.playlist_ads.size %> slides</p>
+              </div>
+              <% if playlist.status == "published" %>
+                <span class="inline-flex items-center gap-1 rounded-full bg-green-50 px-2 py-0.5 text-xs font-medium text-green-700 ring-1 ring-green-600/20 ring-inset">
+                  <span class="size-1.5 rounded-full bg-green-500"></span>
+                  Live
+                </span>
+              <% else %>
+                <span class="inline-flex items-center gap-1 rounded-full bg-yellow-50 px-2 py-0.5 text-xs font-medium text-yellow-800 ring-1 ring-yellow-600/20 ring-inset">
+                  <span class="size-1.5 rounded-full bg-yellow-500"></span>
+                  Draft
+                </span>
+              <% end %>
+            <% end %>
+          <% end %>
+        </div>
+      <% else %>
+        <div class="p-6 text-center">
+          <p class="text-sm text-gray-500">This ad is not in any playlists yet.</p>
+        </div>
+      <% end %>
     </div>
   </div>
 

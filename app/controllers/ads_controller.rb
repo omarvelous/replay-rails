@@ -1,11 +1,12 @@
 class AdsController < ApplicationController
-  before_action :set_ad, only: %i[ show edit update destroy preview playlists ]
+  before_action :set_ad, only: %i[ show edit update destroy preview ]
 
   def index
     @ads = Current.account.ads.order(created_at: :desc)
   end
 
   def show
+    @playlists = @ad.playlists.distinct
   end
 
   def new
@@ -35,10 +36,6 @@ class AdsController < ApplicationController
 
   def preview
     render layout: "preview"
-  end
-
-  def playlists
-    @playlists = @ad.playlists.distinct
   end
 
   def destroy

@@ -12,7 +12,6 @@ Rails.application.routes.draw do
   resources :ads do
     member do
       get :preview
-      get :playlists
     end
   end
   resources :playlists do
