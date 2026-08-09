@@ -6,10 +6,7 @@ Rails.application.routes.draw do
     resource :screen_playlist, only: %i[ new create destroy ]
   end
   resources :listings do
-    member do
-      get :ads
-    end
-    resources :listing_agents
+    resources :listing_agents, only: %i[ new create edit update destroy ]
   end
   resources :agents
   resources :ads do

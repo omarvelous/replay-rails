@@ -1,8 +1,0 @@
-<%= turbo_stream.append "listing_agents_rows" do %>
-  <%= render "listing_agents/listing_agent_row", la: @listing_agent %>
-<% end %>
-<%= turbo_stream.remove "listing_agents_empty" %>
-<%= turbo_stream.update "modal", "" %>
-<%= turbo_stream.update "flash" do %>
-  <%= render "shared/flash" %>
-<% end %>

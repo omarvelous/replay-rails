@@ -1,5 +1,5 @@
 class ListingsController < ApplicationController
-  before_action :set_listing, only: %i[ show edit update destroy ads ]
+  before_action :set_listing, only: %i[ show edit update destroy ]
 
   def index
     @listings = Current.account.listings.order(created_at: :desc)
@@ -16,10 +16,7 @@ class ListingsController < ApplicationController
     @listing = Current.account.listings.build(listing_params)
 
     if @listing.save
-      respond_to do |format|
-        format.turbo_stream { flash.now[:notice] = t(".success") }
-        format.html { redirect_to @listing, notice: t(".success") }
-      end
+      redirect_to @listing, notice: t(".success")
     else
       render :new, status: :unprocessable_entity
     end
@@ -30,10 +27,7 @@ class ListingsController < ApplicationController
 
   def update
     if @listing.update(listing_params)
-      respond_to do |format|
-        format.turbo_stream { flash.now[:notice] = t(".success") }
-        format.html { redirect_to @listing, notice: t(".success") }
-      end
+      redirect_to @listing, notice: t(".success")
     else
       render :edit, status: :unprocessable_entity
     end
@@ -42,10 +36,6 @@ class ListingsController < ApplicationController
   def destroy
     @listing.destroy
     redirect_to listings_path, notice: t(".success")
-  end
-
-  def ads
-    @ads = @listing.ads
   end
 
   private
