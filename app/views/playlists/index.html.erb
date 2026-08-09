@@ -1,31 +1,36 @@
-<%
-  pub_count = @playlists.count { |p| p.status == "published" }
-  draft_count = @playlists.count { |p| p.status == "draft" }
-%>
 <% actions = capture do %>
   <%= link_to new_playlist_path, class: "rounded-md bg-indigo-600 px-2.5 py-1.5 text-sm font-semibold text-white shadow-xs hover:bg-indigo-500 inline-flex items-center gap-1.5" do %>
     <svg viewBox="0 0 20 20" fill="currentColor" class="size-4"><path d="M10.75 4.75a.75.75 0 0 0-1.5 0v4.5h-4.5a.75.75 0 0 0 0 1.5h4.5v4.5a.75.75 0 0 0 1.5 0v-4.5h4.5a.75.75 0 0 0 0-1.5h-4.5v-4.5Z"/></svg>
     New playlist
   <% end %>
 <% end %>
-<%= render "shared/page_header", title: "Playlists", subtitle: "#{@playlists.size} playlists · #{pub_count} published · #{draft_count} drafts", actions: actions %>
+<%= render "shared/page_header", title: "Playlists", subtitle: "#{@pagy.count} playlists", actions: actions %>
 
-<div class="flex flex-wrap items-center gap-3 mb-5">
-  <div class="flex-1 min-w-50 max-w-xs">
-    <input type="text" placeholder="Search playlists…" class="block w-full rounded-md bg-white px-3 py-1.5 text-sm text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600" />
+<%= form_with url: playlists_path, method: :get do |f| %>
+  <div class="flex flex-wrap items-center gap-3 mb-5">
+    <div class="flex-1 min-w-50 max-w-xs">
+      <%= f.search_field :q, value: params[:q], placeholder: "Search playlists…",
+          class: "block w-full rounded-md bg-white px-3 py-1.5 text-sm text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600",
+          oninput: "if (this.value === '') this.form.requestSubmit()" %>
+    </div>
+    <div class="grid grid-cols-1">
+      <%= f.select :status,
+          [["All statuses", ""], ["Published", "published"], ["Draft", "draft"], ["Archived", "archived"]],
+          { selected: params[:status].to_s },
+          class: "col-start-1 row-start-1 w-full appearance-none rounded-md bg-white py-1.5 pr-8 pl-3 text-sm/6 text-gray-900 outline-1 -outline-offset-1 outline-gray-300 focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-indigo-600",
+          onchange: "this.form.requestSubmit()" %>
+      <svg viewBox="0 0 16 16" fill="currentColor" data-slot="icon" aria-hidden="true" class="pointer-events-none col-start-1 row-start-1 mr-2 size-4 self-center justify-self-end text-gray-500">
+        <path d="M4.22 6.22a.75.75 0 0 1 1.06 0L8 8.94l2.72-2.72a.75.75 0 1 1 1.06 1.06l-3.25 3.25a.75.75 0 0 1-1.06 0L4.22 7.28a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd" fill-rule="evenodd" />
+      </svg>
+    </div>
   </div>
-  <div class="flex gap-1">
-    <button class="rounded-md bg-gray-100 px-2.5 py-1 text-xs font-semibold text-gray-900 ring-1 ring-gray-300 ring-inset">All</button>
-    <button class="rounded-md bg-white px-2.5 py-1 text-xs font-semibold text-gray-600 ring-1 ring-gray-300 ring-inset hover:bg-gray-50">Published</button>
-    <button class="rounded-md bg-white px-2.5 py-1 text-xs font-semibold text-gray-600 ring-1 ring-gray-300 ring-inset hover:bg-gray-50">Drafts</button>
-  </div>
-</div>
+<% end %>
 
 <% if @playlists.any? %>
   <div class="flex flex-col gap-3">
     <% @playlists.each do |playlist| %>
       <% tone = %w[#2f6bff #0fb5a6 #7c5cff #e8990f #1f9d57][playlist.id % 5] %>
-      <%= link_to playlist_path(playlist), class: "rounded-lg bg-white shadow-sm ring-1 ring-gray-900/5 hover:shadow-md transition-shadow", data: { turbo_frame: "_top" } do %>
+      <%= link_to playlist_path(playlist), class: "rounded-lg bg-white shadow-sm ring-1 ring-gray-900/5 hover:shadow-md transition-shadow" do %>
         <div class="p-4 flex flex-row items-center gap-4">
           <%# Playlist icon %>
           <div class="w-10 h-10 rounded-lg flex-none grid place-items-center" style="background: #2f6bff14; color: #2f6bff;">
@@ -96,3 +101,5 @@
     </div>
   </div>
 <% end %>
+
+<%= render "shared/pagination", pagy: @pagy %>

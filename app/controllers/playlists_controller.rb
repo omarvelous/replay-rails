@@ -2,7 +2,10 @@ class PlaylistsController < ApplicationController
   before_action :set_playlist, only: %i[ show edit update destroy preview ]
 
   def index
-    @playlists = Current.account.playlists.order(created_at: :desc)
+    base = Current.account.playlists
+    base = base.search(params[:q]) if params[:q].present?
+    base = base.by_status(params[:status]) if params[:status].present?
+    @pagy, @playlists = pagy(base.order(created_at: :desc))
   end
 
   def show

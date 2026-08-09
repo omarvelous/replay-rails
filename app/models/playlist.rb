@@ -8,4 +8,7 @@ class Playlist < ApplicationRecord
 
   validates :name, presence: true
   validates :status, presence: true, inclusion: { in: %w[draft published archived] }
+
+  scope :search, ->(q) { where("playlists.name ILIKE ?", "%#{sanitize_sql_like(q)}%") }
+  scope :by_status, ->(s) { where(status: s) }
 end
