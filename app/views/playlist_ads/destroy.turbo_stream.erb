@@ -1,9 +1,0 @@
-<%= turbo_stream.remove dom_id(@playlist_ad) %>
-<%= turbo_stream.replace "playlist_timeline" do %>
-  <%= turbo_frame_tag "playlist_timeline" do %>
-    <%= render "playlist_ads/playlist_timeline", playlist_ads: @playlist.playlist_ads.includes(:ad).order(:position) %>
-  <% end %>
-<% end %>
-<%= turbo_stream.update "flash" do %>
-  <%= render "shared/flash" %>
-<% end %>

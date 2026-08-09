@@ -17,13 +17,8 @@ Rails.application.routes.draw do
   resources :playlists do
     member do
       get :preview
-      get :screens
     end
-    resources :playlist_ads do
-      collection do
-        get :timeline
-      end
-    end
+    resources :playlist_ads, only: %i[ new create edit update destroy ]
   end
   resource :session
   resources :passwords, param: :token

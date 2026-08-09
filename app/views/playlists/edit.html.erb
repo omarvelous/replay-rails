@@ -27,11 +27,32 @@
   <div class="grid grid-cols-1 lg:grid-cols-[1fr_380px] gap-6 items-start">
     <%# Left — sequence editor %>
     <div class="flex flex-col gap-5">
-      <%# Loop timeline — lazy-loaded %>
-      <%= turbo_frame_tag "playlist_timeline", src: timeline_playlist_playlist_ads_path(@playlist), loading: :lazy %>
+      <%# Loop timeline %>
+      <%= render "playlist_ads/playlist_timeline", playlist_ads: @playlist_ads %>
 
-      <%# Sequence list — lazy-loaded %>
-      <%= turbo_frame_tag "playlist_ads", src: playlist_playlist_ads_path(@playlist), loading: :lazy %>
+      <%# Sequence list %>
+      <div class="rounded-lg bg-white shadow-sm ring-1 ring-gray-900/5">
+        <div class="flex items-center justify-between p-4 border-b border-gray-200">
+          <h3 class="text-sm font-semibold">Sequence</h3>
+          <%= link_to new_playlist_playlist_ad_path(@playlist), class: "rounded-md bg-indigo-600 px-2.5 py-1.5 text-sm font-semibold text-white shadow-xs hover:bg-indigo-500 inline-flex items-center gap-1.5" do %>
+            <svg viewBox="0 0 20 20" fill="currentColor" class="size-4"><path d="M10.75 4.75a.75.75 0 0 0-1.5 0v4.5h-4.5a.75.75 0 0 0 0 1.5h4.5v4.5a.75.75 0 0 0 1.5 0v-4.5h4.5a.75.75 0 0 0 0-1.5h-4.5v-4.5Z"/></svg>
+            Add content
+          <% end %>
+        </div>
+
+        <div class="divide-y divide-gray-100">
+          <% @playlist_ads.each do |pa| %>
+            <%= render "playlist_ads/playlist_ad_row", pa: pa %>
+          <% end %>
+        </div>
+
+        <% unless @playlist_ads.any? %>
+          <div class="p-8 text-center">
+            <p class="text-sm text-gray-500">No content in this playlist yet.</p>
+            <p class="text-xs text-gray-400 mt-1">Add ads to build your signage loop.</p>
+          </div>
+        <% end %>
+      </div>
     </div>
 
     <%# Right — details + preview %>

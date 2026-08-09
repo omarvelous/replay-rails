@@ -3,7 +3,7 @@
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" class="size-4"><path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z"/><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
     Preview
   <% end %>
-  <%= link_to edit_playlist_path(@playlist), class: "rounded-md bg-white px-2.5 py-1.5 text-sm font-semibold text-gray-900 shadow-xs ring-1 ring-gray-300 ring-inset hover:bg-gray-50 inline-flex items-center gap-1.5", data: { turbo_frame: "modal" } do %>
+  <%= link_to edit_playlist_path(@playlist), class: "rounded-md bg-white px-2.5 py-1.5 text-sm font-semibold text-gray-900 shadow-xs ring-1 ring-gray-300 ring-inset hover:bg-gray-50 inline-flex items-center gap-1.5" do %>
     Edit
   <% end %>
 <% end %>
@@ -31,17 +31,62 @@
   </div>
 </div>
 
-<%# Loop timeline — lazy-loaded from playlist_ads/timeline %>
+<%# Loop timeline %>
 <div class="mb-5">
-  <%= turbo_frame_tag "playlist_timeline", src: timeline_playlist_playlist_ads_path(@playlist), loading: :lazy %>
+  <%= render "playlist_ads/playlist_timeline", playlist_ads: @playlist_ads %>
 </div>
 
-<%# Sequence list — lazy-loaded from playlist_ads/index %>
-<%= turbo_frame_tag "playlist_ads", src: playlist_playlist_ads_path(@playlist), loading: :lazy %>
+<%# Sequence list %>
+<div class="rounded-lg bg-white shadow-sm ring-1 ring-gray-900/5">
+  <div class="flex items-center justify-between p-4 border-b border-gray-200">
+    <h3 class="text-sm font-semibold">Sequence</h3>
+    <%= link_to new_playlist_playlist_ad_path(@playlist), class: "rounded-md bg-indigo-600 px-2.5 py-1.5 text-sm font-semibold text-white shadow-xs hover:bg-indigo-500 inline-flex items-center gap-1.5" do %>
+      <svg viewBox="0 0 20 20" fill="currentColor" class="size-4"><path d="M10.75 4.75a.75.75 0 0 0-1.5 0v4.5h-4.5a.75.75 0 0 0 0 1.5h4.5v4.5a.75.75 0 0 0 1.5 0v-4.5h4.5a.75.75 0 0 0 0-1.5h-4.5v-4.5Z"/></svg>
+      Add content
+    <% end %>
+  </div>
 
-<%# Assigned screens — lazy-loaded %>
+  <div id="playlist_ads_rows" class="divide-y divide-gray-100">
+    <% @playlist_ads.each do |pa| %>
+      <%= render "playlist_ads/playlist_ad_row", pa: pa %>
+    <% end %>
+  </div>
+
+  <% unless @playlist_ads.any? %>
+    <div id="playlist_ads_empty" class="p-8 text-center">
+      <p class="text-sm text-gray-500">No content in this playlist yet.</p>
+      <p class="text-xs text-gray-400 mt-1">Add ads to build your signage loop.</p>
+    </div>
+  <% end %>
+</div>
+
+<%# Assigned screens %>
 <div class="mt-5">
-  <%= turbo_frame_tag "playlist_screens", src: screens_playlist_path(@playlist), loading: :lazy %>
+  <div class="rounded-lg bg-white shadow-sm ring-1 ring-gray-900/5">
+    <div class="p-4 border-b border-gray-200">
+      <h3 class="text-sm font-semibold">Assigned to screens</h3>
+    </div>
+    <% if @screen_playlists.any? %>
+      <div class="divide-y divide-gray-100">
+        <% @screen_playlists.each do |sp| %>
+          <div class="flex items-center gap-3 px-4 py-3">
+            <div class="w-12 h-8 rounded bg-gray-900 flex-none flex items-center justify-center">
+              <span class="text-white/20 text-[7px]">Preview</span>
+            </div>
+            <div class="flex-1 min-w-0">
+              <p class="text-sm font-medium truncate"><%= sp.screen.name %></p>
+              <p class="text-xs text-gray-400"><%= sp.screen.site.name %></p>
+            </div>
+            <span class="inline-flex items-center rounded-full bg-green-50 px-2 py-0.5 text-xs font-medium text-green-700 ring-1 ring-green-600/20 ring-inset">Live</span>
+          </div>
+        <% end %>
+      </div>
+    <% else %>
+      <div class="p-6 text-center">
+        <p class="text-sm text-gray-500">Not assigned to any screens.</p>
+      </div>
+    <% end %>
+  </div>
 </div>
 
 <%# Danger zone %>

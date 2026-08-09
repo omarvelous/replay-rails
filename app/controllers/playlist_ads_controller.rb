@@ -2,14 +2,6 @@ class PlaylistAdsController < ApplicationController
   before_action :set_playlist
   before_action :set_playlist_ad, only: %i[ edit update destroy ]
 
-  def index
-    @playlist_ads = @playlist.playlist_ads.includes(:ad)
-  end
-
-  def timeline
-    @playlist_ads = @playlist.playlist_ads.includes(:ad).order(:position)
-  end
-
   def new
     @playlist_ad = @playlist.playlist_ads.build(duration: 10)
   end
@@ -18,10 +10,7 @@ class PlaylistAdsController < ApplicationController
     @playlist_ad = @playlist.playlist_ads.build(playlist_ad_params)
 
     if @playlist_ad.save
-      respond_to do |format|
-        format.turbo_stream { flash.now[:notice] = t(".success") }
-        format.html { redirect_to @playlist, notice: t(".success") }
-      end
+      redirect_to @playlist, notice: t(".success")
     else
       render :new, status: :unprocessable_entity
     end
@@ -32,10 +21,7 @@ class PlaylistAdsController < ApplicationController
 
   def update
     if @playlist_ad.update(playlist_ad_params)
-      respond_to do |format|
-        format.turbo_stream { flash.now[:notice] = t(".success") }
-        format.html { redirect_to @playlist, notice: t(".success") }
-      end
+      redirect_to @playlist, notice: t(".success")
     else
       render :edit, status: :unprocessable_entity
     end
@@ -43,10 +29,7 @@ class PlaylistAdsController < ApplicationController
 
   def destroy
     @playlist_ad.destroy
-    respond_to do |format|
-      format.turbo_stream { flash.now[:notice] = t(".success") }
-      format.html { redirect_to @playlist, notice: t(".success") }
-    end
+    redirect_to @playlist, notice: t(".success")
   end
 
   private
