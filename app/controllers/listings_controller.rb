@@ -2,7 +2,10 @@ class ListingsController < ApplicationController
   before_action :set_listing, only: %i[ show edit update destroy ]
 
   def index
-    @listings = Current.account.listings.order(created_at: :desc)
+    base = Current.account.listings
+    base = base.search(params[:q]) if params[:q].present?
+    base = base.by_status(params[:status]) if params[:status].present?
+    @pagy, @listings = pagy(base.order(created_at: :desc))
   end
 
   def show

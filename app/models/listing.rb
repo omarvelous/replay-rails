@@ -7,4 +7,7 @@ class Listing < ApplicationRecord
   validates :address, presence: true
   validates :price, presence: true, numericality: { greater_than: 0 }
   validates :status, presence: true, inclusion: { in: %w[active pending sold] }
+
+  scope :search, ->(q) { where("listings.address ILIKE ?", "%#{sanitize_sql_like(q)}%") }
+  scope :by_status, ->(s) { where(status: s) }
 end
