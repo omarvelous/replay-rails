@@ -1,26 +1,29 @@
-<%
-  total = @screens.size
-  live_count = @screens.count { |s| s.screen_playlists.any?(&:active) }
-  idle_count = total - live_count
-%>
-  <% actions = capture do %>
-    <%= link_to new_screen_path, class: "rounded-md bg-indigo-600 px-2.5 py-1.5 text-sm font-semibold text-white shadow-xs hover:bg-indigo-500 inline-flex items-center gap-1.5" do %>
-      <svg viewBox="0 0 20 20" fill="currentColor" class="size-4"><path d="M10.75 4.75a.75.75 0 0 0-1.5 0v4.5h-4.5a.75.75 0 0 0 0 1.5h4.5v4.5a.75.75 0 0 0 1.5 0v-4.5h4.5a.75.75 0 0 0 0-1.5h-4.5v-4.5Z"/></svg>
-      Add screen
-    <% end %>
+<% actions = capture do %>
+  <%= link_to new_screen_path, class: "rounded-md bg-indigo-600 px-2.5 py-1.5 text-sm font-semibold text-white shadow-xs hover:bg-indigo-500 inline-flex items-center gap-1.5" do %>
+    <svg viewBox="0 0 20 20" fill="currentColor" class="size-4"><path d="M10.75 4.75a.75.75 0 0 0-1.5 0v4.5h-4.5a.75.75 0 0 0 0 1.5h4.5v4.5a.75.75 0 0 0 1.5 0v-4.5h4.5a.75.75 0 0 0 0-1.5h-4.5v-4.5Z"/></svg>
+    Add screen
   <% end %>
-  <%= render "shared/page_header", title: "Screens", subtitle: "#{total} screens · #{live_count} live · #{idle_count} idle", actions: actions %>
+<% end %>
+<%= render "shared/page_header", title: "Screens", subtitle: "#{@pagy.count} screens", actions: actions %>
 
-  <div data-controller="view-toggle">
+<div data-controller="view-toggle">
+  <%= form_with url: screens_path, method: :get do |f| %>
     <div class="flex flex-wrap items-center gap-3 mb-5">
       <div class="flex-1 min-w-50 max-w-xs">
-        <input type="text" placeholder="Search screens…" class="block w-full rounded-md bg-white px-3 py-1.5 text-sm text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600" />
+        <%= f.search_field :q, value: params[:q], placeholder: "Search screens…",
+            class: "block w-full rounded-md bg-white px-3 py-1.5 text-sm text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600",
+            oninput: "if (this.value === '') this.form.requestSubmit()" %>
       </div>
 
-      <div class="flex gap-1">
-        <button class="rounded-md bg-gray-100 px-2.5 py-1 text-xs font-semibold text-gray-900 ring-1 ring-gray-300 ring-inset">All</button>
-        <button class="rounded-md bg-white px-2.5 py-1 text-xs font-semibold text-gray-600 ring-1 ring-gray-300 ring-inset hover:bg-gray-50">Live</button>
-        <button class="rounded-md bg-white px-2.5 py-1 text-xs font-semibold text-gray-600 ring-1 ring-gray-300 ring-inset hover:bg-gray-50">Issues</button>
+      <div class="grid grid-cols-1">
+        <%= f.select :status,
+            [["All screens", ""], ["Live", "live"], ["Idle", "idle"]],
+            { selected: params[:status].to_s },
+            class: "col-start-1 row-start-1 w-full appearance-none rounded-md bg-white py-1.5 pr-8 pl-3 text-sm/6 text-gray-900 outline-1 -outline-offset-1 outline-gray-300 focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-indigo-600",
+            onchange: "this.form.requestSubmit()" %>
+        <svg viewBox="0 0 16 16" fill="currentColor" data-slot="icon" aria-hidden="true" class="pointer-events-none col-start-1 row-start-1 mr-2 size-4 self-center justify-self-end text-gray-500">
+          <path d="M4.22 6.22a.75.75 0 0 1 1.06 0L8 8.94l2.72-2.72a.75.75 0 1 1 1.06 1.06l-3.25 3.25a.75.75 0 0 1-1.06 0L4.22 7.28a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd" fill-rule="evenodd" />
+        </svg>
       </div>
 
       <span class="ml-auto isolate inline-flex rounded-md shadow-xs">
@@ -32,12 +35,13 @@
         </button>
       </span>
     </div>
+  <% end %>
 
-    <%# Grid view %>
-    <div data-view-toggle-target="view" data-view="grid">
-      <% if @screens.any? %>
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-          <% @screens.includes(:site, screen_playlists: :playlist).each do |screen| %>
+  <%# Grid view %>
+  <div data-view-toggle-target="view" data-view="grid">
+    <% if @screens.any? %>
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+        <% @screens.each do |screen| %>
             <% active_playlist = screen.screen_playlists.find { |sp| sp.active }&.playlist %>
             <% is_live = active_playlist.present? %>
             <% tone = is_live ? %w[#2f6bff #0fb5a6 #7c5cff #e8990f #1f9d57][screen.id % 5] : nil %>
@@ -131,7 +135,7 @@
                 </tr>
               </thead>
               <tbody class="divide-y divide-gray-200">
-                <% @screens.includes(:site, screen_playlists: :playlist).each do |screen| %>
+                <% @screens.each do |screen| %>
                   <% active_playlist = screen.screen_playlists.find { |sp| sp.active }&.playlist %>
                   <% is_live = active_playlist.present? %>
                   <% tone = is_live ? %w[#2f6bff #0fb5a6 #7c5cff #e8990f #1f9d57][screen.id % 5] : nil %>
@@ -139,7 +143,7 @@
                     <td class="px-3 py-4">
                       <div class="flex items-center gap-3">
                         <%# Mini preview — 48×30 %>
-                        <div class="w-12 h-[30px] rounded flex-none relative overflow-hidden" style="background: <%= is_live ? "linear-gradient(135deg, #14171f, #{tone}33)" : '#0b0d12' %>;">
+                        <div class="w-12 h-7.5 rounded flex-none relative overflow-hidden" style="background: <%= is_live ? "linear-gradient(135deg, #14171f, #{tone}33)" : '#0b0d12' %>;">
                           <% if is_live %>
                             <div class="absolute inset-0 flex flex-col justify-end p-1 text-white">
                               <div class="text-[6px] font-bold leading-none">$1.25M</div>
@@ -171,3 +175,5 @@
       <% end %>
     </div>
   </div>
+
+  <%= render "shared/pagination", pagy: @pagy %>

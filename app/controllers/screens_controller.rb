@@ -2,7 +2,11 @@ class ScreensController < ApplicationController
   before_action :set_screen, only: %i[ show edit update destroy ]
 
   def index
-    @screens = scope.order(:name)
+    base = scope.includes(:site, screen_playlists: :playlist)
+    base = base.search(params[:q]) if params[:q].present?
+    base = base.live   if params[:status] == "live"
+    base = base.idle   if params[:status] == "idle"
+    @pagy, @screens = pagy(base.order(:name))
   end
 
   def show
