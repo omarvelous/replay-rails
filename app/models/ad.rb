@@ -5,4 +5,8 @@ class Ad < ApplicationRecord
   has_many :playlists, through: :playlist_ads
 
   validates :headline, presence: true
+
+  scope :search, ->(q) { where("ads.headline ILIKE ?", "%#{sanitize_sql_like(q)}%") }
+  scope :listing_ads, -> { where.not(listing_id: nil) }
+  scope :standalone, -> { where(listing_id: nil) }
 end

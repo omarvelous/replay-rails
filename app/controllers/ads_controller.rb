@@ -2,7 +2,11 @@ class AdsController < ApplicationController
   before_action :set_ad, only: %i[ show edit update destroy preview ]
 
   def index
-    @ads = Current.account.ads.order(created_at: :desc)
+    base = Current.account.ads
+    base = base.search(params[:q]) if params[:q].present?
+    base = base.listing_ads if params[:type] == "listing"
+    base = base.standalone  if params[:type] == "standalone"
+    @pagy, @ads = pagy(base.order(created_at: :desc))
   end
 
   def show
