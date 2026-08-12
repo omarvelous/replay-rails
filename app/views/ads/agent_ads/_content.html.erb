@@ -2,10 +2,14 @@
 <% agent = agent_ad.agent %>
 
 <div class="flex items-center" style="gap: var(--s-pad);">
-  <%# Photo placeholder %>
-  <div class="rounded-full flex-none grid place-items-center"
+  <%# Agent photo %>
+  <div class="rounded-full flex-none overflow-hidden grid place-items-center"
        style="width: var(--s-avatar); height: var(--s-avatar); background: var(--ad-surface);">
-    <span class="font-bold" style="font-size: var(--s-4xl); color: var(--ad-text-faint);"><%= agent.name.split.map(&:first).join %></span>
+    <% if agent.photo.attached? %>
+      <%= image_tag agent.photo, class: "w-full h-full object-cover" %>
+    <% else %>
+      <span class="font-bold" style="font-size: var(--s-4xl); color: var(--ad-text-faint);"><%= agent.name.split.map(&:first).join %></span>
+    <% end %>
   </div>
   <div>
     <div class="font-bold tracking-widest uppercase" style="font-size: var(--s-xl); color: var(--ad-accent); margin-bottom: var(--s-xs);">Your Agent</div>

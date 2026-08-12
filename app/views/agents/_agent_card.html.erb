@@ -1,7 +1,11 @@
-<%= link_to agent_path(agent), class: "rounded-lg bg-white shadow-sm ring-1 ring-gray-900/5 hover:shadow-md transition-shadow cursor-pointer", data: { turbo_frame: "_top" } do %>
+<%= link_to agent_path(agent), class: "rounded-lg bg-white shadow-sm ring-1 ring-gray-900/5 hover:shadow-md transition-shadow cursor-pointer" do %>
   <div class="p-4 flex flex-row items-center gap-3">
-    <div class="w-10 h-10 rounded-full flex-none grid place-items-center text-sm font-bold bg-indigo-50 text-indigo-600">
-      <%= agent.name.split.map(&:first).join.first(2).upcase %>
+    <div class="w-10 h-10 rounded-full flex-none grid place-items-center text-sm font-bold bg-indigo-50 text-indigo-600 overflow-hidden">
+      <% if agent.photo.attached? %>
+        <%= image_tag agent.photo, class: "w-full h-full object-cover" %>
+      <% else %>
+        <%= agent.name.split.map(&:first).join.first(2).upcase %>
+      <% end %>
     </div>
     <div class="flex-1 min-w-0">
       <p class="font-semibold text-sm truncate"><%= agent.name %></p>
