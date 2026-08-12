@@ -134,16 +134,20 @@ RSpec.describe "Playlists", type: :request do
       expect(response).to be_successful
     end
 
-    it "includes ad headlines in order" do
+    it "includes ad content in order" do
       playlist = create(:playlist, account: account)
-      ad1 = create(:ad, account: account, headline: "First Slide")
-      ad2 = create(:ad, account: account, headline: "Second Slide")
+      listing1 = create(:listing, account: account, address: "100 First Ave")
+      listing2 = create(:listing, account: account, address: "200 Second Ave")
+      listing_ad1 = create(:listing_ad, listing: listing1)
+      listing_ad2 = create(:listing_ad, listing: listing2)
+      ad1 = create(:ad, account: account, headline: "First", adable: listing_ad1)
+      ad2 = create(:ad, account: account, headline: "Second", adable: listing_ad2)
       create(:playlist_ad, playlist: playlist, ad: ad1, position: 1, duration: 10)
       create(:playlist_ad, playlist: playlist, ad: ad2, position: 2, duration: 15)
 
       get preview_playlist_path(playlist)
-      expect(response.body).to include("First Slide")
-      expect(response.body).to include("Second Slide")
+      expect(response.body).to include("100 First Ave")
+      expect(response.body).to include("200 Second Ave")
     end
 
     it "returns 404 for another account's playlist" do
