@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_08_12_000944) do
+ActiveRecord::Schema[8.1].define(version: 2026_08_12_001053) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -28,6 +28,13 @@ ActiveRecord::Schema[8.1].define(version: 2026_08_12_000944) do
     t.datetime "updated_at", null: false
     t.index ["account_id"], name: "index_ads_on_account_id"
     t.index ["listing_id"], name: "index_ads_on_listing_id"
+  end
+
+  create_table "agent_ads", force: :cascade do |t|
+    t.bigint "agent_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["agent_id"], name: "index_agent_ads_on_agent_id"
   end
 
   create_table "agents", force: :cascade do |t|
@@ -172,6 +179,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_08_12_000944) do
 
   add_foreign_key "ads", "accounts"
   add_foreign_key "ads", "listings"
+  add_foreign_key "agent_ads", "agents"
   add_foreign_key "agents", "accounts"
   add_foreign_key "agents", "users"
   add_foreign_key "collection_ad_ads", "ads"
