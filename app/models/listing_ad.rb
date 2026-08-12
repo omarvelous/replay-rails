@@ -7,7 +7,7 @@ class ListingAd < ApplicationRecord
     "open_house"      => "Open House",
     "just_sold"       => "Just Sold",
     "price_reduction" => "Price Reduced",
-    "coming_soon"     => "Coming Soon",
+    "coming_soon"     => "Coming Soon"
   }.freeze
 
   has_one :ad, as: :adable, dependent: :destroy, touch: true

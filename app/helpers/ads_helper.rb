@@ -6,15 +6,15 @@ module AdsHelper
       "--ad-text"       => "#111827",
       "--ad-text-muted" => "#6b7280",
       "--ad-text-faint" => "#9ca3af",
-      "--ad-surface"    => "#ffffff",
+      "--ad-surface"    => "#ffffff"
     },
     "brand" => {
       "--ad-bg"         => :accent,
       "--ad-text"       => "#ffffff",
       "--ad-text-muted" => "rgba(255, 255, 255, 0.6)",
       "--ad-text-faint" => "rgba(255, 255, 255, 0.4)",
-      "--ad-surface"    => "rgba(255, 255, 255, 0.1)",
-    },
+      "--ad-surface"    => "rgba(255, 255, 255, 0.1)"
+    }
   }.freeze
 
   def ad_theme_style(theme, accent: "#2f6bff")

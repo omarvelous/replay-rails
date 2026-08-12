@@ -99,7 +99,7 @@ RSpec.describe Ad, type: :model do
     it "searches by headline" do
       ad1 = create(:ad, headline: "Just Listed on Maple")
       create(:ad, headline: "Brand Campaign")
-      expect(Ad.search("Maple")).to eq([ad1])
+      expect(described_class.search("Maple")).to eq([ ad1 ])
     end
   end
 end
