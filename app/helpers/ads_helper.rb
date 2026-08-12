@@ -4,15 +4,16 @@ module AdsHelper
     "light" => {
       "--ad-bg"         => "#f9fafb",
       "--ad-text"       => "#111827",
-      "--ad-text-muted" => "#6b7280",
-      "--ad-text-faint" => "#9ca3af",
+      "--ad-text-muted" => "#4b5563",
+      "--ad-text-faint" => "#6b7280",
+      "--ad-accent"     => "#2f6bff",
       "--ad-surface"    => "#ffffff"
     },
     "brand" => {
       "--ad-bg"         => :accent,
       "--ad-text"       => "#ffffff",
-      "--ad-text-muted" => "rgba(255, 255, 255, 0.6)",
-      "--ad-text-faint" => "rgba(255, 255, 255, 0.4)",
+      "--ad-text-muted" => "rgba(255, 255, 255, 0.65)",
+      "--ad-text-faint" => "rgba(255, 255, 255, 0.5)",
       "--ad-surface"    => "rgba(255, 255, 255, 0.1)"
     }
   }.freeze

@@ -1,4 +1,4 @@
-<div class="ad-canvas aspect-video relative flex flex-col justify-end"
+<div class="ad-canvas aspect-video relative flex flex-col <%= ad.image.attached? ? 'justify-end' : 'justify-center' %>"
      style="background: var(--ad-bg); color: var(--ad-text); padding: var(--s-pad-lg); <%= ad_theme_style(ad.theme) %>">
   <% if ad.image.attached? %>
     <%= image_tag ad.image.variant(:preview), class: "absolute inset-0 w-full h-full object-cover" %>

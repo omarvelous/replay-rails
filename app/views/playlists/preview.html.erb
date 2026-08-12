@@ -2,7 +2,7 @@
   <% if @playlist_ads.any? %>
     <% @playlist_ads.each_with_index do |pa, index| %>
       <div class="slide absolute inset-0 transition-opacity duration-700 <%= index == 0 ? 'opacity-100' : 'opacity-0' %>"
-           style="z-index: 1;"
+           style="z-index: 1; contain: content;"
            data-slideshow-target="slide"
            data-duration="<%= pa.duration %>">
         <%= render "ads/layouts/#{pa.ad.layout}", ad: pa.ad %>
@@ -21,9 +21,9 @@
        target="_blank">Edit Ad</a>
   <% end %>
 
-  <%# Progress bar %>
+  <%# Progress bar — uses transform: scaleX() for GPU compositing %>
   <div style="position: absolute; bottom: 0; left: 0; width: 100%; height: 4px; background: rgba(255,255,255,0.1); z-index: 10;">
-    <div style="height: 100%; width: 0%; background: rgba(255,255,255,0.5);" data-slideshow-target="progress"></div>
+    <div style="height: 100%; width: 100%; transform: scaleX(0); transform-origin: left; background: rgba(255,255,255,0.5);" data-slideshow-target="progress"></div>
   </div>
 
   <%# Nav controls %>

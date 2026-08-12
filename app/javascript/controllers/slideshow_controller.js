@@ -20,7 +20,7 @@ export default class extends Controller {
 
     if (this.hasProgressTarget) {
       this.progressTarget.style.transition = "none"
-      this.progressTarget.style.width = "0%"
+      this.progressTarget.style.transform = "scaleX(0)"
     }
 
     this.tick()
@@ -31,7 +31,7 @@ export default class extends Controller {
     const fraction = Math.min(elapsed / this.duration, 1)
 
     if (this.hasProgressTarget) {
-      this.progressTarget.style.width = `${fraction * 100}%`
+      this.progressTarget.style.transform = `scaleX(${fraction})`
     }
 
     if (fraction < 1) {

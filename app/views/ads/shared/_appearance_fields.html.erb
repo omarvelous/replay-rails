@@ -25,6 +25,9 @@
           <span class="w-5 h-5 rounded-full border border-gray-300" style="background: <%= bg %>;"></span>
           <span class="text-sm font-medium text-gray-700"><%= theme_name.capitalize %></span>
         </span>
+        <% if theme_name == "light" %>
+          <span class="text-[10px] text-amber-600 block mt-0.5">May be hard to read in sunlight</span>
+        <% end %>
       </label>
     <% end %>
   </div>
