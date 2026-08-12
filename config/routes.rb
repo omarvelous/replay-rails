@@ -9,7 +9,13 @@ Rails.application.routes.draw do
     resources :listing_agents, only: %i[ new create edit update destroy ]
   end
   resources :agents
-  resources :ads do
+  namespace :ads do
+    resources :listing_ads,    only: %i[ new create edit update ]
+    resources :collection_ads, only: %i[ new create edit update ]
+    resources :agent_ads,      only: %i[ new create edit update ]
+    resources :brand_ads,      only: %i[ new create edit update ]
+  end
+  resources :ads, only: %i[ index new show edit update destroy ] do
     member do
       get :preview
     end

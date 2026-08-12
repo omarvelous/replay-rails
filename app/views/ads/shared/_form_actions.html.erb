@@ -1,0 +1,5 @@
+<div class="flex items-center justify-between pt-2">
+  <%= link_to "Cancel", (ad.persisted? ? ad_path(ad) : ads_path), class: "text-sm font-semibold text-gray-600 hover:text-gray-900" %>
+  <%= form.submit ad.persisted? ? "Save changes" : "Create ad",
+      class: "rounded-md bg-indigo-600 px-4 py-2 text-sm font-semibold text-white shadow-xs hover:bg-indigo-500 cursor-pointer" %>
+</div>

@@ -29,39 +29,6 @@ RSpec.describe "Ads", type: :request do
     end
   end
 
-  describe "POST /ads" do
-    let(:listing) { create(:listing, account: account) }
-    let(:valid_params) do
-      { ad: { headline: "Dream Home Awaits", body: "Schedule a showing today.", listing_id: listing.id } }
-    end
-
-    context "with valid params" do
-      it "creates an ad scoped to the current account" do
-        expect {
-          post ads_path, params: valid_params
-        }.to change(account.ads, :count).by(1)
-      end
-
-      it "redirects to the ad" do
-        post ads_path, params: valid_params
-        expect(response).to redirect_to(ad_path(Ad.last))
-      end
-    end
-
-    context "with invalid params" do
-      it "does not create an ad" do
-        expect {
-          post ads_path, params: { ad: { headline: "" } }
-        }.not_to change(Ad, :count)
-      end
-
-      it "returns 422" do
-        post ads_path, params: { ad: { headline: "" } }
-        expect(response).to have_http_status(:unprocessable_entity)
-      end
-    end
-  end
-
   describe "GET /ads/:id" do
     it "shows the ad" do
       ad = create(:ad, account: account, headline: "Luxury Living")

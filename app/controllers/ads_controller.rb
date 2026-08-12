@@ -13,19 +13,7 @@ class AdsController < ApplicationController
   end
 
   def new
-    @listing_ad = ListingAd.new
-    @ad = @listing_ad.build_ad(account: Current.account)
-  end
-
-  def create
-    @listing_ad = ListingAd.new(listing_ad_params)
-    @ad = @listing_ad.build_ad(ad_params.merge(account: Current.account))
-
-    if @listing_ad.save
-      redirect_to @ad, notice: t(".success")
-    else
-      render :new, status: :unprocessable_entity
-    end
+    # Renders type chooser — links to ads/listing_ads/new, etc.
   end
 
   def edit
@@ -56,9 +44,5 @@ class AdsController < ApplicationController
 
     def ad_params
       params.require(:ad).permit(:headline, :body, :layout, :theme)
-    end
-
-    def listing_ad_params
-      params.require(:ad).permit(:listing_id)
     end
 end

@@ -1,0 +1,17 @@
+<% errors = [ad.errors, ad.adable&.errors].compact.flat_map(&:full_messages).uniq %>
+<% if errors.any? %>
+  <div class="rounded-md bg-red-50 p-4 mb-5">
+    <div class="flex">
+      <div class="shrink-0">
+        <svg viewBox="0 0 20 20" fill="currentColor" aria-hidden="true" class="size-5 text-red-400"><path d="M10 18a8 8 0 1 0 0-16 8 8 0 0 0 0 16ZM8.28 7.22a.75.75 0 0 0-1.06 1.06L8.94 10l-1.72 1.72a.75.75 0 1 0 1.06 1.06L10 11.06l1.72 1.72a.75.75 0 1 0 1.06-1.06L11.06 10l1.72-1.72a.75.75 0 0 0-1.06-1.06L10 8.94 8.28 7.22Z" clip-rule="evenodd" fill-rule="evenodd" /></svg>
+      </div>
+      <div class="ml-3">
+        <ul class="list-disc list-inside text-sm text-red-700">
+          <% errors.each do |message| %>
+            <li><%= message %></li>
+          <% end %>
+        </ul>
+      </div>
+    </div>
+  </div>
+<% end %>

@@ -1,0 +1,15 @@
+<div class="rounded-lg overflow-hidden shadow-sm ring-1 ring-gray-900/5">
+  <div class="bg-gray-100 p-8 flex items-center justify-center">
+    <% if ad.persisted? && ad.adable&.persisted? %>
+      <%= render "ads/layouts/#{ad.layout}", ad: ad %>
+    <% else %>
+      <div class="ad-canvas aspect-video flex items-center justify-center" style="background: var(--ad-bg); color: var(--ad-text); <%= ad_theme_style(ad.theme || 'dark') %>">
+        <span style="color: var(--ad-text-faint);" class="text-lg">Preview will appear here</span>
+      </div>
+    <% end %>
+  </div>
+  <div class="px-5 py-3 flex items-center justify-between bg-white border-t border-gray-100">
+    <span class="inline-flex items-center rounded-md bg-gray-50 px-1.5 py-0.5 text-xs font-medium text-gray-500 ring-1 ring-gray-500/10 ring-inset">16:9 &middot; 1920&times;1080</span>
+    <span class="text-xs text-gray-400">Live preview</span>
+  </div>
+</div>
