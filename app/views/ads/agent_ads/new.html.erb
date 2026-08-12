@@ -1,0 +1,5 @@
+<%= render "shared/page_header", title: "New Agent Ad", back_link: { label: "← Ads", path: ads_path } %>
+
+<%= form_with model: @ad, url: ads_agent_ads_path do |form| %>
+  <%= render "ads/agent_ads/form", form: form %>
+<% end %>

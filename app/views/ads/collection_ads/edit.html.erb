@@ -1,0 +1,5 @@
+<%= render "shared/page_header", title: "Edit Collection Ad", back_link: { label: "← Ad", path: ad_path(@ad) } %>
+
+<%= form_with model: @ad, url: ads_collection_ad_path(@ad), method: :patch do |form| %>
+  <%= render "ads/collection_ads/form", form: form %>
+<% end %>

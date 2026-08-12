@@ -16,8 +16,8 @@ RSpec.describe "Ads::CollectionAds", type: :request do
   describe "POST /ads/collection_ads" do
     let(:listing1) { create(:listing, account: account) }
     let(:listing2) { create(:listing, account: account) }
-    let(:ad1) { create(:ad, account: account, adable: create(:listing_ad, listing: listing1)) }
-    let(:ad2) { create(:ad, account: account, adable: create(:listing_ad, listing: listing2)) }
+    let!(:ad1) { create(:ad, account: account, adable: create(:listing_ad, listing: listing1)) }
+    let!(:ad2) { create(:ad, account: account, adable: create(:listing_ad, listing: listing2)) }
 
     let(:valid_params) do
       {
