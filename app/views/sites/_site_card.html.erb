@@ -1,9 +1,13 @@
 <% tone = %w[#2f6bff #0fb5a6 #7c5cff #e8990f #1f9d57 #e5484d][site.id % 6] %>
 <% screen_count = site.screens.count %>
 <%= link_to site_path(site), class: "rounded-lg bg-white shadow-sm ring-1 ring-gray-900/5 hover:shadow-md transition-shadow cursor-pointer group overflow-hidden" do %>
-  <%# Tinted header — 124px per spec %>
+  <%# Site photo or tinted header %>
   <div class="relative overflow-hidden" style="height: 124px; background: <%= tone %>14;">
-    <div class="absolute inset-0" style="background: linear-gradient(135deg, <%= tone %>26, transparent);"></div>
+    <% if site.photo.attached? %>
+      <%= image_tag site.photo, class: "absolute inset-0 w-full h-full object-cover" %>
+    <% else %>
+      <div class="absolute inset-0" style="background: linear-gradient(135deg, <%= tone %>26, transparent);"></div>
+    <% end %>
     <%# Type badge top-left %>
     <span class="absolute top-3 left-3 inline-flex items-center rounded-full bg-gray-900/8 px-2 py-0.5 text-xs font-medium text-gray-600 ring-1 ring-gray-500/10 ring-inset backdrop-blur-sm">Brokerage</span>
     <%# Status badge top-right — N/N live %>

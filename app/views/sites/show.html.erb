@@ -11,13 +11,18 @@
 <% tone = %w[#2f6bff #0fb5a6 #7c5cff #e8990f #1f9d57 #e5484d][@site.id % 6] %>
 <% screen_count = @site.screens.count %>
 
-<%# Tinted hero %>
+<%# Site photo or tinted hero %>
 <div class="rounded-xl relative overflow-hidden mb-5" style="height: 170px; background: <%= tone %>18;">
-  <div class="absolute inset-0" style="background: linear-gradient(135deg, <%= tone %>30, transparent);"></div>
+  <% if @site.photo.attached? %>
+    <%= image_tag @site.photo, class: "absolute inset-0 w-full h-full object-cover" %>
+    <div class="absolute inset-0" style="background: linear-gradient(to top, rgba(0,0,0,0.3), transparent);"></div>
+  <% else %>
+    <div class="absolute inset-0" style="background: linear-gradient(135deg, <%= tone %>30, transparent);"></div>
+  <% end %>
   <span class="absolute top-4 left-4 inline-flex items-center rounded-full bg-gray-900/8 px-2 py-0.5 text-xs font-medium text-gray-600 ring-1 ring-gray-500/10 ring-inset backdrop-blur-sm">Brokerage</span>
   <% if @site.address.present? %>
     <div class="absolute bottom-4 left-4">
-      <p class="text-sm text-gray-600 flex items-center gap-1.5">
+      <p class="text-sm flex items-center gap-1.5 <%= @site.photo.attached? ? 'text-white' : 'text-gray-600' %>">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" class="size-3.5 shrink-0"><path stroke-linecap="round" stroke-linejoin="round" d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z"/></svg>
         <%= @site.address %>
       </p>
