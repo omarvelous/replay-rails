@@ -1,0 +1,44 @@
+<% listing_ad = ad.adable %>
+<% listing = listing_ad.listing %>
+
+<% if listing_ad.badge.present? %>
+  <div class="mb-3">
+    <% badge_colors = { "just_listed" => "bg-green-500", "open_house" => "bg-amber-500", "just_sold" => "bg-red-500", "price_reduction" => "bg-orange-500", "coming_soon" => "bg-purple-500" } %>
+    <span class="inline-flex items-center rounded-full <%= badge_colors[listing_ad.badge] %> px-2.5 py-0.5 text-xs font-bold text-white tracking-wider uppercase">
+      <%= listing_ad.badge_label %>
+    </span>
+  </div>
+<% end %>
+
+<div style="color: var(--ad-accent);" class="text-xs font-bold tracking-widest mb-2">
+  <%= listing_ad.just_sold? ? "JUST SOLD" : "FOR SALE" %>
+</div>
+
+<% if listing_ad.price_reduction? && listing_ad.original_price %>
+  <div class="flex items-baseline gap-3">
+    <span class="text-4xl font-extrabold tracking-tight"><%= number_to_currency(listing.price, precision: 0) %></span>
+    <span class="text-xl line-through" style="color: var(--ad-text-faint);"><%= number_to_currency(listing_ad.original_price, precision: 0) %></span>
+  </div>
+<% elsif listing_ad.just_sold? && listing_ad.sold_price %>
+  <div class="text-4xl font-extrabold tracking-tight"><%= number_to_currency(listing_ad.sold_price, precision: 0) %></div>
+  <div class="text-sm mt-1" style="color: var(--ad-text-faint);">Listed at <%= number_to_currency(listing.price, precision: 0) %></div>
+<% else %>
+  <div class="text-4xl font-extrabold tracking-tight"><%= number_to_currency(listing.price, precision: 0) %></div>
+<% end %>
+
+<div class="text-base mt-2" style="color: var(--ad-text-muted);"><%= listing.address %></div>
+<div class="text-sm mt-1" style="color: var(--ad-text-faint);">
+  <%= [ listing.beds&.to_s&.+(" bd"), listing.baths&.to_s&.+(" ba"), listing.sqft ? "#{number_with_delimiter(listing.sqft)} sqft" : nil ].compact.join(" · ") %>
+</div>
+
+<% if listing_ad.open_house? && listing_ad.event_date %>
+  <div class="mt-3 inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-semibold" style="background: var(--ad-surface); color: var(--ad-accent);">
+    <%= listing_ad.event_date.strftime("%A, %B %-d") %>
+    <% if listing_ad.event_start_time %>
+      &middot; <%= listing_ad.event_start_time.strftime("%-l:%M %p") %>
+      <% if listing_ad.event_end_time %>
+        – <%= listing_ad.event_end_time.strftime("%-l:%M %p") %>
+      <% end %>
+    <% end %>
+  </div>
+<% end %>

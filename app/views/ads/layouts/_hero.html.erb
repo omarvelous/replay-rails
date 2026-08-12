@@ -1,0 +1,6 @@
+<div class="ad-canvas aspect-video relative flex flex-col justify-end p-8"
+     style="background: var(--ad-bg); color: var(--ad-text); <%= ad_theme_style(ad.theme) %>">
+  <%= render "ads/#{ad.adable_name.pluralize}/content", ad: ad %>
+  <div class="absolute right-8 bottom-8 w-16 h-16 rounded-lg grid place-items-center text-xs font-mono"
+       style="background: var(--ad-surface); color: var(--ad-text-faint);">QR</div>
+</div>

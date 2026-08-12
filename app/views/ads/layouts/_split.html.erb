@@ -1,0 +1,12 @@
+<div class="ad-canvas aspect-video flex"
+     style="background: var(--ad-bg); color: var(--ad-text); <%= ad_theme_style(ad.theme) %>">
+  <%# Left: image/gradient area %>
+  <div class="w-1/2 relative" style="background: linear-gradient(135deg, var(--ad-bg), color-mix(in srgb, var(--ad-accent) 20%, transparent));">
+    <div class="absolute bottom-6 left-6 w-14 h-14 rounded-lg grid place-items-center text-xs font-mono"
+         style="background: var(--ad-surface); color: var(--ad-text-faint);">QR</div>
+  </div>
+  <%# Right: content %>
+  <div class="w-1/2 flex flex-col justify-center p-8">
+    <%= render "ads/#{ad.adable_name.pluralize}/content", ad: ad %>
+  </div>
+</div>

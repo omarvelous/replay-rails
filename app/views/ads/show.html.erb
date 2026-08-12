@@ -9,34 +9,12 @@
 <% end %>
 <%= render "shared/page_header", title: @ad.headline, subtitle: "Ad", actions: actions, back_link: { label: "← Ads", path: ads_path } %>
 
-<% tone = %w[#2f6bff #0fb5a6 #7c5cff #e8990f #1f9d57 #e5484d][@ad.id % 6] %>
-
 <div class="grid grid-cols-1 lg:grid-cols-[1fr_320px] gap-5 items-start">
   <%# Main column %>
   <div class="flex flex-col gap-5">
     <%# Live preview card %>
     <div class="rounded-lg bg-white shadow-sm ring-1 ring-gray-900/5 overflow-hidden">
-      <div class="aspect-video relative flex flex-col justify-end p-6"
-           style="background: linear-gradient(135deg, #0b0d12, <%= tone %>);">
-        <%# Creative preview %>
-        <div class="text-white">
-          <% if @ad.listing %>
-            <div class="text-xs font-bold tracking-wider mb-1" style="color: <%= tone %>cc;">FOR SALE</div>
-            <div class="text-3xl font-extrabold tracking-tight leading-tight"><%= number_to_currency(@ad.listing.price, precision: 0) %></div>
-            <div class="text-sm opacity-80 mt-1"><%= @ad.listing.address %></div>
-            <div class="text-xs opacity-60 mt-1">
-              <%= [@ad.listing.beds&.to_s&.+(" bd"), @ad.listing.baths&.to_s&.+(" ba"), @ad.listing.sqft ? "#{number_with_delimiter(@ad.listing.sqft)} sqft" : nil].compact.join(" · ") %>
-            </div>
-          <% else %>
-            <div class="text-3xl font-extrabold tracking-tight leading-tight"><%= @ad.headline %></div>
-            <% if @ad.body.present? %>
-              <div class="text-sm opacity-80 mt-2 max-w-lg"><%= @ad.body %></div>
-            <% end %>
-          <% end %>
-        </div>
-        <%# QR placeholder %>
-        <div class="absolute right-6 bottom-6 w-16 h-16 bg-white rounded-lg"></div>
-      </div>
+      <%= render "ads/layouts/#{@ad.layout}", ad: @ad %>
       <div class="px-5 py-3 flex items-center justify-between border-t border-gray-100">
         <span class="inline-flex items-center rounded-md bg-gray-50 px-1.5 py-0.5 text-xs font-medium text-gray-500 ring-1 ring-gray-500/10 ring-inset">16:9 · 1920×1080</span>
         <span class="text-xs text-gray-400">Live preview</span>
@@ -106,19 +84,15 @@
       <div class="divide-y divide-gray-100">
         <div class="flex justify-between py-2 text-sm">
           <span class="text-gray-500">Type</span>
-          <span class="inline-flex items-center rounded-md bg-gray-50 px-1.5 py-0.5 text-xs font-medium text-gray-500 ring-1 ring-gray-500/10 ring-inset">Listing</span>
-        </div>
-        <div class="flex justify-between py-2 text-sm">
-          <span class="text-gray-500">Status</span>
-          <span class="inline-flex items-center rounded-full bg-green-50 px-2 py-0.5 text-xs font-medium text-green-700 ring-1 ring-green-600/20 ring-inset">Live</span>
+          <span class="inline-flex items-center rounded-md bg-gray-50 px-1.5 py-0.5 text-xs font-medium text-gray-500 ring-1 ring-gray-500/10 ring-inset"><%= @ad.adable_name.humanize %></span>
         </div>
         <div class="flex justify-between py-2 text-sm">
           <span class="text-gray-500">Layout</span>
-          <span class="font-medium">Hero</span>
+          <span class="font-medium"><%= @ad.layout.humanize %></span>
         </div>
         <div class="flex justify-between py-2 text-sm">
           <span class="text-gray-500">Theme</span>
-          <span class="font-medium">Dark</span>
+          <span class="font-medium"><%= @ad.theme.capitalize %></span>
         </div>
       </div>
     </div>
@@ -128,7 +102,7 @@
       <h3 class="text-sm font-semibold mb-3">Linked listing</h3>
       <% if @ad.listing %>
         <%= link_to listing_path(@ad.listing), class: "flex items-center gap-3 p-3 -mx-1 rounded-lg border border-gray-200 hover:border-gray-300 hover:bg-gray-50 transition-colors" do %>
-          <div class="w-12 h-9 rounded flex-none" style="background: <%= tone %>22;"></div>
+          <div class="w-12 h-9 rounded flex-none bg-indigo-50"></div>
           <div class="flex-1 min-w-0">
             <p class="text-sm font-medium truncate"><%= @ad.listing.address %></p>
             <p class="text-xs text-gray-400"><%= number_to_currency(@ad.listing.price, precision: 0) %> · <%= @ad.listing.beds %> bd · <%= @ad.listing.baths %> ba</p>

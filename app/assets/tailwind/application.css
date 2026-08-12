@@ -1,3 +1,13 @@
 @import "tailwindcss";
 @source "../../../app/views";
 @source "../../../app/javascript";
+
+/* Ad canvas — dark theme as default */
+.ad-canvas {
+  --ad-bg: #0b0d12;
+  --ad-text: #ffffff;
+  --ad-text-muted: rgba(255, 255, 255, 0.5);
+  --ad-text-faint: rgba(255, 255, 255, 0.3);
+  --ad-accent: #2f6bff;
+  --ad-surface: rgba(255, 255, 255, 0.1);
+}
