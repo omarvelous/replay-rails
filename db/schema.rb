@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_08_04_004248) do
+ActiveRecord::Schema[8.1].define(version: 2026_08_12_000535) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -40,6 +40,20 @@ ActiveRecord::Schema[8.1].define(version: 2026_08_04_004248) do
     t.bigint "user_id"
     t.index ["account_id"], name: "index_agents_on_account_id"
     t.index ["user_id"], name: "index_agents_on_user_id"
+  end
+
+  create_table "listing_ads", force: :cascade do |t|
+    t.string "badge", default: "just_listed", null: false
+    t.datetime "created_at", null: false
+    t.date "event_date"
+    t.time "event_end_time"
+    t.time "event_start_time"
+    t.bigint "listing_id", null: false
+    t.integer "original_price"
+    t.date "sold_date"
+    t.integer "sold_price"
+    t.datetime "updated_at", null: false
+    t.index ["listing_id"], name: "index_listing_ads_on_listing_id"
   end
 
   create_table "listing_agents", force: :cascade do |t|
@@ -142,6 +156,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_08_04_004248) do
   add_foreign_key "ads", "listings"
   add_foreign_key "agents", "accounts"
   add_foreign_key "agents", "users"
+  add_foreign_key "listing_ads", "listings"
   add_foreign_key "listing_agents", "agents"
   add_foreign_key "listing_agents", "listings"
   add_foreign_key "listings", "accounts"
