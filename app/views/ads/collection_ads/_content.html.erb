@@ -10,7 +10,13 @@
     <% member = item.ad %>
     <% listing = member.listing %>
     <div class="rounded-2xl overflow-hidden flex flex-col" style="background: var(--ad-surface);">
-      <div class="flex-1 relative" style="background: color-mix(in srgb, var(--ad-accent) 15%, transparent); min-height: 45%;"></div>
+      <div class="flex-1 relative overflow-hidden" style="background: color-mix(in srgb, var(--ad-accent) 15%, transparent); min-height: 45%;">
+        <% if member.image.attached? %>
+          <%= image_tag member.image, class: "absolute inset-0 w-full h-full object-cover" %>
+        <% elsif listing&.photos&.any? %>
+          <%= image_tag listing.photos.first, class: "absolute inset-0 w-full h-full object-cover" %>
+        <% end %>
+      </div>
       <div style="padding: var(--s-pad);">
         <% if listing %>
           <div class="font-extrabold tracking-tight" style="font-size: var(--s-3xl);"><%= number_to_currency(listing.price, precision: 0) %></div>
