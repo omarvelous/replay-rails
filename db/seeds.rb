@@ -1,3 +1,38 @@
+SEED_IMAGE_DIR = Rails.root.join("db/seed_images")
+
+# Helper: attach a local image file (skips if already attached)
+def attach_seed_image(record, attachment_name, filename)
+  attachment = record.send(attachment_name)
+  return if attachment.is_a?(ActiveStorage::Attached::One) && attachment.attached?
+
+  path = SEED_IMAGE_DIR.join(filename)
+  unless path.exist?
+    puts "  Skipped #{filename}: file not found"
+    return
+  end
+
+  record.send(attachment_name).attach(
+    io: File.open(path),
+    filename: filename,
+    content_type: "image/jpeg"
+  )
+  puts "  Attached #{filename} to #{record.class.name} ##{record.id}"
+end
+
+def attach_seed_photos(record, *filenames)
+  return if record.photos.any?
+
+  filenames.each do |filename|
+    path = SEED_IMAGE_DIR.join(filename)
+    unless path.exist?
+      puts "  Skipped #{filename}: file not found"
+      next
+    end
+    record.photos.attach(io: File.open(path), filename: filename, content_type: "image/jpeg")
+    puts "  Attached #{filename} to #{record.class.name} ##{record.id}"
+  end
+end
+
 # -----------------------------------------------------------------------
 # Accounts & Users
 # -----------------------------------------------------------------------
@@ -32,6 +67,12 @@ if demo_account
     Site.create!(account: demo_account, name: "Downtown Gallery", address: "456 Park Ave, New York, NY 10022")
     puts "Created demo site: Downtown Gallery"
   end
+
+  main_office = Site.find_by(account: demo_account, name: "Main Office")
+  attach_seed_image(main_office, :photo, "site-office.jpg") if main_office
+
+  gallery = Site.find_by(account: demo_account, name: "Downtown Gallery")
+  attach_seed_image(gallery, :photo, "site-gallery.jpg") if gallery
 end
 puts "Seeded #{Site.count} site(s)"
 
@@ -73,6 +114,8 @@ if demo_account
     )
     puts "Created demo listing: 350 Fifth Ave"
   end
+  fifth_ave_listing = Listing.find_by(account: demo_account, address: "350 Fifth Ave, New York, NY 10118")
+  attach_seed_photos(fifth_ave_listing, "house-1.jpg", "interior-1.jpg") if fifth_ave_listing
 
   unless Listing.exists?(account: demo_account, address: "20 W 34th St, New York, NY 10001")
     Listing.create!(
@@ -86,6 +129,8 @@ if demo_account
     )
     puts "Created demo listing: 20 W 34th St"
   end
+  w34th_listing = Listing.find_by(account: demo_account, address: "20 W 34th St, New York, NY 10001")
+  attach_seed_photos(w34th_listing, "house-2.jpg", "interior-2.jpg") if w34th_listing
 end
 puts "Seeded #{Listing.count} listing(s)"
 
@@ -115,6 +160,12 @@ if demo_account
     )
     puts "Created demo agent: Tom Realtor"
   end
+
+  jane_agent = Agent.find_by(account: demo_account, email: "jane.broker@example.com")
+  attach_seed_image(jane_agent, :photo, "agent-jane.jpg") if jane_agent
+
+  tom_agent = Agent.find_by(account: demo_account, email: "tom.realtor@example.com")
+  attach_seed_image(tom_agent, :photo, "agent-tom.jpg") if tom_agent
 end
 puts "Seeded #{Agent.count} agent(s)"
 
@@ -139,6 +190,8 @@ if demo_account
     )
     puts "Created demo ListingAd: Just Listed (350 Fifth Ave)"
   end
+  just_listed_ad = Ad.find_by(account: demo_account, headline: "Just Listed")
+  attach_seed_image(just_listed_ad, :image, "house-1.jpg") if just_listed_ad
 
   # ListingAd — open_house
   unless Ad.exists?(account: demo_account, headline: "Open House")
@@ -159,6 +212,8 @@ if demo_account
     )
     puts "Created demo ListingAd: Open House (20 W 34th St)"
   end
+  open_house_ad = Ad.find_by(account: demo_account, headline: "Open House")
+  attach_seed_image(open_house_ad, :image, "house-2.jpg") if open_house_ad
 
   # CollectionAd
   unless Ad.exists?(account: demo_account, headline: "Featured Listings")
@@ -193,6 +248,8 @@ if demo_account
       puts "Created demo AgentAd: Jane Broker"
     end
   end
+  agent_ad_record = Ad.find_by(account: demo_account, headline: "Jane Broker")
+  attach_seed_image(agent_ad_record, :image, "agent.jpg") if agent_ad_record
 
   # BrandAd
   unless Ad.exists?(account: demo_account, headline: "Your Window, Working 24/7")
@@ -207,6 +264,8 @@ if demo_account
     )
     puts "Created demo BrandAd: Your Window, Working 24/7"
   end
+  brand_ad_record = Ad.find_by(account: demo_account, headline: "Your Window, Working 24/7")
+  attach_seed_image(brand_ad_record, :image, "brand.jpg") if brand_ad_record
 end
 puts "Seeded #{Ad.count} ad(s)"
 
