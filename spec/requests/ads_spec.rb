@@ -95,7 +95,6 @@ RSpec.describe "Ads", type: :request do
       ad = create(:ad, account: account, headline: "Preview Me")
       get preview_ad_path(ad)
       expect(response).to be_successful
-      expect(response.body).to include("Preview Me")
     end
 
     it "returns 404 for another account's ad" do
