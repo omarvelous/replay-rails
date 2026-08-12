@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_08_12_000820) do
+ActiveRecord::Schema[8.1].define(version: 2026_08_12_000944) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -40,6 +40,18 @@ ActiveRecord::Schema[8.1].define(version: 2026_08_12_000820) do
     t.bigint "user_id"
     t.index ["account_id"], name: "index_agents_on_account_id"
     t.index ["user_id"], name: "index_agents_on_user_id"
+  end
+
+  create_table "collection_ad_ads", force: :cascade do |t|
+    t.bigint "ad_id", null: false
+    t.bigint "collection_ad_id", null: false
+    t.datetime "created_at", null: false
+    t.integer "position", default: 0, null: false
+    t.datetime "updated_at", null: false
+    t.index ["ad_id"], name: "index_collection_ad_ads_on_ad_id"
+    t.index ["collection_ad_id", "ad_id"], name: "index_collection_ad_ads_on_collection_ad_id_and_ad_id", unique: true
+    t.index ["collection_ad_id", "position"], name: "index_collection_ad_ads_on_collection_ad_id_and_position"
+    t.index ["collection_ad_id"], name: "index_collection_ad_ads_on_collection_ad_id"
   end
 
   create_table "collection_ads", force: :cascade do |t|
@@ -162,6 +174,8 @@ ActiveRecord::Schema[8.1].define(version: 2026_08_12_000820) do
   add_foreign_key "ads", "listings"
   add_foreign_key "agents", "accounts"
   add_foreign_key "agents", "users"
+  add_foreign_key "collection_ad_ads", "ads"
+  add_foreign_key "collection_ad_ads", "collection_ads"
   add_foreign_key "listing_ads", "listings"
   add_foreign_key "listing_agents", "agents"
   add_foreign_key "listing_agents", "listings"
