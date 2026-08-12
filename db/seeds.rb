@@ -119,28 +119,93 @@ end
 puts "Seeded #{Agent.count} agent(s)"
 
 # -----------------------------------------------------------------------
-# Ads
+# Ads (delegated types: ListingAd, CollectionAd, AgentAd, BrandAd)
 # -----------------------------------------------------------------------
 if demo_account
   fifth_ave = Listing.find_by(account: demo_account, address: "350 Fifth Ave, New York, NY 10118")
+  w34th = Listing.find_by(account: demo_account, address: "20 W 34th St, New York, NY 10001")
+  jane = Agent.find_by(account: demo_account, email: "jane.broker@example.com")
 
-  unless Ad.exists?(account: demo_account, headline: "Luxury Living on Fifth Ave")
+  # ListingAd — just_listed
+  unless Ad.exists?(account: demo_account, headline: "Just Listed")
+    listing_ad = ListingAd.create!(listing: fifth_ave, badge: "just_listed")
     Ad.create!(
       account: demo_account,
-      listing: fifth_ave,
-      headline: "Luxury Living on Fifth Ave",
-      body: "Stunning 3BR with panoramic city views. Schedule a showing today."
+      adable: listing_ad,
+      headline: "Just Listed",
+      body: "Stunning 3BR with panoramic city views.",
+      layout: "hero",
+      theme: "dark"
     )
-    puts "Created demo ad: Luxury Living on Fifth Ave"
+    puts "Created demo ListingAd: Just Listed (350 Fifth Ave)"
   end
 
-  unless Ad.exists?(account: demo_account, headline: "Open House This Weekend")
+  # ListingAd — open_house
+  unless Ad.exists?(account: demo_account, headline: "Open House")
+    listing_ad = ListingAd.create!(
+      listing: w34th,
+      badge: "open_house",
+      event_date: Date.current.next_occurring(:saturday),
+      event_start_time: Time.zone.parse("13:00"),
+      event_end_time: Time.zone.parse("15:00")
+    )
     Ad.create!(
       account: demo_account,
-      headline: "Open House This Weekend",
-      body: "Visit our featured properties Saturday & Sunday 12-4pm."
+      adable: listing_ad,
+      headline: "Open House",
+      body: "Visit this Saturday 1-3 PM.",
+      layout: "split",
+      theme: "dark"
     )
-    puts "Created demo ad: Open House This Weekend"
+    puts "Created demo ListingAd: Open House (20 W 34th St)"
+  end
+
+  # CollectionAd
+  unless Ad.exists?(account: demo_account, headline: "Featured Listings")
+    collection_ad = CollectionAd.create!(collection_title: "Featured Listings")
+    member_ads = Ad.where(account: demo_account).where(adable_type: "ListingAd").order(:id)
+    member_ads.each_with_index do |ad, i|
+      CollectionAdAd.create!(collection_ad: collection_ad, ad: ad, position: i)
+    end
+    Ad.create!(
+      account: demo_account,
+      adable: collection_ad,
+      headline: "Featured Listings",
+      body: "Our top properties this week.",
+      layout: "grid",
+      theme: "dark"
+    )
+    puts "Created demo CollectionAd: Featured Listings (#{member_ads.count} ads)"
+  end
+
+  # AgentAd
+  if jane
+    unless Ad.exists?(account: demo_account, headline: "Jane Broker")
+      agent_ad = AgentAd.create!(agent: jane)
+      Ad.create!(
+        account: demo_account,
+        adable: agent_ad,
+        headline: "Jane Broker",
+        body: "Your trusted real estate advisor.",
+        layout: "profile",
+        theme: "dark"
+      )
+      puts "Created demo AgentAd: Jane Broker"
+    end
+  end
+
+  # BrandAd
+  unless Ad.exists?(account: demo_account, headline: "Your Window, Working 24/7")
+    brand_ad = BrandAd.create!
+    Ad.create!(
+      account: demo_account,
+      adable: brand_ad,
+      headline: "Your Window, Working 24/7",
+      body: "Digital signage purpose-built for real estate.",
+      layout: "hero",
+      theme: "brand"
+    )
+    puts "Created demo BrandAd: Your Window, Working 24/7"
   end
 end
 puts "Seeded #{Ad.count} ad(s)"
