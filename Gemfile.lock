@@ -346,6 +346,7 @@ GEM
       websocket (~> 1.0)
     shoulda-matchers (6.5.0)
       activesupport (>= 5.2.0)
+    simplecov (1.1.0)
     solid_cable (4.0.2)
       actioncable (>= 7.2)
       activejob (>= 7.2)
@@ -435,6 +436,7 @@ DEPENDENCIES
   rubocop-rspec
   selenium-webdriver
   shoulda-matchers (~> 6.0)
+  simplecov
   solid_cable
   solid_cache
   solid_queue
