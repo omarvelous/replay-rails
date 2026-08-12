@@ -3,6 +3,7 @@ FROM ruby:3.4.2-bookworm
 RUN apt-get update -qq && apt-get install --no-install-recommends -y \
   build-essential \
   libpq-dev \
+  libvips \
   curl \
   && curl -fsSL https://deb.nodesource.com/setup_22.x | bash - \
   && apt-get install --no-install-recommends -y nodejs \
