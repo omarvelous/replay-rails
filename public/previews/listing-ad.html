@@ -6,7 +6,7 @@
   <title>Listing Ad Previews — RePlay</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
-    .preview-frame { aspect-ratio: 16/9; }
+    .preview-frame { aspect-ratio: 16/9; font-weight: 600; }
   </style>
 </head>
 <body class="bg-gray-950 text-white min-h-screen">
@@ -41,18 +41,18 @@
             <span class="text-xs font-mono px-2 py-0.5 rounded bg-green-500/20 text-green-400">just_listed</span>
             <span class="text-xs text-gray-500">hero &middot; dark</span>
           </div>
-          <div class="preview-frame rounded-xl overflow-hidden relative flex flex-col justify-end p-10" style="background: linear-gradient(135deg, #0b0d12, #2f6bff40);">
+          <div class="preview-frame rounded-xl overflow-hidden relative flex flex-col justify-center p-[7%]" style="background: linear-gradient(135deg, #0b0d12, #2f6bff40);">
             <div class="absolute top-6 left-8">
-              <span class="inline-flex items-center rounded-full bg-green-500 px-3 py-1 text-xs font-bold text-white tracking-wider uppercase">Just Listed</span>
+              <span class="inline-flex items-center rounded-full bg-green-500 px-4 py-1.5 text-xl font-bold text-white tracking-wider uppercase">Just Listed</span>
             </div>
             <div class="text-white">
-              <div class="text-xs font-bold tracking-widest mb-2 text-blue-400">FOR SALE</div>
+              <div class="text-xs font-bold tracking-widest mb-2" style="color: #5b8eff;">FOR SALE</div>
               <div class="text-5xl font-extrabold tracking-tight">$1,250,000</div>
-              <div class="text-lg opacity-80 mt-2">742 Evergreen Terrace, Springfield</div>
-              <div class="text-sm opacity-50 mt-1">4 bd &middot; 3 ba &middot; 2,850 sqft</div>
-              <div class="mt-4 text-sm opacity-60">Sarah Chen &middot; (555) 234-5678</div>
+              <div class="text-xl font-semibold opacity-80 mt-2">742 Evergreen Terrace, Springfield</div>
+              <div class="text-lg font-semibold opacity-60 mt-1">4 bd &middot; 3 ba &middot; 2,850 sqft</div>
+              <div class="mt-4 text-sm font-semibold opacity-60">Sarah Chen &middot; (555) 234-5678</div>
             </div>
-            <div class="absolute right-10 bottom-10 w-20 h-20 bg-white rounded-xl grid place-items-center text-gray-400 text-xs font-mono">QR</div>
+            <div class="absolute right-10 bottom-10 w-24 h-24 bg-white rounded-xl grid place-items-center text-gray-400 text-xs font-mono">QR</div>
           </div>
         </div>
 
@@ -62,24 +62,24 @@
             <span class="text-xs font-mono px-2 py-0.5 rounded bg-amber-500/20 text-amber-400">open_house</span>
             <span class="text-xs text-gray-500">hero &middot; dark</span>
           </div>
-          <div class="preview-frame rounded-xl overflow-hidden relative flex flex-col justify-end p-10" style="background: linear-gradient(135deg, #0b0d12, #e8990f40);">
+          <div class="preview-frame rounded-xl overflow-hidden relative flex flex-col justify-center p-[7%]" style="background: linear-gradient(135deg, #0b0d12, #e8990f40);">
             <div class="absolute top-6 left-8">
-              <span class="inline-flex items-center rounded-full bg-amber-500 px-3 py-1 text-xs font-bold text-white tracking-wider uppercase">Open House</span>
+              <span class="inline-flex items-center rounded-full bg-amber-500 px-4 py-1.5 text-xl font-bold text-white tracking-wider uppercase">Open House</span>
             </div>
             <div class="text-white">
               <div class="text-xs font-bold tracking-widest mb-2 text-amber-400">OPEN HOUSE</div>
               <div class="text-5xl font-extrabold tracking-tight">$1,250,000</div>
-              <div class="text-lg opacity-80 mt-2">742 Evergreen Terrace, Springfield</div>
-              <div class="text-sm opacity-50 mt-1">4 bd &middot; 3 ba &middot; 2,850 sqft</div>
+              <div class="text-xl font-semibold opacity-80 mt-2">742 Evergreen Terrace, Springfield</div>
+              <div class="text-lg font-semibold opacity-60 mt-1">4 bd &middot; 3 ba &middot; 2,850 sqft</div>
               <div class="mt-4 flex items-center gap-3">
-                <span class="inline-flex items-center gap-1.5 bg-amber-500/20 text-amber-300 px-3 py-1.5 rounded-lg text-sm font-semibold">
-                  <svg viewBox="0 0 20 20" fill="currentColor" class="w-4 h-4"><path fill-rule="evenodd" d="M5.75 2a.75.75 0 01.75.75V4h7V2.75a.75.75 0 011.5 0V4h.25A2.75 2.75 0 0118 6.75v8.5A2.75 2.75 0 0115.25 18H4.75A2.75 2.75 0 012 15.25v-8.5A2.75 2.75 0 014.75 4H5V2.75A.75.75 0 015.75 2zm-1 5.5c-.69 0-1.25.56-1.25 1.25v6.5c0 .69.56 1.25 1.25 1.25h10.5c.69 0 1.25-.56 1.25-1.25v-6.5c0-.69-.56-1.25-1.25-1.25H4.75z" clip-rule="evenodd"/></svg>
+                <span class="inline-flex items-center gap-1.5 bg-amber-500/20 text-amber-300 px-3 py-1.5 rounded-lg text-xl font-semibold">
+                  <svg viewBox="0 0 20 20" fill="currentColor" class="w-5 h-5"><path fill-rule="evenodd" d="M5.75 2a.75.75 0 01.75.75V4h7V2.75a.75.75 0 011.5 0V4h.25A2.75 2.75 0 0118 6.75v8.5A2.75 2.75 0 0115.25 18H4.75A2.75 2.75 0 012 15.25v-8.5A2.75 2.75 0 014.75 4H5V2.75A.75.75 0 015.75 2zm-1 5.5c-.69 0-1.25.56-1.25 1.25v6.5c0 .69.56 1.25 1.25 1.25h10.5c.69 0 1.25-.56 1.25-1.25v-6.5c0-.69-.56-1.25-1.25-1.25H4.75z" clip-rule="evenodd"/></svg>
                   Sat, Aug 15 &middot; 1:00 – 3:00 PM
                 </span>
               </div>
-              <div class="mt-3 text-sm opacity-60">Sarah Chen &middot; (555) 234-5678</div>
+              <div class="mt-3 text-sm font-semibold opacity-60">Sarah Chen &middot; (555) 234-5678</div>
             </div>
-            <div class="absolute right-10 bottom-10 w-20 h-20 bg-white rounded-xl grid place-items-center text-gray-400 text-xs font-mono">QR</div>
+            <div class="absolute right-10 bottom-10 w-24 h-24 bg-white rounded-xl grid place-items-center text-gray-400 text-xs font-mono">QR</div>
           </div>
         </div>
 
@@ -89,19 +89,19 @@
             <span class="text-xs font-mono px-2 py-0.5 rounded bg-red-500/20 text-red-400">just_sold</span>
             <span class="text-xs text-gray-500">hero &middot; dark</span>
           </div>
-          <div class="preview-frame rounded-xl overflow-hidden relative flex flex-col justify-end p-10" style="background: linear-gradient(135deg, #0b0d12, #e5484d40);">
+          <div class="preview-frame rounded-xl overflow-hidden relative flex flex-col justify-center p-[7%]" style="background: linear-gradient(135deg, #0b0d12, #e5484d40);">
             <div class="absolute top-6 left-8">
-              <span class="inline-flex items-center rounded-full bg-red-500 px-3 py-1 text-xs font-bold text-white tracking-wider uppercase">Sold</span>
+              <span class="inline-flex items-center rounded-full bg-red-500 px-4 py-1.5 text-xl font-bold text-white tracking-wider uppercase">Sold</span>
             </div>
             <div class="text-white">
               <div class="text-xs font-bold tracking-widest mb-2 text-red-400">JUST SOLD</div>
               <div class="text-5xl font-extrabold tracking-tight">$1,180,000</div>
-              <div class="text-sm line-through opacity-40 mt-1">Listed at $1,250,000</div>
-              <div class="text-lg opacity-80 mt-2">742 Evergreen Terrace, Springfield</div>
-              <div class="text-sm opacity-50 mt-1">4 bd &middot; 3 ba &middot; 2,850 sqft</div>
-              <div class="mt-4 text-sm opacity-60">Sold by Sarah Chen &middot; Closed Aug 1, 2026</div>
+              <div class="text-sm font-semibold line-through opacity-60 mt-1">Listed at $1,250,000</div>
+              <div class="text-xl font-semibold opacity-80 mt-2">742 Evergreen Terrace, Springfield</div>
+              <div class="text-lg font-semibold opacity-60 mt-1">4 bd &middot; 3 ba &middot; 2,850 sqft</div>
+              <div class="mt-4 text-sm font-semibold opacity-60">Sold by Sarah Chen &middot; Closed Aug 1, 2026</div>
             </div>
-            <div class="absolute right-10 bottom-10 w-20 h-20 bg-white rounded-xl grid place-items-center text-gray-400 text-xs font-mono">QR</div>
+            <div class="absolute right-10 bottom-10 w-24 h-24 bg-white rounded-xl grid place-items-center text-gray-400 text-xs font-mono">QR</div>
           </div>
         </div>
 
@@ -111,24 +111,24 @@
             <span class="text-xs font-mono px-2 py-0.5 rounded bg-orange-500/20 text-orange-400">price_reduction</span>
             <span class="text-xs text-gray-500">hero &middot; dark</span>
           </div>
-          <div class="preview-frame rounded-xl overflow-hidden relative flex flex-col justify-end p-10" style="background: linear-gradient(135deg, #0b0d12, #e8990f40);">
+          <div class="preview-frame rounded-xl overflow-hidden relative flex flex-col justify-center p-[7%]" style="background: linear-gradient(135deg, #0b0d12, #e8990f40);">
             <div class="absolute top-6 left-8">
-              <span class="inline-flex items-center rounded-full bg-orange-500 px-3 py-1 text-xs font-bold text-white tracking-wider uppercase">Price Reduced</span>
+              <span class="inline-flex items-center rounded-full bg-orange-500 px-4 py-1.5 text-xl font-bold text-white tracking-wider uppercase">Price Reduced</span>
             </div>
             <div class="text-white">
               <div class="text-xs font-bold tracking-widest mb-2 text-orange-400">PRICE REDUCED</div>
               <div class="flex items-baseline gap-4">
                 <span class="text-5xl font-extrabold tracking-tight">$1,125,000</span>
-                <span class="text-2xl line-through opacity-40">$1,250,000</span>
+                <span class="text-2xl font-semibold line-through opacity-60">$1,250,000</span>
               </div>
               <div class="mt-2 inline-flex items-center gap-1.5 bg-green-500/20 text-green-400 px-3 py-1 rounded-full text-sm font-semibold">
                 <svg viewBox="0 0 20 20" fill="currentColor" class="w-4 h-4"><path fill-rule="evenodd" d="M12.577 4.878a.75.75 0 01.919-.53l4.78 1.281a.75.75 0 01.531.919l-1.281 4.78a.75.75 0 01-1.449-.387l.81-3.022a19.407 19.407 0 00-5.594 5.203.75.75 0 01-1.139.093L7 10.06l-4.72 4.72a.75.75 0 01-1.06-1.06l5.25-5.25a.75.75 0 011.06 0l3.074 3.073a20.923 20.923 0 015.545-4.931l-3.042.815a.75.75 0 01-.53-.919z" clip-rule="evenodd"/></svg>
                 $125,000 reduction
               </div>
-              <div class="text-lg opacity-80 mt-3">742 Evergreen Terrace, Springfield</div>
-              <div class="text-sm opacity-50 mt-1">4 bd &middot; 3 ba &middot; 2,850 sqft</div>
+              <div class="text-xl font-semibold opacity-80 mt-3">742 Evergreen Terrace, Springfield</div>
+              <div class="text-lg font-semibold opacity-60 mt-1">4 bd &middot; 3 ba &middot; 2,850 sqft</div>
             </div>
-            <div class="absolute right-10 bottom-10 w-20 h-20 bg-white rounded-xl grid place-items-center text-gray-400 text-xs font-mono">QR</div>
+            <div class="absolute right-10 bottom-10 w-24 h-24 bg-white rounded-xl grid place-items-center text-gray-400 text-xs font-mono">QR</div>
           </div>
         </div>
 
@@ -138,18 +138,18 @@
             <span class="text-xs font-mono px-2 py-0.5 rounded bg-purple-500/20 text-purple-400">coming_soon</span>
             <span class="text-xs text-gray-500">hero &middot; dark</span>
           </div>
-          <div class="preview-frame rounded-xl overflow-hidden relative flex flex-col justify-end p-10" style="background: linear-gradient(135deg, #0b0d12, #7c5cff40);">
+          <div class="preview-frame rounded-xl overflow-hidden relative flex flex-col justify-center p-[7%]" style="background: linear-gradient(135deg, #0b0d12, #7c5cff40);">
             <div class="absolute top-6 left-8">
-              <span class="inline-flex items-center rounded-full bg-purple-500 px-3 py-1 text-xs font-bold text-white tracking-wider uppercase">Coming Soon</span>
+              <span class="inline-flex items-center rounded-full bg-purple-500 px-4 py-1.5 text-xl font-bold text-white tracking-wider uppercase">Coming Soon</span>
             </div>
             <div class="text-white">
               <div class="text-xs font-bold tracking-widest mb-2 text-purple-400">COMING SOON</div>
               <div class="text-5xl font-extrabold tracking-tight">$1,250,000</div>
-              <div class="text-lg opacity-80 mt-2">742 Evergreen Terrace, Springfield</div>
-              <div class="text-sm opacity-50 mt-1">4 bd &middot; 3 ba &middot; 2,850 sqft</div>
-              <div class="mt-4 text-sm opacity-60">Available September 1 &middot; Contact Sarah Chen</div>
+              <div class="text-xl font-semibold opacity-80 mt-2">742 Evergreen Terrace, Springfield</div>
+              <div class="text-lg font-semibold opacity-60 mt-1">4 bd &middot; 3 ba &middot; 2,850 sqft</div>
+              <div class="mt-4 text-sm font-semibold opacity-60">Available September 1 &middot; Contact Sarah Chen</div>
             </div>
-            <div class="absolute right-10 bottom-10 w-20 h-20 bg-white rounded-xl grid place-items-center text-gray-400 text-xs font-mono">QR</div>
+            <div class="absolute right-10 bottom-10 w-24 h-24 bg-white rounded-xl grid place-items-center text-gray-400 text-xs font-mono">QR</div>
           </div>
         </div>
 
@@ -167,54 +167,54 @@
         <!-- Hero / Dark -->
         <div>
           <span class="text-xs font-mono text-gray-500 mb-3 block">hero &middot; dark</span>
-          <div class="preview-frame rounded-xl overflow-hidden relative flex flex-col justify-end p-10" style="background: linear-gradient(135deg, #0b0d12, #2f6bff40);">
+          <div class="preview-frame rounded-xl overflow-hidden relative flex flex-col justify-center p-[7%]" style="background: linear-gradient(135deg, #0b0d12, #2f6bff40);">
             <div class="absolute top-6 left-8">
-              <span class="inline-flex items-center rounded-full bg-green-500 px-3 py-1 text-xs font-bold text-white tracking-wider uppercase">Just Listed</span>
+              <span class="inline-flex items-center rounded-full bg-green-500 px-4 py-1.5 text-xl font-bold text-white tracking-wider uppercase">Just Listed</span>
             </div>
             <div class="text-white">
-              <div class="text-xs font-bold tracking-widest mb-2 text-blue-400">FOR SALE</div>
+              <div class="text-xs font-bold tracking-widest mb-2" style="color: #5b8eff;">FOR SALE</div>
               <div class="text-5xl font-extrabold tracking-tight">$1,250,000</div>
-              <div class="text-lg opacity-80 mt-2">742 Evergreen Terrace, Springfield</div>
-              <div class="text-sm opacity-50 mt-1">4 bd &middot; 3 ba &middot; 2,850 sqft</div>
-              <div class="mt-4 text-sm opacity-60">Sarah Chen &middot; (555) 234-5678</div>
+              <div class="text-xl font-semibold opacity-80 mt-2">742 Evergreen Terrace, Springfield</div>
+              <div class="text-lg font-semibold opacity-60 mt-1">4 bd &middot; 3 ba &middot; 2,850 sqft</div>
+              <div class="mt-4 text-sm font-semibold opacity-60">Sarah Chen &middot; (555) 234-5678</div>
             </div>
-            <div class="absolute right-10 bottom-10 w-20 h-20 bg-white rounded-xl grid place-items-center text-gray-400 text-xs font-mono">QR</div>
+            <div class="absolute right-10 bottom-10 w-24 h-24 bg-white rounded-xl grid place-items-center text-gray-400 text-xs font-mono">QR</div>
           </div>
         </div>
 
         <!-- Hero / Light -->
         <div>
           <span class="text-xs font-mono text-gray-500 mb-3 block">hero &middot; light</span>
-          <div class="preview-frame rounded-xl overflow-hidden relative flex flex-col justify-end p-10 border border-gray-200" style="background: #f9fafb;">
+          <div class="preview-frame rounded-xl overflow-hidden relative flex flex-col justify-center p-[7%] border border-gray-200" style="background: #f9fafb;">
             <div class="absolute top-6 left-8">
-              <span class="inline-flex items-center rounded-full bg-green-500 px-3 py-1 text-xs font-bold text-white tracking-wider uppercase">Just Listed</span>
+              <span class="inline-flex items-center rounded-full bg-green-500 px-4 py-1.5 text-xl font-bold text-white tracking-wider uppercase">Just Listed</span>
             </div>
             <div class="text-gray-900">
               <div class="text-xs font-bold tracking-widest mb-2 text-indigo-600">FOR SALE</div>
               <div class="text-5xl font-extrabold tracking-tight">$1,250,000</div>
-              <div class="text-lg text-gray-600 mt-2">742 Evergreen Terrace, Springfield</div>
-              <div class="text-sm text-gray-400 mt-1">4 bd &middot; 3 ba &middot; 2,850 sqft</div>
-              <div class="mt-4 text-sm text-gray-500">Sarah Chen &middot; (555) 234-5678</div>
+              <div class="text-xl font-semibold text-gray-600 mt-2">742 Evergreen Terrace, Springfield</div>
+              <div class="text-lg font-semibold text-gray-500 mt-1">4 bd &middot; 3 ba &middot; 2,850 sqft</div>
+              <div class="mt-4 text-sm font-semibold text-gray-500">Sarah Chen &middot; (555) 234-5678</div>
             </div>
-            <div class="absolute right-10 bottom-10 w-20 h-20 bg-gray-900 rounded-xl grid place-items-center text-gray-300 text-xs font-mono">QR</div>
+            <div class="absolute right-10 bottom-10 w-24 h-24 bg-gray-900 rounded-xl grid place-items-center text-gray-300 text-xs font-mono">QR</div>
           </div>
         </div>
 
         <!-- Hero / Brand -->
         <div>
           <span class="text-xs font-mono text-gray-500 mb-3 block">hero &middot; brand</span>
-          <div class="preview-frame rounded-xl overflow-hidden relative flex flex-col justify-end p-10" style="background: linear-gradient(135deg, #2f6bff, #2f6bffcc);">
+          <div class="preview-frame rounded-xl overflow-hidden relative flex flex-col justify-center p-[7%]" style="background: linear-gradient(135deg, #2f6bff, #2f6bffcc);">
             <div class="absolute top-6 left-8">
-              <span class="inline-flex items-center rounded-full bg-white/20 backdrop-blur px-3 py-1 text-xs font-bold text-white tracking-wider uppercase">Just Listed</span>
+              <span class="inline-flex items-center rounded-full bg-white/20 backdrop-blur px-4 py-1.5 text-xl font-bold text-white tracking-wider uppercase">Just Listed</span>
             </div>
             <div class="text-white">
               <div class="text-xs font-bold tracking-widest mb-2 text-white/60">FOR SALE</div>
               <div class="text-5xl font-extrabold tracking-tight">$1,250,000</div>
-              <div class="text-lg opacity-80 mt-2">742 Evergreen Terrace, Springfield</div>
-              <div class="text-sm opacity-50 mt-1">4 bd &middot; 3 ba &middot; 2,850 sqft</div>
-              <div class="mt-4 text-sm opacity-60">Sarah Chen &middot; (555) 234-5678</div>
+              <div class="text-xl font-semibold opacity-80 mt-2">742 Evergreen Terrace, Springfield</div>
+              <div class="text-lg font-semibold opacity-60 mt-1">4 bd &middot; 3 ba &middot; 2,850 sqft</div>
+              <div class="mt-4 text-sm font-semibold opacity-60">Sarah Chen &middot; (555) 234-5678</div>
             </div>
-            <div class="absolute right-10 bottom-10 w-20 h-20 bg-white rounded-xl grid place-items-center text-indigo-500 text-xs font-mono">QR</div>
+            <div class="absolute right-10 bottom-10 w-24 h-24 bg-white rounded-xl grid place-items-center text-indigo-500 text-xs font-mono">QR</div>
           </div>
         </div>
       </div>
@@ -235,29 +235,29 @@
             <!-- Left: image area -->
             <div class="w-1/2 relative" style="background: linear-gradient(135deg, #14171f, #2f6bff55);">
               <div class="absolute top-6 left-6">
-                <span class="inline-flex items-center rounded-full bg-green-500 px-3 py-1 text-xs font-bold text-white tracking-wider uppercase">Just Listed</span>
+                <span class="inline-flex items-center rounded-full bg-green-500 px-4 py-1.5 text-xl font-bold text-white tracking-wider uppercase">Just Listed</span>
               </div>
               <div class="absolute bottom-6 left-6 right-6">
-                <div class="w-16 h-16 bg-white rounded-xl grid place-items-center text-gray-400 text-xs font-mono">QR</div>
+                <div class="w-24 h-24 bg-white rounded-xl grid place-items-center text-gray-400 text-xs font-mono">QR</div>
               </div>
             </div>
             <!-- Right: details -->
-            <div class="w-1/2 flex flex-col justify-center p-10 text-white">
-              <div class="text-xs font-bold tracking-widest mb-3 text-blue-400">FOR SALE</div>
+            <div class="w-1/2 flex flex-col justify-center p-[7%] text-white">
+              <div class="text-xs font-bold tracking-widest mb-3" style="color: #5b8eff;">FOR SALE</div>
               <div class="text-4xl font-extrabold tracking-tight">$1,250,000</div>
-              <div class="text-base opacity-80 mt-3">742 Evergreen Terrace</div>
-              <div class="text-sm opacity-50">Springfield, IL 62704</div>
-              <div class="flex gap-6 mt-6 text-sm">
-                <div><span class="text-xl font-bold block">4</span><span class="opacity-50">Beds</span></div>
-                <div><span class="text-xl font-bold block">3</span><span class="opacity-50">Baths</span></div>
-                <div><span class="text-xl font-bold block">2,850</span><span class="opacity-50">Sq Ft</span></div>
+              <div class="text-lg font-semibold opacity-80 mt-3">742 Evergreen Terrace</div>
+              <div class="text-base font-semibold opacity-60">Springfield, IL 62704</div>
+              <div class="flex gap-6 mt-6 text-base font-semibold">
+                <div><span class="text-xl font-bold block">4</span><span class="opacity-60">Beds</span></div>
+                <div><span class="text-xl font-bold block">3</span><span class="opacity-60">Baths</span></div>
+                <div><span class="text-xl font-bold block">2,850</span><span class="opacity-60">Sq Ft</span></div>
               </div>
               <div class="mt-8 pt-6 border-t border-white/10">
                 <div class="flex items-center gap-3">
-                  <div class="w-10 h-10 rounded-full bg-white/10 grid place-items-center text-xs text-white/40">SC</div>
+                  <div class="w-10 h-10 rounded-full bg-white/10 grid place-items-center text-xs text-white/45 font-semibold">SC</div>
                   <div>
                     <p class="font-semibold text-sm">Sarah Chen</p>
-                    <p class="text-xs opacity-50">(555) 234-5678</p>
+                    <p class="text-xs font-semibold opacity-60">(555) 234-5678</p>
                   </div>
                 </div>
               </div>
@@ -271,28 +271,28 @@
           <div class="preview-frame rounded-xl overflow-hidden flex border border-gray-200" style="background: #f9fafb;">
             <div class="w-1/2 relative" style="background: linear-gradient(135deg, #e5e7eb, #2f6bff22);">
               <div class="absolute top-6 left-6">
-                <span class="inline-flex items-center rounded-full bg-green-500 px-3 py-1 text-xs font-bold text-white tracking-wider uppercase">Just Listed</span>
+                <span class="inline-flex items-center rounded-full bg-green-500 px-4 py-1.5 text-xl font-bold text-white tracking-wider uppercase">Just Listed</span>
               </div>
               <div class="absolute bottom-6 left-6">
-                <div class="w-16 h-16 bg-gray-900 rounded-xl grid place-items-center text-gray-300 text-xs font-mono">QR</div>
+                <div class="w-24 h-24 bg-gray-900 rounded-xl grid place-items-center text-gray-300 text-xs font-mono">QR</div>
               </div>
             </div>
-            <div class="w-1/2 flex flex-col justify-center p-10 text-gray-900">
+            <div class="w-1/2 flex flex-col justify-center p-[7%] text-gray-900">
               <div class="text-xs font-bold tracking-widest mb-3 text-indigo-600">FOR SALE</div>
               <div class="text-4xl font-extrabold tracking-tight">$1,250,000</div>
-              <div class="text-base text-gray-600 mt-3">742 Evergreen Terrace</div>
-              <div class="text-sm text-gray-400">Springfield, IL 62704</div>
-              <div class="flex gap-6 mt-6 text-sm">
-                <div><span class="text-xl font-bold block text-gray-900">4</span><span class="text-gray-400">Beds</span></div>
-                <div><span class="text-xl font-bold block text-gray-900">3</span><span class="text-gray-400">Baths</span></div>
-                <div><span class="text-xl font-bold block text-gray-900">2,850</span><span class="text-gray-400">Sq Ft</span></div>
+              <div class="text-lg font-semibold text-gray-600 mt-3">742 Evergreen Terrace</div>
+              <div class="text-base font-semibold text-gray-500">Springfield, IL 62704</div>
+              <div class="flex gap-6 mt-6 text-base font-semibold">
+                <div><span class="text-xl font-bold block text-gray-900">4</span><span class="text-gray-500">Beds</span></div>
+                <div><span class="text-xl font-bold block text-gray-900">3</span><span class="text-gray-500">Baths</span></div>
+                <div><span class="text-xl font-bold block text-gray-900">2,850</span><span class="text-gray-500">Sq Ft</span></div>
               </div>
               <div class="mt-8 pt-6 border-t border-gray-200">
                 <div class="flex items-center gap-3">
                   <div class="w-10 h-10 rounded-full bg-indigo-100 grid place-items-center text-xs text-indigo-600 font-semibold">SC</div>
                   <div>
                     <p class="font-semibold text-sm">Sarah Chen</p>
-                    <p class="text-xs text-gray-400">(555) 234-5678</p>
+                    <p class="text-xs font-semibold text-gray-500">(555) 234-5678</p>
                   </div>
                 </div>
               </div>
@@ -306,28 +306,28 @@
           <div class="preview-frame rounded-xl overflow-hidden flex" style="background: #2f6bff;">
             <div class="w-1/2 relative" style="background: linear-gradient(135deg, #1e4fd0, #2f6bff);">
               <div class="absolute top-6 left-6">
-                <span class="inline-flex items-center rounded-full bg-white/20 backdrop-blur px-3 py-1 text-xs font-bold text-white tracking-wider uppercase">Just Listed</span>
+                <span class="inline-flex items-center rounded-full bg-white/20 backdrop-blur px-4 py-1.5 text-xl font-bold text-white tracking-wider uppercase">Just Listed</span>
               </div>
               <div class="absolute bottom-6 left-6">
-                <div class="w-16 h-16 bg-white rounded-xl grid place-items-center text-indigo-500 text-xs font-mono">QR</div>
+                <div class="w-24 h-24 bg-white rounded-xl grid place-items-center text-indigo-500 text-xs font-mono">QR</div>
               </div>
             </div>
-            <div class="w-1/2 flex flex-col justify-center p-10 text-white" style="background: #2453b8;">
+            <div class="w-1/2 flex flex-col justify-center p-[7%] text-white" style="background: #2453b8;">
               <div class="text-xs font-bold tracking-widest mb-3 text-white/60">FOR SALE</div>
               <div class="text-4xl font-extrabold tracking-tight">$1,250,000</div>
-              <div class="text-base opacity-80 mt-3">742 Evergreen Terrace</div>
-              <div class="text-sm opacity-50">Springfield, IL 62704</div>
-              <div class="flex gap-6 mt-6 text-sm">
-                <div><span class="text-xl font-bold block">4</span><span class="opacity-50">Beds</span></div>
-                <div><span class="text-xl font-bold block">3</span><span class="opacity-50">Baths</span></div>
-                <div><span class="text-xl font-bold block">2,850</span><span class="opacity-50">Sq Ft</span></div>
+              <div class="text-lg font-semibold opacity-80 mt-3">742 Evergreen Terrace</div>
+              <div class="text-base font-semibold opacity-60">Springfield, IL 62704</div>
+              <div class="flex gap-6 mt-6 text-base font-semibold">
+                <div><span class="text-xl font-bold block">4</span><span class="opacity-60">Beds</span></div>
+                <div><span class="text-xl font-bold block">3</span><span class="opacity-60">Baths</span></div>
+                <div><span class="text-xl font-bold block">2,850</span><span class="opacity-60">Sq Ft</span></div>
               </div>
               <div class="mt-8 pt-6 border-t border-white/20">
                 <div class="flex items-center gap-3">
                   <div class="w-10 h-10 rounded-full bg-white/20 grid place-items-center text-xs font-semibold">SC</div>
                   <div>
                     <p class="font-semibold text-sm">Sarah Chen</p>
-                    <p class="text-xs opacity-60">(555) 234-5678</p>
+                    <p class="text-xs font-semibold opacity-60">(555) 234-5678</p>
                   </div>
                 </div>
               </div>
@@ -348,17 +348,17 @@
         <!-- Minimal / Dark -->
         <div>
           <span class="text-xs font-mono text-gray-500 mb-3 block">minimal &middot; dark</span>
-          <div class="preview-frame rounded-xl overflow-hidden flex items-center justify-center" style="background: #0b0d12;">
+          <div class="preview-frame rounded-xl overflow-hidden flex items-center justify-center p-[7%]" style="background: #0b0d12;">
             <div class="text-center text-white">
-              <span class="inline-flex items-center rounded-full bg-green-500/20 text-green-400 px-3 py-1 text-xs font-bold tracking-wider uppercase mb-6">Just Listed</span>
+              <span class="inline-flex items-center rounded-full bg-green-500/20 text-green-400 px-4 py-1.5 text-xl font-bold tracking-wider uppercase mb-6">Just Listed</span>
               <div class="text-6xl font-extrabold tracking-tight">$1,250,000</div>
-              <div class="text-xl opacity-60 mt-4">742 Evergreen Terrace, Springfield</div>
-              <div class="flex justify-center gap-8 mt-6 text-sm opacity-40">
+              <div class="text-2xl font-semibold opacity-60 mt-4">742 Evergreen Terrace, Springfield</div>
+              <div class="flex justify-center gap-8 mt-6 text-lg font-semibold opacity-60">
                 <span>4 Beds</span>
                 <span>3 Baths</span>
                 <span>2,850 Sq Ft</span>
               </div>
-              <div class="mt-8 opacity-40 text-sm">Sarah Chen &middot; (555) 234-5678</div>
+              <div class="mt-8 opacity-60 text-sm font-semibold">Sarah Chen &middot; (555) 234-5678</div>
             </div>
           </div>
         </div>
@@ -366,17 +366,17 @@
         <!-- Minimal / Light -->
         <div>
           <span class="text-xs font-mono text-gray-500 mb-3 block">minimal &middot; light</span>
-          <div class="preview-frame rounded-xl overflow-hidden flex items-center justify-center border border-gray-200" style="background: #f9fafb;">
+          <div class="preview-frame rounded-xl overflow-hidden flex items-center justify-center p-[7%] border border-gray-200" style="background: #f9fafb;">
             <div class="text-center text-gray-900">
-              <span class="inline-flex items-center rounded-full bg-green-100 text-green-700 px-3 py-1 text-xs font-bold tracking-wider uppercase mb-6">Just Listed</span>
+              <span class="inline-flex items-center rounded-full bg-green-100 text-green-700 px-4 py-1.5 text-xl font-bold tracking-wider uppercase mb-6">Just Listed</span>
               <div class="text-6xl font-extrabold tracking-tight">$1,250,000</div>
-              <div class="text-xl text-gray-500 mt-4">742 Evergreen Terrace, Springfield</div>
-              <div class="flex justify-center gap-8 mt-6 text-sm text-gray-400">
+              <div class="text-2xl font-semibold text-gray-500 mt-4">742 Evergreen Terrace, Springfield</div>
+              <div class="flex justify-center gap-8 mt-6 text-lg font-semibold text-gray-500">
                 <span>4 Beds</span>
                 <span>3 Baths</span>
                 <span>2,850 Sq Ft</span>
               </div>
-              <div class="mt-8 text-gray-400 text-sm">Sarah Chen &middot; (555) 234-5678</div>
+              <div class="mt-8 text-gray-500 text-sm font-semibold">Sarah Chen &middot; (555) 234-5678</div>
             </div>
           </div>
         </div>
@@ -384,17 +384,17 @@
         <!-- Minimal / Brand -->
         <div>
           <span class="text-xs font-mono text-gray-500 mb-3 block">minimal &middot; brand</span>
-          <div class="preview-frame rounded-xl overflow-hidden flex items-center justify-center" style="background: #2f6bff;">
+          <div class="preview-frame rounded-xl overflow-hidden flex items-center justify-center p-[7%]" style="background: #2f6bff;">
             <div class="text-center text-white">
-              <span class="inline-flex items-center rounded-full bg-white/20 px-3 py-1 text-xs font-bold tracking-wider uppercase mb-6">Just Listed</span>
+              <span class="inline-flex items-center rounded-full bg-white/20 px-4 py-1.5 text-xl font-bold tracking-wider uppercase mb-6">Just Listed</span>
               <div class="text-6xl font-extrabold tracking-tight">$1,250,000</div>
-              <div class="text-xl opacity-70 mt-4">742 Evergreen Terrace, Springfield</div>
-              <div class="flex justify-center gap-8 mt-6 text-sm opacity-50">
+              <div class="text-2xl font-semibold opacity-70 mt-4">742 Evergreen Terrace, Springfield</div>
+              <div class="flex justify-center gap-8 mt-6 text-lg font-semibold opacity-60">
                 <span>4 Beds</span>
                 <span>3 Baths</span>
                 <span>2,850 Sq Ft</span>
               </div>
-              <div class="mt-8 opacity-50 text-sm">Sarah Chen &middot; (555) 234-5678</div>
+              <div class="mt-8 opacity-60 text-sm font-semibold">Sarah Chen &middot; (555) 234-5678</div>
             </div>
           </div>
         </div>
@@ -412,93 +412,93 @@
         <!-- Stat Grid / Dark -->
         <div>
           <span class="text-xs font-mono text-gray-500 mb-3 block">stat_grid &middot; dark</span>
-          <div class="preview-frame rounded-xl overflow-hidden flex flex-col justify-center p-12" style="background: #0b0d12;">
+          <div class="preview-frame rounded-xl overflow-hidden flex flex-col justify-center p-[7%]" style="background: #0b0d12;">
             <div class="mb-2">
-              <span class="inline-flex items-center rounded-full bg-green-500/20 text-green-400 px-3 py-1 text-xs font-bold tracking-wider uppercase">Just Listed</span>
+              <span class="inline-flex items-center rounded-full bg-green-500/20 text-green-400 px-4 py-1.5 text-xl font-bold tracking-wider uppercase">Just Listed</span>
             </div>
             <div class="text-white text-2xl font-bold mb-1">742 Evergreen Terrace</div>
-            <div class="text-sm text-white/40 mb-8">Springfield, IL 62704</div>
+            <div class="text-base font-semibold text-white/45 mb-8">Springfield, IL 62704</div>
             <div class="grid grid-cols-2 gap-4 max-w-lg">
               <div class="rounded-xl p-6" style="background: #2f6bff18;">
-                <div class="text-3xl font-extrabold text-blue-400">$1.25M</div>
-                <div class="text-xs text-white/40 mt-1 uppercase tracking-wider">List Price</div>
+                <div class="text-3xl font-extrabold" style="color: #5b8eff;">$1.25M</div>
+                <div class="text-xs font-semibold text-white/45 mt-1 uppercase tracking-wider">List Price</div>
               </div>
               <div class="rounded-xl p-6" style="background: #0fb5a618;">
                 <div class="text-3xl font-extrabold text-teal-400">4</div>
-                <div class="text-xs text-white/40 mt-1 uppercase tracking-wider">Bedrooms</div>
+                <div class="text-xs font-semibold text-white/45 mt-1 uppercase tracking-wider">Bedrooms</div>
               </div>
               <div class="rounded-xl p-6" style="background: #7c5cff18;">
                 <div class="text-3xl font-extrabold text-purple-400">3</div>
-                <div class="text-xs text-white/40 mt-1 uppercase tracking-wider">Bathrooms</div>
+                <div class="text-xs font-semibold text-white/45 mt-1 uppercase tracking-wider">Bathrooms</div>
               </div>
               <div class="rounded-xl p-6" style="background: #e8990f18;">
                 <div class="text-3xl font-extrabold text-amber-400">2,850</div>
-                <div class="text-xs text-white/40 mt-1 uppercase tracking-wider">Sq Ft</div>
+                <div class="text-xs font-semibold text-white/45 mt-1 uppercase tracking-wider">Sq Ft</div>
               </div>
             </div>
-            <div class="mt-6 text-sm text-white/40">Sarah Chen &middot; (555) 234-5678</div>
+            <div class="mt-6 text-sm font-semibold text-white/45">Sarah Chen &middot; (555) 234-5678</div>
           </div>
         </div>
 
         <!-- Stat Grid / Light -->
         <div>
           <span class="text-xs font-mono text-gray-500 mb-3 block">stat_grid &middot; light</span>
-          <div class="preview-frame rounded-xl overflow-hidden flex flex-col justify-center p-12 border border-gray-200" style="background: #f9fafb;">
+          <div class="preview-frame rounded-xl overflow-hidden flex flex-col justify-center p-[7%] border border-gray-200" style="background: #f9fafb;">
             <div class="mb-2">
-              <span class="inline-flex items-center rounded-full bg-green-100 text-green-700 px-3 py-1 text-xs font-bold tracking-wider uppercase">Just Listed</span>
+              <span class="inline-flex items-center rounded-full bg-green-100 text-green-700 px-4 py-1.5 text-xl font-bold tracking-wider uppercase">Just Listed</span>
             </div>
             <div class="text-gray-900 text-2xl font-bold mb-1">742 Evergreen Terrace</div>
-            <div class="text-sm text-gray-400 mb-8">Springfield, IL 62704</div>
+            <div class="text-base font-semibold text-gray-500 mb-8">Springfield, IL 62704</div>
             <div class="grid grid-cols-2 gap-4 max-w-lg">
               <div class="rounded-xl bg-white p-6 ring-1 ring-gray-200">
                 <div class="text-3xl font-extrabold text-indigo-600">$1.25M</div>
-                <div class="text-xs text-gray-400 mt-1 uppercase tracking-wider">List Price</div>
+                <div class="text-xs font-semibold text-gray-500 mt-1 uppercase tracking-wider">List Price</div>
               </div>
               <div class="rounded-xl bg-white p-6 ring-1 ring-gray-200">
                 <div class="text-3xl font-extrabold text-gray-900">4</div>
-                <div class="text-xs text-gray-400 mt-1 uppercase tracking-wider">Bedrooms</div>
+                <div class="text-xs font-semibold text-gray-500 mt-1 uppercase tracking-wider">Bedrooms</div>
               </div>
               <div class="rounded-xl bg-white p-6 ring-1 ring-gray-200">
                 <div class="text-3xl font-extrabold text-gray-900">3</div>
-                <div class="text-xs text-gray-400 mt-1 uppercase tracking-wider">Bathrooms</div>
+                <div class="text-xs font-semibold text-gray-500 mt-1 uppercase tracking-wider">Bathrooms</div>
               </div>
               <div class="rounded-xl bg-white p-6 ring-1 ring-gray-200">
                 <div class="text-3xl font-extrabold text-gray-900">2,850</div>
-                <div class="text-xs text-gray-400 mt-1 uppercase tracking-wider">Sq Ft</div>
+                <div class="text-xs font-semibold text-gray-500 mt-1 uppercase tracking-wider">Sq Ft</div>
               </div>
             </div>
-            <div class="mt-6 text-sm text-gray-400">Sarah Chen &middot; (555) 234-5678</div>
+            <div class="mt-6 text-sm font-semibold text-gray-500">Sarah Chen &middot; (555) 234-5678</div>
           </div>
         </div>
 
         <!-- Stat Grid / Brand -->
         <div>
           <span class="text-xs font-mono text-gray-500 mb-3 block">stat_grid &middot; brand</span>
-          <div class="preview-frame rounded-xl overflow-hidden flex flex-col justify-center p-12" style="background: #2f6bff;">
+          <div class="preview-frame rounded-xl overflow-hidden flex flex-col justify-center p-[7%]" style="background: #2f6bff;">
             <div class="mb-2">
-              <span class="inline-flex items-center rounded-full bg-white/20 px-3 py-1 text-xs font-bold text-white tracking-wider uppercase">Just Listed</span>
+              <span class="inline-flex items-center rounded-full bg-white/20 px-4 py-1.5 text-xl font-bold text-white tracking-wider uppercase">Just Listed</span>
             </div>
             <div class="text-white text-2xl font-bold mb-1">742 Evergreen Terrace</div>
-            <div class="text-sm text-white/40 mb-8">Springfield, IL 62704</div>
+            <div class="text-base font-semibold text-white/45 mb-8">Springfield, IL 62704</div>
             <div class="grid grid-cols-2 gap-4 max-w-lg">
               <div class="rounded-xl bg-white/10 p-6">
                 <div class="text-3xl font-extrabold text-white">$1.25M</div>
-                <div class="text-xs text-white/40 mt-1 uppercase tracking-wider">List Price</div>
+                <div class="text-xs font-semibold text-white/45 mt-1 uppercase tracking-wider">List Price</div>
               </div>
               <div class="rounded-xl bg-white/10 p-6">
                 <div class="text-3xl font-extrabold text-white">4</div>
-                <div class="text-xs text-white/40 mt-1 uppercase tracking-wider">Bedrooms</div>
+                <div class="text-xs font-semibold text-white/45 mt-1 uppercase tracking-wider">Bedrooms</div>
               </div>
               <div class="rounded-xl bg-white/10 p-6">
                 <div class="text-3xl font-extrabold text-white">3</div>
-                <div class="text-xs text-white/40 mt-1 uppercase tracking-wider">Bathrooms</div>
+                <div class="text-xs font-semibold text-white/45 mt-1 uppercase tracking-wider">Bathrooms</div>
               </div>
               <div class="rounded-xl bg-white/10 p-6">
                 <div class="text-3xl font-extrabold text-white">2,850</div>
-                <div class="text-xs text-white/40 mt-1 uppercase tracking-wider">Sq Ft</div>
+                <div class="text-xs font-semibold text-white/45 mt-1 uppercase tracking-wider">Sq Ft</div>
               </div>
             </div>
-            <div class="mt-6 text-sm text-white/50">Sarah Chen &middot; (555) 234-5678</div>
+            <div class="mt-6 text-sm font-semibold text-white/60">Sarah Chen &middot; (555) 234-5678</div>
           </div>
         </div>
       </div>
