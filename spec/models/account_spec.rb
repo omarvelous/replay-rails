@@ -5,5 +5,10 @@ RSpec.describe Account, type: :model do
 
   describe "associations" do
     it { is_expected.to have_many(:users) }
+    it { is_expected.to have_many(:sites) }
+    it { is_expected.to have_many(:listings) }
+    it { is_expected.to have_many(:agents) }
+    it { is_expected.to have_many(:ads) }
+    it { is_expected.to have_many(:playlists) }
   end
 end

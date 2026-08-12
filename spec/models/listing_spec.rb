@@ -27,4 +27,22 @@ RSpec.describe Listing, type: :model do
       expect(listing.photos.count).to eq(2)
     end
   end
+
+  describe "scopes" do
+    describe ".search" do
+      it "searches by address case-insensitively" do
+        match = create(:listing, address: "350 Fifth Ave")
+        create(:listing, address: "20 W 34th St")
+        expect(Listing.search("fifth")).to eq([ match ])
+      end
+    end
+
+    describe ".by_status" do
+      it "filters by status" do
+        active = create(:listing, status: "active")
+        create(:listing, status: "sold")
+        expect(Listing.by_status("active")).to eq([ active ])
+      end
+    end
+  end
 end

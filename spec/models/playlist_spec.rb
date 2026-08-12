@@ -14,4 +14,22 @@ RSpec.describe Playlist, type: :model do
     it { is_expected.to have_many(:playlist_ads).dependent(:destroy) }
     it { is_expected.to have_many(:ads).through(:playlist_ads) }
   end
+
+  describe "scopes" do
+    describe ".search" do
+      it "searches by name case-insensitively" do
+        match = create(:playlist, name: "Evening Showcase")
+        create(:playlist, name: "Morning Loop")
+        expect(Playlist.search("evening")).to eq([ match ])
+      end
+    end
+
+    describe ".by_status" do
+      it "filters by status" do
+        published = create(:playlist, status: "published")
+        create(:playlist, status: "draft")
+        expect(Playlist.by_status("published")).to eq([ published ])
+      end
+    end
+  end
 end
