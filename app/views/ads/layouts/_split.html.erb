@@ -1,7 +1,10 @@
 <div class="ad-canvas aspect-video flex"
      style="background: var(--ad-bg); color: var(--ad-text); <%= ad_theme_style(ad.theme) %>">
   <%# Left: image/gradient area %>
-  <div class="w-1/2 relative" style="background: linear-gradient(135deg, var(--ad-bg), color-mix(in srgb, var(--ad-accent) 20%, transparent));">
+  <div class="w-1/2 relative overflow-hidden" style="background: linear-gradient(135deg, var(--ad-bg), color-mix(in srgb, var(--ad-accent) 20%, transparent));">
+    <% if ad.image.attached? %>
+      <%= image_tag ad.image.variant(:preview), class: "absolute inset-0 w-full h-full object-cover" %>
+    <% end %>
     <div class="absolute rounded-xl grid place-items-center"
          style="bottom: var(--s-pad); left: var(--s-pad); width: var(--s-qr); height: var(--s-qr); background: var(--ad-surface); color: var(--ad-text-faint); font-size: var(--s-sm);">QR</div>
   </div>

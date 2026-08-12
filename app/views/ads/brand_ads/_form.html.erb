@@ -14,6 +14,9 @@
       <%= render "ads/shared/content_fields", form: form %>
     </div>
 
+    <%# Image %>
+    <%= render "ads/shared/image_field", form: form, ad: @ad %>
+
     <%# Appearance %>
     <div class="rounded-lg bg-white shadow-sm ring-1 ring-gray-900/5 p-5">
       <h3 class="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-4">Appearance</h3>
