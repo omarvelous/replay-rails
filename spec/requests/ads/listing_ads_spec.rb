@@ -52,6 +52,12 @@ RSpec.describe "Ads::ListingAds", type: :request do
         expect(Ad.last.adable).to be_open_house
         expect(Ad.last.adable.event_date).to eq(1.week.from_now.to_date)
       end
+
+      it "attaches an image when provided" do
+        params = valid_params.deep_merge(ad: { image: fixture_file_upload("test.jpg", "image/jpeg") })
+        post ads_listing_ads_path, params: params
+        expect(Ad.last.image).to be_attached
+      end
     end
 
     context "with invalid params" do
@@ -110,6 +116,23 @@ RSpec.describe "Ads::ListingAds", type: :request do
         listing_ad: { badge: "just_listed" }
       }
       expect(response).to have_http_status(:unprocessable_entity)
+    end
+  end
+
+  describe "tenant isolation" do
+    it "returns 404 when editing another account's ad" do
+      other_ad = create(:ad)
+      get edit_ads_listing_ad_path(other_ad)
+      expect(response).to have_http_status(:not_found)
+    end
+
+    it "returns 404 when updating another account's ad" do
+      other_ad = create(:ad)
+      patch ads_listing_ad_path(other_ad), params: {
+        ad: { headline: "Hacked" },
+        listing_ad: { badge: "just_listed" }
+      }
+      expect(response).to have_http_status(:not_found)
     end
   end
 end

@@ -81,4 +81,12 @@ RSpec.describe "Ads::CollectionAds", type: :request do
       expect(response).to redirect_to(ad_path(ad))
     end
   end
+
+  describe "tenant isolation" do
+    it "returns 404 when editing another account's ad" do
+      other_ad = create(:ad, adable: create(:collection_ad), layout: "grid")
+      get edit_ads_collection_ad_path(other_ad)
+      expect(response).to have_http_status(:not_found)
+    end
+  end
 end

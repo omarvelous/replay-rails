@@ -45,6 +45,12 @@ RSpec.describe "Listings", type: :request do
         post listings_path, params: valid_params
         expect(response).to redirect_to(listing_path(Listing.last))
       end
+
+      it "attaches photos when provided" do
+        params = valid_params.deep_merge(listing: { photos: [ fixture_file_upload("test.jpg", "image/jpeg") ] })
+        post listings_path, params: params
+        expect(Listing.last.photos).to be_attached
+      end
     end
 
     context "with invalid params" do
