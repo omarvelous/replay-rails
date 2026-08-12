@@ -90,7 +90,8 @@ RSpec.describe Ad, type: :model do
       ad = create(:ad, adable: create(:listing_ad))
       create(:collection_ad_ad, collection_ad: collection_ad, ad: ad)
 
-      expect { ad.destroy! }.to raise_error(ActiveRecord::DeleteRestrictionError)
+      expect(ad.destroy).to be false
+      expect(ad.errors[:base]).to be_present
     end
   end
 

@@ -2,7 +2,8 @@ class Listing < ApplicationRecord
   belongs_to :account
   has_many :listing_agents, dependent: :destroy
   has_many :agents, through: :listing_agents
-  has_many :ads, dependent: :nullify
+  has_many :listing_ads, dependent: :destroy
+  has_many :ads, through: :listing_ads
 
   validates :address, presence: true
   validates :price, presence: true, numericality: { greater_than: 0 }

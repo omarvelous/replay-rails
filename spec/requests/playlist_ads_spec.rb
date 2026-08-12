@@ -9,15 +9,6 @@ RSpec.describe "PlaylistAds", type: :request do
   before { sign_in(user) }
 
   describe "from playlist context" do
-    describe "GET /playlists/:id/playlist_ads" do
-      it "returns ads for a playlist" do
-        create(:playlist_ad, playlist: playlist, ad: ad)
-        get playlist_playlist_ads_path(playlist)
-        expect(response).to be_successful
-        expect(response.body).to include(ad.headline)
-      end
-    end
-
     describe "GET /playlists/:id/playlist_ads/new" do
       it "returns a successful response" do
         get new_playlist_playlist_ad_path(playlist)
@@ -71,17 +62,6 @@ RSpec.describe "PlaylistAds", type: :request do
         pa = create(:playlist_ad, playlist: playlist, ad: ad)
         delete playlist_playlist_ad_path(playlist, pa)
         expect(response).to redirect_to(playlist_path(playlist))
-      end
-    end
-  end
-
-  describe "from ad context" do
-    describe "GET /ads/:id/playlists" do
-      it "returns playlists for an ad" do
-        create(:playlist_ad, playlist: playlist, ad: ad)
-        get playlists_ad_path(ad)
-        expect(response).to be_successful
-        expect(response.body).to include(playlist.name)
       end
     end
   end

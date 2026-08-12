@@ -4,8 +4,7 @@ class AdsController < ApplicationController
   def index
     base = Current.account.ads
     base = base.search(params[:q]) if params[:q].present?
-    base = base.listing_ads if params[:type] == "listing"
-    base = base.standalone  if params[:type] == "standalone"
+    base = base.where(adable_type: params[:ad_type]) if params[:ad_type].present?
     @pagy, @ads = pagy(base.order(created_at: :desc))
   end
 
@@ -14,13 +13,15 @@ class AdsController < ApplicationController
   end
 
   def new
-    @ad = Current.account.ads.build
+    @listing_ad = ListingAd.new
+    @ad = @listing_ad.build_ad(account: Current.account)
   end
 
   def create
-    @ad = Current.account.ads.build(ad_params)
+    @listing_ad = ListingAd.new(listing_ad_params)
+    @ad = @listing_ad.build_ad(ad_params.merge(account: Current.account))
 
-    if @ad.save
+    if @listing_ad.save
       redirect_to @ad, notice: t(".success")
     else
       render :new, status: :unprocessable_entity
@@ -54,6 +55,10 @@ class AdsController < ApplicationController
     end
 
     def ad_params
-      params.require(:ad).permit(:headline, :body, :listing_id)
+      params.require(:ad).permit(:headline, :body, :layout, :theme)
+    end
+
+    def listing_ad_params
+      params.require(:ad).permit(:listing_id)
     end
 end

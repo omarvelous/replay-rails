@@ -35,12 +35,13 @@ class PlaylistsController < ApplicationController
     if @playlist.update(playlist_params)
       redirect_to @playlist, notice: t(".success")
     else
+      @playlist_ads = @playlist.playlist_ads.includes(:ad).order(:position)
       render :edit, status: :unprocessable_entity
     end
   end
 
   def preview
-    @playlist_ads = @playlist.playlist_ads.includes(ad: { listing: { listing_agents: :agent } })
+    @playlist_ads = @playlist.playlist_ads.includes(:ad)
     render layout: "preview"
   end
 

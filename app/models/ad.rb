@@ -1,12 +1,31 @@
 class Ad < ApplicationRecord
   belongs_to :account
-  belongs_to :listing, optional: true
+  delegated_type :adable, types: %w[ListingAd CollectionAd AgentAd BrandAd], dependent: :destroy
+
   has_many :playlist_ads, dependent: :destroy
   has_many :playlists, through: :playlist_ads
+  has_many :collection_ad_ads, dependent: :restrict_with_error
+
+  THEMES = %w[dark light brand].freeze
 
   validates :headline, presence: true
+  validates :theme, inclusion: { in: THEMES }
+  validates :layout, inclusion: { in: ->(ad) { ad.allowed_layouts } }
 
   scope :search, ->(q) { where("ads.headline ILIKE ?", "%#{sanitize_sql_like(q)}%") }
-  scope :listing_ads, -> { where.not(listing_id: nil) }
-  scope :standalone, -> { where(listing_id: nil) }
+
+  # Convenience delegation for views during migration to layout partials
+  def listing
+    adable.try(:listing)
+  end
+
+  def allowed_layouts
+    adable ? adable.class::LAYOUTS : %w[hero]
+  end
+
+  def apply_defaults
+    self.headline = adable&.default_headline if headline.blank?
+    self.layout = allowed_layouts.first if layout.blank?
+    self.theme = "dark" if theme.blank?
+  end
 end

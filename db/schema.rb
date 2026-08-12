@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_08_12_001211) do
+ActiveRecord::Schema[8.1].define(version: 2026_08_12_001415) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -21,13 +21,16 @@ ActiveRecord::Schema[8.1].define(version: 2026_08_12_001211) do
 
   create_table "ads", force: :cascade do |t|
     t.bigint "account_id", null: false
+    t.bigint "adable_id", null: false
+    t.string "adable_type", null: false
     t.text "body"
     t.datetime "created_at", null: false
     t.string "headline", null: false
-    t.bigint "listing_id"
+    t.string "layout", default: "hero", null: false
+    t.string "theme", default: "dark", null: false
     t.datetime "updated_at", null: false
     t.index ["account_id"], name: "index_ads_on_account_id"
-    t.index ["listing_id"], name: "index_ads_on_listing_id"
+    t.index ["adable_type", "adable_id"], name: "index_ads_on_adable_type_and_adable_id"
   end
 
   create_table "agent_ads", force: :cascade do |t|
@@ -183,7 +186,6 @@ ActiveRecord::Schema[8.1].define(version: 2026_08_12_001211) do
   end
 
   add_foreign_key "ads", "accounts"
-  add_foreign_key "ads", "listings"
   add_foreign_key "agent_ads", "agents"
   add_foreign_key "agents", "accounts"
   add_foreign_key "agents", "users"

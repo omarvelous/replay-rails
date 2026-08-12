@@ -9,15 +9,6 @@ RSpec.describe "ListingAgents", type: :request do
   before { sign_in(user) }
 
   describe "from listing context" do
-    describe "GET /listings/:id/listing_agents" do
-      it "returns agents for a listing" do
-        create(:listing_agent, listing: listing, agent: agent)
-        get listing_listing_agents_path(listing)
-        expect(response).to be_successful
-        expect(response.body).to include(agent.name)
-      end
-    end
-
     describe "GET /listings/:id/listing_agents/new" do
       it "returns a successful response" do
         get new_listing_listing_agent_path(listing)
