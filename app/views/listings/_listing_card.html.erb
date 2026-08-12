@@ -1,9 +1,13 @@
 <% tone = %w[#2f6bff #0fb5a6 #7c5cff #e8990f #1f9d57 #e5484d][listing.id % 6] %>
 <div class="rounded-lg bg-white shadow-sm ring-1 ring-gray-900/5 hover:shadow-md transition-shadow cursor-pointer group overflow-hidden">
-  <%# Photo placeholder with tone tint %>
-  <%= link_to listing_path(listing), data: { turbo_frame: "_top" } do %>
+  <%# Photo %>
+  <%= link_to listing_path(listing) do %>
     <div class="h-36 relative overflow-hidden" style="background: <%= tone %>22;">
-      <div class="absolute inset-0" style="background: linear-gradient(160deg, <%= tone %>33, transparent 70%);"></div>
+      <% if listing.photos.any? %>
+        <%= image_tag listing.photos.first, class: "absolute inset-0 w-full h-full object-cover" %>
+      <% else %>
+        <div class="absolute inset-0" style="background: linear-gradient(160deg, <%= tone %>33, transparent 70%);"></div>
+      <% end %>
       <div class="absolute top-3 right-3">
         <% if listing.status == 'active' %>
           <span class="inline-flex items-center rounded-full bg-green-50 px-2 py-0.5 text-xs font-medium text-green-700 ring-1 ring-green-600/20 ring-inset"><%= listing.status.capitalize %></span>
@@ -17,7 +21,7 @@
   <% end %>
 
   <div class="p-4">
-    <%= link_to listing_path(listing), class: "block", data: { turbo_frame: "_top" } do %>
+    <%= link_to listing_path(listing), class: "block" do %>
       <p class="text-lg font-bold tabular-nums"><%= number_to_currency(listing.price, precision: 0) %></p>
       <p class="text-sm text-gray-700 truncate"><%= listing.address %></p>
       <p class="text-xs text-gray-400 mt-0.5">Apartment</p>
