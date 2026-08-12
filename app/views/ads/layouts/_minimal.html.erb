@@ -1,6 +1,6 @@
-<div class="ad-canvas aspect-video flex items-center justify-center text-center p-28"
-     style="background: var(--ad-bg); color: var(--ad-text); <%= ad_theme_style(ad.theme) %>">
-  <div class="max-w-4xl">
+<div class="ad-canvas aspect-video flex items-center justify-center text-center"
+     style="background: var(--ad-bg); color: var(--ad-text); padding: var(--s-pad-lg); <%= ad_theme_style(ad.theme) %>">
+  <div>
     <%= render "ads/#{ad.adable_name.pluralize}/content", ad: ad %>
   </div>
 </div>

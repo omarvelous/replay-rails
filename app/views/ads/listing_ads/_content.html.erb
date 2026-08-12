@@ -1,40 +1,42 @@
 <% listing_ad = ad.adable %>
 <% listing = listing_ad.listing %>
 
-<%# Badge — large, bold, top of content %>
+<%# Badge %>
 <% if listing_ad.badge.present? %>
-  <div class="mb-6">
+  <div style="margin-bottom: var(--s-gap);">
     <% badge_colors = { "just_listed" => "bg-green-500", "open_house" => "bg-amber-500", "just_sold" => "bg-red-500", "price_reduction" => "bg-orange-500", "coming_soon" => "bg-purple-500" } %>
-    <span class="inline-flex items-center rounded-full <%= badge_colors[listing_ad.badge] %> px-5 py-1.5 text-2xl font-bold text-white tracking-wider uppercase">
+    <span class="inline-flex items-center rounded-full <%= badge_colors[listing_ad.badge] %> font-bold text-white tracking-wider uppercase"
+          style="font-size: var(--s-2xl); padding: var(--s-badge-py) var(--s-badge-px);">
       <%= listing_ad.badge_label %>
     </span>
   </div>
 <% end %>
 
-<%# Price — the hero element %>
+<%# Price %>
 <% if listing_ad.price_reduction? && listing_ad.original_price %>
-  <div class="flex items-baseline gap-4">
-    <span class="text-8xl font-extrabold tracking-tight leading-none"><%= number_to_currency(listing.price, precision: 0) %></span>
-    <span class="text-4xl line-through" style="color: var(--ad-text-faint);"><%= number_to_currency(listing_ad.original_price, precision: 0) %></span>
+  <div class="flex items-baseline" style="gap: var(--s-gap);">
+    <span class="font-extrabold tracking-tight leading-none" style="font-size: var(--s-hero);"><%= number_to_currency(listing.price, precision: 0) %></span>
+    <span class="line-through" style="font-size: var(--s-3xl); color: var(--ad-text-faint);"><%= number_to_currency(listing_ad.original_price, precision: 0) %></span>
   </div>
 <% elsif listing_ad.just_sold? && listing_ad.sold_price %>
-  <div class="text-8xl font-extrabold tracking-tight leading-none"><%= number_to_currency(listing_ad.sold_price, precision: 0) %></div>
-  <div class="text-2xl mt-2" style="color: var(--ad-text-faint);">Listed at <%= number_to_currency(listing.price, precision: 0) %></div>
+  <div class="font-extrabold tracking-tight leading-none" style="font-size: var(--s-hero);"><%= number_to_currency(listing_ad.sold_price, precision: 0) %></div>
+  <div style="font-size: var(--s-2xl); margin-top: var(--s-xs); color: var(--ad-text-faint);">Listed at <%= number_to_currency(listing.price, precision: 0) %></div>
 <% else %>
-  <div class="text-8xl font-extrabold tracking-tight leading-none"><%= number_to_currency(listing.price, precision: 0) %></div>
+  <div class="font-extrabold tracking-tight leading-none" style="font-size: var(--s-hero);"><%= number_to_currency(listing.price, precision: 0) %></div>
 <% end %>
 
 <%# Address %>
-<div class="text-3xl mt-4" style="color: var(--ad-text-muted);"><%= listing.address %></div>
+<div style="font-size: var(--s-3xl); margin-top: var(--s-gap); color: var(--ad-text-muted);"><%= listing.address %></div>
 
 <%# Specs %>
-<div class="text-xl mt-2" style="color: var(--ad-text-faint);">
+<div style="font-size: var(--s-xl); margin-top: var(--s-xs); color: var(--ad-text-faint);">
   <%= [ listing.beds&.to_s&.+(" bd"), listing.baths&.to_s&.+(" ba"), listing.sqft ? "#{number_with_delimiter(listing.sqft)} sqft" : nil ].compact.join(" · ") %>
 </div>
 
-<%# Open house event — prominent, this is time-sensitive %>
+<%# Open house event %>
 <% if listing_ad.open_house? && listing_ad.event_date %>
-  <div class="mt-6 inline-flex items-center gap-2 px-6 py-3 rounded-xl text-2xl font-bold" style="background: var(--ad-surface); color: var(--ad-accent);">
+  <div class="inline-flex items-center rounded-xl font-bold"
+       style="font-size: var(--s-2xl); margin-top: var(--s-gap); padding: var(--s-badge-py) var(--s-badge-px); background: var(--ad-surface); color: var(--ad-accent); gap: var(--s-xs);">
     <%= listing_ad.event_date.strftime("%A, %B %-d") %>
     <% if listing_ad.event_start_time %>
       &middot; <%= listing_ad.event_start_time.strftime("%-l:%M %p") %>

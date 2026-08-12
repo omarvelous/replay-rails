@@ -2,12 +2,33 @@
 @source "../../../app/views";
 @source "../../../app/javascript";
 
-/* Ad canvas — dark theme as default */
+/* Ad canvas — dark theme as default + container-relative signage scale */
 .ad-canvas {
+  container-type: inline-size;
+
+  /* Theme colors (dark default) */
   --ad-bg: #0b0d12;
   --ad-text: #ffffff;
   --ad-text-muted: rgba(255, 255, 255, 0.5);
   --ad-text-faint: rgba(255, 255, 255, 0.3);
   --ad-accent: #2f6bff;
   --ad-surface: rgba(255, 255, 255, 0.1);
+
+  /* Signage scale — proportional to container width */
+  --s-xs: 1cqw;
+  --s-sm: 1.3cqw;
+  --s-base: 1.5cqw;
+  --s-lg: 1.8cqw;
+  --s-xl: 2.2cqw;
+  --s-2xl: 2.8cqw;
+  --s-3xl: 3.5cqw;
+  --s-4xl: 5cqw;
+  --s-hero: 7cqw;
+  --s-pad: 5cqw;
+  --s-pad-lg: 7cqw;
+  --s-gap: 1.5cqw;
+  --s-qr: 8cqw;
+  --s-avatar: 15cqw;
+  --s-badge-px: 1.2cqw;
+  --s-badge-py: 0.4cqw;
 }

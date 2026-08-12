@@ -2,13 +2,11 @@
      style="background: var(--ad-bg); color: var(--ad-text); <%= ad_theme_style(ad.theme) %>">
   <%# Left: image/gradient area %>
   <div class="w-1/2 relative" style="background: linear-gradient(135deg, var(--ad-bg), color-mix(in srgb, var(--ad-accent) 20%, transparent));">
-    <div class="absolute bottom-20 left-20 w-24 h-24 rounded-xl grid place-items-center"
-         style="background: var(--ad-surface); color: var(--ad-text-faint);">
-      <span class="text-sm font-mono">QR</span>
-    </div>
+    <div class="absolute rounded-xl grid place-items-center"
+         style="bottom: var(--s-pad); left: var(--s-pad); width: var(--s-qr); height: var(--s-qr); background: var(--ad-surface); color: var(--ad-text-faint); font-size: var(--s-sm);">QR</div>
   </div>
   <%# Right: content %>
-  <div class="w-1/2 flex flex-col justify-center p-20">
+  <div class="w-1/2 flex flex-col justify-center" style="padding: var(--s-pad-lg);">
     <%= render "ads/#{ad.adable_name.pluralize}/content", ad: ad %>
   </div>
 </div>

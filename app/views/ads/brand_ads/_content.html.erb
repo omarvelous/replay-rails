@@ -1,4 +1,4 @@
-<div class="text-7xl font-extrabold tracking-tight leading-tight"><%= ad.headline %></div>
+<div class="font-extrabold tracking-tight leading-tight" style="font-size: var(--s-hero);"><%= ad.headline %></div>
 <% if ad.body.present? %>
-  <div class="text-2xl mt-4" style="color: var(--ad-text-muted);"><%= ad.body %></div>
+  <div style="font-size: var(--s-2xl); margin-top: var(--s-gap); color: var(--ad-text-muted);"><%= ad.body %></div>
 <% end %>
