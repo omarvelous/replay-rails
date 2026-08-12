@@ -8,6 +8,18 @@ RSpec.describe Ad, type: :model do
     it { is_expected.to have_many(:playlist_ads).dependent(:destroy) }
     it { is_expected.to have_many(:playlists).through(:playlist_ads) }
     it { is_expected.to have_many(:collection_ad_ads).dependent(:restrict_with_error) }
+
+    it "has one attached image" do
+      expect(Ad.new.image).not_to be_attached
+    end
+  end
+
+  describe "image attachment" do
+    it "attaches an image" do
+      ad = create(:ad)
+      ad.image.attach(io: StringIO.new("fake"), filename: "test.jpg", content_type: "image/jpeg")
+      expect(ad.image).to be_attached
+    end
   end
 
   describe "delegated type" do

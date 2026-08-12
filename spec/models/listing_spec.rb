@@ -13,5 +13,18 @@ RSpec.describe Listing, type: :model do
 
   describe "associations" do
     it { is_expected.to belong_to(:account) }
+
+    it "has many attached photos" do
+      expect(Listing.new.photos).to be_empty
+    end
+  end
+
+  describe "photos attachment" do
+    it "attaches multiple photos" do
+      listing = create(:listing)
+      listing.photos.attach(io: StringIO.new("fake1"), filename: "photo1.jpg", content_type: "image/jpeg")
+      listing.photos.attach(io: StringIO.new("fake2"), filename: "photo2.jpg", content_type: "image/jpeg")
+      expect(listing.photos.count).to eq(2)
+    end
   end
 end
