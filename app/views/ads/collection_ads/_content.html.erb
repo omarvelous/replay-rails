@@ -1,24 +1,26 @@
 <% collection_ad = ad.adable %>
+<% count = collection_ad.member_ads.size %>
 
-<h2 class="text-2xl font-bold mb-1"><%= collection_ad.collection_title %></h2>
-<p class="text-sm mb-6" style="color: var(--ad-text-faint);"><%= collection_ad.member_ads.size %> properties</p>
+<h2 class="text-5xl font-bold mb-2"><%= collection_ad.collection_title %></h2>
+<p class="text-2xl mb-10" style="color: var(--ad-text-faint);"><%= count %> properties</p>
 
-<% cols = collection_ad.member_ads.size <= 2 ? 2 : collection_ad.member_ads.size <= 6 ? 3 : 4 %>
-<div class="grid gap-3 flex-1" style="grid-template-columns: repeat(<%= cols %>, 1fr);">
+<% cols = count <= 2 ? 2 : count <= 4 ? 2 : 3 %>
+<div class="grid gap-6 flex-1" style="grid-template-columns: repeat(<%= cols %>, 1fr);">
   <% collection_ad.collection_ad_ads.order(:position).includes(ad: :adable).each do |item| %>
     <% member = item.ad %>
     <% listing = member.listing %>
-    <div class="rounded-lg overflow-hidden flex flex-col" style="background: var(--ad-surface);">
-      <div class="flex-1 relative" style="background: color-mix(in srgb, var(--ad-accent) 15%, transparent); min-height: 50%;"></div>
-      <div class="p-3">
+    <div class="rounded-2xl overflow-hidden flex flex-col" style="background: var(--ad-surface);">
+      <div class="flex-1 relative" style="background: color-mix(in srgb, var(--ad-accent) 15%, transparent); min-height: 45%;"></div>
+      <div class="p-8">
         <% if listing %>
-          <div class="text-base font-bold"><%= number_to_currency(listing.price, precision: 0) %></div>
-          <div class="text-xs mt-0.5" style="color: var(--ad-text-muted);"><%= listing.address %></div>
-          <div class="text-[11px] mt-0.5" style="color: var(--ad-text-faint);">
+          <div class="text-4xl font-extrabold tracking-tight"><%= number_to_currency(listing.price, precision: 0) %></div>
+          <div class="text-xl mt-2" style="color: var(--ad-text-muted);"><%= listing.address %></div>
+          <div class="text-lg mt-1" style="color: var(--ad-text-faint);">
             <%= listing.beds %> bd &middot; <%= listing.baths %> ba
+            <% if listing.sqft %> &middot; <%= number_with_delimiter(listing.sqft) %> sqft<% end %>
           </div>
         <% else %>
-          <div class="text-sm font-semibold"><%= member.headline %></div>
+          <div class="text-3xl font-bold"><%= member.headline %></div>
         <% end %>
       </div>
     </div>

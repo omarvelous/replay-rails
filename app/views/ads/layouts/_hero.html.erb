@@ -1,6 +1,8 @@
-<div class="ad-canvas aspect-video relative flex flex-col justify-end p-8"
+<div class="ad-canvas aspect-video relative flex flex-col justify-end p-24"
      style="background: var(--ad-bg); color: var(--ad-text); <%= ad_theme_style(ad.theme) %>">
   <%= render "ads/#{ad.adable_name.pluralize}/content", ad: ad %>
-  <div class="absolute right-8 bottom-8 w-16 h-16 rounded-lg grid place-items-center text-xs font-mono"
-       style="background: var(--ad-surface); color: var(--ad-text-faint);">QR</div>
+  <div class="absolute right-24 bottom-24 w-28 h-28 rounded-xl grid place-items-center"
+       style="background: var(--ad-surface); color: var(--ad-text-faint);">
+    <span class="text-sm font-mono">QR</span>
+  </div>
 </div>
