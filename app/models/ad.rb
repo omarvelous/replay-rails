@@ -2,6 +2,11 @@ class Ad < ApplicationRecord
   belongs_to :account
   delegated_type :adable, types: %w[ListingAd CollectionAd AgentAd BrandAd], dependent: :destroy
 
+  has_one_attached :image do |attachable|
+    attachable.variant :thumb,   resize_to_fill: [ 400, 225 ]
+    attachable.variant :preview, resize_to_fill: [ 1920, 1080 ]
+  end
+
   has_many :playlist_ads, dependent: :destroy
   has_many :playlists, through: :playlist_ads
   has_many :collection_ad_ads, dependent: :restrict_with_error

@@ -43,7 +43,7 @@ module Ads
       end
 
       def ad_params
-        params.require(:ad).permit(:headline, :body, :layout, :theme)
+        params.require(:ad).permit(:headline, :body, :layout, :theme, :image)
       end
   end
 end

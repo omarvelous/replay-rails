@@ -49,7 +49,7 @@ module Ads
       end
 
       def ad_params
-        params.require(:ad).permit(:headline, :body, :theme)
+        params.require(:ad).permit(:headline, :body, :theme, :image)
       end
 
       def collection_ad_params
