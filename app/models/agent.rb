@@ -7,6 +7,8 @@ class Agent < ApplicationRecord
     attachable.variant :card,  resize_to_fill: [ 400, 400 ]
   end
 
+  has_one :qr_code, as: :destination_record, dependent: :destroy
+
   has_many :listing_agents, dependent: :destroy
   has_many :listings, through: :listing_agents
 

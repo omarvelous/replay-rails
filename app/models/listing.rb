@@ -5,6 +5,8 @@ class Listing < ApplicationRecord
     attachable.variant :card,  resize_to_fill: [ 800, 450 ]
   end
 
+  has_one :qr_code, as: :destination_record, dependent: :destroy
+
   has_many :listing_agents, dependent: :destroy
   has_many :agents, through: :listing_agents
   has_many :listing_ads, dependent: :destroy
@@ -13,6 +15,10 @@ class Listing < ApplicationRecord
   validates :address, presence: true
   validates :price, presence: true, numericality: { greater_than: 0 }
   validates :status, presence: true, inclusion: { in: %w[active pending sold] }
+
+  def ensure_qr_code!
+    qr_code || create_qr_code!(account: account, label: address.truncate(40))
+  end
 
   scope :search, ->(q) { where("listings.address ILIKE ?", "%#{sanitize_sql_like(q)}%") }
   scope :by_status, ->(s) { where(status: s) }
