@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_08_12_031940) do
+ActiveRecord::Schema[8.1].define(version: 2026_08_13_004213) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -166,6 +166,21 @@ ActiveRecord::Schema[8.1].define(version: 2026_08_12_031940) do
     t.index ["account_id"], name: "index_playlists_on_account_id"
   end
 
+  create_table "qr_codes", force: :cascade do |t|
+    t.bigint "account_id", null: false
+    t.boolean "active", default: true, null: false
+    t.datetime "created_at", null: false
+    t.bigint "destination_record_id"
+    t.string "destination_record_type"
+    t.string "destination_url"
+    t.string "label"
+    t.string "token", null: false
+    t.datetime "updated_at", null: false
+    t.index ["account_id"], name: "index_qr_codes_on_account_id"
+    t.index ["destination_record_type", "destination_record_id"], name: "idx_on_destination_record_type_destination_record_i_017f34d69d"
+    t.index ["token"], name: "index_qr_codes_on_token", unique: true
+  end
+
   create_table "screen_playlists", force: :cascade do |t|
     t.boolean "active", default: true, null: false
     t.datetime "created_at", null: false
@@ -232,6 +247,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_08_12_031940) do
   add_foreign_key "playlist_ads", "ads"
   add_foreign_key "playlist_ads", "playlists"
   add_foreign_key "playlists", "accounts"
+  add_foreign_key "qr_codes", "accounts"
   add_foreign_key "screen_playlists", "playlists"
   add_foreign_key "screen_playlists", "screens"
   add_foreign_key "screens", "sites"
