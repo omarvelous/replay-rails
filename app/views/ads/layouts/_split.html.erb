@@ -5,8 +5,13 @@
     <% if ad.image.attached? %>
       <%= image_tag ad.image.variant(:preview), class: "absolute inset-0 w-full h-full object-cover" %>
     <% end %>
-    <div class="absolute rounded-xl grid place-items-center"
-         style="bottom: var(--s-pad); left: var(--s-pad); width: var(--s-qr); height: var(--s-qr); background: var(--ad-surface); color: var(--ad-text-faint); font-size: var(--s-sm);">QR</div>
+    <% qr = ad.listing&.qr_code %>
+    <% if qr %>
+      <div class="absolute rounded-xl overflow-hidden bg-white"
+           style="bottom: var(--s-pad); left: var(--s-pad); width: var(--s-qr); height: var(--s-qr); padding: var(--s-xs);">
+        <%= qr_svg(qr, source: "Ad.#{ad.id}") %>
+      </div>
+    <% end %>
   </div>
   <%# Right: content %>
   <div class="w-1/2 flex flex-col justify-center" style="padding: var(--s-pad-lg);">

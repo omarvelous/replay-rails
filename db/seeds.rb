@@ -131,8 +131,13 @@ if demo_account
   end
   w34th_listing = Listing.find_by(account: demo_account, address: "20 W 34th St, New York, NY 10001")
   attach_seed_photos(w34th_listing, "house-2.jpg", "interior-2.jpg") if w34th_listing
+  # QR codes for listings
+  [ fifth_ave_listing, w34th_listing ].compact.each do |listing|
+    listing.ensure_qr_code!
+  end
 end
 puts "Seeded #{Listing.count} listing(s)"
+puts "Seeded #{QrCode.count} QR code(s)"
 
 # -----------------------------------------------------------------------
 # Agents

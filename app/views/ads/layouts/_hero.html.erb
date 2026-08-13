@@ -7,6 +7,5 @@
   <div class="relative">
     <%= render "ads/#{ad.adable_name.pluralize}/content", ad: ad %>
   </div>
-  <div class="absolute rounded-xl grid place-items-center"
-       style="right: var(--s-pad-lg); bottom: var(--s-pad-lg); width: var(--s-qr); height: var(--s-qr); background: var(--ad-surface); color: var(--ad-text-faint); font-size: var(--s-sm);">QR</div>
+  <%= render "ads/layouts/qr_badge", ad: ad %>
 </div>

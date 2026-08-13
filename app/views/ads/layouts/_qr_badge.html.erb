@@ -1,0 +1,10 @@
+<% qr = ad.listing&.qr_code %>
+<div class="absolute rounded-xl overflow-hidden bg-white"
+     style="right: var(--s-pad-lg); bottom: var(--s-pad-lg); width: var(--s-qr); height: var(--s-qr); padding: var(--s-xs);">
+  <% if qr %>
+    <%= qr_svg(qr, source: "Ad.#{ad.id}") %>
+  <% else %>
+    <span class="grid place-items-center w-full h-full"
+          style="font-size: var(--s-sm); color: #999;">QR</span>
+  <% end %>
+</div>
