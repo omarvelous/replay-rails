@@ -10,6 +10,7 @@ class AdsController < ApplicationController
 
   def show
     @playlists = @ad.playlists.distinct
+    @scan_count = QrScan.where(source_type: "Ad", source_id: @ad.id).count
   end
 
   def new
