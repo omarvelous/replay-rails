@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_08_13_004213) do
+ActiveRecord::Schema[8.1].define(version: 2026_08_13_004630) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -181,6 +181,21 @@ ActiveRecord::Schema[8.1].define(version: 2026_08_13_004213) do
     t.index ["token"], name: "index_qr_codes_on_token", unique: true
   end
 
+  create_table "qr_scans", force: :cascade do |t|
+    t.bigint "account_id", null: false
+    t.datetime "created_at", null: false
+    t.string "ip_address"
+    t.bigint "qr_code_id", null: false
+    t.bigint "source_id"
+    t.string "source_type"
+    t.datetime "updated_at", null: false
+    t.string "user_agent"
+    t.index ["account_id"], name: "index_qr_scans_on_account_id"
+    t.index ["qr_code_id", "created_at"], name: "index_qr_scans_on_qr_code_id_and_created_at"
+    t.index ["qr_code_id"], name: "index_qr_scans_on_qr_code_id"
+    t.index ["source_type", "source_id"], name: "index_qr_scans_on_source_type_and_source_id"
+  end
+
   create_table "screen_playlists", force: :cascade do |t|
     t.boolean "active", default: true, null: false
     t.datetime "created_at", null: false
@@ -248,6 +263,8 @@ ActiveRecord::Schema[8.1].define(version: 2026_08_13_004213) do
   add_foreign_key "playlist_ads", "playlists"
   add_foreign_key "playlists", "accounts"
   add_foreign_key "qr_codes", "accounts"
+  add_foreign_key "qr_scans", "accounts"
+  add_foreign_key "qr_scans", "qr_codes"
   add_foreign_key "screen_playlists", "playlists"
   add_foreign_key "screen_playlists", "screens"
   add_foreign_key "screens", "sites"
