@@ -6,8 +6,9 @@ class ScansController < ApplicationController
 
     qr.scans.create!(
       account: qr.account,
-      source_type: source_type,
-      source_id: source_id,
+      ad_id: params[:a],
+      screen_id: params[:s],
+      context: scan_context,
       ip_address: request.remote_ip,
       user_agent: request.user_agent
     )
@@ -23,11 +24,9 @@ class ScansController < ApplicationController
 
   private
 
-    def source_type
-      params[:src]&.split(".")&.first
-    end
-
-    def source_id
-      params[:src]&.split(".")&.last&.to_i
+    def scan_context
+      ctx = {}
+      ctx[:playlist_id] = params[:p].to_i if params[:p].present?
+      ctx
     end
 end

@@ -96,7 +96,7 @@
           <p class="text-xs text-gray-400">Active listings</p>
         </div>
         <div>
-          <p class="text-2xl font-bold tabular-nums"><%= QrScan.joins(:qr_code).where(qr_codes: { destination_record_type: "Listing", destination_record_id: @agent.listing_ids }).count %></p>
+          <p class="text-2xl font-bold tabular-nums"><%= QrScan.qualified.joins(:qr_code).where(qr_codes: { destination_record_type: "Listing", destination_record_id: @agent.listing_ids }).count %></p>
           <p class="text-xs text-gray-400">QR scans</p>
         </div>
       </div>

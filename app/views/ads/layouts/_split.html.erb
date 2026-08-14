@@ -9,7 +9,7 @@
     <% if qr %>
       <div class="absolute rounded-xl overflow-hidden bg-white"
            style="bottom: var(--s-pad); left: var(--s-pad); width: var(--s-qr); height: var(--s-qr); padding: var(--s-xs);">
-        <%= qr_svg(qr, source: "Ad.#{ad.id}") %>
+        <%= qr_svg(qr, ad: ad, screen: defined?(@screen) ? @screen : nil) %>
       </div>
     <% end %>
   </div>

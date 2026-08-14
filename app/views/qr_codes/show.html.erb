@@ -14,10 +14,11 @@
             <div class="px-4 py-3 flex items-center gap-4">
               <div class="flex-1 min-w-0">
                 <div class="flex items-center gap-2">
-                  <% if scan.source_type.present? %>
-                    <span class="inline-flex items-center rounded-md bg-indigo-50 px-1.5 py-0.5 text-[10.5px] font-medium text-indigo-700 ring-1 ring-indigo-600/20 ring-inset"><%= scan.source_type %></span>
+                  <% if scan.ad && scan.screen %>
+                    <span class="inline-flex items-center rounded-md bg-green-50 px-1.5 py-0.5 text-[10.5px] font-medium text-green-700 ring-1 ring-green-600/20 ring-inset">Qualified</span>
+                    <span class="text-xs text-gray-400">Ad #<%= scan.ad_id %> &middot; Screen #<%= scan.screen_id %></span>
                   <% else %>
-                    <span class="inline-flex items-center rounded-md bg-gray-50 px-1.5 py-0.5 text-[10.5px] font-medium text-gray-500 ring-1 ring-gray-500/10 ring-inset">Organic</span>
+                    <span class="inline-flex items-center rounded-md bg-gray-50 px-1.5 py-0.5 text-[10.5px] font-medium text-gray-500 ring-1 ring-gray-500/10 ring-inset">Unqualified</span>
                   <% end %>
                   <span class="text-xs text-gray-400"><%= scan.ip_address %></span>
                 </div>
