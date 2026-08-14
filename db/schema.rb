@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_08_14_123045) do
+ActiveRecord::Schema[8.1].define(version: 2026_08_14_124232) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -145,6 +145,20 @@ ActiveRecord::Schema[8.1].define(version: 2026_08_14_123045) do
     t.index ["account_id"], name: "index_listings_on_account_id"
   end
 
+  create_table "players", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.string "firmware_version"
+    t.string "ip_address"
+    t.datetime "last_heartbeat_at"
+    t.string "pairing_code"
+    t.datetime "pairing_code_expires_at"
+    t.string "token", null: false
+    t.datetime "updated_at", null: false
+    t.string "user_agent"
+    t.index ["pairing_code"], name: "index_players_on_pairing_code", unique: true
+    t.index ["token"], name: "index_players_on_token", unique: true
+  end
+
   create_table "playlist_ads", force: :cascade do |t|
     t.bigint "ad_id", null: false
     t.datetime "created_at", null: false
@@ -196,6 +210,21 @@ ActiveRecord::Schema[8.1].define(version: 2026_08_14_123045) do
     t.index ["qr_code_id", "created_at"], name: "index_qr_scans_on_qr_code_id_and_created_at"
     t.index ["qr_code_id"], name: "index_qr_scans_on_qr_code_id"
     t.index ["screen_id"], name: "index_qr_scans_on_screen_id"
+  end
+
+  create_table "screen_players", force: :cascade do |t|
+    t.boolean "active", default: true, null: false
+    t.datetime "created_at", null: false
+    t.bigint "paired_by_id"
+    t.bigint "player_id", null: false
+    t.bigint "screen_id", null: false
+    t.datetime "unpaired_at"
+    t.datetime "updated_at", null: false
+    t.index ["paired_by_id"], name: "index_screen_players_on_paired_by_id"
+    t.index ["player_id"], name: "idx_screen_players_active_player", unique: true, where: "(active = true)"
+    t.index ["player_id"], name: "index_screen_players_on_player_id"
+    t.index ["screen_id"], name: "idx_screen_players_active_screen", unique: true, where: "(active = true)"
+    t.index ["screen_id"], name: "index_screen_players_on_screen_id"
   end
 
   create_table "screen_playlists", force: :cascade do |t|
@@ -269,6 +298,9 @@ ActiveRecord::Schema[8.1].define(version: 2026_08_14_123045) do
   add_foreign_key "qr_scans", "ads"
   add_foreign_key "qr_scans", "qr_codes"
   add_foreign_key "qr_scans", "screens"
+  add_foreign_key "screen_players", "players"
+  add_foreign_key "screen_players", "screens"
+  add_foreign_key "screen_players", "users", column: "paired_by_id"
   add_foreign_key "screen_playlists", "playlists"
   add_foreign_key "screen_playlists", "screens"
   add_foreign_key "screens", "sites"

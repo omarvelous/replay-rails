@@ -58,7 +58,8 @@ RSpec.describe Player, type: :model do
     end
 
     it "returns false when no code" do
-      player = create(:player, pairing_code: nil)
+      player = create(:player)
+      player.update_columns(pairing_code: nil, pairing_code_expires_at: nil)
       expect(player.pairing_code_valid?).to be false
     end
   end
