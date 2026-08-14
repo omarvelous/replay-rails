@@ -4,6 +4,9 @@ RSpec.describe "Scans", type: :request do
   describe "GET /s/:token" do
     let(:account) { create(:account) }
     let(:listing) { create(:listing, account: account) }
+    let(:site) { create(:site, account: account) }
+    let(:screen) { create(:screen, site: site) }
+    let(:ad) { create(:ad, account: account) }
     let(:qr_code) { create(:qr_code, account: account, destination_record: listing) }
 
     it "records a scan and redirects to the destination" do
@@ -13,24 +16,29 @@ RSpec.describe "Scans", type: :request do
       expect(response).to redirect_to(go_listing_path(listing))
     end
 
-    it "records source from params" do
-      ad = create(:ad, account: account)
-      get qr_scan_path(token: qr_code.token, src: "Ad.#{ad.id}")
+    it "records ad and screen from params" do
+      get qr_scan_path(token: qr_code.token, a: ad.id, s: screen.id)
       scan = QrScan.last
-      expect(scan.source_type).to eq("Ad")
-      expect(scan.source_id).to eq(ad.id)
+      expect(scan.ad).to eq(ad)
+      expect(scan.screen).to eq(screen)
     end
 
-    it "allows scans with no source" do
-      get qr_scan_path(token: qr_code.token)
-      scan = QrScan.last
-      expect(scan.source_type).to be_nil
+    it "records a qualified scan when both ad and screen present" do
+      get qr_scan_path(token: qr_code.token, a: ad.id, s: screen.id)
+      expect(QrScan.qualified.count).to eq(1)
     end
 
-    it "records ip and user agent" do
+    it "records an unqualified scan when params are missing" do
       get qr_scan_path(token: qr_code.token)
       scan = QrScan.last
-      expect(scan.ip_address).to be_present
+      expect(scan.ad).to be_nil
+      expect(scan.screen).to be_nil
+      expect(QrScan.unqualified.count).to eq(1)
+    end
+
+    it "records ip address" do
+      get qr_scan_path(token: qr_code.token)
+      expect(QrScan.last.ip_address).to be_present
     end
 
     it "redirects to external URL when destination_url is set" do
