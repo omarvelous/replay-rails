@@ -1,4 +1,4 @@
-<div class="w-full h-screen flex items-center justify-center relative" data-controller="slideshow">
+<div class="w-full h-screen flex items-center justify-center relative" data-controller="slideshow device-playback">
   <% if @playlist_ads.any? %>
     <% @playlist_ads.each_with_index do |pa, index| %>
       <div class="slide absolute inset-0 transition-opacity duration-700 <%= index == 0 ? 'opacity-100' : 'opacity-0' %>"

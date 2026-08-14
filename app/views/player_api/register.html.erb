@@ -1,0 +1,9 @@
+<div class="flex flex-col items-center justify-center h-screen text-white gap-8"
+     data-controller="device-pairing"
+     data-device-pairing-code-value="<%= @player.pairing_code %>"
+     data-device-pairing-token-value="<%= @player.token %>">
+  <p class="text-sm uppercase tracking-widest text-white/40 font-semibold">Pair this screen</p>
+  <div class="font-mono text-7xl font-bold tracking-widest"><%= @player.pairing_code %></div>
+  <p class="text-sm text-white/30 font-semibold">Enter this code at replay.com &rarr; Screens</p>
+  <p class="text-xs text-white/20 mt-8">Code expires in 10 minutes</p>
+</div>

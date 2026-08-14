@@ -3,13 +3,19 @@ module ApplicationCable
     identified_by :current_user
 
     def connect
-      set_current_user || reject_unauthorized_connection
+      self.current_user = find_verified_user
+    rescue
+      # Allow anonymous connections — PairingChannel and ScreenChannel
+      # authenticate via their own params
     end
 
     private
-      def set_current_user
+
+      def find_verified_user
         if session = Session.find_by(id: cookies.signed[:session_id])
-          self.current_user = session.user
+          session.user
+        else
+          raise "Unauthorized"
         end
       end
   end

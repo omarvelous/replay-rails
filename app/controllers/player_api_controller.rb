@@ -3,15 +3,15 @@ class PlayerApiController < ActionController::Base
 
   # POST /player/register
   def register
-    player = Player.create!(
+    @player = Player.create!(
       ip_address: request.remote_ip,
       user_agent: request.user_agent
     )
-    render json: {
-      pairing_code: player.pairing_code,
-      token: player.token,
-      expires_in: 600
-    }
+
+    respond_to do |format|
+      format.html { render "player_api/register", layout: "player" }
+      format.json { render json: { pairing_code: @player.pairing_code, token: @player.token, expires_in: 600 } }
+    end
   end
 
   # GET /player/status

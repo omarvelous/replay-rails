@@ -17,7 +17,15 @@ class ScreenPlayersController < ApplicationController
       return redirect_to new_screen_screen_player_path(@screen)
     end
 
+    code = player.pairing_code
     @screen.pair_player!(player, paired_by: Current.user)
+
+    ActionCable.server.broadcast("pairing_#{code}", {
+      paired: true,
+      token: player.token,
+      screen_id: @screen.id
+    })
+
     redirect_to @screen, notice: "Player paired successfully."
   end
 

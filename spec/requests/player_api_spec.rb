@@ -2,15 +2,21 @@ require "rails_helper"
 
 RSpec.describe "PlayerApi", type: :request do
   describe "POST /player/register" do
-    it "creates a player and returns a pairing code" do
+    it "creates a player and returns a pairing code (JSON)" do
       expect {
-        post "/player/register"
+        post "/player/register", as: :json
       }.to change(Player, :count).by(1)
 
       body = response.parsed_body
       expect(body["pairing_code"]).to match(/\A[A-Z0-9]{6}\z/)
       expect(body["token"]).to be_present
       expect(body["expires_in"]).to eq(600)
+    end
+
+    it "renders the pairing view (HTML)" do
+      post "/player/register"
+      expect(response).to be_successful
+      expect(response.body).to include("Pair this screen")
     end
   end
 
