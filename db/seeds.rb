@@ -99,6 +99,25 @@ end
 puts "Seeded #{Screen.count} screen(s)"
 
 # -----------------------------------------------------------------------
+# Players
+# -----------------------------------------------------------------------
+if demo_account
+  unless Player.any?
+    window_display = Screen.joins(:site).find_by(name: "Window Display", sites: { account_id: demo_account.id })
+    if window_display
+      player = Player.create!(
+        ip_address: "192.168.1.100",
+        user_agent: "RePlayPlayer/1.0 (Chromium)"
+      )
+      window_display.pair_player!(player)
+      player.update!(last_heartbeat_at: Time.current)
+      puts "Created demo player and paired to Window Display"
+    end
+  end
+end
+puts "Seeded #{Player.count} player(s)"
+
+# -----------------------------------------------------------------------
 # Listings
 # -----------------------------------------------------------------------
 if demo_account

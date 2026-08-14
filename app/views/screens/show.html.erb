@@ -135,25 +135,82 @@
 
   <%# Sidebar %>
   <div class="flex flex-col gap-5">
-    <%# Hardware %>
+    <%# Player %>
     <div class="rounded-lg bg-white shadow-sm ring-1 ring-gray-900/5 p-5">
-      <h3 class="text-sm font-semibold mb-3">Hardware</h3>
-      <div class="divide-y divide-gray-200">
-        <% [
-          ["Display", @screen.orientation == 'landscape' ? '55" Commercial LCD' : '49" Portrait LCD'],
-          ["Orientation", @screen.orientation.capitalize],
-          ["Resolution", @screen.orientation == 'landscape' ? "1920 × 1080" : "1080 × 1920"],
-          ["Player", "—"],
-          ["Firmware", "—"],
-          ["Last heartbeat", "—"],
-        ].each do |label, value| %>
+      <h3 class="text-sm font-semibold mb-3">Player</h3>
+      <% if @screen.paired? %>
+        <div class="divide-y divide-gray-200">
           <div class="flex justify-between py-2 text-sm">
-            <span class="text-gray-500"><%= label %></span>
-            <span class="font-semibold <%= %w[Resolution Player Firmware].include?(label) ? 'font-mono text-xs' : '' %>"><%= value %></span>
+            <span class="text-gray-500">Status</span>
+            <% if @screen.online? %>
+              <span class="inline-flex items-center gap-1.5 text-green-600 font-semibold">
+                <span class="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span>
+                Online
+              </span>
+            <% else %>
+              <span class="text-red-600 font-semibold">Offline</span>
+            <% end %>
           </div>
-        <% end %>
-      </div>
+          <div class="flex justify-between py-2 text-sm">
+            <span class="text-gray-500">Paired</span>
+            <span><%= time_ago_in_words(@screen.active_player_assignment.created_at) %> ago</span>
+          </div>
+          <% if @screen.player.last_heartbeat_at %>
+            <div class="flex justify-between py-2 text-sm">
+              <span class="text-gray-500">Last heartbeat</span>
+              <span><%= time_ago_in_words(@screen.player.last_heartbeat_at) %> ago</span>
+            </div>
+          <% end %>
+          <% if @screen.player.ip_address %>
+            <div class="flex justify-between py-2 text-sm">
+              <span class="text-gray-500">IP</span>
+              <span class="font-mono text-xs"><%= @screen.player.ip_address %></span>
+            </div>
+          <% end %>
+          <div class="flex justify-between py-2 text-sm">
+            <span class="text-gray-500">Orientation</span>
+            <span><%= @screen.orientation.capitalize %></span>
+          </div>
+          <div class="flex justify-between py-2 text-sm">
+            <span class="text-gray-500">Resolution</span>
+            <span class="font-mono text-xs"><%= @screen.orientation == 'landscape' ? "1920 × 1080" : "1080 × 1920" %></span>
+          </div>
+        </div>
+        <%= button_to "Unpair", screen_screen_player_path(@screen), method: :delete,
+            class: "text-sm text-red-600 font-semibold mt-3",
+            data: { turbo_confirm: "Unpair this player?" } %>
+      <% else %>
+        <div class="divide-y divide-gray-200 mb-3">
+          <div class="flex justify-between py-2 text-sm">
+            <span class="text-gray-500">Orientation</span>
+            <span><%= @screen.orientation.capitalize %></span>
+          </div>
+          <div class="flex justify-between py-2 text-sm">
+            <span class="text-gray-500">Resolution</span>
+            <span class="font-mono text-xs"><%= @screen.orientation == 'landscape' ? "1920 × 1080" : "1080 × 1920" %></span>
+          </div>
+        </div>
+        <p class="text-sm text-gray-500 mb-3">No player paired to this screen.</p>
+        <%= link_to "Pair a player", new_screen_screen_player_path(@screen),
+            class: "inline-flex items-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold text-white shadow-xs hover:bg-indigo-500" %>
+      <% end %>
     </div>
+
+    <%# Pairing history %>
+    <% history = @screen.screen_players.history.order(created_at: :desc).limit(5) %>
+    <% if history.any? %>
+      <div class="rounded-lg bg-white shadow-sm ring-1 ring-gray-900/5 p-5">
+        <h3 class="text-sm font-semibold mb-3">Pairing history</h3>
+        <div class="space-y-2">
+          <% history.each do |sp| %>
+            <div class="flex justify-between text-xs text-gray-400">
+              <span>Paired <%= sp.created_at.strftime("%b %-d, %Y") %></span>
+              <span>Unpaired <%= sp.unpaired_at&.strftime("%b %-d, %Y") || "—" %></span>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    <% end %>
 
     <%# Site %>
     <div class="rounded-lg bg-white shadow-sm ring-1 ring-gray-900/5 p-5">
