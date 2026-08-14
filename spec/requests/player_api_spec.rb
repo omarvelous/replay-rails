@@ -22,13 +22,12 @@ RSpec.describe "PlayerApi", type: :request do
       expect(response.parsed_body["paired"]).to be false
     end
 
-    it "returns paired: true with token when paired" do
+    it "returns 404 after pairing clears the code" do
+      code = player.pairing_code
       screen = create(:screen)
       screen.pair_player!(player)
 
-      get "/player/status", params: { code: player.pairing_code }
-
-      # pairing_code is cleared after pairing, so this should 404
+      get "/player/status", params: { code: code }
       expect(response).to have_http_status(:not_found)
     end
 

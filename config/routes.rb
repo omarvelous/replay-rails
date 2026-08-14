@@ -30,6 +30,14 @@ Rails.application.routes.draw do
   resource :session
   resources :passwords, param: :token
 
+  # Device-facing player API (token auth, no session)
+  scope "/player" do
+    post "/register",  to: "player_api#register"
+    get  "/status",    to: "player_api#status"
+    get  "/play",      to: "player_api#play"
+    post "/heartbeat", to: "player_api#heartbeat"
+  end
+
   # Public scan endpoint
   get "/s/:token", to: "scans#show", as: :qr_scan
 
