@@ -45,6 +45,16 @@ RSpec.describe User, type: :model do
     it { is_expected.to have_many(:sessions).dependent(:destroy) }
   end
 
+  describe "#admin?" do
+    it "defaults to false" do
+      expect(build(:user)).not_to be_admin
+    end
+
+    it "returns true when admin is set" do
+      expect(build(:user, admin: true)).to be_admin
+    end
+  end
+
   describe "authentication" do
     it "authenticates with correct password" do
       user = create(:user, password: "secret123")
