@@ -9,6 +9,11 @@ Rails.application.routes.draw do
       get "/pricing",  to: "pages#pricing",  as: :pricing
       get "/about",    to: "pages#about",    as: :about
     end
+
+    # Public destination pages (consumer-facing, marketing domain)
+    namespace :go do
+      resources :listings, only: :show
+    end
   end
 
   # ---------------------------------------------------------------
@@ -47,20 +52,20 @@ Rails.application.routes.draw do
   end
 
   # ---------------------------------------------------------------
-  # Public (any subdomain)
+  # Play — play subdomain (device API, token auth)
   # ---------------------------------------------------------------
-  scope "/player" do
+  constraints subdomain: "play" do
     post "/register",  to: "player_api#register"
     get  "/status",    to: "player_api#status"
-    get  "/play",      to: "player_api#play"
+    get  "/",          to: "player_api#play", as: :play_root
     post "/heartbeat", to: "player_api#heartbeat"
+    post "/impression", to: "player_api#impression"
   end
 
+  # ---------------------------------------------------------------
+  # Public (any subdomain)
+  # ---------------------------------------------------------------
   get "/s/:token", to: "scans#show", as: :qr_scan
-
-  namespace :go do
-    resources :listings, only: :show
-  end
 
   get "up" => "rails/health#show", as: :rails_health_check
 end

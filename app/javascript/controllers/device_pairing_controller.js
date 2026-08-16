@@ -19,7 +19,7 @@ export default class extends Controller {
 
   async checkStatus() {
     try {
-      const res = await fetch(`/player/status?code=${this.codeValue}`)
+      const res = await fetch(`/status?code=${this.codeValue}`)
       if (!res.ok) return
       const data = await res.json()
       if (data.paired) this.onPaired(data.token)
@@ -32,6 +32,6 @@ export default class extends Controller {
     clearInterval(this.poll)
     this.subscription?.unsubscribe()
     localStorage.setItem("player_token", token)
-    window.location.href = "/player/play"
+    window.location.href = "/"
   }
 }

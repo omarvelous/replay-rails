@@ -1,6 +1,8 @@
 require "rails_helper"
 
 RSpec.describe "Go::Listings", type: :request do
+  before { host! "replay.localhost" }
+
   describe "GET /go/listings/:id" do
     it "returns a successful response without authentication" do
       listing = create(:listing)

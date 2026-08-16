@@ -13,7 +13,7 @@ RSpec.describe "Scans", type: :request do
       expect {
         get qr_scan_path(token: qr_code.token)
       }.to change(QrScan, :count).by(1)
-      expect(response).to redirect_to(go_listing_path(listing))
+      expect(response).to redirect_to(go_listing_url(listing, subdomain: ""))
     end
 
     it "records ad and screen from params" do

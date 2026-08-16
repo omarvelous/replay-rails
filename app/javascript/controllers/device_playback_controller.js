@@ -26,7 +26,7 @@ export default class extends Controller {
 
   async sendHeartbeat(token) {
     try {
-      await fetch("/player/heartbeat", {
+      await fetch("/heartbeat", {
         method: "POST",
         headers: { "Authorization": `Bearer ${token}` }
       })
