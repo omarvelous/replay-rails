@@ -19,7 +19,7 @@ end
 
 if ENV["SELENIUM_URL"]
   Capybara.server_host = "0.0.0.0"
-  Capybara.app_host = "http://#{ENV.fetch("WEB_HOST", "web")}:#{Capybara.server_port}"
+  Capybara.app_host = "http://app.#{ENV.fetch("WEB_HOST", "web")}:#{Capybara.server_port}"
 end
 
 RSpec.configure do |config|
