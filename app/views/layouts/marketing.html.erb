@@ -22,8 +22,8 @@
           <%= link_to "Features", "/features", class: "text-sm font-medium text-gray-600 hover:text-gray-900" %>
           <%= link_to "Pricing", "/pricing", class: "text-sm font-medium text-gray-600 hover:text-gray-900" %>
           <%= link_to "About", "/about", class: "text-sm font-medium text-gray-600 hover:text-gray-900" %>
-          <a href="//app.<%= request.domain %>/session/new" class="text-sm font-medium text-gray-600 hover:text-gray-900">Log in</a>
-          <a href="//app.<%= request.domain %>/accounts/new" class="rounded-md bg-indigo-600 px-3.5 py-2 text-sm font-semibold text-white shadow-xs hover:bg-indigo-500">Start free trial</a>
+          <%= link_to "Log in", new_session_url(subdomain: "app"), class: "text-sm font-medium text-gray-600 hover:text-gray-900" %>
+          <%= link_to "Start free trial", new_account_url(subdomain: "app"), class: "rounded-md bg-indigo-600 px-3.5 py-2 text-sm font-semibold text-white shadow-xs hover:bg-indigo-500" %>
         </div>
       </div>
     </nav>
