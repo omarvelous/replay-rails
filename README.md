@@ -13,9 +13,15 @@ make migrate     # Run database migrations
 make seed        # Seed the database
 ```
 
-Then visit [http://localhost:3000](http://localhost:3000).
+The app uses subdomain routing. Visit:
 
-**Demo login:** `demo@example.com` / `password`
+| URL | Purpose |
+|-----|---------|
+| [replay.localhost:3000](http://replay.localhost:3000) | Marketing site |
+| [app.replay.localhost:3000](http://app.replay.localhost:3000) | App (login here) |
+| [play.replay.localhost:3000](http://play.replay.localhost:3000) | Player device API |
+
+**Demo login:** `demo@example.com` / `password` (at `app.replay.localhost:3000`)
 
 ## Tech Stack
 
@@ -78,7 +84,7 @@ All text, padding, gaps, and QR code sizes use `cqw` (container query width) uni
 
 Physical devices pair to screens via a 6-character code:
 
-1. Device boots → `POST /player/register` → shows pairing code on screen
+1. Device boots → `POST play.replay.com/register` → shows pairing code on screen
 2. Admin enters code on the Screen show page → `screen.pair_player!(player)`
 3. Device detects pairing (ActionCable + polling fallback) → transitions to playback
 4. Device heartbeats every 30s → screen shows online/offline status
@@ -113,29 +119,39 @@ Public landing pages live under `/go/` (e.g. `/go/listings/42`) — mobile-first
 
 ## Architecture
 
+### Subdomain Routing
+
+| Subdomain | Module | Purpose |
+|-----------|--------|---------|
+| `replay.com` | `Marketing::` | Public marketing pages + `/go/` landing pages |
+| `app.replay.com` | `App::` | Authenticated product (all CRUD) |
+| `play.replay.com` | `PlayerApiController` | Device API (register, status, play, heartbeat) |
+| any | `ScansController` | `/s/:token` scan redirect |
+
 ### Controllers
 
-Namespaced ad type controllers under `Ads::`:
+App controllers namespaced under `App::`:
 
 ```
-AdsController              — index, show, destroy, preview (all types)
-Ads::ListingAdsController  — new, create, edit, update
-Ads::CollectionAdsController
-Ads::AgentAdsController
-Ads::BrandAdsController
+App::SitesController       — sites CRUD
+App::AdsController         — index, show, destroy, preview
+App::Ads::ListingAdsController — new, create, edit, update
+App::Ads::CollectionAdsController
+App::Ads::AgentAdsController
+App::Ads::BrandAdsController
 ```
 
-Player API (token auth, no session):
+Marketing (public, no auth):
+
+```
+Marketing::PagesController — home, features, pricing, about
+Go::ListingsController     — public listing landing page
+```
+
+Device API (token auth, `play` subdomain):
 
 ```
 PlayerApiController — register, status, play, heartbeat
-```
-
-Public pages (no auth):
-
-```
-ScansController     — GET /s/:token (record scan, redirect)
-Go::ListingsController — GET /go/listings/:id
 ```
 
 ### Multi-tenancy
