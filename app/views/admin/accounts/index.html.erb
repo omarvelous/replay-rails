@@ -1,0 +1,30 @@
+<h1 class="text-2xl font-bold text-gray-900 mb-6">Accounts</h1>
+
+<div class="rounded-lg bg-white shadow-sm ring-1 ring-gray-900/5 overflow-x-auto">
+  <table class="min-w-full divide-y divide-gray-300">
+    <thead>
+      <tr>
+        <th class="px-4 py-3 text-left text-sm font-semibold text-gray-900">ID</th>
+        <th class="px-4 py-3 text-left text-sm font-semibold text-gray-900">Users</th>
+        <th class="px-4 py-3 text-left text-sm font-semibold text-gray-900">Sites</th>
+        <th class="px-4 py-3 text-left text-sm font-semibold text-gray-900">Screens</th>
+        <th class="px-4 py-3 text-left text-sm font-semibold text-gray-900">Ads</th>
+        <th class="px-4 py-3 text-left text-sm font-semibold text-gray-900">Created</th>
+      </tr>
+    </thead>
+    <tbody class="divide-y divide-gray-200">
+      <% @accounts.each do |account| %>
+        <tr>
+          <td class="px-4 py-3 text-sm text-gray-500">
+            <%= link_to account.id, admin_account_path(account), class: "text-indigo-600 hover:text-indigo-900" %>
+          </td>
+          <td class="px-4 py-3 text-sm text-gray-500"><%= account.users.size %></td>
+          <td class="px-4 py-3 text-sm text-gray-500"><%= account.sites.size %></td>
+          <td class="px-4 py-3 text-sm text-gray-500"><%= account.screens.size %></td>
+          <td class="px-4 py-3 text-sm text-gray-500"><%= account.ads.size %></td>
+          <td class="px-4 py-3 text-sm text-gray-500"><%= time_ago_in_words(account.created_at) %> ago</td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div>

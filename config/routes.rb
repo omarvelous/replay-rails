@@ -52,6 +52,20 @@ Rails.application.routes.draw do
   end
 
   # ---------------------------------------------------------------
+  # Admin — admin subdomain (internal ops)
+  # ---------------------------------------------------------------
+  constraints subdomain: "admin" do
+    scope module: "admin", as: "admin" do
+      root "dashboard#show", as: :root
+      resources :accounts, only: %i[ index show ]
+      resources :players, only: %i[ index show ]
+      resources :screens, only: %i[ index show ]
+      resources :qr_codes, only: %i[ index show ]
+      resources :qr_scans, only: %i[ index show ]
+    end
+  end
+
+  # ---------------------------------------------------------------
   # Play — play subdomain (device API, token auth)
   # ---------------------------------------------------------------
   constraints subdomain: "play" do

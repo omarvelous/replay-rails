@@ -1,0 +1,95 @@
+<%= link_to "← Back to players", admin_players_path, class: "text-sm text-gray-500 hover:text-gray-700 mb-4 inline-block" %>
+
+<h1 class="text-2xl font-bold text-gray-900 mb-6">Player #<%= @player.id %></h1>
+
+<div class="rounded-lg bg-white shadow-sm ring-1 ring-gray-900/5 p-5 mb-8">
+  <dl class="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-4">
+    <div>
+      <dt class="text-sm font-semibold text-gray-900">Token</dt>
+      <dd class="text-sm text-gray-500 font-mono"><%= @player.token.first(12) %>...</dd>
+    </div>
+    <div>
+      <dt class="text-sm font-semibold text-gray-900">Status</dt>
+      <dd class="text-sm">
+        <% if @player.online? %>
+          <span class="inline-flex items-center rounded-full bg-green-50 px-2 py-1 text-xs font-medium text-green-700 ring-1 ring-inset ring-green-600/20">Online</span>
+        <% elsif @player.paired? %>
+          <span class="inline-flex items-center rounded-full bg-red-50 px-2 py-1 text-xs font-medium text-red-700 ring-1 ring-inset ring-red-600/20">Offline</span>
+        <% else %>
+          <span class="inline-flex items-center rounded-full bg-gray-50 px-2 py-1 text-xs font-medium text-gray-600 ring-1 ring-inset ring-gray-500/10">Unpaired</span>
+        <% end %>
+      </dd>
+    </div>
+    <div>
+      <dt class="text-sm font-semibold text-gray-900">Paired screen</dt>
+      <dd class="text-sm text-gray-500">
+        <% if @player.active_assignment %>
+          <%= link_to @player.screen.name, admin_screen_path(@player.screen), class: "text-indigo-600 hover:text-indigo-900" %>
+        <% else %>
+          &mdash;
+        <% end %>
+      </dd>
+    </div>
+    <div>
+      <dt class="text-sm font-semibold text-gray-900">IP</dt>
+      <dd class="text-sm text-gray-500"><%= @player.ip_address || "—" %></dd>
+    </div>
+    <div>
+      <dt class="text-sm font-semibold text-gray-900">User agent</dt>
+      <dd class="text-sm text-gray-500 break-all"><%= @player.user_agent || "—" %></dd>
+    </div>
+    <div>
+      <dt class="text-sm font-semibold text-gray-900">Firmware version</dt>
+      <dd class="text-sm text-gray-500"><%= @player.firmware_version || "—" %></dd>
+    </div>
+    <div>
+      <dt class="text-sm font-semibold text-gray-900">Last heartbeat</dt>
+      <dd class="text-sm text-gray-500">
+        <% if @player.last_heartbeat_at %>
+          <%= time_ago_in_words(@player.last_heartbeat_at) %> ago
+        <% else %>
+          &mdash;
+        <% end %>
+      </dd>
+    </div>
+    <div>
+      <dt class="text-sm font-semibold text-gray-900">Created</dt>
+      <dd class="text-sm text-gray-500"><%= @player.created_at.strftime("%B %d, %Y at %l:%M %p") %></dd>
+    </div>
+  </dl>
+</div>
+
+<h2 class="text-lg font-semibold text-gray-900 mb-4">Pairing history</h2>
+
+<div class="rounded-lg bg-white shadow-sm ring-1 ring-gray-900/5 overflow-x-auto">
+  <table class="min-w-full divide-y divide-gray-300">
+    <thead>
+      <tr>
+        <th class="px-4 py-3 text-left text-sm font-semibold text-gray-900">Screen</th>
+        <th class="px-4 py-3 text-left text-sm font-semibold text-gray-900">Paired by</th>
+        <th class="px-4 py-3 text-left text-sm font-semibold text-gray-900">Active</th>
+        <th class="px-4 py-3 text-left text-sm font-semibold text-gray-900">Paired at</th>
+        <th class="px-4 py-3 text-left text-sm font-semibold text-gray-900">Unpaired at</th>
+      </tr>
+    </thead>
+    <tbody class="divide-y divide-gray-200">
+      <% @player.screen_players.order(created_at: :desc).each do |sp| %>
+        <tr>
+          <td class="px-4 py-3 text-sm text-gray-500">
+            <%= link_to sp.screen.name, admin_screen_path(sp.screen), class: "text-indigo-600 hover:text-indigo-900" %>
+          </td>
+          <td class="px-4 py-3 text-sm text-gray-500"><%= sp.paired_by&.email_address || "—" %></td>
+          <td class="px-4 py-3 text-sm">
+            <% if sp.active? %>
+              <span class="inline-flex items-center rounded-full bg-green-50 px-2 py-1 text-xs font-medium text-green-700 ring-1 ring-inset ring-green-600/20">Yes</span>
+            <% else %>
+              <span class="inline-flex items-center rounded-full bg-gray-50 px-2 py-1 text-xs font-medium text-gray-600 ring-1 ring-inset ring-gray-500/10">No</span>
+            <% end %>
+          </td>
+          <td class="px-4 py-3 text-sm text-gray-500"><%= time_ago_in_words(sp.created_at) %> ago</td>
+          <td class="px-4 py-3 text-sm text-gray-500"><%= sp.unpaired_at ? "#{time_ago_in_words(sp.unpaired_at)} ago" : "—" %></td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div>

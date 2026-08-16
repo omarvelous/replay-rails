@@ -1,0 +1,48 @@
+<%= link_to "← Back to QR codes", admin_qr_codes_path, class: "text-sm text-gray-500 hover:text-gray-700 mb-4 inline-block" %>
+
+<h1 class="text-2xl font-bold text-gray-900 mb-6">QR Code: <%= @qr_code.token %></h1>
+
+<div class="rounded-lg bg-white shadow-sm ring-1 ring-gray-900/5 p-5">
+  <dl class="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-4">
+    <div>
+      <dt class="text-sm font-semibold text-gray-900">Token</dt>
+      <dd class="text-sm text-gray-500 font-mono"><%= @qr_code.token %></dd>
+    </div>
+    <div>
+      <dt class="text-sm font-semibold text-gray-900">Account</dt>
+      <dd class="text-sm text-gray-500">
+        <%= link_to "Account ##{@qr_code.account_id}", admin_account_path(@qr_code.account), class: "text-indigo-600 hover:text-indigo-900" %>
+      </dd>
+    </div>
+    <div>
+      <dt class="text-sm font-semibold text-gray-900">Destination</dt>
+      <dd class="text-sm text-gray-500">
+        <% if @qr_code.destination_record %>
+          <%= @qr_code.destination_record_type %> &mdash; <%= @qr_code.destination_record.try(:address) || @qr_code.destination_record.try(:name) %>
+        <% elsif @qr_code.destination_url.present? %>
+          <%= @qr_code.destination_url %>
+        <% else %>
+          &mdash;
+        <% end %>
+      </dd>
+    </div>
+    <div>
+      <dt class="text-sm font-semibold text-gray-900">Qualified scans</dt>
+      <dd class="text-sm text-gray-500"><%= @qr_code.scans.qualified.count %></dd>
+    </div>
+    <div>
+      <dt class="text-sm font-semibold text-gray-900">Active</dt>
+      <dd class="text-sm">
+        <% if @qr_code.active? %>
+          <span class="inline-flex items-center rounded-full bg-green-50 px-2 py-1 text-xs font-medium text-green-700 ring-1 ring-inset ring-green-600/20">Yes</span>
+        <% else %>
+          <span class="inline-flex items-center rounded-full bg-gray-50 px-2 py-1 text-xs font-medium text-gray-600 ring-1 ring-inset ring-gray-500/10">No</span>
+        <% end %>
+      </dd>
+    </div>
+    <div>
+      <dt class="text-sm font-semibold text-gray-900">Created</dt>
+      <dd class="text-sm text-gray-500"><%= @qr_code.created_at.strftime("%B %d, %Y at %l:%M %p") %></dd>
+    </div>
+  </dl>
+</div>

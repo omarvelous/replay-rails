@@ -52,7 +52,9 @@ unless User.exists?(email_address: "demo@example.com")
   puts "Created demo user: demo@example.com / password"
 end
 
-demo_account = User.find_by(email_address: "demo@example.com")&.account
+demo_user_record = User.find_by(email_address: "demo@example.com")
+demo_user_record&.update!(admin: true) unless demo_user_record&.admin?
+demo_account = demo_user_record&.account
 
 # -----------------------------------------------------------------------
 # Sites

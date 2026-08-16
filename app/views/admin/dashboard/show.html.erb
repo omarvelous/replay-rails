@@ -1,0 +1,34 @@
+<h1 class="text-2xl font-bold text-gray-900 mb-6">Platform Dashboard</h1>
+
+<div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+  <div class="rounded-lg bg-white shadow-sm ring-1 ring-gray-900/5 p-5">
+    <p class="text-3xl font-bold tabular-nums"><%= @total_accounts %></p>
+    <p class="text-sm text-gray-500">Accounts</p>
+  </div>
+  <div class="rounded-lg bg-white shadow-sm ring-1 ring-gray-900/5 p-5">
+    <p class="text-3xl font-bold tabular-nums">
+      <span class="text-green-600"><%= @players_online %></span>
+      <span class="text-gray-400 text-lg">/ <%= @total_players %></span>
+    </p>
+    <p class="text-sm text-gray-500">Players online</p>
+  </div>
+  <div class="rounded-lg bg-white shadow-sm ring-1 ring-gray-900/5 p-5">
+    <p class="text-3xl font-bold tabular-nums"><%= @total_screens %></p>
+    <p class="text-sm text-gray-500">Screens</p>
+  </div>
+  <div class="rounded-lg bg-white shadow-sm ring-1 ring-gray-900/5 p-5">
+    <p class="text-3xl font-bold tabular-nums"><%= @total_qr_codes %></p>
+    <p class="text-sm text-gray-500">QR Codes</p>
+  </div>
+</div>
+
+<div class="grid grid-cols-2 md:grid-cols-3 gap-4">
+  <div class="rounded-lg bg-white shadow-sm ring-1 ring-gray-900/5 p-5">
+    <p class="text-3xl font-bold tabular-nums"><%= @total_scans %></p>
+    <p class="text-sm text-gray-500">Qualified scans (all time)</p>
+  </div>
+  <div class="rounded-lg bg-white shadow-sm ring-1 ring-gray-900/5 p-5">
+    <p class="text-3xl font-bold tabular-nums"><%= @scans_today %></p>
+    <p class="text-sm text-gray-500">Scans today</p>
+  </div>
+</div>

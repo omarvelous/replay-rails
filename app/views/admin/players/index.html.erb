@@ -1,0 +1,52 @@
+<h1 class="text-2xl font-bold text-gray-900 mb-6">Players</h1>
+
+<div class="rounded-lg bg-white shadow-sm ring-1 ring-gray-900/5 overflow-x-auto">
+  <table class="min-w-full divide-y divide-gray-300">
+    <thead>
+      <tr>
+        <th class="px-4 py-3 text-left text-sm font-semibold text-gray-900">ID</th>
+        <th class="px-4 py-3 text-left text-sm font-semibold text-gray-900">Token</th>
+        <th class="px-4 py-3 text-left text-sm font-semibold text-gray-900">Status</th>
+        <th class="px-4 py-3 text-left text-sm font-semibold text-gray-900">Paired to</th>
+        <th class="px-4 py-3 text-left text-sm font-semibold text-gray-900">IP</th>
+        <th class="px-4 py-3 text-left text-sm font-semibold text-gray-900">Last heartbeat</th>
+        <th class="px-4 py-3 text-left text-sm font-semibold text-gray-900">Created</th>
+      </tr>
+    </thead>
+    <tbody class="divide-y divide-gray-200">
+      <% @players.each do |player| %>
+        <tr>
+          <td class="px-4 py-3 text-sm text-gray-500">
+            <%= link_to player.id, admin_player_path(player), class: "text-indigo-600 hover:text-indigo-900" %>
+          </td>
+          <td class="px-4 py-3 text-sm text-gray-500 font-mono"><%= player.token.first(12) %>...</td>
+          <td class="px-4 py-3 text-sm">
+            <% if player.online? %>
+              <span class="inline-flex items-center rounded-full bg-green-50 px-2 py-1 text-xs font-medium text-green-700 ring-1 ring-inset ring-green-600/20">Online</span>
+            <% elsif player.paired? %>
+              <span class="inline-flex items-center rounded-full bg-red-50 px-2 py-1 text-xs font-medium text-red-700 ring-1 ring-inset ring-red-600/20">Offline</span>
+            <% else %>
+              <span class="inline-flex items-center rounded-full bg-gray-50 px-2 py-1 text-xs font-medium text-gray-600 ring-1 ring-inset ring-gray-500/10">Unpaired</span>
+            <% end %>
+          </td>
+          <td class="px-4 py-3 text-sm text-gray-500">
+            <% if player.active_assignment %>
+              <%= link_to player.screen.name, admin_screen_path(player.screen), class: "text-indigo-600 hover:text-indigo-900" %>
+            <% else %>
+              &mdash;
+            <% end %>
+          </td>
+          <td class="px-4 py-3 text-sm text-gray-500"><%= player.ip_address || "—" %></td>
+          <td class="px-4 py-3 text-sm text-gray-500">
+            <% if player.last_heartbeat_at %>
+              <%= time_ago_in_words(player.last_heartbeat_at) %> ago
+            <% else %>
+              &mdash;
+            <% end %>
+          </td>
+          <td class="px-4 py-3 text-sm text-gray-500"><%= time_ago_in_words(player.created_at) %> ago</td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div>
