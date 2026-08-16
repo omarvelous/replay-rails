@@ -87,4 +87,9 @@ Rails.application.configure do
   #
   # Skip DNS rebinding protection for the default health check endpoint.
   # config.host_authorization = { exclude: ->(request) { request.path == "/up" } }
+
+  # Subdomain routing
+  config.action_dispatch.tld_length = 1
+  config.action_controller.default_url_options = { host: "replay.com", protocol: "https" }
+  config.action_mailer.default_url_options = { host: "app.replay.com", protocol: "https" }
 end
