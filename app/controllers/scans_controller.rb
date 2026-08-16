@@ -18,7 +18,7 @@ class ScansController < ApplicationController
     elsif qr.destination_record.present?
       redirect_to polymorphic_path([ :go, qr.destination_record ])
     else
-      redirect_to root_path
+      redirect_to app_root_path
     end
   end
 

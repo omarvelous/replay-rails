@@ -1,0 +1,105 @@
+<% actions = capture do %>
+  <%= link_to new_playlist_path, class: "rounded-md bg-indigo-600 px-2.5 py-1.5 text-sm font-semibold text-white shadow-xs hover:bg-indigo-500 inline-flex items-center gap-1.5" do %>
+    <svg viewBox="0 0 20 20" fill="currentColor" class="size-4"><path d="M10.75 4.75a.75.75 0 0 0-1.5 0v4.5h-4.5a.75.75 0 0 0 0 1.5h4.5v4.5a.75.75 0 0 0 1.5 0v-4.5h4.5a.75.75 0 0 0 0-1.5h-4.5v-4.5Z"/></svg>
+    New playlist
+  <% end %>
+<% end %>
+<%= render "app/shared/page_header", title: "Playlists", subtitle: "#{@pagy.count} playlists", actions: actions %>
+
+<%= form_with url: playlists_path, method: :get do |f| %>
+  <div class="flex flex-wrap items-center gap-3 mb-5">
+    <div class="flex-1 min-w-50 max-w-xs">
+      <%= f.search_field :q, value: params[:q], placeholder: "Search playlists…",
+          class: "block w-full rounded-md bg-white px-3 py-1.5 text-sm text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600",
+          oninput: "if (this.value === '') this.form.requestSubmit()" %>
+    </div>
+    <div class="grid grid-cols-1">
+      <%= f.select :status,
+          [["All statuses", ""], ["Published", "published"], ["Draft", "draft"], ["Archived", "archived"]],
+          { selected: params[:status].to_s },
+          class: "col-start-1 row-start-1 w-full appearance-none rounded-md bg-white py-1.5 pr-8 pl-3 text-sm/6 text-gray-900 outline-1 -outline-offset-1 outline-gray-300 focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-indigo-600",
+          onchange: "this.form.requestSubmit()" %>
+      <svg viewBox="0 0 16 16" fill="currentColor" data-slot="icon" aria-hidden="true" class="pointer-events-none col-start-1 row-start-1 mr-2 size-4 self-center justify-self-end text-gray-500">
+        <path d="M4.22 6.22a.75.75 0 0 1 1.06 0L8 8.94l2.72-2.72a.75.75 0 1 1 1.06 1.06l-3.25 3.25a.75.75 0 0 1-1.06 0L4.22 7.28a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd" fill-rule="evenodd" />
+      </svg>
+    </div>
+  </div>
+<% end %>
+
+<% if @playlists.any? %>
+  <div class="flex flex-col gap-3">
+    <% @playlists.each do |playlist| %>
+      <% tone = %w[#2f6bff #0fb5a6 #7c5cff #e8990f #1f9d57][playlist.id % 5] %>
+      <%= link_to playlist_path(playlist), class: "rounded-lg bg-white shadow-sm ring-1 ring-gray-900/5 hover:shadow-md transition-shadow" do %>
+        <div class="p-4 flex flex-row items-center gap-4">
+          <%# Playlist icon %>
+          <div class="w-10 h-10 rounded-lg flex-none grid place-items-center" style="background: #2f6bff14; color: #2f6bff;">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" class="size-5"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 12h16.5m-16.5 3.75h16.5M3.75 19.5h16.5M5.625 4.5h12.75a1.875 1.875 0 010 3.75H5.625a1.875 1.875 0 010-3.75z"/></svg>
+          </div>
+
+          <%# Name + site %>
+          <div class="w-52 flex-none">
+            <p class="font-semibold text-sm truncate"><%= playlist.name %></p>
+            <p class="text-xs text-gray-400 mt-0.5">RePlay Account</p>
+          </div>
+
+          <%# Mini loop timeline %>
+          <div class="flex-1 min-w-0 hidden sm:block">
+            <% total_dur = playlist.playlist_ads.sum(&:duration) %>
+            <% if total_dur > 0 %>
+              <div class="flex h-2 rounded-full overflow-hidden bg-gray-100 gap-px">
+                <% playlist.playlist_ads.order(:position).each do |pa| %>
+                  <% seg_tone = %w[#2f6bff #0fb5a6 #7c5cff #e8990f #1f9d57 #e5484d][pa.ad_id % 6] %>
+                  <div style="width: <%= (pa.duration.to_f / total_dur * 100).round(1) %>%; background: <%= seg_tone %>; opacity: 0.7;"
+                       class="rounded-sm"></div>
+                <% end %>
+              </div>
+              <p class="text-[11px] text-gray-400 mt-1"><%= playlist.playlist_ads.size %> slides · <%= total_dur %>s loop</p>
+            <% else %>
+              <div class="h-2 rounded-full bg-gray-100"></div>
+              <p class="text-[11px] text-gray-400 mt-1">0 slides</p>
+            <% end %>
+          </div>
+
+          <%# Stats %>
+          <div class="flex items-center gap-5 flex-none">
+            <div>
+              <p class="font-bold text-base tabular-nums"><%= playlist.screen_playlists.count %></p>
+              <p class="text-[11px] text-gray-400">Screens</p>
+            </div>
+            <div class="w-20 text-center">
+              <% if playlist.status == "published" %>
+                <span class="inline-flex items-center gap-1 rounded-full bg-green-50 px-2 py-0.5 text-xs font-medium text-green-700 ring-1 ring-green-600/20 ring-inset">
+                  <span class="size-1.5 rounded-full bg-green-500"></span>
+                  v1 live
+                </span>
+              <% else %>
+                <span class="inline-flex items-center gap-1 rounded-full bg-yellow-50 px-2 py-0.5 text-xs font-medium text-yellow-800 ring-1 ring-yellow-600/20 ring-inset">
+                  <span class="size-1.5 rounded-full bg-yellow-500"></span>
+                  Draft
+                </span>
+              <% end %>
+            </div>
+            <span class="text-xs text-gray-400 w-16 text-right">just now</span>
+            <button class="text-gray-400 hover:text-gray-600" onclick="event.stopPropagation(); event.preventDefault();">
+              <svg viewBox="0 0 20 20" fill="currentColor" class="size-5"><path d="M10 3a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM10 8.5a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM11.5 15.5a1.5 1.5 0 1 0-3 0 1.5 1.5 0 0 0 3 0Z"/></svg>
+            </button>
+          </div>
+        </div>
+      <% end %>
+    <% end %>
+  </div>
+<% else %>
+  <div class="rounded-lg border-2 border-dashed border-gray-200 p-10 text-center">
+    <div class="flex flex-col items-center gap-3">
+      <div class="w-12 h-12 rounded-xl bg-indigo-50 grid place-items-center">
+        <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 text-indigo-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15"/></svg>
+      </div>
+      <p class="font-semibold">No playlists yet</p>
+      <p class="text-sm text-gray-500">Create your first playlist to sequence ads on screens.</p>
+      <%= link_to "New playlist", new_playlist_path, class: "rounded-md bg-indigo-600 px-2.5 py-1.5 text-sm font-semibold text-white shadow-xs hover:bg-indigo-500" %>
+    </div>
+  </div>
+<% end %>
+
+<%= render "app/shared/pagination", pagy: @pagy %>

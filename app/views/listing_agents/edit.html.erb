@@ -1,5 +1,0 @@
-<%= render "shared/page_header", title: "Edit agent assignment", subtitle: @listing.address, back_link: { label: "← Listing", path: listing_path(@listing) } %>
-
-<div class="rounded-lg bg-white shadow-sm ring-1 ring-gray-900/5 p-5">
-  <%= render "form", listing_agent: @listing_agent, url: listing_listing_agent_path(@listing, @listing_agent) %>
-</div>

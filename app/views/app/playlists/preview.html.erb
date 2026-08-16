@@ -1,4 +1,4 @@
-<div class="w-full h-screen flex items-center justify-center relative" data-controller="slideshow device-playback">
+<div class="w-full h-screen flex items-center justify-center relative" data-controller="slideshow">
   <% if @playlist_ads.any? %>
     <% @playlist_ads.each_with_index do |pa, index| %>
       <div class="slide absolute inset-0 transition-opacity duration-700 <%= index == 0 ? 'opacity-100' : 'opacity-0' %>"
@@ -9,13 +9,21 @@
       </div>
     <% end %>
   <% else %>
-    <p class="text-2xl text-white/50 font-semibold">No ads in this playlist.</p>
+    <p class="text-2xl text-white/50">No ads in this playlist.</p>
   <% end %>
 
-  <%# Progress bar %>
+  <%# Edit ad link — one per slide, visibility toggles with the slide %>
+  <% @playlist_ads.each_with_index do |pa, index| %>
+    <a href="<%= edit_ad_path(pa.ad) %>"
+       class="text-sm font-semibold text-white/30 hover:text-white/80"
+       style="position: absolute; bottom: 16px; left: 16px; z-index: 10; <%= index == 0 ? '' : 'display: none;' %>"
+       data-slideshow-target="editLink"
+       target="_blank">Edit Ad</a>
+  <% end %>
+
+  <%# Progress bar — uses transform: scaleX() for GPU compositing %>
   <div style="position: absolute; bottom: 0; left: 0; width: 100%; height: 4px; background: rgba(255,255,255,0.1); z-index: 10;">
-    <div style="height: 100%; width: 100%; transform: scaleX(0); transform-origin: left; background: rgba(255,255,255,0.5);"
-         data-slideshow-target="progress"></div>
+    <div style="height: 100%; width: 100%; transform: scaleX(0); transform-origin: left; background: rgba(255,255,255,0.5);" data-slideshow-target="progress"></div>
   </div>
 
   <%# Nav controls %>

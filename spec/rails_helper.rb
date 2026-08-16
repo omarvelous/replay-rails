@@ -63,9 +63,9 @@ RSpec.configure do |config|
   # To enable this behaviour uncomment the line below.
   config.infer_spec_type_from_file_location!
 
-  # Default host for request specs — matches default_url_options
+  # Default host for request specs — app subdomain
   config.before(:each, type: :request) do
-    host! "replay.localhost"
+    host! "app.replay.localhost"
   end
 
   # Filter lines from Rails gems in backtraces.

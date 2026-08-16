@@ -1,5 +1,0 @@
-<%= render "shared/page_header", title: "New Screen#{" at #{current_site.name}" if current_site}", subtitle: "Add a screen to your network", back_link: { label: "← Screens", path: screens_path } %>
-
-<div class="rounded-lg bg-white shadow-sm ring-1 ring-gray-900/5 p-5">
-  <%= render "screens/form", screen: @screen, url: screens_path %>
-</div>

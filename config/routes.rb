@@ -1,37 +1,54 @@
 Rails.application.routes.draw do
-  root "home#index"
-  resources :accounts, only: [ :new, :create ]
-  resources :sites
-  resources :screens do
-    resource :screen_playlist, only: %i[ new create destroy ]
-    resource :screen_player, only: %i[ new create destroy ]
-  end
-  resources :listings do
-    resources :listing_agents, only: %i[ new create edit update destroy ]
-  end
-  resources :agents
-  namespace :ads do
-    resources :listing_ads,    only: %i[ new create edit update ]
-    resources :collection_ads, only: %i[ new create edit update ]
-    resources :agent_ads,      only: %i[ new create edit update ]
-    resources :brand_ads,      only: %i[ new create edit update ]
-  end
-  resources :ads, only: %i[ index new show edit update destroy ] do
-    member do
-      get :preview
+  # ---------------------------------------------------------------
+  # Marketing — root domain (no subdomain)
+  # ---------------------------------------------------------------
+  constraints subdomain: "" do
+    scope module: "marketing" do
+      root "pages#home", as: :marketing_root
+      get "/features", to: "pages#features", as: :features
+      get "/pricing",  to: "pages#pricing",  as: :pricing
+      get "/about",    to: "pages#about",    as: :about
     end
   end
-  resources :playlists do
-    member do
-      get :preview
-    end
-    resources :playlist_ads, only: %i[ new create edit update destroy ]
-  end
-  resources :qr_codes, only: %i[ index show ]
-  resource :session
-  resources :passwords, param: :token
 
-  # Device-facing player API (token auth, no session)
+  # ---------------------------------------------------------------
+  # App — app subdomain (authenticated)
+  # ---------------------------------------------------------------
+  constraints subdomain: "app" do
+    scope module: "app" do
+      root "home#index", as: :app_root
+      resources :accounts, only: %i[ new create ]
+      resources :sites
+      resources :screens do
+        resource :screen_playlist, only: %i[ new create destroy ]
+        resource :screen_player, only: %i[ new create destroy ]
+      end
+      resources :listings do
+        resources :listing_agents, only: %i[ new create edit update destroy ]
+      end
+      resources :agents
+      namespace :ads do
+        resources :listing_ads,    only: %i[ new create edit update ]
+        resources :collection_ads, only: %i[ new create edit update ]
+        resources :agent_ads,      only: %i[ new create edit update ]
+        resources :brand_ads,      only: %i[ new create edit update ]
+      end
+      resources :ads, only: %i[ index new show edit update destroy ] do
+        member { get :preview }
+      end
+      resources :playlists do
+        member { get :preview }
+        resources :playlist_ads, only: %i[ new create edit update destroy ]
+      end
+      resources :qr_codes, only: %i[ index show ]
+      resource :session
+      resources :passwords, param: :token
+    end
+  end
+
+  # ---------------------------------------------------------------
+  # Public (any subdomain)
+  # ---------------------------------------------------------------
   scope "/player" do
     post "/register",  to: "player_api#register"
     get  "/status",    to: "player_api#status"
@@ -39,23 +56,11 @@ Rails.application.routes.draw do
     post "/heartbeat", to: "player_api#heartbeat"
   end
 
-  # Public scan endpoint
   get "/s/:token", to: "scans#show", as: :qr_scan
 
-  # Public destination pages (no auth)
   namespace :go do
     resources :listings, only: :show
   end
-  # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 
-  # Reveal health status on /up that returns 200 if the app boots with no exceptions, otherwise 500.
-  # Can be used by load balancers and uptime monitors to verify that the app is live.
   get "up" => "rails/health#show", as: :rails_health_check
-
-  # Render dynamic PWA files from app/views/pwa/* (remember to link manifest in application.html.erb)
-  # get "manifest" => "rails/pwa#manifest", as: :pwa_manifest
-  # get "service-worker" => "rails/pwa#service_worker", as: :pwa_service_worker
-
-  # Defines the root path route ("/")
-  # root "posts#index"
 end

@@ -50,7 +50,7 @@ RSpec.describe "Scans", type: :request do
     it "redirects to root when no destination" do
       qr = create(:qr_code, account: account, destination_record: nil, destination_url: nil)
       get qr_scan_path(token: qr.token)
-      expect(response).to redirect_to(root_path)
+      expect(response).to redirect_to(app_root_path)
     end
 
     it "returns 404 for inactive QR codes" do
