@@ -9,7 +9,7 @@ class QrScanDashboard < Administrate::BaseDashboard
     screen: Field::BelongsTo,
     ip_address: Field::String,
     user_agent: Field::String,
-    created_at: Field::DateTime,
+    created_at: Field::DateTime
   }.freeze
 
   COLLECTION_ATTRIBUTES = %i[ id qr_code account ad screen created_at ].freeze

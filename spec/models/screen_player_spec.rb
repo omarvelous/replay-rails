@@ -11,13 +11,13 @@ RSpec.describe ScreenPlayer, type: :model do
     it ".active returns only active pairings" do
       active = create(:screen_player, active: true)
       create(:screen_player, active: false)
-      expect(ScreenPlayer.active).to eq([ active ])
+      expect(described_class.active).to eq([ active ])
     end
 
     it ".history returns only inactive pairings" do
       create(:screen_player, active: true)
       inactive = create(:screen_player, active: false)
-      expect(ScreenPlayer.history).to eq([ inactive ])
+      expect(described_class.history).to eq([ inactive ])
     end
   end
 

@@ -22,7 +22,7 @@ RSpec.describe Screen, type: :model do
       it "searches by name case-insensitively" do
         match = create(:screen, site: site, name: "Window Display")
         create(:screen, site: site, name: "Gallery Entrance")
-        expect(Screen.search("window")).to eq([ match ])
+        expect(described_class.search("window")).to eq([ match ])
       end
     end
 
@@ -33,8 +33,8 @@ RSpec.describe Screen, type: :model do
         playlist = create(:playlist, account: account, status: "published")
         create(:screen_playlist, screen: live_screen, playlist: playlist, active: true)
 
-        expect(Screen.live).to include(live_screen)
-        expect(Screen.live).not_to include(idle_screen)
+        expect(described_class.live).to include(live_screen)
+        expect(described_class.live).not_to include(idle_screen)
       end
     end
 
@@ -45,8 +45,8 @@ RSpec.describe Screen, type: :model do
         playlist = create(:playlist, account: account, status: "published")
         create(:screen_playlist, screen: live_screen, playlist: playlist, active: true)
 
-        expect(Screen.idle).to include(idle_screen)
-        expect(Screen.idle).not_to include(live_screen)
+        expect(described_class.idle).to include(idle_screen)
+        expect(described_class.idle).not_to include(live_screen)
       end
     end
   end

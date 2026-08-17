@@ -8,7 +8,7 @@ class ScreenDashboard < Administrate::BaseDashboard
     site: Field::BelongsTo,
     screen_playlists: Field::HasMany,
     screen_players: Field::HasMany,
-    created_at: Field::DateTime,
+    created_at: Field::DateTime
   }.freeze
 
   COLLECTION_ATTRIBUTES = %i[ id name orientation site created_at ].freeze

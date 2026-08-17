@@ -24,7 +24,7 @@ RSpec.describe QrScan, type: :model do
         create(:qr_scan, qr_code: qr_code, account: account, ad: nil, screen: screen)
         create(:qr_scan, qr_code: qr_code, account: account, ad: nil, screen: nil)
 
-        expect(QrScan.qualified).to eq([ qualified ])
+        expect(described_class.qualified).to eq([ qualified ])
       end
     end
 
@@ -35,7 +35,7 @@ RSpec.describe QrScan, type: :model do
         no_ad = create(:qr_scan, qr_code: qr_code, account: account, ad: nil, screen: screen)
         neither = create(:qr_scan, qr_code: qr_code, account: account, ad: nil, screen: nil)
 
-        expect(QrScan.unqualified).to match_array([ no_screen, no_ad, neither ])
+        expect(described_class.unqualified).to contain_exactly(no_screen, no_ad, neither)
       end
     end
   end

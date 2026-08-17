@@ -14,7 +14,7 @@ class PlaylistAdDashboard < Administrate::BaseDashboard
     playlist: Field::BelongsTo,
     position: Field::Number,
     created_at: Field::DateTime,
-    updated_at: Field::DateTime,
+    updated_at: Field::DateTime
   }.freeze
 
   # COLLECTION_ATTRIBUTES

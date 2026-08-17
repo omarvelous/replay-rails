@@ -4,5 +4,5 @@ module App
 
   def index
   end
-end
+  end
 end

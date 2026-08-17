@@ -15,7 +15,7 @@ RSpec.describe Listing, type: :model do
     it { is_expected.to belong_to(:account) }
 
     it "has many attached photos" do
-      expect(Listing.new.photos).to be_empty
+      expect(described_class.new.photos).to be_empty
     end
   end
 
@@ -33,7 +33,7 @@ RSpec.describe Listing, type: :model do
       it "searches by address case-insensitively" do
         match = create(:listing, address: "350 Fifth Ave")
         create(:listing, address: "20 W 34th St")
-        expect(Listing.search("fifth")).to eq([ match ])
+        expect(described_class.search("fifth")).to eq([ match ])
       end
     end
 
@@ -41,7 +41,7 @@ RSpec.describe Listing, type: :model do
       it "filters by status" do
         active = create(:listing, status: "active")
         create(:listing, status: "sold")
-        expect(Listing.by_status("active")).to eq([ active ])
+        expect(described_class.by_status("active")).to eq([ active ])
       end
     end
   end

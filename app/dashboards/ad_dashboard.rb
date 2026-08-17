@@ -12,7 +12,7 @@ class AdDashboard < Administrate::BaseDashboard
     theme: Field::String,
     image: Field::ActiveStorage,
     playlists: Field::HasMany,
-    created_at: Field::DateTime,
+    created_at: Field::DateTime
   }.freeze
 
   COLLECTION_ATTRIBUTES = %i[ id headline adable layout theme account ].freeze

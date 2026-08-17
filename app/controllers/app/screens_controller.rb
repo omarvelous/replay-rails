@@ -64,5 +64,5 @@ module App
     def screen_params
       params.require(:screen).permit(:name, :orientation)
     end
-end
+  end
 end

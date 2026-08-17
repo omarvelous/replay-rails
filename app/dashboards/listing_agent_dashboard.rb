@@ -13,7 +13,7 @@ class ListingAgentDashboard < Administrate::BaseDashboard
     listing: Field::BelongsTo,
     role: Field::String,
     created_at: Field::DateTime,
-    updated_at: Field::DateTime,
+    updated_at: Field::DateTime
   }.freeze
 
   # COLLECTION_ATTRIBUTES

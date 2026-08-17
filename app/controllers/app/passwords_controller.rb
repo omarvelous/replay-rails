@@ -33,5 +33,5 @@ module App
     rescue ActiveSupport::MessageVerifier::InvalidSignature
       redirect_to new_password_path, alert: "Password reset link is invalid or has expired."
     end
-end
+  end
 end

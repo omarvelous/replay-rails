@@ -18,5 +18,5 @@ module App
     def set_qr_code
       @qr_code = Current.account.qr_codes.find(params[:id])
     end
-end
+  end
 end

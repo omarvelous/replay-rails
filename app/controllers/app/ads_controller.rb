@@ -47,5 +47,5 @@ module App
     def ad_params
       params.require(:ad).permit(:headline, :body, :layout, :theme, :image)
     end
-end
+  end
 end

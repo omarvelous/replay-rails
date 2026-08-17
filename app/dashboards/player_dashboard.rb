@@ -10,7 +10,7 @@ class PlayerDashboard < Administrate::BaseDashboard
     user_agent: Field::String,
     firmware_version: Field::String,
     screen_players: Field::HasMany,
-    created_at: Field::DateTime,
+    created_at: Field::DateTime
   }.freeze
 
   COLLECTION_ATTRIBUTES = %i[ id ip_address last_heartbeat_at firmware_version created_at ].freeze

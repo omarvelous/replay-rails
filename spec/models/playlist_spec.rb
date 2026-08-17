@@ -20,7 +20,7 @@ RSpec.describe Playlist, type: :model do
       it "searches by name case-insensitively" do
         match = create(:playlist, name: "Evening Showcase")
         create(:playlist, name: "Morning Loop")
-        expect(Playlist.search("evening")).to eq([ match ])
+        expect(described_class.search("evening")).to eq([ match ])
       end
     end
 
@@ -28,7 +28,7 @@ RSpec.describe Playlist, type: :model do
       it "filters by status" do
         published = create(:playlist, status: "published")
         create(:playlist, status: "draft")
-        expect(Playlist.by_status("published")).to eq([ published ])
+        expect(described_class.by_status("published")).to eq([ published ])
       end
     end
   end

@@ -15,7 +15,7 @@ class ScreenPlayerDashboard < Administrate::BaseDashboard
     screen: Field::BelongsTo,
     unpaired_at: Field::DateTime,
     created_at: Field::DateTime,
-    updated_at: Field::DateTime,
+    updated_at: Field::DateTime
   }.freeze
 
   # COLLECTION_ATTRIBUTES

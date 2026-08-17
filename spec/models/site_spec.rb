@@ -12,7 +12,7 @@ RSpec.describe Site, type: :model do
     it { is_expected.to have_many(:screens).dependent(:destroy) }
 
     it "has one attached photo" do
-      expect(Site.new.photo).not_to be_attached
+      expect(described_class.new.photo).not_to be_attached
     end
   end
 

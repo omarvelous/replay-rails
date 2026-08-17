@@ -46,5 +46,5 @@ module App
     def listing_agent_params
       params.require(:listing_agent).permit(:agent_id, :role)
     end
-end
+  end
 end

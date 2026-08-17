@@ -13,7 +13,7 @@ class Ads::ListingAdDashboard < Administrate::BaseDashboard
     sold_date: Field::Date,
     sold_price: Field::Number,
     created_at: Field::DateTime,
-    updated_at: Field::DateTime,
+    updated_at: Field::DateTime
   }.freeze
 
   COLLECTION_ATTRIBUTES = %i[

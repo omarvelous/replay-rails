@@ -7,7 +7,7 @@ class Ads::CollectionAdAdDashboard < Administrate::BaseDashboard
     collection_ad: Field::BelongsTo,
     position: Field::Number,
     created_at: Field::DateTime,
-    updated_at: Field::DateTime,
+    updated_at: Field::DateTime
   }.freeze
 
   COLLECTION_ATTRIBUTES = %i[

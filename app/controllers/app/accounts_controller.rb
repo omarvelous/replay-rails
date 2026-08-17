@@ -31,5 +31,5 @@ module App
         :phone, :password, :password_confirmation
       )
     end
-end
+  end
 end

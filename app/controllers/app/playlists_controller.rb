@@ -60,5 +60,5 @@ module App
     def playlist_params
       params.require(:playlist).permit(:name, :status)
     end
-end
+  end
 end

@@ -10,7 +10,7 @@ class UserDashboard < Administrate::BaseDashboard
     admin: Field::Boolean,
     account: Field::BelongsTo,
     sessions: Field::HasMany,
-    created_at: Field::DateTime,
+    created_at: Field::DateTime
   }.freeze
 
   COLLECTION_ATTRIBUTES = %i[ id first_name last_name email_address admin account ].freeze

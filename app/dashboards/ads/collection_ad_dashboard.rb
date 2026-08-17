@@ -8,7 +8,7 @@ class Ads::CollectionAdDashboard < Administrate::BaseDashboard
     collection_title: Field::String,
     member_ads: Field::HasMany,
     created_at: Field::DateTime,
-    updated_at: Field::DateTime,
+    updated_at: Field::DateTime
   }.freeze
 
   COLLECTION_ATTRIBUTES = %i[

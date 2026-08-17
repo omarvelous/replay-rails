@@ -13,7 +13,7 @@ class ScreenPlaylistDashboard < Administrate::BaseDashboard
     playlist: Field::BelongsTo,
     screen: Field::BelongsTo,
     created_at: Field::DateTime,
-    updated_at: Field::DateTime,
+    updated_at: Field::DateTime
   }.freeze
 
   # COLLECTION_ATTRIBUTES

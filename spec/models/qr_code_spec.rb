@@ -12,7 +12,7 @@ RSpec.describe QrCode, type: :model do
   describe "validations" do
     it "validates token uniqueness" do
       create(:qr_code)
-      is_expected.to validate_uniqueness_of(:token)
+      expect(subject).to validate_uniqueness_of(:token)
     end
   end
 

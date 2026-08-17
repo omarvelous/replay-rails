@@ -17,7 +17,7 @@ class PlaylistDashboard < Administrate::BaseDashboard
     screens: Field::HasMany,
     status: Field::String,
     created_at: Field::DateTime,
-    updated_at: Field::DateTime,
+    updated_at: Field::DateTime
   }.freeze
 
   # COLLECTION_ATTRIBUTES

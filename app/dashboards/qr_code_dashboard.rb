@@ -11,7 +11,7 @@ class QrCodeDashboard < Administrate::BaseDashboard
     label: Field::String,
     active: Field::Boolean,
     scans: Field::HasMany,
-    created_at: Field::DateTime,
+    created_at: Field::DateTime
   }.freeze
 
   COLLECTION_ATTRIBUTES = %i[ id token account label active created_at ].freeze

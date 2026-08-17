@@ -15,7 +15,7 @@ RSpec.describe Agent, type: :model do
     it { is_expected.to have_many(:listings).through(:listing_agents) }
 
     it "has one attached photo" do
-      expect(Agent.new.photo).not_to be_attached
+      expect(described_class.new.photo).not_to be_attached
     end
   end
 

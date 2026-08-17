@@ -9,7 +9,7 @@ class SiteDashboard < Administrate::BaseDashboard
     photo: Field::ActiveStorage,
     account: Field::BelongsTo,
     screens: Field::HasMany,
-    created_at: Field::DateTime,
+    created_at: Field::DateTime
   }.freeze
 
   COLLECTION_ATTRIBUTES = %i[ id name address account screens ].freeze

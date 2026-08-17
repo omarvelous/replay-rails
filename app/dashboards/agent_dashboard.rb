@@ -12,7 +12,7 @@ class AgentDashboard < Administrate::BaseDashboard
     user: Field::BelongsTo,
     listings: Field::HasMany,
     qr_code: Field::HasOne,
-    created_at: Field::DateTime,
+    created_at: Field::DateTime
   }.freeze
 
   COLLECTION_ATTRIBUTES = %i[ id name email phone account ].freeze

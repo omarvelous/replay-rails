@@ -46,5 +46,5 @@ module App
     def playlist_ad_params
       params.require(:playlist_ad).permit(:ad_id, :position, :duration)
     end
-end
+  end
 end

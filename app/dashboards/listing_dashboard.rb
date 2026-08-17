@@ -15,7 +15,7 @@ class ListingDashboard < Administrate::BaseDashboard
     agents: Field::HasMany,
     ads: Field::HasMany,
     qr_code: Field::HasOne,
-    created_at: Field::DateTime,
+    created_at: Field::DateTime
   }.freeze
 
   COLLECTION_ATTRIBUTES = %i[ id address price status account created_at ].freeze

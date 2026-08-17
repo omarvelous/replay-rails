@@ -10,7 +10,7 @@ class AccountDashboard < Administrate::BaseDashboard
     playlists: Field::HasMany,
     qr_codes: Field::HasMany,
     created_at: Field::DateTime,
-    updated_at: Field::DateTime,
+    updated_at: Field::DateTime
   }.freeze
 
   COLLECTION_ATTRIBUTES = %i[ id users sites listings ads created_at ].freeze

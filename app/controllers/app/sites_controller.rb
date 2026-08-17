@@ -48,5 +48,5 @@ module App
     def site_params
       params.require(:site).permit(:name, :address, :photo)
     end
-end
+  end
 end
