@@ -1,6 +1,6 @@
 require "rails_helper"
 
-RSpec.describe QrCode, type: :model do
+RSpec.describe QrCode do
   subject(:qr_code) { build(:qr_code) }
 
   describe "associations" do

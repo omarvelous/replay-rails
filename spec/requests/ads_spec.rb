@@ -1,6 +1,6 @@
 require "rails_helper"
 
-RSpec.describe "Ads", type: :request do
+RSpec.describe "Ads" do
   let(:account) { create(:account) }
   let(:user) { create(:user, account: account) }
 
@@ -79,7 +79,7 @@ RSpec.describe "Ads", type: :request do
     context "with invalid params" do
       it "returns 422" do
         patch ad_path(ad), params: { ad: { headline: "" } }
-        expect(response).to have_http_status(:unprocessable_entity)
+        expect(response).to have_http_status(:unprocessable_content)
       end
     end
   end

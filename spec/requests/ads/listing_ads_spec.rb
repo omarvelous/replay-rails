@@ -1,6 +1,6 @@
 require "rails_helper"
 
-RSpec.describe "Ads::ListingAds", type: :request do
+RSpec.describe "Ads::ListingAds" do
   let(:account) { create(:account) }
   let(:user) { create(:user, account: account) }
   let(:listing) { create(:listing, account: account) }
@@ -66,7 +66,7 @@ RSpec.describe "Ads::ListingAds", type: :request do
           ad: { headline: "", layout: "hero", theme: "dark" },
           listing_ad: { listing_id: listing.id, badge: "just_listed" }
         }
-        expect(response).to have_http_status(:unprocessable_entity)
+        expect(response).to have_http_status(:unprocessable_content)
       end
 
       it "returns 422 when listing is missing" do
@@ -74,7 +74,7 @@ RSpec.describe "Ads::ListingAds", type: :request do
           ad: { headline: "Test", layout: "hero", theme: "dark" },
           listing_ad: { listing_id: "", badge: "just_listed" }
         }
-        expect(response).to have_http_status(:unprocessable_entity)
+        expect(response).to have_http_status(:unprocessable_content)
       end
     end
   end
@@ -115,7 +115,7 @@ RSpec.describe "Ads::ListingAds", type: :request do
         ad: { headline: "" },
         listing_ad: { badge: "just_listed" }
       }
-      expect(response).to have_http_status(:unprocessable_entity)
+      expect(response).to have_http_status(:unprocessable_content)
     end
   end
 

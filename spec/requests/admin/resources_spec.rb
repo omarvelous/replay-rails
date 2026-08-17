@@ -1,6 +1,6 @@
 require "rails_helper"
 
-RSpec.describe "Admin Resources", type: :request do
+RSpec.describe "Admin Resources" do
   let(:admin) { create(:user, admin: true) }
 
   before do

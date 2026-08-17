@@ -1,6 +1,6 @@
 require "rails_helper"
 
-RSpec.describe "Sites", type: :request do
+RSpec.describe "Sites" do
   let(:account) { create(:account) }
   let(:user) { create(:user, account: account) }
 
@@ -54,7 +54,7 @@ RSpec.describe "Sites", type: :request do
 
       it "returns 422" do
         post sites_path, params: { site: { name: "" } }
-        expect(response).to have_http_status(:unprocessable_entity)
+        expect(response).to have_http_status(:unprocessable_content)
       end
     end
   end
@@ -100,7 +100,7 @@ RSpec.describe "Sites", type: :request do
     context "with invalid params" do
       it "returns 422" do
         patch site_path(site), params: { site: { name: "" } }
-        expect(response).to have_http_status(:unprocessable_entity)
+        expect(response).to have_http_status(:unprocessable_content)
       end
     end
   end

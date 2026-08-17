@@ -1,6 +1,6 @@
 require "rails_helper"
 
-RSpec.describe "Agents", type: :request do
+RSpec.describe "Agents" do
   let(:account) { create(:account) }
   let(:user) { create(:user, account: account) }
 
@@ -63,7 +63,7 @@ RSpec.describe "Agents", type: :request do
 
       it "returns 422" do
         post agents_path, params: { agent: { name: "" } }
-        expect(response).to have_http_status(:unprocessable_entity)
+        expect(response).to have_http_status(:unprocessable_content)
       end
     end
   end
@@ -109,7 +109,7 @@ RSpec.describe "Agents", type: :request do
     context "with invalid params" do
       it "returns 422" do
         patch agent_path(agent), params: { agent: { name: "" } }
-        expect(response).to have_http_status(:unprocessable_entity)
+        expect(response).to have_http_status(:unprocessable_content)
       end
     end
   end

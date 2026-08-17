@@ -1,6 +1,6 @@
 require "rails_helper"
 
-RSpec.describe QrScan, type: :model do
+RSpec.describe QrScan do
   subject(:qr_scan) { build(:qr_scan) }
 
   describe "associations" do

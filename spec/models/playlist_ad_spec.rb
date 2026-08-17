@@ -1,6 +1,6 @@
 require "rails_helper"
 
-RSpec.describe PlaylistAd, type: :model do
+RSpec.describe PlaylistAd do
   subject(:playlist_ad) { build(:playlist_ad) }
 
   describe "validations" do

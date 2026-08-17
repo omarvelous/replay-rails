@@ -1,6 +1,6 @@
 require "rails_helper"
 
-RSpec.describe Listing, type: :model do
+RSpec.describe Listing do
   subject(:listing) { build(:listing) }
 
   describe "validations" do

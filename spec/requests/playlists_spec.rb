@@ -1,6 +1,6 @@
 require "rails_helper"
 
-RSpec.describe "Playlists", type: :request do
+RSpec.describe "Playlists" do
   let(:account) { create(:account) }
   let(:user) { create(:user, account: account) }
 
@@ -56,7 +56,7 @@ RSpec.describe "Playlists", type: :request do
 
       it "returns 422" do
         post playlists_path, params: { playlist: { name: "" } }
-        expect(response).to have_http_status(:unprocessable_entity)
+        expect(response).to have_http_status(:unprocessable_content)
       end
     end
   end
@@ -107,7 +107,7 @@ RSpec.describe "Playlists", type: :request do
     context "with invalid params" do
       it "returns 422" do
         patch playlist_path(playlist), params: { playlist: { name: "" } }
-        expect(response).to have_http_status(:unprocessable_entity)
+        expect(response).to have_http_status(:unprocessable_content)
       end
     end
   end

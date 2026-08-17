@@ -1,6 +1,6 @@
 require "rails_helper"
 
-RSpec.describe "Ads::AgentAds", type: :request do
+RSpec.describe "Ads::AgentAds" do
   let(:account) { create(:account) }
   let(:user) { create(:user, account: account) }
   let(:agent) { create(:agent, account: account) }
@@ -41,7 +41,7 @@ RSpec.describe "Ads::AgentAds", type: :request do
           ad: { headline: "Test", layout: "profile", theme: "dark" },
           agent_ad: { agent_id: "" }
         }
-        expect(response).to have_http_status(:unprocessable_entity)
+        expect(response).to have_http_status(:unprocessable_content)
       end
     end
   end

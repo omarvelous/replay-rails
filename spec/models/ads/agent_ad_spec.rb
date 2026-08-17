@@ -1,6 +1,6 @@
 require "rails_helper"
 
-RSpec.describe Ads::AgentAd, type: :model do
+RSpec.describe Ads::AgentAd do
   subject(:agent_ad) { build(:agent_ad) }
 
   describe "associations" do

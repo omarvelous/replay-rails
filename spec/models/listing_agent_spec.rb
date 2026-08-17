@@ -1,6 +1,6 @@
 require "rails_helper"
 
-RSpec.describe ListingAgent, type: :model do
+RSpec.describe ListingAgent do
   subject(:listing_agent) { build(:listing_agent) }
 
   describe "validations" do

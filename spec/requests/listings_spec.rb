@@ -1,6 +1,6 @@
 require "rails_helper"
 
-RSpec.describe "Listings", type: :request do
+RSpec.describe "Listings" do
   let(:account) { create(:account) }
   let(:user) { create(:user, account: account) }
 
@@ -62,7 +62,7 @@ RSpec.describe "Listings", type: :request do
 
       it "returns 422" do
         post listings_path, params: { listing: { address: "" } }
-        expect(response).to have_http_status(:unprocessable_entity)
+        expect(response).to have_http_status(:unprocessable_content)
       end
     end
   end
@@ -108,7 +108,7 @@ RSpec.describe "Listings", type: :request do
     context "with invalid params" do
       it "returns 422" do
         patch listing_path(listing), params: { listing: { address: "" } }
-        expect(response).to have_http_status(:unprocessable_entity)
+        expect(response).to have_http_status(:unprocessable_content)
       end
     end
   end

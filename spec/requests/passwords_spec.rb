@@ -1,6 +1,6 @@
 require "rails_helper"
 
-RSpec.describe "Passwords", type: :request do
+RSpec.describe "Passwords" do
   describe "GET /passwords/new" do
     it "returns a successful response" do
       get new_password_path

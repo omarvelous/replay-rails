@@ -1,6 +1,6 @@
 require "rails_helper"
 
-RSpec.describe "Marketing::Pages", type: :request do
+RSpec.describe "Marketing::Pages" do
   before { host! "replay.localhost" }
 
   describe "GET / (marketing root)" do

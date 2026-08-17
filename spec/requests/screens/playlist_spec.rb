@@ -1,6 +1,6 @@
 require "rails_helper"
 
-RSpec.describe "Screen Playlist", type: :request do
+RSpec.describe "Screen Playlist" do
   let(:account) { create(:account) }
   let(:user) { create(:user, account: account) }
   let(:site) { create(:site, account: account) }

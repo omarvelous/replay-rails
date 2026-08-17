@@ -1,6 +1,6 @@
 require "rails_helper"
 
-RSpec.describe Ads::ListingAd, type: :model do
+RSpec.describe Ads::ListingAd do
   subject(:listing_ad) { build(:listing_ad) }
 
   describe "associations" do

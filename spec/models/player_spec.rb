@@ -1,6 +1,6 @@
 require "rails_helper"
 
-RSpec.describe Player, type: :model do
+RSpec.describe Player do
   subject(:player) { build(:player) }
 
   describe "associations" do

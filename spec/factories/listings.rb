@@ -6,6 +6,6 @@ FactoryBot.define do
     baths { Faker::Number.between(from: 1, to: 4) }
     sqft { Faker::Number.between(from: 500, to: 5_000) }
     status { %w[active pending sold].sample }
-    association :account
+    account
   end
 end

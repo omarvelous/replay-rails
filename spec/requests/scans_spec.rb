@@ -1,6 +1,6 @@
 require "rails_helper"
 
-RSpec.describe "Scans", type: :request do
+RSpec.describe "Scans" do
   describe "GET /s/:token" do
     let(:account) { create(:account) }
     let(:listing) { create(:listing, account: account) }

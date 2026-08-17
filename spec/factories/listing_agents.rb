@@ -1,7 +1,7 @@
 FactoryBot.define do
   factory :listing_agent do
-    association :listing
-    association :agent
+    listing
+    agent
     role { "listing_agent" }
   end
 end

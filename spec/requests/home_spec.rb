@@ -1,6 +1,6 @@
 require "rails_helper"
 
-RSpec.describe "Home", type: :request do
+RSpec.describe "Home" do
   describe "GET / (app root)" do
     it "returns a successful response when not authenticated" do
       get app_root_path

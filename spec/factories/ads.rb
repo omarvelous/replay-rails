@@ -4,7 +4,7 @@ FactoryBot.define do
     body { Faker::Lorem.sentence }
     layout { "hero" }
     theme { "dark" }
-    association :account
-    association :adable, factory: :listing_ad
+    account
+    adable factory: %i[listing_ad]
   end
 end

@@ -1,6 +1,6 @@
 require "rails_helper"
 
-RSpec.describe Site, type: :model do
+RSpec.describe Site do
   subject(:site) { build(:site) }
 
   describe "validations" do

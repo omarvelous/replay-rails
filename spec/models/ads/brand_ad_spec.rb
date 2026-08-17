@@ -1,6 +1,6 @@
 require "rails_helper"
 
-RSpec.describe Ads::BrandAd, type: :model do
+RSpec.describe Ads::BrandAd do
   describe "associations" do
     it "has one ad as adable" do
       brand_ad = create(:brand_ad)

@@ -5,6 +5,6 @@ FactoryBot.define do
     last_name  { Faker::Name.last_name }
     phone      { Faker::PhoneNumber.cell_phone_in_e164 }
     password   { "password123" }
-    association :account
+    account
   end
 end

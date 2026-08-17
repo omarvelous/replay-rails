@@ -1,6 +1,6 @@
 require "rails_helper"
 
-RSpec.describe Agent, type: :model do
+RSpec.describe Agent do
   subject(:agent) { build(:agent) }
 
   describe "validations" do

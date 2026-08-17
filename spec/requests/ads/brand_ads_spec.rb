@@ -1,6 +1,6 @@
 require "rails_helper"
 
-RSpec.describe "Ads::BrandAds", type: :request do
+RSpec.describe "Ads::BrandAds" do
   let(:account) { create(:account) }
   let(:user) { create(:user, account: account) }
 
@@ -40,7 +40,7 @@ RSpec.describe "Ads::BrandAds", type: :request do
           ad: { headline: "", layout: "hero", theme: "brand" },
           brand_ad: {}
         }
-        expect(response).to have_http_status(:unprocessable_entity)
+        expect(response).to have_http_status(:unprocessable_content)
       end
     end
   end

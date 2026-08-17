@@ -1,6 +1,6 @@
 require "rails_helper"
 
-RSpec.describe ScreenPlaylist, type: :model do
+RSpec.describe ScreenPlaylist do
   subject(:screen_playlist) { build(:screen_playlist) }
 
   describe "associations" do

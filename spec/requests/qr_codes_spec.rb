@@ -1,6 +1,6 @@
 require "rails_helper"
 
-RSpec.describe "QrCodes", type: :request do
+RSpec.describe "QrCodes" do
   let(:account) { create(:account) }
   let(:user) { create(:user, account: account) }
 

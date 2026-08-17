@@ -1,6 +1,6 @@
 require "rails_helper"
 
-RSpec.describe "PlaylistAds", type: :request do
+RSpec.describe "PlaylistAds" do
   let(:account) { create(:account) }
   let(:user) { create(:user, account: account) }
   let(:playlist) { create(:playlist, account: account) }
@@ -30,7 +30,7 @@ RSpec.describe "PlaylistAds", type: :request do
 
       it "returns 422 when ad is missing" do
         post playlist_playlist_ads_path(playlist), params: { playlist_ad: { ad_id: "", position: 1, duration: 10 } }
-        expect(response).to have_http_status(:unprocessable_entity)
+        expect(response).to have_http_status(:unprocessable_content)
       end
     end
 

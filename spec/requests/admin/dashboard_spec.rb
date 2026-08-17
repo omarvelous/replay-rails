@@ -1,6 +1,6 @@
 require "rails_helper"
 
-RSpec.describe "Admin::Dashboard", type: :request do
+RSpec.describe "Admin::Dashboard" do
   before { host! "admin.replay.localhost" }
 
   describe "GET / (admin root)" do

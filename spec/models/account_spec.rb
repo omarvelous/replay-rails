@@ -1,6 +1,6 @@
 require "rails_helper"
 
-RSpec.describe Account, type: :model do
+RSpec.describe Account do
   it { is_expected.to be_valid }
 
   describe "associations" do

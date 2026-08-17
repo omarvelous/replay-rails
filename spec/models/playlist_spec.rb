@@ -1,6 +1,6 @@
 require "rails_helper"
 
-RSpec.describe Playlist, type: :model do
+RSpec.describe Playlist do
   subject(:playlist) { build(:playlist) }
 
   describe "validations" do

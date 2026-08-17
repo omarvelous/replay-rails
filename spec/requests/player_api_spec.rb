@@ -1,6 +1,6 @@
 require "rails_helper"
 
-RSpec.describe "PlayerApi", type: :request do
+RSpec.describe "PlayerApi" do
   before { host! "play.replay.localhost" }
 
   describe "POST /register" do

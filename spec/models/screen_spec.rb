@@ -1,6 +1,6 @@
 require "rails_helper"
 
-RSpec.describe Screen, type: :model do
+RSpec.describe Screen do
   subject(:screen) { build(:screen) }
 
   describe "validations" do

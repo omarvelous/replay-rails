@@ -1,6 +1,6 @@
 require "rails_helper"
 
-RSpec.describe "Screens", type: :request do
+RSpec.describe "Screens" do
   let(:account) { create(:account) }
   let(:user) { create(:user, account: account) }
   let(:site) { create(:site, account: account) }
@@ -65,7 +65,7 @@ RSpec.describe "Screens", type: :request do
 
       it "returns 422" do
         post screens_path, params: { screen: { site_id: site.id, name: "" } }
-        expect(response).to have_http_status(:unprocessable_entity)
+        expect(response).to have_http_status(:unprocessable_content)
       end
     end
   end
@@ -105,7 +105,7 @@ RSpec.describe "Screens", type: :request do
     context "with invalid params" do
       it "returns 422" do
         patch screen_path(screen), params: { screen: { name: "" } }
-        expect(response).to have_http_status(:unprocessable_entity)
+        expect(response).to have_http_status(:unprocessable_content)
       end
     end
   end

@@ -1,6 +1,6 @@
 require "rails_helper"
 
-RSpec.describe "ListingAgents", type: :request do
+RSpec.describe "ListingAgents" do
   let(:account) { create(:account) }
   let(:user) { create(:user, account: account) }
   let(:listing) { create(:listing, account: account) }
@@ -30,7 +30,7 @@ RSpec.describe "ListingAgents", type: :request do
 
       it "returns 422 when agent is missing" do
         post listing_listing_agents_path(listing), params: { listing_agent: { agent_id: "", role: "listing_agent" } }
-        expect(response).to have_http_status(:unprocessable_entity)
+        expect(response).to have_http_status(:unprocessable_content)
       end
     end
 

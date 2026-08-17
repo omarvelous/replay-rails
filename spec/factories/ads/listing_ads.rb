@@ -1,6 +1,6 @@
 FactoryBot.define do
   factory :listing_ad, class: "Ads::ListingAd" do
-    association :listing
+    listing
     badge { "just_listed" }
 
     trait :open_house do

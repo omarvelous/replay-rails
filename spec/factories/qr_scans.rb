@@ -1,7 +1,7 @@
 FactoryBot.define do
   factory :qr_scan do
-    association :qr_code
-    association :account
+    qr_code
+    account
     ad { nil }
     screen { nil }
     ip_address { Faker::Internet.ip_v4_address }

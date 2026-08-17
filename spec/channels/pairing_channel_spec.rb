@@ -1,6 +1,6 @@
 require "rails_helper"
 
-RSpec.describe PairingChannel, type: :channel do
+RSpec.describe PairingChannel do
   it "subscribes with a code" do
     subscribe(code: "A7B3K2")
     expect(subscription).to be_confirmed

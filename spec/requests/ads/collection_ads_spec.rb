@@ -1,6 +1,6 @@
 require "rails_helper"
 
-RSpec.describe "Ads::CollectionAds", type: :request do
+RSpec.describe "Ads::CollectionAds" do
   let(:account) { create(:account) }
   let(:user) { create(:user, account: account) }
 
@@ -45,7 +45,7 @@ RSpec.describe "Ads::CollectionAds", type: :request do
           ad: { headline: "Test", layout: "grid", theme: "dark" },
           collection_ad: { collection_title: "" }
         }
-        expect(response).to have_http_status(:unprocessable_entity)
+        expect(response).to have_http_status(:unprocessable_content)
       end
     end
   end

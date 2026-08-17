@@ -1,6 +1,6 @@
 require "rails_helper"
 
-RSpec.describe ScreenChannel, type: :channel do
+RSpec.describe ScreenChannel do
   it "subscribes with a valid paired player token" do
     player = create(:player)
     screen = create(:screen)

@@ -1,6 +1,6 @@
 require "rails_helper"
 
-RSpec.describe "Go::Listings", type: :request do
+RSpec.describe "Go::Listings" do
   before { host! "replay.localhost" }
 
   describe "GET /go/listings/:id" do
