@@ -205,7 +205,7 @@ if demo_account
 
   # ListingAd — just_listed
   unless Ad.exists?(account: demo_account, headline: "Just Listed")
-    listing_ad = ListingAd.create!(listing: fifth_ave, badge: "just_listed")
+    listing_ad = Ads::ListingAd.create!(listing: fifth_ave, badge: "just_listed")
     Ad.create!(
       account: demo_account,
       adable: listing_ad,
@@ -221,7 +221,7 @@ if demo_account
 
   # ListingAd — open_house
   unless Ad.exists?(account: demo_account, headline: "Open House")
-    listing_ad = ListingAd.create!(
+    listing_ad = Ads::ListingAd.create!(
       listing: w34th,
       badge: "open_house",
       event_date: Date.current.next_occurring(:saturday),
@@ -243,10 +243,10 @@ if demo_account
 
   # CollectionAd
   unless Ad.exists?(account: demo_account, headline: "Featured Listings")
-    collection_ad = CollectionAd.create!(collection_title: "Featured Listings")
-    member_ads = Ad.where(account: demo_account).where(adable_type: "ListingAd").order(:id)
+    collection_ad = Ads::CollectionAd.create!(collection_title: "Featured Listings")
+    member_ads = Ad.where(account: demo_account).where(adable_type: "Ads::ListingAd").order(:id)
     member_ads.each_with_index do |ad, i|
-      CollectionAdAd.create!(collection_ad: collection_ad, ad: ad, position: i)
+      Ads::CollectionAdAd.create!(collection_ad: collection_ad, ad: ad, position: i)
     end
     Ad.create!(
       account: demo_account,
@@ -262,7 +262,7 @@ if demo_account
   # AgentAd
   if jane
     unless Ad.exists?(account: demo_account, headline: "Jane Broker")
-      agent_ad = AgentAd.create!(agent: jane)
+      agent_ad = Ads::AgentAd.create!(agent: jane)
       Ad.create!(
         account: demo_account,
         adable: agent_ad,
@@ -279,7 +279,7 @@ if demo_account
 
   # BrandAd
   unless Ad.exists?(account: demo_account, headline: "Your Window, Working 24/7")
-    brand_ad = BrandAd.create!
+    brand_ad = Ads::BrandAd.create!
     Ad.create!(
       account: demo_account,
       adable: brand_ad,
