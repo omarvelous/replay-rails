@@ -1,8 +1,7 @@
 module Admin
-  class BaseController < ApplicationController
+  class ApplicationController < Administrate::ApplicationController
+    include Authentication
     before_action :require_admin!
-
-    layout "admin"
 
     private
 

@@ -1,5 +1,5 @@
 module Admin
-  class DashboardController < BaseController
+  class DashboardController < ApplicationController
     def show
       @total_accounts = Account.count
       @total_players = Player.count

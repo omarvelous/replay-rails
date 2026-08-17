@@ -17,6 +17,8 @@
         </a>
         <%= link_to "Dashboard", admin_root_path, class: "text-sm #{controller_name == 'dashboard' ? 'text-white' : 'text-gray-300 hover:text-white'}" %>
         <%= link_to "Accounts", admin_accounts_path, class: "text-sm #{controller_name == 'accounts' ? 'text-white' : 'text-gray-300 hover:text-white'}" %>
+        <%= link_to "Users", admin_users_path, class: "text-sm #{controller_name == 'users' ? 'text-white' : 'text-gray-300 hover:text-white'}" %>
+        <%= link_to "Sites", admin_sites_path, class: "text-sm #{controller_name == 'sites' ? 'text-white' : 'text-gray-300 hover:text-white'}" %>
         <%= link_to "Players", admin_players_path, class: "text-sm #{controller_name == 'players' ? 'text-white' : 'text-gray-300 hover:text-white'}" %>
         <%= link_to "Screens", admin_screens_path, class: "text-sm #{controller_name == 'screens' ? 'text-white' : 'text-gray-300 hover:text-white'}" %>
         <%= link_to "QR Codes", admin_qr_codes_path, class: "text-sm #{controller_name == 'qr_codes' ? 'text-white' : 'text-gray-300 hover:text-white'}" %>

@@ -77,4 +77,19 @@ RSpec.describe "Admin Resources", type: :request do
       expect(response).to be_successful
     end
   end
+
+  describe "Users" do
+    it "GET /users returns a successful response" do
+      get admin_users_path
+      expect(response).to be_successful
+    end
+  end
+
+  describe "Sites" do
+    it "GET /sites returns a successful response" do
+      create(:site)
+      get admin_sites_path
+      expect(response).to be_successful
+    end
+  end
 end

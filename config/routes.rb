@@ -57,11 +57,13 @@ Rails.application.routes.draw do
   constraints subdomain: "admin" do
     scope module: "admin", as: "admin" do
       root "dashboard#show", as: :root
-      resources :accounts, only: %i[ index show ]
-      resources :players, only: %i[ index show ]
-      resources :screens, only: %i[ index show ]
-      resources :qr_codes, only: %i[ index show ]
-      resources :qr_scans, only: %i[ index show ]
+      resources :accounts
+      resources :users
+      resources :sites
+      resources :players
+      resources :screens
+      resources :qr_codes
+      resources :qr_scans
     end
   end
 
