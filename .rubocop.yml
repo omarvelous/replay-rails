@@ -12,3 +12,9 @@ RSpec/MultipleExpectations:
 
 RSpec/ExampleLength:
   Max: 15
+
+RSpec/MultipleMemoizedHelpers:
+  Max: 8
+
+RSpec/IndexedLet:
+  Enabled: false

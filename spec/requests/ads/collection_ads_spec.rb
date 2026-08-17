@@ -14,15 +14,15 @@ RSpec.describe "Ads::CollectionAds", type: :request do
   end
 
   describe "POST /ads/collection_ads" do
-    let(:listing1) { create(:listing, account: account) }
-    let(:listing2) { create(:listing, account: account) }
-    let!(:ad1) { create(:ad, account: account, adable: create(:listing_ad, listing: listing1)) }
-    let!(:ad2) { create(:ad, account: account, adable: create(:listing_ad, listing: listing2)) }
+    let(:first_listing) { create(:listing, account: account) }
+    let(:second_listing) { create(:listing, account: account) }
+    let!(:first_ad) { create(:ad, account: account, adable: create(:listing_ad, listing: first_listing)) }
+    let!(:second_ad) { create(:ad, account: account, adable: create(:listing_ad, listing: second_listing)) }
 
     let(:valid_params) do
       {
         ad: { headline: "Open Houses This Weekend", layout: "grid", theme: "dark" },
-        collection_ad: { collection_title: "Open Houses This Weekend", member_ad_ids: [ ad1.id, ad2.id ] }
+        collection_ad: { collection_title: "Open Houses This Weekend", member_ad_ids: [ first_ad.id, second_ad.id ] }
       }
     end
 
