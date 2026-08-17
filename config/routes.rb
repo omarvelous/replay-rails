@@ -62,6 +62,10 @@ Rails.application.routes.draw do
       resources :sites
       resources :players
       resources :screens
+      resources :listings
+      resources :agents
+      resources :ads
+      resources :playlists
       resources :qr_codes
       resources :qr_scans
     end

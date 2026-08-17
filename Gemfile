@@ -53,6 +53,7 @@ gem "rqrcode", "~> 2.2"
 
 # Admin dashboard [https://github.com/thoughtbot/administrate]
 gem "administrate"
+gem "administrate-field-active_storage"
 
 group :development, :test do
   # See https://guides.rubyonrails.org/debugging_rails_applications.html#debugging-with-the-debug-gem
