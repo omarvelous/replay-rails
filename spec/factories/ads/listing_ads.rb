@@ -1,5 +1,5 @@
 FactoryBot.define do
-  factory :listing_ad do
+  factory :listing_ad, class: "Ads::ListingAd" do
     association :listing
     badge { "just_listed" }
 

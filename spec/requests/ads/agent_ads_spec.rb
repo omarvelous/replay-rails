@@ -26,7 +26,7 @@ RSpec.describe "Ads::AgentAds", type: :request do
       it "creates an AgentAd and Ad" do
         expect {
           post ads_agent_ads_path, params: valid_params
-        }.to change(Ad, :count).by(1).and change(AgentAd, :count).by(1)
+        }.to change(Ad, :count).by(1).and change(Ads::AgentAd, :count).by(1)
       end
 
       it "redirects to the ad" do

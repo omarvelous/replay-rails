@@ -1,6 +1,6 @@
 require "rails_helper"
 
-RSpec.describe BrandAd, type: :model do
+RSpec.describe Ads::BrandAd, type: :model do
   describe "associations" do
     it "has one ad as adable" do
       brand_ad = create(:brand_ad)
@@ -11,7 +11,7 @@ RSpec.describe BrandAd, type: :model do
 
   describe "constants" do
     it "defines LAYOUTS" do
-      expect(BrandAd::LAYOUTS).to eq(%w[hero minimal])
+      expect(Ads::BrandAd::LAYOUTS).to eq(%w[hero minimal])
     end
   end
 

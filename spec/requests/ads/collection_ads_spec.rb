@@ -30,7 +30,7 @@ RSpec.describe "Ads::CollectionAds", type: :request do
       it "creates a CollectionAd and Ad" do
         expect {
           post ads_collection_ads_path, params: valid_params
-        }.to change(Ad, :count).by(1).and change(CollectionAd, :count).by(1)
+        }.to change(Ad, :count).by(1).and change(Ads::CollectionAd, :count).by(1)
       end
 
       it "redirects to the ad" do

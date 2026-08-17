@@ -25,7 +25,7 @@ RSpec.describe "Ads", type: :request do
       create(:ad, account: account, headline: "Listing One", adable: create(:listing_ad))
       create(:ad, account: account, headline: "Brand One", adable: create(:brand_ad))
 
-      get ads_path, params: { ad_type: "ListingAd" }
+      get ads_path, params: { ad_type: "Ads::ListingAd" }
       expect(response.body).to include("Listing One")
       expect(response.body).not_to include("Brand One")
     end

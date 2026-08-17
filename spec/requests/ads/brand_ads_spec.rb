@@ -25,7 +25,7 @@ RSpec.describe "Ads::BrandAds", type: :request do
       it "creates a BrandAd and Ad" do
         expect {
           post ads_brand_ads_path, params: valid_params
-        }.to change(Ad, :count).by(1).and change(BrandAd, :count).by(1)
+        }.to change(Ad, :count).by(1).and change(Ads::BrandAd, :count).by(1)
       end
 
       it "redirects to the ad" do

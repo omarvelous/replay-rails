@@ -1,6 +1,6 @@
 require "rails_helper"
 
-RSpec.describe ListingAd, type: :model do
+RSpec.describe Ads::ListingAd, type: :model do
   subject(:listing_ad) { build(:listing_ad) }
 
   describe "associations" do
@@ -9,7 +9,7 @@ RSpec.describe ListingAd, type: :model do
 
   describe "validations" do
     it { is_expected.to validate_presence_of(:listing) }
-    it { is_expected.to validate_inclusion_of(:badge).in_array(ListingAd::BADGES) }
+    it { is_expected.to validate_inclusion_of(:badge).in_array(Ads::ListingAd::BADGES) }
 
     context "when badge is open_house" do
       subject(:listing_ad) { build(:listing_ad, :open_house, event_date: nil, event_start_time: nil) }
@@ -40,11 +40,11 @@ RSpec.describe ListingAd, type: :model do
 
   describe "constants" do
     it "defines LAYOUTS" do
-      expect(ListingAd::LAYOUTS).to eq(%w[hero split minimal stat_grid])
+      expect(Ads::ListingAd::LAYOUTS).to eq(%w[hero split minimal stat_grid])
     end
 
     it "defines BADGES" do
-      expect(ListingAd::BADGES).to eq(%w[just_listed open_house just_sold price_reduction coming_soon])
+      expect(Ads::ListingAd::BADGES).to eq(%w[just_listed open_house just_sold price_reduction coming_soon])
     end
   end
 

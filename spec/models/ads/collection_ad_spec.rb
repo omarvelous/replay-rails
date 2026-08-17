@@ -1,6 +1,6 @@
 require "rails_helper"
 
-RSpec.describe CollectionAd, type: :model do
+RSpec.describe Ads::CollectionAd, type: :model do
   subject(:collection_ad) { build(:collection_ad) }
 
   describe "associations" do
@@ -14,7 +14,7 @@ RSpec.describe CollectionAd, type: :model do
 
   describe "constants" do
     it "defines LAYOUTS" do
-      expect(CollectionAd::LAYOUTS).to eq(%w[grid])
+      expect(Ads::CollectionAd::LAYOUTS).to eq(%w[grid])
     end
   end
 

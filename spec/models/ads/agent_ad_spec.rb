@@ -1,6 +1,6 @@
 require "rails_helper"
 
-RSpec.describe AgentAd, type: :model do
+RSpec.describe Ads::AgentAd, type: :model do
   subject(:agent_ad) { build(:agent_ad) }
 
   describe "associations" do
@@ -13,7 +13,7 @@ RSpec.describe AgentAd, type: :model do
 
   describe "constants" do
     it "defines LAYOUTS" do
-      expect(AgentAd::LAYOUTS).to eq(%w[profile split])
+      expect(Ads::AgentAd::LAYOUTS).to eq(%w[profile split])
     end
   end
 

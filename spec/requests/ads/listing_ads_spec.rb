@@ -26,7 +26,7 @@ RSpec.describe "Ads::ListingAds", type: :request do
       it "creates a ListingAd and Ad" do
         expect {
           post ads_listing_ads_path, params: valid_params
-        }.to change(Ad, :count).by(1).and change(ListingAd, :count).by(1)
+        }.to change(Ad, :count).by(1).and change(Ads::ListingAd, :count).by(1)
       end
 
       it "scopes the ad to the current account" do

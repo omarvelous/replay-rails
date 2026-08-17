@@ -26,13 +26,13 @@ RSpec.describe Ad, type: :model do
     it "delegates to adable" do
       listing_ad = create(:listing_ad)
       ad = create(:ad, adable: listing_ad)
-      expect(ad).to be_listing_ad
+      expect(ad).to be_ads_listing_ad
       expect(ad.adable).to eq(listing_ad)
     end
 
     it "provides adable_name" do
       ad = build(:ad, adable: build(:brand_ad))
-      expect(ad.adable_name).to eq("brand_ad")
+      expect(ad.adable_name).to eq("ads_brand_ad")
     end
   end
 
@@ -57,7 +57,7 @@ RSpec.describe Ad, type: :model do
   describe "#allowed_layouts" do
     it "delegates to the adable class constant" do
       ad = build(:ad, adable: build(:listing_ad))
-      expect(ad.allowed_layouts).to eq(ListingAd::LAYOUTS)
+      expect(ad.allowed_layouts).to eq(Ads::ListingAd::LAYOUTS)
     end
 
     it "returns hero as default when adable is nil" do
