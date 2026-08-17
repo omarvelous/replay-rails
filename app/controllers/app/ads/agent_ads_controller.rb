@@ -4,13 +4,13 @@ module Ads
     before_action :set_ad, only: %i[ edit update ]
 
     def new
-      @agent_ad = AgentAd.new
+      @agent_ad = ::Ads::AgentAd.new
       @ad = @agent_ad.build_ad(account: Current.account)
       @ad.apply_defaults
     end
 
     def create
-      @agent_ad = AgentAd.new(agent_ad_params)
+      @agent_ad = ::Ads::AgentAd.new(agent_ad_params)
       @ad = @agent_ad.build_ad(ad_params.merge(account: Current.account))
 
       if @ad.valid? & @agent_ad.valid?

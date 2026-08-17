@@ -4,13 +4,13 @@ module Ads
     before_action :set_ad, only: %i[ edit update ]
 
     def new
-      @brand_ad = BrandAd.new
+      @brand_ad = ::Ads::BrandAd.new
       @ad = @brand_ad.build_ad(account: Current.account)
       @ad.apply_defaults
     end
 
     def create
-      @brand_ad = BrandAd.new
+      @brand_ad = ::Ads::BrandAd.new
       @ad = @brand_ad.build_ad(ad_params.merge(account: Current.account))
 
       if @ad.valid? & @brand_ad.valid?

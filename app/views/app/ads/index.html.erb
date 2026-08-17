@@ -17,7 +17,7 @@
 
       <div class="grid grid-cols-1">
         <%= f.select :ad_type,
-            [["All ads", ""], ["Listing", "ListingAd"], ["Collection", "CollectionAd"], ["Agent", "AgentAd"], ["Brand", "BrandAd"]],
+            [["All ads", ""], ["Listing", "Ads::ListingAd"], ["Collection", "Ads::CollectionAd"], ["Agent", "Ads::AgentAd"], ["Brand", "Ads::BrandAd"]],
             { selected: params[:ad_type].to_s },
             class: "col-start-1 row-start-1 w-full appearance-none rounded-md bg-white py-1.5 pr-8 pl-3 text-sm/6 text-gray-900 outline-1 -outline-offset-1 outline-gray-300 focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-indigo-600",
             onchange: "this.form.requestSubmit()" %>
@@ -46,7 +46,7 @@
             <%# Theme-tinted card header %>
             <div class="ad-canvas aspect-video rounded-t-lg flex flex-col justify-end p-4"
                  style="background: var(--ad-bg); color: var(--ad-text); <%= ad_theme_style(ad.theme) %>">
-              <div class="text-xs font-bold tracking-widest uppercase mb-1" style="color: var(--ad-accent);"><%= ad.adable_name.humanize %></div>
+              <div class="text-xs font-bold tracking-widest uppercase mb-1" style="color: var(--ad-accent);"><%= ad.adable_short_name.humanize %></div>
               <div class="text-lg font-extrabold tracking-tight leading-tight truncate"><%= ad.headline %></div>
               <% if ad.body.present? %>
                 <div class="text-xs mt-1 truncate" style="color: var(--ad-text-muted);"><%= ad.body.truncate(60) %></div>
@@ -55,7 +55,7 @@
             <div class="p-4">
               <div class="flex items-center justify-between gap-2">
                 <span class="font-semibold text-sm truncate"><%= ad.headline %></span>
-                <span class="inline-flex items-center rounded-md bg-gray-50 px-1.5 py-0.5 text-[10.5px] font-medium text-gray-500 ring-1 ring-gray-500/10 ring-inset shrink-0"><%= ad.adable_name.humanize %></span>
+                <span class="inline-flex items-center rounded-md bg-gray-50 px-1.5 py-0.5 text-[10.5px] font-medium text-gray-500 ring-1 ring-gray-500/10 ring-inset shrink-0"><%= ad.adable_short_name.humanize %></span>
               </div>
               <% if ad.listing %>
                 <p class="text-xs text-gray-400 mt-1"><%= ad.listing.address %></p>
@@ -126,7 +126,7 @@
                   </td>
                   <td class="px-3 py-4 text-sm text-gray-500">—</td>
                   <td class="px-3 py-4">
-                    <span class="inline-flex items-center rounded-md bg-gray-50 px-1.5 py-0.5 text-[10.5px] font-medium text-gray-500 ring-1 ring-gray-500/10 ring-inset"><%= ad.adable_name.humanize %></span>
+                    <span class="inline-flex items-center rounded-md bg-gray-50 px-1.5 py-0.5 text-[10.5px] font-medium text-gray-500 ring-1 ring-gray-500/10 ring-inset"><%= ad.adable_short_name.humanize %></span>
                   </td>
                   <td class="px-3 py-4 text-sm text-gray-500"><%= ad.layout.humanize %></td>
                   <td class="px-3 py-4 text-sm text-gray-500"><%= ad.theme.capitalize %></td>

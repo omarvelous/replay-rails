@@ -4,28 +4,28 @@ module Ads
     before_action :set_ad, only: %i[ edit update ]
 
     def new
-      @collection_ad = CollectionAd.new
+      @collection_ad = ::Ads::CollectionAd.new
       @ad = @collection_ad.build_ad(account: Current.account, layout: "grid")
       @ad.apply_defaults
-      @available_ads = Current.account.ads.where.not(adable_type: "CollectionAd").order(:headline)
+      @available_ads = Current.account.ads.where.not(adable_type: "Ads::CollectionAd").order(:headline)
     end
 
     def create
-      @collection_ad = CollectionAd.new(collection_ad_params)
+      @collection_ad = ::Ads::CollectionAd.new(collection_ad_params)
       @ad = @collection_ad.build_ad(ad_params.merge(account: Current.account, layout: "grid"))
 
       if @ad.valid? & @collection_ad.valid?
         @collection_ad.save!
         redirect_to @ad, notice: t(".success")
       else
-        @available_ads = Current.account.ads.where.not(adable_type: "CollectionAd").order(:headline)
+        @available_ads = Current.account.ads.where.not(adable_type: "Ads::CollectionAd").order(:headline)
         render :new, status: :unprocessable_entity
       end
     end
 
     def edit
       @collection_ad = @ad.adable
-      @available_ads = Current.account.ads.where.not(adable_type: "CollectionAd").order(:headline)
+      @available_ads = Current.account.ads.where.not(adable_type: "Ads::CollectionAd").order(:headline)
     end
 
     def update
@@ -38,7 +38,7 @@ module Ads
         @ad.save!
         redirect_to @ad, notice: t(".success")
       else
-        @available_ads = Current.account.ads.where.not(adable_type: "CollectionAd").order(:headline)
+        @available_ads = Current.account.ads.where.not(adable_type: "Ads::CollectionAd").order(:headline)
         render :edit, status: :unprocessable_entity
       end
     end

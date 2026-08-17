@@ -13,11 +13,11 @@
       <h3 class="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-4">Ad Type</h3>
       <%= fields_for :listing_ad, @listing_ad do |la_form| %>
         <div class="flex flex-wrap gap-2 mb-4">
-          <% ListingAd::BADGES.each do |badge_val| %>
+          <% ::Ads::ListingAd::BADGES.each do |badge_val| %>
             <label class="cursor-pointer">
               <%= la_form.radio_button :badge, badge_val, class: "peer sr-only", data: { action: "change->badge-fields#toggle" } %>
               <span class="peer-checked:ring-2 peer-checked:ring-indigo-600 peer-checked:bg-indigo-50 peer-checked:text-indigo-700 inline-flex items-center rounded-md bg-white px-3 py-1.5 text-sm font-medium text-gray-600 ring-1 ring-gray-300 ring-inset hover:bg-gray-50 transition-colors">
-                <%= ListingAd::BADGE_LABELS[badge_val] %>
+                <%= ::Ads::ListingAd::BADGE_LABELS[badge_val] %>
               </span>
             </label>
           <% end %>
@@ -82,7 +82,7 @@
     <%# Appearance %>
     <div class="rounded-lg bg-white shadow-sm ring-1 ring-gray-900/5 p-5">
       <h3 class="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-4">Appearance</h3>
-      <%= render "app/ads/shared/appearance_fields", form: form, layouts: ListingAd::LAYOUTS %>
+      <%= render "app/ads/shared/appearance_fields", form: form, layouts: ::Ads::ListingAd::LAYOUTS %>
     </div>
 
     <%# Actions %>

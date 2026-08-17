@@ -4,13 +4,13 @@ module Ads
     before_action :set_ad, only: %i[ edit update ]
 
     def new
-      @listing_ad = ListingAd.new
+      @listing_ad = ::Ads::ListingAd.new
       @ad = @listing_ad.build_ad(account: Current.account)
       @ad.apply_defaults
     end
 
     def create
-      @listing_ad = ListingAd.new(listing_ad_params)
+      @listing_ad = ::Ads::ListingAd.new(listing_ad_params)
       @ad = @listing_ad.build_ad(ad_params.merge(account: Current.account))
 
       if @ad.valid? & @listing_ad.valid? # non-short-circuit: validate both
