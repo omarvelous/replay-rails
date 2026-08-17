@@ -5,7 +5,7 @@
     <div class="absolute inset-0" style="background: linear-gradient(to top, rgba(0,0,0,0.7) 0%, transparent 60%);"></div>
   <% end %>
   <div class="relative">
-    <%= render "app/ads/#{ad.adable_name.pluralize}/content", ad: ad %>
+    <%= render "app/ads/#{ad.adable_partial_path}/content", ad: ad %>
   </div>
   <%= render "app/ads/layouts/qr_badge", ad: ad %>
 </div>
