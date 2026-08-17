@@ -27,7 +27,7 @@ module AdsHelper
 
   def edit_typed_ad_path(ad)
     # Uses namespaced routes when available (Phase E), falls back to base route
-    route = "edit_ads_#{ad.adable_name}_path"
+    route = "edit_ads_#{ad.adable_short_name}_path"
     respond_to?(route, true) ? send(route, ad) : edit_ad_path(ad)
   end
 end

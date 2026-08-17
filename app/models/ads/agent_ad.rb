@@ -1,3 +1,4 @@
+module Ads
 class AgentAd < ApplicationRecord
   LAYOUTS = %w[profile split].freeze
 
@@ -8,4 +9,5 @@ class AgentAd < ApplicationRecord
   validates :agent, presence: true
 
   def default_headline = agent&.name
+end
 end

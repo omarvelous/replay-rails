@@ -1,3 +1,4 @@
+module Ads
 class CollectionAd < ApplicationRecord
   LAYOUTS = %w[grid].freeze
   MAX_ITEMS = 8
@@ -10,4 +11,5 @@ class CollectionAd < ApplicationRecord
   validates :collection_title, presence: true
 
   def default_headline = collection_title
+end
 end

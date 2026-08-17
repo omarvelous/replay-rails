@@ -1,6 +1,6 @@
 class Ad < ApplicationRecord
   belongs_to :account
-  delegated_type :adable, types: %w[ListingAd CollectionAd AgentAd BrandAd], dependent: :destroy
+  delegated_type :adable, types: %w[Ads::ListingAd Ads::CollectionAd Ads::AgentAd Ads::BrandAd], dependent: :destroy
 
   has_one_attached :image do |attachable|
     attachable.variant :thumb,   resize_to_fill: [ 400, 225 ]
@@ -9,7 +9,7 @@ class Ad < ApplicationRecord
 
   has_many :playlist_ads, dependent: :destroy
   has_many :playlists, through: :playlist_ads
-  has_many :collection_ad_ads, dependent: :restrict_with_error
+  has_many :collection_ad_ads, class_name: "Ads::CollectionAdAd", dependent: :restrict_with_error
 
   THEMES = %w[dark light brand].freeze
 
@@ -26,6 +26,14 @@ class Ad < ApplicationRecord
 
   def allowed_layouts
     adable ? adable.class::LAYOUTS : %w[hero]
+  end
+
+  def adable_partial_path
+    adable.class.name.underscore.pluralize # "ads/listing_ads"
+  end
+
+  def adable_short_name
+    adable.class.name.demodulize.underscore # "listing_ad" (no namespace)
   end
 
   def apply_defaults
