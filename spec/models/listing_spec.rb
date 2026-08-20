@@ -28,6 +28,34 @@ RSpec.describe Listing do
     end
   end
 
+  describe "#primary_agent" do
+    it "returns the agent with the most recent primary_at" do
+      account = create(:account)
+      listing = create(:listing, account: account)
+      agent_a = create(:agent, account: account)
+      agent_b = create(:agent, account: account)
+
+      create(:listing_agent, listing: listing, agent: agent_a, primary_at: 2.days.ago)
+      create(:listing_agent, listing: listing, agent: agent_b, primary_at: 1.day.ago)
+
+      expect(listing.primary_agent).to eq(agent_b)
+    end
+
+    it "falls back to the first agent when no primary_at is set" do
+      account = create(:account)
+      listing = create(:listing, account: account)
+      agent = create(:agent, account: account)
+      create(:listing_agent, listing: listing, agent: agent, primary_at: nil)
+
+      expect(listing.primary_agent).to eq(agent)
+    end
+
+    it "returns nil when no agents are assigned" do
+      listing = create(:listing)
+      expect(listing.primary_agent).to be_nil
+    end
+  end
+
   describe "scopes" do
     describe ".search" do
       it "searches by address case-insensitively" do

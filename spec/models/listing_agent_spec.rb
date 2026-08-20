@@ -27,4 +27,19 @@ RSpec.describe ListingAgent do
     it { is_expected.to belong_to(:listing) }
     it { is_expected.to belong_to(:agent) }
   end
+
+  describe ".primary" do
+    it "returns listing agents with primary_at set, most recent first" do
+      account = create(:account)
+      listing = create(:listing, account: account)
+      agent_a = create(:agent, account: account)
+      agent_b = create(:agent, account: account)
+
+      la_a = create(:listing_agent, listing: listing, agent: agent_a, primary_at: 2.days.ago)
+      la_b = create(:listing_agent, listing: listing, agent: agent_b, primary_at: 1.day.ago)
+      create(:listing_agent, listing: listing, agent: create(:agent, account: account), primary_at: nil)
+
+      expect(ListingAgent.primary).to eq([ la_b, la_a ])
+    end
+  end
 end
