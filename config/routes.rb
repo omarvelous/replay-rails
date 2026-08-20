@@ -13,6 +13,7 @@ Rails.application.routes.draw do
     # Public destination pages (consumer-facing, marketing domain)
     namespace :go do
       resources :listings, only: :show
+      resources :agents, only: :show
       resources :leads, only: :create
     end
   end
