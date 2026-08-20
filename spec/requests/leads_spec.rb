@@ -61,5 +61,4 @@ RSpec.describe "Leads" do
       expect(lead.current_agent).to eq(agent)
     end
   end
-
 end

@@ -39,7 +39,7 @@ RSpec.describe ListingAgent do
       la_b = create(:listing_agent, listing: listing, agent: agent_b, primary_at: 1.day.ago)
       create(:listing_agent, listing: listing, agent: create(:agent, account: account), primary_at: nil)
 
-      expect(ListingAgent.primary).to eq([ la_b, la_a ])
+      expect(described_class.primary).to eq([ la_b, la_a ])
     end
   end
 end
