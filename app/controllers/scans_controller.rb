@@ -4,7 +4,7 @@ class ScansController < ApplicationController
   def show
     qr = QrCode.find_by!(token: params[:token], active: true)
 
-    qr.scans.create!(
+    scan = qr.scans.create!(
       account: qr.account,
       ad_id: params[:a],
       screen_id: params[:s],
@@ -16,7 +16,8 @@ class ScansController < ApplicationController
     if qr.destination_url.present?
       redirect_to qr.destination_url, allow_other_host: true
     elsif qr.destination_record.present?
-      redirect_to polymorphic_url([ :go, qr.destination_record ], subdomain: ""), allow_other_host: true
+      redirect_to polymorphic_url([ :go, qr.destination_record ], subdomain: "", scan_id: scan.id),
+                  allow_other_host: true
     else
       redirect_to app_root_path
     end
