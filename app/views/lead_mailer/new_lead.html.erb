@@ -1,0 +1,47 @@
+<h2 style="margin: 0 0 16px; font-size: 20px; color: #111827;">New Lead Inquiry</h2>
+
+<table style="width: 100%; border-collapse: collapse; margin-bottom: 24px;">
+  <tr>
+    <td style="padding: 8px 0; color: #6b7280; font-size: 13px; width: 100px;">Name</td>
+    <td style="padding: 8px 0; font-size: 14px; font-weight: 600;"><%= @lead.name %></td>
+  </tr>
+  <% if @lead.email.present? %>
+    <tr>
+      <td style="padding: 8px 0; color: #6b7280; font-size: 13px;">Email</td>
+      <td style="padding: 8px 0; font-size: 14px;"><a href="mailto:<%= @lead.email %>" style="color: #4f46e5;"><%= @lead.email %></a></td>
+    </tr>
+  <% end %>
+  <% if @lead.phone.present? %>
+    <tr>
+      <td style="padding: 8px 0; color: #6b7280; font-size: 13px;">Phone</td>
+      <td style="padding: 8px 0; font-size: 14px;"><a href="tel:<%= @lead.phone %>" style="color: #4f46e5;"><%= @lead.phone %></a></td>
+    </tr>
+  <% end %>
+  <tr>
+    <td style="padding: 8px 0; color: #6b7280; font-size: 13px;">Type</td>
+    <td style="padding: 8px 0; font-size: 14px;"><%= @lead.lead_type.humanize %></td>
+  </tr>
+  <% if @lead.listing %>
+    <tr>
+      <td style="padding: 8px 0; color: #6b7280; font-size: 13px;">Listing</td>
+      <td style="padding: 8px 0; font-size: 14px;"><%= @lead.listing.address %></td>
+    </tr>
+  <% end %>
+</table>
+
+<% if @lead.message.present? %>
+  <div style="background: #f9fafb; border-radius: 8px; padding: 16px; margin-bottom: 24px;">
+    <p style="margin: 0 0 4px; font-size: 12px; color: #6b7280; text-transform: uppercase; letter-spacing: 0.05em;">Message</p>
+    <p style="margin: 0; font-size: 14px; color: #374151; white-space: pre-wrap;"><%= @lead.message %></p>
+  </div>
+<% end %>
+
+<div style="margin-top: 24px;">
+  <% if @lead.email.present? %>
+    <a href="mailto:<%= @lead.email %>?subject=Re: Your inquiry" style="display: inline-block; background: #4f46e5; color: #fff; padding: 10px 20px; border-radius: 6px; text-decoration: none; font-size: 14px; font-weight: 600;">Reply to <%= @lead.name %></a>
+  <% end %>
+</div>
+
+<p style="margin-top: 32px; font-size: 12px; color: #9ca3af;">
+  This lead was submitted via RePlay on <%= @lead.created_at.strftime("%b %-d, %Y at %-I:%M %p") %>.
+</p>

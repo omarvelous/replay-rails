@@ -5,7 +5,7 @@ RSpec.describe LeadMailer do
     let(:account) { create(:account) }
     let(:user) { create(:user, account: account) }
     let(:agent) { create(:agent, account: account, email: "agent@example.com") }
-    let(:lead) { create(:lead, account: account, name: "Jane Doe", email: "jane@example.com", message: "I'd like a viewing") }
+    let(:lead) { create(:lead, account: account, name: "Jane Doe", email: "jane@example.com", message: "I would like a viewing") }
 
     before { lead.lead_agents.create!(agent: agent) }
 
@@ -14,8 +14,9 @@ RSpec.describe LeadMailer do
       expect(mail.to).to eq([ "agent@example.com" ])
     end
 
-    it "falls back to account owner when no agent" do
-      lead_without_agent = create(:lead, account: account, name: "No Agent Lead")
+    it "falls back to account owner when no agent assigned" do
+      user # ensure user exists
+      lead_without_agent = create(:lead, account: account, name: "No Agent Lead", email: "noagent@example.com")
       mail = described_class.new_lead(lead_without_agent)
       expect(mail.to).to eq([ user.email_address ])
     end
@@ -32,7 +33,7 @@ RSpec.describe LeadMailer do
 
     it "includes the message in the body" do
       mail = described_class.new_lead(lead)
-      expect(mail.body.encoded).to include("I'd like a viewing")
+      expect(mail.body.encoded).to include("I would like a viewing")
     end
 
     it "includes a mailto link" do

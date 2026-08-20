@@ -26,6 +26,15 @@ RSpec.describe "Go::Leads" do
         expect(lead.lead_type).to eq("buyer_inquiry")
       end
 
+      it "enqueues a notification email" do
+        post go_leads_path, params: {
+          lead: { name: "Jane Doe", email: "jane@example.com",
+                  lead_type: "buyer_inquiry", listing_id: listing.id }
+        }
+
+        expect(ActionMailer::MailDeliveryJob).to have_been_enqueued
+      end
+
       it "assigns the listing's primary agent via LeadAgent" do
         post go_leads_path, params: {
           lead: { name: "Jane Doe", email: "jane@example.com",

@@ -24,6 +24,7 @@ module Go
 
       if @lead.save
         @lead.lead_agents.create!(agent: agent) if agent
+        LeadMailer.new_lead(@lead).deliver_later
         redirect_back_or_to marketing_root_path, flash: { submitted: true }
       else
         redirect_back_or_to marketing_root_path,
