@@ -40,9 +40,8 @@ RSpec.describe "Leads" do
 
     it "returns 404 for another account's lead" do
       other_lead = create(:lead)
-      expect {
-        get lead_path(other_lead)
-      }.to raise_error(ActiveRecord::RecordNotFound)
+      get lead_path(other_lead)
+      expect(response).to have_http_status(:not_found)
     end
   end
 

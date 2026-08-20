@@ -48,6 +48,7 @@ Rails.application.routes.draw do
         resources :playlist_ads, only: %i[ new create edit update destroy ]
       end
       resources :qr_codes, only: %i[ index show ]
+      resources :leads, only: %i[ index show update ]
       resource :session
       resources :passwords, param: :token
     end
