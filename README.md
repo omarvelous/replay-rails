@@ -19,6 +19,7 @@ The app uses subdomain routing. Visit:
 |-----|---------|
 | [replay.localhost:3000](http://replay.localhost:3000) | Marketing site |
 | [app.replay.localhost:3000](http://app.replay.localhost:3000) | App (login here) |
+| [admin.replay.localhost:3000](http://admin.replay.localhost:3000) | Admin panel (Administrate) |
 | [play.replay.localhost:3000](http://play.replay.localhost:3000) | Player device API |
 
 **Demo login:** `demo@example.com` / `password` (at `app.replay.localhost:3000`)
@@ -31,8 +32,9 @@ The app uses subdomain routing. Visit:
 - **Solid Queue / Cache / Cable** — DB-backed, no Redis
 - **ActionCable** for real-time player updates (Solid Cable adapter)
 - **ActiveStorage** for image uploads (libvips for variants)
+- **Administrate** for internal admin panel
 - **Docker** for development, **Kamal** for deployment
-- **RSpec** + FactoryBot + SimpleCov for testing (399 specs, 97% line coverage)
+- **RSpec** + FactoryBot + SimpleCov for testing (478 specs, 95% line coverage)
 
 ## Domain Model
 
@@ -43,34 +45,36 @@ Account (tenant)
 │       ├── ScreenPlaylist (assigned playlist)
 │       └── ScreenPlayer (player pairing — active + history)
 ├── Listings (properties: address, price, beds, baths, sqft, status)
-│   ├── ListingAgents (join: agent + role)
+│   ├── ListingAgents (join: agent + role + primary_at)
 │   ├── Photos (ActiveStorage attachments)
 │   └── QrCode (public entry point, scannable)
 ├── Agents (real estate agents, optionally linked to a User)
-├── Ads (delegated types — content for screens)
-│   ├── ListingAd (single listing, badge: just_listed/open_house/sold/price_reduction/coming_soon)
-│   ├── CollectionAd (multiple ads in a grid via CollectionAdAd)
-│   ├── AgentAd (agent spotlight)
-│   └── BrandAd (freeform headline + body)
+├── Ads (delegated types under Ads:: namespace)
+│   ├── Ads::ListingAd (single listing, badge modifier)
+│   ├── Ads::CollectionAd (multiple ads in a grid via CollectionAdAd)
+│   ├── Ads::AgentAd (agent spotlight)
+│   └── Ads::BrandAd (freeform headline + body)
 ├── Playlists (ordered sequences of ads: draft → published → archived)
 │   └── PlaylistAds (join: position + duration)
 ├── Players (physical devices — token, pairing code, heartbeat)
-└── QrCodes (scannable links — token, destination, scan tracking)
-    └── QrScans (scan events — ad, screen, IP, context JSONB)
+├── QrCodes (scannable links — token, destination, scan tracking)
+│   └── QrScans (scan events — ad, screen, IP, context JSONB)
+└── Leads (contact form submissions — name, email, phone, message)
+    └── LeadAgents (agent assignment history)
 ```
 
 All resources are tenant-scoped through `Current.account`.
 
 ## Ad Templates
 
-Ads use **delegated types** — each type is its own model with its own table, validations, controller, and form. The base `Ad` model holds common fields (headline, body, layout, theme).
+Ads use **delegated types** — each type is its own model (namespaced under `Ads::`) with its own table, validations, controller, and form. The base `Ad` model holds common fields (headline, body, layout, theme).
 
 | Type | Purpose | Layouts |
 |------|---------|---------|
-| ListingAd | Single property with badge | hero, split, minimal, stat_grid |
-| CollectionAd | Multiple ads in a grid | grid |
-| AgentAd | Agent spotlight | profile, split |
-| BrandAd | Freeform branding | hero, minimal |
+| Ads::ListingAd | Single property with badge | hero, split, minimal, stat_grid |
+| Ads::CollectionAd | Multiple ads in a grid | grid |
+| Ads::AgentAd | Agent spotlight | profile, split |
+| Ads::BrandAd | Freeform branding | hero, minimal |
 
 ### Themes
 
@@ -79,6 +83,27 @@ CSS custom properties on `.ad-canvas` with dark as the CSS default. Light and br
 ### Signage Scale
 
 All text, padding, gaps, and QR code sizes use `cqw` (container query width) units — the ad scales proportionally whether rendered full-screen on a 55" TV, in the admin preview, or as an index card thumbnail.
+
+## Lead Capture
+
+QR scans lead to public landing pages where visitors submit contact forms. Leads flow through a pipeline:
+
+```
+QR scan → landing page → contact form → Lead created → agent notified → inbox
+```
+
+### How it works
+
+1. **Three lead surfaces** — listing page (`/go/listings/:id`), agent page (`/go/agents/:id`), and marketing site. All post to a single `/go/leads` endpoint.
+2. **Attribution** — scan ID passes through as a query param. The lead links to the QR scan, which chains to the ad, screen, site, and listing.
+3. **Agent assignment** — `LeadAgent` join table tracks assignment history. Current agent = most recent row. Reassignment creates a new row.
+4. **Status workflow** — new → contacted → qualified → closed. Filter and manage in the app inbox.
+5. **Email notification** — `LeadMailer#new_lead` sends to the assigned agent (or account owner as fallback) via `deliver_later`.
+
+### Dev tools for email
+
+- **Letter Opener Web** — browse intercepted emails at [localhost:3000/letter_opener](http://localhost:3000/letter_opener)
+- **Mailer Previews** — design templates at [localhost:3000/rails/mailers](http://localhost:3000/rails/mailers)
 
 ## Player Pairing
 
@@ -95,7 +120,7 @@ Physical devices pair to screens via a 6-character code:
 
 QR codes belong to destination records (Listing, Agent). Scans record ad + screen attribution via URL params (`/s/:token?a=456&s=123`). Only scans with both dimensions are "qualified" and counted in metrics.
 
-Public landing pages live under `/go/` (e.g. `/go/listings/42`) — mobile-first, no auth required.
+Public landing pages live under `/go/` (e.g. `/go/listings/42`, `/go/agents/7`) — mobile-first, no auth required.
 
 ## Development Commands
 
@@ -123,8 +148,10 @@ Public landing pages live under `/go/` (e.g. `/go/listings/42`) — mobile-first
 
 | Subdomain | Module | Purpose |
 |-----------|--------|---------|
-| `replay.com` | `Marketing::` | Public marketing pages + `/go/` landing pages |
+| `replay.com` | `Marketing::` | Public marketing pages |
+| (none) | `Go::` | Public landing pages (`/go/listings`, `/go/agents`, `/go/leads`) |
 | `app.replay.com` | `App::` | Authenticated product (all CRUD) |
+| `admin.replay.com` | `Admin::` | Internal admin panel (Administrate) |
 | `play.replay.com` | `PlayerApiController` | Device API (register, status, play, heartbeat) |
 | any | `ScansController` | `/s/:token` scan redirect |
 
@@ -139,13 +166,24 @@ App::Ads::ListingAdsController — new, create, edit, update
 App::Ads::CollectionAdsController
 App::Ads::AgentAdsController
 App::Ads::BrandAdsController
+App::LeadsController       — lead inbox (index, show, update)
 ```
 
-Marketing (public, no auth):
+Public (no auth, marketing subdomain):
 
 ```
 Marketing::PagesController — home, features, pricing, about
 Go::ListingsController     — public listing landing page
+Go::AgentsController       — public agent landing page
+Go::LeadsController        — lead form submission
+```
+
+Admin (Administrate, `admin` subdomain):
+
+```
+Admin::ApplicationController — base with auth + require_admin!
+Admin::DashboardController   — platform stats
+Admin::{Resource}Controller  — CRUD for all models
 ```
 
 Device API (token auth, `play` subdomain):
@@ -166,13 +204,22 @@ All queries scope through `Current.account`. Join models validate same-account o
 
 ## Testing
 
-399 specs covering models, request specs, channel specs, and system specs. SimpleCov enforces minimum coverage (95% line, 80% branch). TDD workflow: write failing spec first, then implement.
+478 specs covering models, request specs, mailer specs, and channel specs. SimpleCov enforces minimum coverage (95% line, 80% branch). TDD workflow: write failing spec first, then implement.
 
 ```bash
 make test                                    # Full suite
 make test-file FILE=spec/models/ad_spec.rb   # Single file
 ```
 
+### Linting
+
+RuboCop with `rubocop-rails-omakase`, `rubocop-rspec`, `rubocop-rspec_rails`, `rubocop-factory_bot`, and `rubocop-capybara`.
+
+```bash
+make lint        # Check
+make lint-fix    # Auto-fix
+```
+
 ## Static Previews
 
-Browse all ad template permutations at `/previews/index.html` — listing ads (5 badges × 4 layouts × 3 themes), collection ads, agent ads, brand ads. Styled for signage readability with contrast and font-weight fixes from the digital signage CSS analysis.
+Browse all ad template permutations at `/previews/index.html` — listing ads (5 badges x 4 layouts x 3 themes), collection ads, agent ads, brand ads. Styled for signage readability with contrast and font-weight fixes from the digital signage CSS analysis.
