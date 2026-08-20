@@ -6,6 +6,8 @@ class QrScan < ApplicationRecord
 
   store_accessor :context, :playlist_id, :slide_position
 
+  has_many :leads
+
   scope :qualified, -> { where.not(ad_id: nil).where.not(screen_id: nil) }
   scope :unqualified, -> { where(ad_id: nil).or(where(screen_id: nil)) }
 end

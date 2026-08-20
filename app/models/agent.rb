@@ -11,6 +11,8 @@ class Agent < ApplicationRecord
 
   has_many :listing_agents, dependent: :destroy
   has_many :listings, through: :listing_agents
+  has_many :lead_agents, dependent: :destroy
+  has_many :leads, through: :lead_agents
 
   validates :name, presence: true
   validates :email, presence: true

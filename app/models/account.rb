@@ -9,4 +9,5 @@ class Account < ApplicationRecord
   has_many :playlists, dependent: :destroy
   has_many :playlist_ads, through: :playlists
   has_many :qr_codes, dependent: :destroy
+  has_many :leads, dependent: :destroy
 end

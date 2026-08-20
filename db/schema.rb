@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_08_20_200918) do
+ActiveRecord::Schema[8.1].define(version: 2026_08_20_201314) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -105,6 +105,34 @@ ActiveRecord::Schema[8.1].define(version: 2026_08_20_200918) do
     t.string "collection_title", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+  end
+
+  create_table "lead_agents", force: :cascade do |t|
+    t.bigint "agent_id", null: false
+    t.datetime "created_at", null: false
+    t.bigint "lead_id", null: false
+    t.datetime "updated_at", null: false
+    t.index ["agent_id"], name: "index_lead_agents_on_agent_id"
+    t.index ["lead_id", "created_at"], name: "index_lead_agents_on_lead_id_and_created_at"
+    t.index ["lead_id"], name: "index_lead_agents_on_lead_id"
+  end
+
+  create_table "leads", force: :cascade do |t|
+    t.bigint "account_id", null: false
+    t.jsonb "context", default: {}
+    t.datetime "created_at", null: false
+    t.string "email"
+    t.string "lead_type", default: "general_inquiry", null: false
+    t.text "message"
+    t.string "name", null: false
+    t.string "phone"
+    t.bigint "qr_scan_id"
+    t.string "status", default: "new", null: false
+    t.datetime "updated_at", null: false
+    t.index ["account_id", "created_at"], name: "index_leads_on_account_id_and_created_at"
+    t.index ["account_id", "status"], name: "index_leads_on_account_id_and_status"
+    t.index ["account_id"], name: "index_leads_on_account_id"
+    t.index ["qr_scan_id"], name: "index_leads_on_qr_scan_id"
   end
 
   create_table "listing_ads", force: :cascade do |t|
@@ -288,6 +316,10 @@ ActiveRecord::Schema[8.1].define(version: 2026_08_20_200918) do
   add_foreign_key "agents", "users"
   add_foreign_key "collection_ad_ads", "ads"
   add_foreign_key "collection_ad_ads", "collection_ads"
+  add_foreign_key "lead_agents", "agents"
+  add_foreign_key "lead_agents", "leads"
+  add_foreign_key "leads", "accounts"
+  add_foreign_key "leads", "qr_scans"
   add_foreign_key "listing_ads", "listings"
   add_foreign_key "listing_agents", "agents"
   add_foreign_key "listing_agents", "listings"
