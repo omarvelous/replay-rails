@@ -5,6 +5,8 @@ class ListingAgent < ApplicationRecord
   validates :role, presence: true
   validate :same_account
 
+  scope :primary, -> { where.not(primary_at: nil).order(primary_at: :desc) }
+
   private
 
     def same_account

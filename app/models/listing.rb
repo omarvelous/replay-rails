@@ -12,6 +12,10 @@ class Listing < ApplicationRecord
   has_many :listing_ads, class_name: "Ads::ListingAd", dependent: :destroy
   has_many :ads, through: :listing_ads
 
+  def primary_agent
+    listing_agents.primary.first&.agent || agents.first
+  end
+
   validates :address, presence: true
   validates :price, presence: true, numericality: { greater_than: 0 }
   validates :status, presence: true, inclusion: { in: %w[active pending sold] }
