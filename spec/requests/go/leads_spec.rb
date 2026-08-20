@@ -7,6 +7,7 @@ RSpec.describe "Go::Leads" do
 
   before do
     create(:listing_agent, listing: listing, agent: agent, primary_at: Time.current)
+    host! "replay.localhost"
   end
 
   describe "POST /go/leads" do

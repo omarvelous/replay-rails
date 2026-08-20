@@ -41,6 +41,15 @@
 <% end %>
 
 <%# Agents %>
+<%# Lead capture form %>
+<div class="border-t border-gray-200 pt-6 mt-6">
+  <h2 class="text-sm font-semibold text-gray-500 uppercase tracking-wider mb-4">Interested in this property?</h2>
+  <%= render "go/leads/form",
+      listing: @listing,
+      agent: @listing.primary_agent,
+      scan_id: params[:scan_id] %>
+</div>
+
 <% if @agents.any? %>
   <div class="border-t border-gray-200 pt-6">
     <h2 class="text-sm font-semibold text-gray-500 uppercase tracking-wider mb-4">Contact</h2>
