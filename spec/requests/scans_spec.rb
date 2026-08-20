@@ -9,11 +9,12 @@ RSpec.describe "Scans" do
     let(:ad) { create(:ad, account: account) }
     let(:qr_code) { create(:qr_code, account: account, destination_record: listing) }
 
-    it "records a scan and redirects to the destination" do
+    it "records a scan and redirects to the destination with scan_id" do
       expect {
         get qr_scan_path(token: qr_code.token)
       }.to change(QrScan, :count).by(1)
-      expect(response).to redirect_to(go_listing_url(listing, subdomain: ""))
+      scan = QrScan.last
+      expect(response).to redirect_to(go_listing_url(listing, subdomain: "", scan_id: scan.id))
     end
 
     it "records ad and screen from params" do
