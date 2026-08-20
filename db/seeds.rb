@@ -325,3 +325,65 @@ if demo_account
   end
 end
 puts "Seeded #{ScreenPlaylist.count} screen-playlist assignment(s)"
+
+# -----------------------------------------------------------------------
+# Leads
+# -----------------------------------------------------------------------
+if demo_account
+  fifth_ave = Listing.find_by(account: demo_account, address: "350 Fifth Ave, New York, NY 10118")
+  jane = Agent.find_by(account: demo_account, email: "jane.broker@example.com")
+
+  unless Lead.exists?(account: demo_account, name: "Sarah Chen")
+    lead = Lead.create!(
+      account: demo_account,
+      name: "Sarah Chen",
+      email: "sarah.chen@example.com",
+      phone: "212-555-0142",
+      lead_type: "buyer_inquiry",
+      status: "new",
+      message: "Hi, I saw this listing on your window display and I'm very interested. Could we schedule a viewing this weekend?",
+      context: { listing_id: fifth_ave&.id, source_url: "https://replay.localhost/go/listings/#{fifth_ave&.id}" }
+    )
+    lead.lead_agents.create!(agent: jane) if jane
+    puts "Created demo lead: Sarah Chen (buyer inquiry)"
+  end
+
+  unless Lead.exists?(account: demo_account, name: "Michael Torres")
+    lead = Lead.create!(
+      account: demo_account,
+      name: "Michael Torres",
+      email: "m.torres@example.com",
+      lead_type: "general_inquiry",
+      status: "contacted",
+      message: "Looking to sell my 2BR in the area. What's the market like right now?"
+    )
+    lead.lead_agents.create!(agent: jane) if jane
+    puts "Created demo lead: Michael Torres (general inquiry)"
+  end
+
+  unless Lead.exists?(account: demo_account, name: "Emily Park")
+    lead = Lead.create!(
+      account: demo_account,
+      name: "Emily Park",
+      phone: "917-555-0198",
+      lead_type: "renter_inquiry",
+      status: "qualified",
+      message: "Is the apartment at 350 Fifth Ave available for a 12-month lease?",
+      context: { listing_id: fifth_ave&.id }
+    )
+    lead.lead_agents.create!(agent: jane) if jane
+    puts "Created demo lead: Emily Park (renter inquiry)"
+  end
+
+  unless Lead.exists?(account: demo_account, name: "David Kim")
+    Lead.create!(
+      account: demo_account,
+      name: "David Kim",
+      email: "david.kim@example.com",
+      lead_type: "seller_inquiry",
+      status: "closed"
+    )
+    puts "Created demo lead: David Kim (seller inquiry, closed)"
+  end
+end
+puts "Seeded #{Lead.count} lead(s)"

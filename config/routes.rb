@@ -73,6 +73,8 @@ Rails.application.routes.draw do
       resources :playlists
       resources :qr_codes
       resources :qr_scans
+      resources :leads
+      resources :lead_agents
     end
   end
 
