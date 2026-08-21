@@ -53,12 +53,10 @@ RSpec.describe "Leads" do
       expect(response).to redirect_to(lead_path(lead))
     end
 
-    it "reassigns the lead to a new agent" do
+    it "does not change agent assignment" do
       lead = create(:lead, account: account)
-      agent = create(:agent, account: account)
-
-      patch lead_path(lead), params: { lead: { agent_id: agent.id } }
-      expect(lead.current_agent).to eq(agent)
+      patch lead_path(lead), params: { lead: { status: "contacted" } }
+      expect(lead.lead_agents.count).to eq(0)
     end
   end
 end
