@@ -1,4 +1,4 @@
-<%= render "app/shared/page_header", title: @lead.name, subtitle: @lead.lead_type.humanize %>
+<%= render "app/shared/page_header", title: @lead.name, subtitle: @lead.lead_type.humanize, back_link: { label: "← Leads", path: leads_path } %>
 
 <div class="grid grid-cols-1 lg:grid-cols-[1fr_320px] gap-6">
   <%# Left — Lead detail %>
@@ -34,17 +34,29 @@
       </div>
     <% end %>
 
-    <%# Attribution %>
-    <div class="rounded-lg bg-white shadow-sm ring-1 ring-gray-900/5 p-5">
-      <h3 class="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-4">Attribution</h3>
-      <dl class="space-y-3 text-sm">
-        <% if @lead.listing %>
-          <div>
-            <dt class="text-xs text-gray-500">Listing</dt>
-            <dd><%= @lead.listing.address %></dd>
+    <%# Listing %>
+    <% if @lead.listing %>
+      <div class="rounded-lg bg-white shadow-sm ring-1 ring-gray-900/5 p-5">
+        <h3 class="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-4">Listing</h3>
+        <%= link_to listing_path(@lead.listing), class: "flex items-center gap-4 p-3 -m-1 rounded-lg hover:bg-gray-50 transition-colors" do %>
+          <% if @lead.listing.photos.any? %>
+            <%= image_tag @lead.listing.photos.first.variant(:thumb), class: "w-20 h-14 rounded-md object-cover flex-none" %>
+          <% else %>
+            <div class="w-20 h-14 rounded-md bg-gray-100 flex-none"></div>
+          <% end %>
+          <div class="min-w-0">
+            <p class="text-sm font-semibold truncate"><%= @lead.listing.address %></p>
+            <p class="text-xs text-gray-500 mt-0.5"><%= number_to_currency(@lead.listing.price, precision: 0) %> &middot; <%= @lead.listing.beds %> bed &middot; <%= @lead.listing.baths %> bath</p>
           </div>
         <% end %>
-        <% if @lead.qr_scan %>
+      </div>
+    <% end %>
+
+    <%# Attribution %>
+    <% if @lead.qr_scan %>
+      <div class="rounded-lg bg-white shadow-sm ring-1 ring-gray-900/5 p-5">
+        <h3 class="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-4">Attribution</h3>
+        <dl class="space-y-3 text-sm">
           <div>
             <dt class="text-xs text-gray-500">QR Code</dt>
             <dd><%= @lead.qr_scan.qr_code.label || @lead.qr_scan.qr_code.token %></dd>
@@ -61,18 +73,55 @@
               <dd><%= @lead.qr_scan.screen.name %></dd>
             </div>
           <% end %>
+          <div>
+            <dt class="text-xs text-gray-500">Scanned</dt>
+            <dd><%= @lead.qr_scan.created_at.strftime("%b %-d, %Y at %-I:%M %p") %></dd>
+          </div>
+        </dl>
+      </div>
+    <% end %>
+  </div>
+
+  <%# Right — Status + agent assignment %>
+  <div class="space-y-5">
+    <%# Status %>
+    <%= form_with model: @lead, url: lead_path(@lead), method: :patch do |f| %>
+      <div class="rounded-lg bg-white shadow-sm ring-1 ring-gray-900/5 p-5 space-y-4">
+        <h3 class="text-xs font-semibold text-gray-500 uppercase tracking-wider">Status</h3>
+        <%= f.select :status,
+            [["New", "new"], ["Contacted", "contacted"], ["Qualified", "qualified"], ["Closed", "closed"]],
+            {},
+            class: "block w-full rounded-md bg-white py-2 pl-3 pr-8 text-sm text-gray-900 outline-1 -outline-offset-1 outline-gray-300 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600" %>
+        <%= f.submit "Update status",
+            class: "w-full rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 cursor-pointer" %>
+      </div>
+    <% end %>
+
+    <%# Agent assignment %>
+    <div class="rounded-lg bg-white shadow-sm ring-1 ring-gray-900/5 p-5 space-y-4">
+      <div class="flex items-center justify-between">
+        <h3 class="text-xs font-semibold text-gray-500 uppercase tracking-wider">Agent</h3>
+        <% if @lead.current_agent %>
+          <span class="text-sm font-semibold"><%= @lead.current_agent.name %></span>
+        <% else %>
+          <span class="text-sm text-gray-400">Unassigned</span>
         <% end %>
-        <div>
-          <dt class="text-xs text-gray-500">Submitted</dt>
-          <dd><%= @lead.created_at.strftime("%b %-d, %Y at %-I:%M %p") %></dd>
-        </div>
-      </dl>
+      </div>
+
+      <%= form_with url: lead_lead_agents_path(@lead), scope: :lead_agent, method: :post do |f| %>
+        <%= f.select :agent_id,
+            Current.account.agents.order(:name).map { |a| [a.name, a.id] },
+            { include_blank: "Select agent…" },
+            class: "block w-full rounded-md bg-white py-2 pl-3 pr-8 text-sm text-gray-900 outline-1 -outline-offset-1 outline-gray-300 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600" %>
+        <%= f.submit @lead.current_agent ? "Reassign" : "Assign",
+            class: "w-full rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-xs ring-1 ring-gray-300 ring-inset hover:bg-gray-50 cursor-pointer mt-2" %>
+      <% end %>
     </div>
 
     <%# Assignment history %>
-    <% if @lead.lead_agents.any? %>
+    <% if @lead.lead_agents.count > 1 %>
       <div class="rounded-lg bg-white shadow-sm ring-1 ring-gray-900/5 p-5">
-        <h3 class="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-4">Assignment History</h3>
+        <h3 class="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-3">Assignment History</h3>
         <div class="space-y-2">
           <% @lead.lead_agents.includes(:agent).order(created_at: :desc).each do |la| %>
             <div class="flex items-center justify-between text-sm">
@@ -83,31 +132,10 @@
         </div>
       </div>
     <% end %>
-  </div>
 
-  <%# Right — Status + agent %>
-  <div class="space-y-5">
-    <%= form_with model: @lead, url: lead_path(@lead), method: :patch do |f| %>
-      <div class="rounded-lg bg-white shadow-sm ring-1 ring-gray-900/5 p-5 space-y-4">
-        <div>
-          <h3 class="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">Status</h3>
-          <%= f.select :status,
-              [["New", "new"], ["Contacted", "contacted"], ["Qualified", "qualified"], ["Closed", "closed"]],
-              {},
-              class: "block w-full rounded-md bg-white py-2 pl-3 pr-8 text-sm text-gray-900 outline-1 -outline-offset-1 outline-gray-300 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600" %>
-        </div>
-
-        <div>
-          <h3 class="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">Assign Agent</h3>
-          <%= f.select :agent_id,
-              Current.account.agents.order(:name).map { |a| [a.name, a.id] },
-              { include_blank: "Select agent…", selected: @lead.current_agent&.id },
-              class: "block w-full rounded-md bg-white py-2 pl-3 pr-8 text-sm text-gray-900 outline-1 -outline-offset-1 outline-gray-300 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600" %>
-        </div>
-
-        <%= f.submit "Update",
-            class: "w-full rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 cursor-pointer" %>
-      </div>
-    <% end %>
+    <%# Submitted timestamp %>
+    <div class="rounded-lg bg-white shadow-sm ring-1 ring-gray-900/5 p-5">
+      <p class="text-xs text-gray-400">Submitted <%= @lead.created_at.strftime("%b %-d, %Y at %-I:%M %p") %></p>
+    </div>
   </div>
 </div>

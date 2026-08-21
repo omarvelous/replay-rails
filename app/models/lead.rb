@@ -31,6 +31,9 @@ class Lead < ApplicationRecord
   end
 
   def listing
-    qr_scan&.qr_code&.destination_record if qr_scan&.qr_code&.destination_record.is_a?(Listing)
+    dest = qr_scan&.qr_code&.destination_record
+    return dest if dest.is_a?(Listing)
+
+    Listing.find_by(id: context&.dig("listing_id")) if context&.dig("listing_id")
   end
 end

@@ -13,11 +13,17 @@ module App
 
     def update
       @lead = Current.account.leads.find(params[:id])
-      @lead.update!(status: params[:lead][:status]) if params[:lead][:status].present?
-      if params[:lead][:agent_id].present?
-        @lead.lead_agents.create!(agent_id: params[:lead][:agent_id])
+      if @lead.update(lead_params)
+        redirect_to @lead, notice: "Lead updated."
+      else
+        render :show, status: :unprocessable_content
       end
-      redirect_to @lead, notice: "Lead updated."
     end
+
+    private
+
+      def lead_params
+        params.require(:lead).permit(:status)
+      end
   end
 end
