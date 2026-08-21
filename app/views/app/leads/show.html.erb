@@ -97,24 +97,29 @@
       </div>
     <% end %>
 
-    <%# Agent assignment %>
-    <div class="rounded-lg bg-white shadow-sm ring-1 ring-gray-900/5 p-5 space-y-4">
-      <div class="flex items-center justify-between">
-        <h3 class="text-xs font-semibold text-gray-500 uppercase tracking-wider">Agent</h3>
-        <% if @lead.current_agent %>
-          <span class="text-sm font-semibold"><%= @lead.current_agent.name %></span>
-        <% else %>
-          <span class="text-sm text-gray-400">Unassigned</span>
-        <% end %>
-      </div>
-
-      <%= form_with url: lead_lead_agents_path(@lead), scope: :lead_agent, method: :post do |f| %>
-        <%= f.select :agent_id,
-            Current.account.agents.order(:name).map { |a| [a.name, a.id] },
-            { include_blank: "Select agent…" },
-            class: "block w-full rounded-md bg-white py-2 pl-3 pr-8 text-sm text-gray-900 outline-1 -outline-offset-1 outline-gray-300 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600" %>
-        <%= f.submit @lead.current_agent ? "Reassign" : "Assign",
-            class: "w-full rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-xs ring-1 ring-gray-300 ring-inset hover:bg-gray-50 cursor-pointer mt-2" %>
+    <%# Agent %>
+    <div class="rounded-lg bg-white shadow-sm ring-1 ring-gray-900/5 p-5">
+      <h3 class="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-3">Agent</h3>
+      <% if @lead.current_agent %>
+        <div class="flex items-center gap-3 mb-3">
+          <div class="w-9 h-9 rounded-full bg-indigo-50 grid place-items-center text-xs font-bold text-indigo-600 shrink-0 overflow-hidden">
+            <% if @lead.current_agent.photo.attached? %>
+              <%= image_tag @lead.current_agent.photo, class: "w-full h-full object-cover" %>
+            <% else %>
+              <%= @lead.current_agent.name.split.map(&:first).join.first(2).upcase %>
+            <% end %>
+          </div>
+          <div>
+            <p class="text-sm font-semibold"><%= @lead.current_agent.name %></p>
+            <p class="text-xs text-gray-500"><%= @lead.current_agent.email %></p>
+          </div>
+        </div>
+        <%= link_to "Reassign", new_lead_lead_agent_path(@lead),
+            class: "text-sm font-semibold text-indigo-600 hover:text-indigo-500" %>
+      <% else %>
+        <p class="text-sm text-gray-400 mb-3">No agent assigned</p>
+        <%= link_to "Assign agent", new_lead_lead_agent_path(@lead),
+            class: "rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 inline-block" %>
       <% end %>
     </div>
 

@@ -2,6 +2,10 @@ module App
   class LeadAgentsController < App::BaseController
     before_action :set_lead
 
+    def new
+      @lead_agent = @lead.lead_agents.build
+    end
+
     def create
       @lead.lead_agents.create!(lead_agent_params)
       redirect_to @lead, notice: "Agent assigned."

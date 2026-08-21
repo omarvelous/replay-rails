@@ -51,7 +51,7 @@ Rails.application.routes.draw do
       end
       resources :qr_codes, only: %i[ index show ]
       resources :leads, only: %i[ index show update ] do
-        resources :lead_agents, only: :create
+        resources :lead_agents, only: %i[ new create ]
       end
       resource :session
       resources :passwords, param: :token

@@ -8,6 +8,13 @@ RSpec.describe "LeadAgents" do
 
   before { sign_in(user) }
 
+  describe "GET /leads/:lead_id/lead_agents/new" do
+    it "returns a successful response" do
+      get new_lead_lead_agent_path(lead)
+      expect(response).to be_successful
+    end
+  end
+
   describe "POST /leads/:lead_id/lead_agents" do
     it "assigns an agent to the lead" do
       expect {
