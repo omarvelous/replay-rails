@@ -5,6 +5,7 @@ RSpec.describe Lead do
 
   describe "associations" do
     it { is_expected.to belong_to(:account) }
+    it { is_expected.to belong_to(:listing).optional }
     it { is_expected.to belong_to(:qr_scan).optional }
     it { is_expected.to have_many(:lead_agents).dependent(:destroy) }
     it { is_expected.to have_many(:agents).through(:lead_agents) }
@@ -67,18 +68,16 @@ RSpec.describe Lead do
   end
 
   describe "#listing" do
-    it "returns the listing from the scan chain" do
+    it "returns the listing when set directly" do
       account = create(:account)
       listing = create(:listing, account: account)
-      qr_code = create(:qr_code, account: account, destination_record: listing)
-      qr_scan = create(:qr_scan, qr_code: qr_code, account: account)
-      lead = create(:lead, account: account, qr_scan: qr_scan)
+      lead = create(:lead, account: account, listing: listing)
 
       expect(lead.listing).to eq(listing)
     end
 
-    it "returns nil when no scan is present" do
-      lead = create(:lead, qr_scan: nil)
+    it "returns nil when no listing is set" do
+      lead = create(:lead, listing: nil)
       expect(lead.listing).to be_nil
     end
   end
