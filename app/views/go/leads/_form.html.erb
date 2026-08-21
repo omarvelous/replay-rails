@@ -7,7 +7,7 @@
     <p class="text-sm text-green-700 mt-1">An agent will be in touch shortly.</p>
   </div>
 <% else %>
-  <%= form_with url: go_leads_path, method: :post, class: "space-y-3" do |f| %>
+  <%= form_with url: go_leads_path, scope: :lead, method: :post, class: "space-y-3" do |f| %>
     <%= f.hidden_field :listing_id, value: local_assigns[:listing]&.id %>
     <%= f.hidden_field :agent_id, value: local_assigns[:agent]&.id %>
     <%= f.hidden_field :scan_id, value: local_assigns[:scan_id] %>
