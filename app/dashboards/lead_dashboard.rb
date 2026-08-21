@@ -4,6 +4,7 @@ class LeadDashboard < Administrate::BaseDashboard
   ATTRIBUTE_TYPES = {
     id: Field::Number,
     account: Field::BelongsTo,
+    listing: Field::BelongsTo,
     qr_scan: Field::BelongsTo,
     lead_agents: Field::HasMany,
     agents: Field::HasMany,
@@ -29,6 +30,7 @@ class LeadDashboard < Administrate::BaseDashboard
   SHOW_PAGE_ATTRIBUTES = %i[
     id
     account
+    listing
     qr_scan
     lead_agents
     lead_type

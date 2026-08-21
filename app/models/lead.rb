@@ -1,5 +1,6 @@
 class Lead < ApplicationRecord
   belongs_to :account
+  belongs_to :listing, optional: true
   belongs_to :qr_scan, optional: true
 
   has_many :lead_agents, dependent: :destroy
@@ -28,12 +29,5 @@ class Lead < ApplicationRecord
 
   def current_agent
     agents.order("lead_agents.created_at DESC").first
-  end
-
-  def listing
-    dest = qr_scan&.qr_code&.destination_record
-    return dest if dest.is_a?(Listing)
-
-    Listing.find_by(id: context&.dig("listing_id")) if context&.dig("listing_id")
   end
 end

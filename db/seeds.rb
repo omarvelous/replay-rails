@@ -336,13 +336,13 @@ if demo_account
   unless Lead.exists?(account: demo_account, name: "Sarah Chen")
     lead = Lead.create!(
       account: demo_account,
+      listing: fifth_ave,
       name: "Sarah Chen",
       email: "sarah.chen@example.com",
       phone: "212-555-0142",
       lead_type: "buyer_inquiry",
       status: "new",
-      message: "Hi, I saw this listing on your window display and I'm very interested. Could we schedule a viewing this weekend?",
-      context: { listing_id: fifth_ave&.id, source_url: "https://replay.localhost/go/listings/#{fifth_ave&.id}" }
+      message: "Hi, I saw this listing on your window display and I'm very interested. Could we schedule a viewing this weekend?"
     )
     lead.lead_agents.create!(agent: jane) if jane
     puts "Created demo lead: Sarah Chen (buyer inquiry)"
@@ -364,12 +364,12 @@ if demo_account
   unless Lead.exists?(account: demo_account, name: "Emily Park")
     lead = Lead.create!(
       account: demo_account,
+      listing: fifth_ave,
       name: "Emily Park",
       phone: "917-555-0198",
       lead_type: "renter_inquiry",
       status: "qualified",
-      message: "Is the apartment at 350 Fifth Ave available for a 12-month lease?",
-      context: { listing_id: fifth_ave&.id }
+      message: "Is the apartment at 350 Fifth Ave available for a 12-month lease?"
     )
     lead.lead_agents.create!(agent: jane) if jane
     puts "Created demo lead: Emily Park (renter inquiry)"

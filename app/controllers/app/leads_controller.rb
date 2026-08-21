@@ -1,7 +1,7 @@
 module App
   class LeadsController < App::BaseController
     def index
-      base = Current.account.leads.includes(:lead_agents, :agents)
+      base = Current.account.leads.includes(:listing, :lead_agents, :agents)
       base = base.by_status(params[:status]) if params[:status].present?
       @pagy, @leads = pagy(base.order(created_at: :desc))
       @unread_count = Current.account.leads.unread.count

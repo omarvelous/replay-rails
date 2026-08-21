@@ -199,7 +199,7 @@
             <p class="text-xs text-gray-400">On screens</p>
           </div>
           <div class="flex-1 text-center">
-            <p class="font-bold text-sm font-mono tabular-nums"><%= Lead.where("context->>'listing_id' = ?", @listing.id.to_s).count %></p>
+            <p class="font-bold text-sm font-mono tabular-nums"><%= @listing.leads.count %></p>
             <p class="text-xs text-gray-400">Leads</p>
           </div>
         </div>

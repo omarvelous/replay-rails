@@ -45,13 +45,13 @@ RSpec.describe "Go::Leads" do
         expect(lead.current_agent).to eq(agent)
       end
 
-      it "stores listing_id in context" do
+      it "sets listing_id on the lead" do
         post go_leads_path, params: {
           lead: { name: "Jane Doe", email: "jane@example.com",
                   lead_type: "buyer_inquiry", listing_id: listing.id }
         }
 
-        expect(Lead.last.context["listing_id"]).to eq(listing.id)
+        expect(Lead.last.listing).to eq(listing)
       end
 
       it "links to a qr_scan when scan_id is provided" do

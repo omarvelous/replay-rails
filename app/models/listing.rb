@@ -11,6 +11,7 @@ class Listing < ApplicationRecord
   has_many :agents, through: :listing_agents
   has_many :listing_ads, class_name: "Ads::ListingAd", dependent: :destroy
   has_many :ads, through: :listing_ads
+  has_many :leads, dependent: :nullify
 
   def primary_agent
     listing_agents.primary.first&.agent || agents.first

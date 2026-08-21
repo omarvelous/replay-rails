@@ -12,11 +12,10 @@ module Go
         return
       end
 
-      @lead = Lead.new(lead_params.except(:listing_id, :agent_id, :scan_id))
+      @lead = Lead.new(lead_params.except(:agent_id, :scan_id))
       @lead.account = account
       @lead.qr_scan = QrScan.find_by(id: lead_params[:scan_id])
       @lead.context = {
-        listing_id: listing&.id,
         source_url: request.referer,
         ip_address: request.remote_ip,
         user_agent: request.user_agent
