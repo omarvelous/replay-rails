@@ -54,4 +54,9 @@ Rails.application.configure do
   # Subdomain routing
   config.action_dispatch.tld_length = 1
   config.action_mailer.default_url_options = { host: "app.replay.localhost" }
+
+  # Disable Rack::Attack by default in tests — enable explicitly in rate limiting specs
+  config.after_initialize do
+    Rack::Attack.enabled = false
+  end
 end
