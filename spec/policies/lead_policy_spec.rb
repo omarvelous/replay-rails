@@ -5,24 +5,30 @@ RSpec.describe LeadPolicy do
   let(:lead) { create(:lead, account: account) }
 
   context "as an owner" do
-    let(:account_user) { create(:account_user, account: account, role: "owner") }
     subject { described_class.new(account_user, lead) }
+
+    let(:account_user) { create(:account_user, account: account, role: "owner") }
+
 
     it { is_expected.to permit_actions(%i[index show update destroy]) }
   end
 
   context "as a manager" do
-    let(:account_user) { create(:account_user, :manager, account: account) }
     subject { described_class.new(account_user, lead) }
+
+    let(:account_user) { create(:account_user, :manager, account: account) }
+
 
     it { is_expected.to permit_actions(%i[index show update destroy]) }
   end
 
   context "as an agent" do
+    subject { described_class.new(account_user, lead) }
+
     let(:user) { create(:user, account: account, role: "agent") }
     let(:account_user) { user.account_users.first }
     let(:agent) { create(:agent, account: account, user: user) }
-    subject { described_class.new(account_user, lead) }
+
 
     it { is_expected.to permit_action(:index) }
     it { is_expected.to forbid_action(:destroy) }

@@ -1,0 +1,1 @@
+class ScreenPolicy < ApplicationPolicy; end

@@ -21,3 +21,11 @@ RSpec/MultipleMemoizedHelpers:
 
 RSpec/IndexedLet:
   Enabled: false
+
+RSpec/ContextWording:
+  Prefixes:
+    - when
+    - with
+    - without
+    - as
+    - on

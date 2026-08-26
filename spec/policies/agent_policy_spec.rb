@@ -5,16 +5,20 @@ RSpec.describe AgentPolicy do
   let(:agent) { create(:agent, account: account) }
 
   context "as a manager" do
-    let(:account_user) { create(:account_user, :manager, account: account) }
     subject { described_class.new(account_user, agent) }
+
+    let(:account_user) { create(:account_user, :manager, account: account) }
+
 
     it { is_expected.to permit_actions(%i[index show create update destroy]) }
   end
 
   context "as an agent" do
+    subject { described_class.new(account_user, agent) }
+
     let(:user) { create(:user, account: account, role: "agent") }
     let(:account_user) { user.account_users.first }
-    subject { described_class.new(account_user, agent) }
+
 
     it { is_expected.to permit_actions(%i[index show]) }
     it { is_expected.to forbid_actions(%i[create destroy]) }

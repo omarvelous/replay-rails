@@ -5,24 +5,30 @@ RSpec.describe ListingPolicy do
   let(:listing) { create(:listing, account: account) }
 
   context "as an owner" do
-    let(:account_user) { create(:account_user, account: account, role: "owner") }
     subject { described_class.new(account_user, listing) }
+
+    let(:account_user) { create(:account_user, account: account, role: "owner") }
+
 
     it { is_expected.to permit_actions(%i[index show create update destroy]) }
   end
 
   context "as a manager" do
-    let(:account_user) { create(:account_user, :manager, account: account) }
     subject { described_class.new(account_user, listing) }
+
+    let(:account_user) { create(:account_user, :manager, account: account) }
+
 
     it { is_expected.to permit_actions(%i[index show create update destroy]) }
   end
 
   context "as an agent" do
+    subject { described_class.new(account_user, listing) }
+
     let(:user) { create(:user, account: account, role: "agent") }
     let(:account_user) { user.account_users.first }
     let(:agent) { create(:agent, account: account, user: user) }
-    subject { described_class.new(account_user, listing) }
+
 
     it { is_expected.to permit_action(:index) }
     it { is_expected.to forbid_actions(%i[create update destroy]) }
