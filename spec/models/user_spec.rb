@@ -41,8 +41,9 @@ RSpec.describe User do
   end
 
   describe "associations" do
-    it { is_expected.to belong_to(:account) }
     it { is_expected.to have_many(:sessions).dependent(:destroy) }
+    it { is_expected.to have_many(:account_users).dependent(:destroy) }
+    it { is_expected.to have_many(:accounts).through(:account_users) }
   end
 
   describe "#admin?" do
