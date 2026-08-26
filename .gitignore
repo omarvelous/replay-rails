@@ -45,3 +45,5 @@
 /.claude/settings.local.json
 
 /.tailwindplus-downloader-session.json
+
+/design/*.json
