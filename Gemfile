@@ -54,6 +54,7 @@ gem "rqrcode", "~> 2.2"
 # Admin dashboard [https://github.com/thoughtbot/administrate]
 gem "administrate"
 gem "administrate-field-active_storage"
+gem "pundit"
 
 group :development, :test do
   # See https://guides.rubyonrails.org/debugging_rails_applications.html#debugging-with-the-debug-gem
@@ -94,6 +95,7 @@ end
 
 group :test do
   gem "shoulda-matchers", "~> 6.0"
+  gem "pundit-matchers", "~> 4.0"
   gem "database_cleaner-active_record"
   gem "simplecov", require: false
 end
