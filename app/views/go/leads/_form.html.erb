@@ -12,6 +12,11 @@
     <%= f.hidden_field :agent_id, value: local_assigns[:agent]&.id %>
     <%= f.hidden_field :scan_id, value: local_assigns[:scan_id] %>
 
+    <%# Honeypot — bots fill this, humans don't see it %>
+    <div aria-hidden="true" style="position: absolute; left: -9999px; top: -9999px;">
+      <%= f.text_field :website, tabindex: "-1", autocomplete: "off" %>
+    </div>
+
     <div>
       <%= f.text_field :name, required: true, placeholder: "Your name",
           class: "block w-full rounded-lg bg-white px-3 py-2.5 text-sm text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600" %>

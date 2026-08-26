@@ -50,7 +50,7 @@ class Rack::Attack
     [
       429,
       { "Content-Type" => "text/plain", "Retry-After" => "60" },
-      ["Rate limit exceeded. Please try again later."]
+      [ "Rate limit exceeded. Please try again later." ]
     ]
   end
 
