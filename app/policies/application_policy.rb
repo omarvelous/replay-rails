@@ -1,29 +1,15 @@
-class ApplicationPolicy
-  attr_reader :account_user, :record
-
-  def initialize(account_user, record)
-    @account_user = account_user
-    @record = record
-  end
+class ApplicationPolicy < ActionPolicy::Base
+  authorize :user, :account, optional: true
 
   def index?   = true
   def show?    = true
-  def create?  = account_user.can_manage?
+  def create?  = user&.can_manage?(account)
   def new?     = create?
-  def update?  = account_user.can_manage?
+  def update?  = user&.can_manage?(account)
   def edit?    = update?
-  def destroy? = account_user.can_manage?
+  def destroy? = user&.can_manage?(account)
 
-  class Scope
-    def initialize(account_user, scope)
-      @account_user = account_user
-      @scope = scope
-    end
-
-    def resolve = scope.all
-
-    private
-
-    attr_reader :account_user, :scope
+  scope_for :active_record_relation do |relation|
+    relation.all
   end
 end

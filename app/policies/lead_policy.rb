@@ -1,29 +1,20 @@
 class LeadPolicy < ApplicationPolicy
-  def show?    = account_user.can_manage? || owns_lead?
-  def update?  = account_user.can_manage? || owns_lead?
-  def destroy? = account_user.can_manage?
+  def show?    = user.can_manage?(account) || owns_lead?
+  def update?  = user.can_manage?(account) || owns_lead?
+  def destroy? = user.can_manage?(account)
 
-  class Scope < ApplicationPolicy::Scope
-    def resolve
-      if account_user.can_manage?
-        scope.all
-      else
-        scope.joins(:lead_agents)
-             .where(lead_agents: { agent_id: agent_id })
-      end
-    end
-
-    private
-
-    def agent_id
-      account_user.user.agent_profile&.id
+  scope_for :active_record_relation do |relation|
+    if user.can_manage?(account)
+      relation.all
+    else
+      relation.joins(:lead_agents)
+              .where(lead_agents: { agent_id: user.agent_profile&.id })
     end
   end
 
   private
 
   def owns_lead?
-    agent = account_user.user.agent_profile
-    agent.present? && record.current_agent == agent
+    user.agent_profile && record.current_agent == user.agent_profile
   end
 end

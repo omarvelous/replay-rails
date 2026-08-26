@@ -5,12 +5,12 @@ module App
 
   def new
     @listing_agent = @listing.listing_agents.build(role: "listing_agent")
-    authorize @listing_agent
+    authorize! @listing_agent
   end
 
   def create
     @listing_agent = @listing.listing_agents.build(listing_agent_params)
-    authorize @listing_agent
+    authorize! @listing_agent
 
     if @listing_agent.save
       redirect_to @listing, notice: t(".success")
@@ -20,11 +20,11 @@ module App
   end
 
   def edit
-    authorize @listing_agent
+    authorize! @listing_agent
   end
 
   def update
-    authorize @listing_agent
+    authorize! @listing_agent
     if @listing_agent.update(listing_agent_params)
       redirect_to @listing, notice: t(".success")
     else
@@ -33,7 +33,7 @@ module App
   end
 
   def destroy
-    authorize @listing_agent
+    authorize! @listing_agent
     @listing_agent.destroy
     redirect_to @listing, notice: t(".success")
   end

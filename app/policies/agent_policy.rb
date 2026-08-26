@@ -1,10 +1,10 @@
 class AgentPolicy < ApplicationPolicy
-  def update? = account_user.can_manage? || own_profile?
+  def update? = user.can_manage?(account) || own_profile?
   def edit?   = update?
 
   private
 
   def own_profile?
-    record.user_id == account_user.user_id
+    record.user_id == user.id
   end
 end

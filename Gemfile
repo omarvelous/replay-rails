@@ -54,7 +54,7 @@ gem "rqrcode", "~> 2.2"
 # Admin dashboard [https://github.com/thoughtbot/administrate]
 gem "administrate"
 gem "administrate-field-active_storage"
-gem "pundit"
+gem "action_policy"
 gem "rack-attack"
 
 group :development, :test do
@@ -96,7 +96,6 @@ end
 
 group :test do
   gem "shoulda-matchers", "~> 6.0"
-  gem "pundit-matchers", "~> 4.0"
   gem "database_cleaner-active_record"
   gem "simplecov", require: false
 end

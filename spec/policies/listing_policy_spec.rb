@@ -4,64 +4,65 @@ RSpec.describe ListingPolicy do
   let(:account) { create(:account) }
   let(:listing) { create(:listing, account: account) }
 
-  context "as an owner" do
-    subject { described_class.new(account_user, listing) }
+  context "when user is owner" do
+    let(:user) { create(:user, account: account, role: "owner") }
+    let(:policy) { described_class.new(listing, user: user, account: account) }
 
-    let(:account_user) { create(:account_user, account: account, role: "owner") }
-
-
-    it { is_expected.to permit_actions(%i[index show create update destroy]) }
+    it { expect(policy).to permit(:index?) }
+    it { expect(policy).to permit(:show?) }
+    it { expect(policy).to permit(:create?) }
+    it { expect(policy).to permit(:update?) }
+    it { expect(policy).to permit(:destroy?) }
   end
 
-  context "as a manager" do
-    subject { described_class.new(account_user, listing) }
+  context "when user is manager" do
+    let(:user) { create(:user, account: account, role: "manager") }
+    let(:policy) { described_class.new(listing, user: user, account: account) }
 
-    let(:account_user) { create(:account_user, :manager, account: account) }
-
-
-    it { is_expected.to permit_actions(%i[index show create update destroy]) }
+    it { expect(policy).to permit(:show?) }
+    it { expect(policy).to permit(:create?) }
   end
 
-  context "as an agent" do
-    subject { described_class.new(account_user, listing) }
-
+  context "when user is agent" do
     let(:user) { create(:user, account: account, role: "agent") }
-    let(:account_user) { user.account_users.first }
     let(:agent) { create(:agent, account: account, user: user) }
+    let(:policy) { described_class.new(listing, user: user, account: account) }
 
+    it { expect(policy).to permit(:index?) }
+    it { expect(policy).not_to permit(:create?) }
+    it { expect(policy).not_to permit(:update?) }
+    it { expect(policy).not_to permit(:destroy?) }
 
-    it { is_expected.to permit_action(:index) }
-    it { is_expected.to forbid_actions(%i[create update destroy]) }
-
-    context "on their own listing" do
+    context "when viewing their own listing" do
       before { create(:listing_agent, listing: listing, agent: agent) }
 
-      it { is_expected.to permit_action(:show) }
+      it { expect(policy).to permit(:show?) }
     end
 
-    context "on another agent's listing" do
-      it { is_expected.to forbid_action(:show) }
+    context "when viewing another agent's listing" do
+      it { expect(policy).not_to permit(:show?) }
     end
   end
 
-  describe "Scope" do
+  describe "scope" do
     let!(:own_listing) { create(:listing, account: account) }
     let!(:other_listing) { create(:listing, account: account) }
     let(:user) { create(:user, account: account, role: "agent") }
-    let(:account_user) { user.account_users.first }
     let(:agent) { create(:agent, account: account, user: user) }
 
     before { create(:listing_agent, listing: own_listing, agent: agent) }
 
     it "returns only the agent's listings for agents" do
-      scope = described_class::Scope.new(account_user, account.listings).resolve
+      scope = described_class.new(own_listing, user: user, account: account)
+                             .apply_scope(account.listings, type: :active_record_relation)
       expect(scope).to include(own_listing)
       expect(scope).not_to include(other_listing)
     end
 
     it "returns all listings for managers" do
-      manager_au = create(:account_user, :manager, account: account)
-      scope = described_class::Scope.new(manager_au, account.listings).resolve
+      manager = create(:user, account: account, role: "manager")
+      scope = described_class.new(own_listing, user: manager, account: account)
+                             .apply_scope(account.listings, type: :active_record_relation)
       expect(scope).to include(own_listing, other_listing)
     end
   end
