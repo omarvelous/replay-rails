@@ -104,6 +104,19 @@ RSpec.describe "Go::Leads" do
       end
     end
 
+    context "with honeypot filled (bot)" do
+      it "silently discards the submission" do
+        expect {
+          post go_leads_path, params: {
+            lead: { name: "Bot", email: "bot@spam.com",
+                    lead_type: "general_inquiry",
+                    listing_id: listing.id, website: "https://spam.com" }
+          }
+        }.not_to change(Lead, :count)
+        expect(response).to have_http_status(:ok)
+      end
+    end
+
     context "with invalid params" do
       it "redirects back with alert when name is blank" do
         post go_leads_path, params: {
