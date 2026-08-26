@@ -1,0 +1,26 @@
+require "rails_helper"
+
+RSpec.describe AccountPolicy do
+  let(:account) { create(:account) }
+
+  context "as an owner" do
+    let(:account_user) { create(:account_user, account: account, role: "owner") }
+    subject { described_class.new(account_user, account) }
+
+    it { is_expected.to permit_actions(%i[edit update destroy]) }
+  end
+
+  context "as a manager" do
+    let(:account_user) { create(:account_user, :manager, account: account) }
+    subject { described_class.new(account_user, account) }
+
+    it { is_expected.to forbid_actions(%i[edit update destroy]) }
+  end
+
+  context "as an agent" do
+    let(:account_user) { create(:account_user, :agent, account: account) }
+    subject { described_class.new(account_user, account) }
+
+    it { is_expected.to forbid_actions(%i[edit update destroy]) }
+  end
+end
