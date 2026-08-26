@@ -28,4 +28,4 @@ RSpec/ContextWording:
     - with
     - without
     - as
-    - on
+    - "on"

@@ -56,6 +56,21 @@ demo_user_record = User.find_by(email_address: "demo@example.com")
 demo_user_record&.update!(admin: true) unless demo_user_record&.admin?
 demo_account = demo_user_record&.accounts&.first
 
+# Manager user
+if demo_account
+  unless User.exists?(email_address: "manager@example.com")
+    manager = User.create!(
+      email_address: "manager@example.com",
+      first_name: "Morgan",
+      last_name: "Manager",
+      phone: "+12125550002",
+      password: "password"
+    )
+    AccountUser.create!(account: demo_account, user: manager, role: "manager")
+    puts "Created manager user: manager@example.com / password (manager)"
+  end
+end
+
 # -----------------------------------------------------------------------
 # Sites
 # -----------------------------------------------------------------------
@@ -192,6 +207,19 @@ if demo_account
 
   tom_agent = Agent.find_by(account: demo_account, email: "tom.realtor@example.com")
   attach_seed_image(tom_agent, :photo, "agent-tom.jpg") if tom_agent
+  # Agent user (linked to Jane's Agent profile)
+  if jane_agent && !User.exists?(email_address: "jane.broker@example.com")
+    jane_user = User.create!(
+      email_address: "jane.broker@example.com",
+      first_name: "Jane",
+      last_name: "Broker",
+      phone: "+12125550003",
+      password: "password"
+    )
+    AccountUser.create!(account: demo_account, user: jane_user, role: "agent")
+    jane_agent.update!(user: jane_user)
+    puts "Created agent user: jane.broker@example.com / password (agent)"
+  end
 end
 puts "Seeded #{Agent.count} agent(s)"
 
