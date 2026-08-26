@@ -1,31 +1,75 @@
-# Files in the config/locales directory are used for internationalization and
-# are automatically loaded by Rails. If you want to use locales other than
-# English, add the necessary files in this directory.
-#
-# To use the locales, use `I18n.t`:
-#
-#     I18n.t "hello"
-#
-# In views, this is aliased to just `t`:
-#
-#     <%= t("hello") %>
-#
-# To use a different locale, set it with `I18n.locale`:
-#
-#     I18n.locale = :es
-#
-# This would use the information in config/locales/es.yml.
-#
-# To learn more about the API, please read the Rails Internationalization guide
-# at https://guides.rubyonrails.org/i18n.html.
-#
-# Be aware that YAML interprets the following case-insensitive strings as
-# booleans: `true`, `false`, `on`, `off`, `yes`, `no`. Therefore, these strings
-# must be quoted to be interpreted as strings. For example:
-#
-#     en:
-#       "yes": yup
-#       enabled: "ON"
-
 en:
-  hello: "Hello world"
+  sites:
+    create:
+      success: "Site was successfully created."
+    update:
+      success: "Site was successfully updated."
+    destroy:
+      success: "Site was successfully deleted."
+
+  screens:
+    create:
+      success: "Screen was successfully created."
+    update:
+      success: "Screen was successfully updated."
+    destroy:
+      success: "Screen was successfully deleted."
+    playlist:
+      create:
+        success: "Playlist assigned to screen."
+      destroy:
+        success: "Playlist removed from screen."
+
+  listings:
+    create:
+      success: "Listing was successfully created."
+    update:
+      success: "Listing was successfully updated."
+    destroy:
+      success: "Listing was successfully deleted."
+
+  agents:
+    create:
+      success: "Agent was successfully created."
+    update:
+      success: "Agent was successfully updated."
+    destroy:
+      success: "Agent was successfully deleted."
+
+  ads:
+    create:
+      success: "Ad was successfully created."
+    update:
+      success: "Ad was successfully updated."
+    destroy:
+      success: "Ad was successfully deleted."
+
+  playlists:
+    create:
+      success: "Playlist was successfully created."
+    update:
+      success: "Playlist was successfully updated."
+    destroy:
+      success: "Playlist was successfully deleted."
+
+  listing_agents:
+    create:
+      success: "Agent and listing linked."
+    update:
+      success: "Listing agent was updated."
+    destroy:
+      success: "Agent and listing unlinked."
+
+  playlist_ads:
+    create:
+      success: "Ad and playlist linked."
+    update:
+      success: "Playlist ad was updated."
+    destroy:
+      success: "Ad and playlist unlinked."
+
+  passwords:
+    create:
+      success: "Password reset instructions sent (if user with that email address exists)."
+    update:
+      success: "Password has been reset."

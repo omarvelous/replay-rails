@@ -1,0 +1,25 @@
+<%= render "app/shared/page_header",
+    title: @lead.current_agent ? "Reassign Lead" : "Assign Agent",
+    subtitle: @lead.name,
+    back_link: { label: "← Back to lead", path: lead_path(@lead) } %>
+
+<div class="max-w-md">
+  <div class="rounded-lg bg-white shadow-sm ring-1 ring-gray-900/5 p-5">
+    <%= form_with url: lead_lead_agents_path(@lead), scope: :lead_agent, method: :post do |f| %>
+      <div class="mb-4">
+        <%= f.label :agent_id, "Agent", class: "block text-sm font-medium text-gray-700 mb-1" %>
+        <%= f.select :agent_id,
+            Current.account.agents.order(:name).map { |a| [a.name, a.id] },
+            { include_blank: "Select agent…" },
+            class: "block w-full rounded-md bg-white py-2 pl-3 pr-8 text-sm text-gray-900 outline-1 -outline-offset-1 outline-gray-300 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600" %>
+      </div>
+
+      <div class="flex items-center gap-3">
+        <%= f.submit @lead.current_agent ? "Reassign" : "Assign",
+            class: "rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 cursor-pointer" %>
+        <%= link_to "Cancel", lead_path(@lead),
+            class: "text-sm font-semibold text-gray-600 hover:text-gray-900" %>
+      </div>
+    <% end %>
+  </div>
+</div>

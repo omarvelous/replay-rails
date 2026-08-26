@@ -36,3 +36,14 @@
 
 /app/assets/builds/*
 !/app/assets/builds/.keep
+
+# Test coverage
+/coverage/
+
+# Claude Code
+/.claude/skills/
+/.claude/settings.local.json
+
+/.tailwindplus-downloader-session.json
+
+/design/*.json

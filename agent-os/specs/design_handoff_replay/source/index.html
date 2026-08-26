@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RePlay — Product Design System</title>
+<link rel="stylesheet" href="assets/replay.css">
+<style>
+  .wrap { max-width: 1080px; margin: 0 auto; padding: 0 32px; }
+  .nav-top {
+    position: sticky; top: 0; z-index: 50; height: 64px;
+    background: rgba(255,255,255,.82); backdrop-filter: blur(14px);
+    border-bottom: 1px solid var(--line); display: flex; align-items: center;
+  }
+  .nav-top .wrap { display: flex; align-items: center; justify-content: space-between; width: 100%; }
+  .nav-links { display: flex; gap: 4px; }
+  .nav-links a { font-size: 13.5px; font-weight: 550; color: var(--slate-500); text-decoration: none; padding: 7px 12px; border-radius: var(--r-sm); }
+  .nav-links a:hover { background: var(--surface-3); color: var(--ink-900); }
+
+  /* ---- logo mark ---- */
+  .logo { display: inline-flex; align-items: center; gap: 10px; text-decoration: none; }
+  .logo-mark { width: 30px; height: 30px; border-radius: 8px; display: grid; place-items: center;
+    background: linear-gradient(135deg, var(--blue), var(--teal)); box-shadow: var(--sh-sm); }
+  .logo-mark svg { width: 14px; height: 14px; }
+  .logo-word { font-size: 18px; font-weight: 700; letter-spacing: -0.02em; color: var(--ink-900); }
+  .logo-word b { color: var(--blue); font-weight: 700; }
+
+  /* ---- hero ---- */
+  .hero { padding: 80px 0 56px; }
+  .eyebrow { display: inline-flex; align-items: center; gap: 8px; font-size: 12px; font-weight: 600;
+    letter-spacing: .04em; color: var(--blue-strong); background: var(--blue-soft);
+    padding: 6px 12px; border-radius: var(--r-pill); margin-bottom: 22px; }
+  .hero h1 { font-size: 58px; line-height: 1.02; font-weight: 700; letter-spacing: -0.03em; margin: 0 0 20px; max-width: 16ch; }
+  .hero h1 .grad { background: linear-gradient(120deg, var(--blue), var(--teal)); -webkit-background-clip: text; background-clip: text; color: transparent; }
+  .hero p.lede { font-size: 19px; line-height: 1.5; color: var(--slate-500); max-width: 60ch; margin: 0 0 32px; }
+  .hero-cta { display: flex; gap: 12px; flex-wrap: wrap; }
+
+  .section { padding: 56px 0; border-top: 1px solid var(--line); }
+  .section-head { margin-bottom: 32px; }
+  .section-head h2 { font-size: 13px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: var(--blue); margin: 0 0 10px; }
+  .section-head h3 { font-size: 30px; font-weight: 700; letter-spacing: -0.02em; margin: 0 0 12px; }
+  .section-head p { font-size: 16px; color: var(--slate-500); max-width: 64ch; margin: 0; line-height: 1.55; }
+
+  /* ---- entry cards ---- */
+  .entries { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
+  .entry { display: flex; flex-direction: column; text-decoration: none; color: inherit;
+    border: 1px solid var(--line); border-radius: var(--r-lg); overflow: hidden; background: var(--surface);
+    box-shadow: var(--sh-sm); transition: transform .18s, box-shadow .18s, border-color .18s; }
+  .entry:hover { transform: translateY(-3px); box-shadow: var(--sh-lg); border-color: var(--slate-300); }
+  .entry-vis { height: 132px; position: relative; overflow: hidden; }
+  .entry-body { padding: 18px; }
+  .entry-body h4 { font-size: 16.5px; font-weight: 650; margin: 0 0 6px; letter-spacing: -0.01em; }
+  .entry-body p { font-size: 13.5px; color: var(--slate-500); margin: 0; line-height: 1.5; }
+  .entry-go { margin-top: 14px; display: inline-flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 600; color: var(--blue); }
+
+  /* ---- nav architecture map ---- */
+  .arch { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+  .arch-col { border: 1px solid var(--line); border-radius: var(--r-lg); background: var(--surface); padding: 22px; }
+  .arch-col h4 { display: flex; align-items: center; gap: 9px; font-size: 14px; font-weight: 650; margin: 0 0 16px; }
+  .arch-col h4 .tag { font-size: 10.5px; font-weight: 600; letter-spacing: .05em; text-transform: uppercase; color: #fff; padding: 3px 8px; border-radius: 5px; }
+  .arch-list { display: flex; flex-direction: column; gap: 2px; }
+  .arch-item { display: flex; align-items: center; gap: 11px; padding: 8px 10px; border-radius: var(--r-sm); font-size: 13.5px; }
+  .arch-item:hover { background: var(--surface-2); }
+  .arch-item .ic { width: 26px; height: 26px; border-radius: 7px; display: grid; place-items: center; background: var(--surface-3); color: var(--slate-500); flex: none; }
+  .arch-item .ic svg { width: 15px; height: 15px; }
+  .arch-item .nm { font-weight: 550; }
+  .arch-item .ds { color: var(--slate-400); font-size: 12.5px; margin-left: auto; }
+
+  /* ---- color swatches ---- */
+  .swatches { display: grid; grid-template-columns: repeat(6, 1fr); gap: 12px; }
+  .sw { border: 1px solid var(--line); border-radius: var(--r-md); overflow: hidden; background: var(--surface); }
+  .sw-chip { height: 64px; }
+  .sw-meta { padding: 9px 11px; }
+  .sw-meta .n { font-size: 12.5px; font-weight: 600; }
+  .sw-meta .h { font-size: 11px; color: var(--slate-400); font-family: var(--mono); margin-top: 1px; }
+
+  /* ---- type specimen ---- */
+  .type-row { display: flex; align-items: baseline; gap: 20px; padding: 16px 0; border-bottom: 1px solid var(--line-2); }
+  .type-row .lbl { width: 130px; flex: none; font-size: 12px; color: var(--slate-400); font-family: var(--mono); }
+
+  /* ---- component gallery ---- */
+  .comp-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+  .comp { border: 1px solid var(--line); border-radius: var(--r-md); background: var(--surface); padding: 20px; }
+  .comp .ttl { font-size: 11px; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; color: var(--slate-400); margin-bottom: 16px; }
+  .comp .row { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+
+  .footer { padding: 48px 0 80px; border-top: 1px solid var(--line); color: var(--slate-400); font-size: 13px; }
+
+  @media (max-width: 880px) {
+    .entries, .comp-grid { grid-template-columns: 1fr; }
+    .arch, .swatches { grid-template-columns: 1fr; }
+    .swatches { grid-template-columns: repeat(3,1fr); }
+    .hero h1 { font-size: 40px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="nav-top">
+  <div class="wrap">
+    <a class="logo" href="index.html">
+      <span class="logo-mark">
+        <svg viewBox="0 0 24 24" fill="none"><path d="M8 6.5v11l9-5.5-9-5.5z" fill="#fff"/><path d="M5 5.5a8 8 0 0 1 2-2" stroke="#fff" stroke-width="1.6" stroke-linecap="round" opacity=".55"/></svg>
+      </span>
+      <span class="logo-word">Re<b>Play</b></span>
+    </a>
+    <div class="nav-links">
+      <a href="#system">Design System</a>
+      <a href="#architecture">Architecture</a>
+      <a href="admin/RePlay Admin.html">Admin App</a>
+      <a href="playback/Playback Board.html">Playback</a>
+      <a href="mobile/Mobile QR.html">Mobile QR</a>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== HERO ===================== -->
+<header class="hero">
+  <div class="wrap">
+    <span class="eyebrow">● Digital signage for real estate</span>
+    <h1>Turn storefront windows into <span class="grad">living listing displays.</span></h1>
+    <p class="lede">RePlay replaces printed property sheets in brokerage, leasing, and sales-gallery windows with dynamic digital screens — managed from one premium, operationally powerful dashboard. Canva-grade creation meets enterprise-grade signage control.</p>
+    <div class="hero-cta">
+      <a class="btn btn-primary btn-lg" href="admin/RePlay Admin.html">Open the Admin App →</a>
+      <a class="btn btn-secondary btn-lg" href="playback/Playback Board.html">View Screen Playback</a>
+    </div>
+  </div>
+</header>
+
+<!-- ===================== ENTRY POINTS ===================== -->
+<section class="section" style="border-top:none;padding-top:8px">
+  <div class="wrap">
+    <div class="entries">
+      <a class="entry" href="admin/RePlay Admin.html">
+        <div class="entry-vis" style="background:var(--ink-900)">
+          <div style="position:absolute;left:0;top:0;bottom:0;width:34%;background:#14171f"></div>
+          <div style="position:absolute;left:40%;top:22px;right:18px;height:14px;border-radius:4px;background:#2a2f3a"></div>
+          <div style="position:absolute;left:40%;top:46px;width:38%;height:10px;border-radius:4px;background:#22262f"></div>
+          <div style="position:absolute;left:40%;bottom:20px;width:30%;height:30px;border-radius:7px;background:linear-gradient(135deg,var(--blue),var(--teal))"></div>
+        </div>
+        <div class="entry-body">
+          <h4>SaaS Admin Application</h4>
+          <p>Interactive prototype — dashboard, sites, screens, players, and the full management surface.</p>
+          <span class="entry-go">Open prototype →</span>
+        </div>
+      </a>
+      <a class="entry" href="playback/Playback Board.html">
+        <div class="entry-vis" style="background:linear-gradient(135deg,#0b0d12,#1c2230)">
+          <div style="position:absolute;inset:0;display:grid;place-items:center;color:#fff;font-weight:700;font-size:22px;letter-spacing:-.02em">Homes in <span style="color:#5b9bff">&nbsp;Bushwick</span></div>
+          <div style="position:absolute;right:16px;bottom:16px;width:36px;height:36px;border-radius:6px;background:#fff"></div>
+        </div>
+        <div class="entry-body">
+          <h4>Screen Playback Designs</h4>
+          <p>Storefront-window experiences — hook screens, hero listings, open houses, branding & CTA.</p>
+          <span class="entry-go">View board →</span>
+        </div>
+      </a>
+      <a class="entry" href="mobile/Mobile QR.html">
+        <div class="entry-vis" style="background:var(--surface-3)">
+          <div style="position:absolute;left:50%;top:18px;transform:translateX(-50%);width:78px;height:150px;border-radius:14px;background:#fff;border:1px solid var(--line);box-shadow:var(--sh-md)"></div>
+          <div style="position:absolute;left:50%;top:30px;transform:translateX(-50%);width:58px;height:42px;border-radius:6px;background:linear-gradient(135deg,var(--blue),var(--teal))"></div>
+        </div>
+        <div class="entry-body">
+          <h4>Mobile QR Landing</h4>
+          <p>What pedestrians see after they scan — fast, mobile-first listing pages with contact & scheduling.</p>
+          <span class="entry-go">View board →</span>
+        </div>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== ARCHITECTURE ===================== -->
+<section class="section" id="architecture">
+  <div class="wrap">
+    <div class="section-head">
+      <h2>Information Architecture</h2>
+      <h3>Two experiences, one domain model</h3>
+      <p>RePlay separates the <strong>operator surface</strong> (the SaaS admin where managers build and publish) from the <strong>playback surface</strong> (what runs on physical screens). Both draw from a shared domain: Accounts own Sites, Sites have Screens driven by Players, and Playlists sequence Ads — which may reference Listings — grouped into Campaigns and measured by Analytics.</p>
+    </div>
+    <div class="arch">
+      <div class="arch-col">
+        <h4><span class="tag" style="background:var(--blue)">Admin</span> Operator surface</h4>
+        <div class="arch-list">
+          <div class="arch-item"><span class="ic">◳</span><span class="nm">Dashboard</span><span class="ds">executive overview</span></div>
+          <div class="arch-item"><span class="ic">⌖</span><span class="nm">Sites</span><span class="ds">physical locations</span></div>
+          <div class="arch-item"><span class="ic">▤</span><span class="nm">Screens</span><span class="ds">display inventory</span></div>
+          <div class="arch-item"><span class="ic">⧉</span><span class="nm">Players</span><span class="ds">playback devices</span></div>
+          <div class="arch-item"><span class="ic">⌂</span><span class="nm">Listings</span><span class="ds">property data</span></div>
+          <div class="arch-item"><span class="ic">✦</span><span class="nm">Ads</span><span class="ds">the ad builder</span></div>
+          <div class="arch-item"><span class="ic">◈</span><span class="nm">Campaigns</span><span class="ds">grouped + scheduled</span></div>
+          <div class="arch-item"><span class="ic">≣</span><span class="nm">Playlists</span><span class="ds">playback sequence</span></div>
+          <div class="arch-item"><span class="ic">◔</span><span class="nm">Analytics</span><span class="ds">scans & engagement</span></div>
+          <div class="arch-item"><span class="ic">⚙</span><span class="nm">Settings</span><span class="ds">brand, team, billing</span></div>
+        </div>
+      </div>
+      <div class="arch-col">
+        <h4><span class="tag" style="background:var(--teal)">Playback</span> What the public sees</h4>
+        <div class="arch-list">
+          <div class="arch-item"><span class="ic">⚡</span><span class="nm">Hook Screen</span><span class="ds">stop the pedestrian</span></div>
+          <div class="arch-item"><span class="ic">★</span><span class="nm">Hero Listing</span><span class="ds">full-screen showcase</span></div>
+          <div class="arch-item"><span class="ic">▦</span><span class="nm">Browse Grid</span><span class="ds">multiple listings</span></div>
+          <div class="arch-item"><span class="ic">◷</span><span class="nm">Open House Ad</span><span class="ds">event promotion</span></div>
+          <div class="arch-item"><span class="ic">❖</span><span class="nm">Branding Ad</span><span class="ds">awards & team</span></div>
+          <div class="arch-item"><span class="ic">⊕</span><span class="nm">Recruiting Ad</span><span class="ds">attract agents</span></div>
+          <div class="arch-item"><span class="ic">⊡</span><span class="nm">CTA Screen</span><span class="ds">large QR, drive scans</span></div>
+        </div>
+        <h4 style="margin-top:22px"><span class="tag" style="background:var(--ink-700)">Mobile</span> After the scan</h4>
+        <div class="arch-list">
+          <div class="arch-item"><span class="ic">▢</span><span class="nm">QR Landing</span><span class="ds">listing detail + contact</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== DESIGN SYSTEM ===================== -->
+<section class="section" id="system">
+  <div class="wrap">
+    <div class="section-head">
+      <h2>Design System</h2>
+      <h3>The building blocks</h3>
+      <p>A cool-neutral foundation with a dual electric-blue / teal accent. Strong type hierarchy that reads on a laptop and from across a sidewalk. Soft shadows, restrained radii, and tabular numerals for the data-dense operator views.</p>
+    </div>
+
+    <!-- colors -->
+    <h4 class="t-label" style="margin-bottom:14px">Color · Foundation & accent</h4>
+    <div class="swatches" style="margin-bottom:34px">
+      <div class="sw"><div class="sw-chip" style="background:var(--ink-900)"></div><div class="sw-meta"><div class="n">Ink 900</div><div class="h">#0b0d12</div></div></div>
+      <div class="sw"><div class="sw-chip" style="background:var(--slate-500)"></div><div class="sw-meta"><div class="n">Slate 500</div><div class="h">#5b6470</div></div></div>
+      <div class="sw"><div class="sw-chip" style="background:var(--blue)"></div><div class="sw-meta"><div class="n">Blue</div><div class="h">#2f6bff</div></div></div>
+      <div class="sw"><div class="sw-chip" style="background:var(--teal)"></div><div class="sw-meta"><div class="n">Teal</div><div class="h">#0fb5a6</div></div></div>
+      <div class="sw"><div class="sw-chip" style="background:var(--surface-2);box-shadow:inset 0 0 0 1px var(--line)"></div><div class="sw-meta"><div class="n">Surface 2</div><div class="h">#f7f8fa</div></div></div>
+      <div class="sw"><div class="sw-chip" style="background:var(--line)"></div><div class="sw-meta"><div class="n">Line</div><div class="h">#e6e8ec</div></div></div>
+    </div>
+    <h4 class="t-label" style="margin-bottom:14px">Color · Semantic</h4>
+    <div class="swatches" style="margin-bottom:40px;grid-template-columns:repeat(4,1fr)">
+      <div class="sw"><div class="sw-chip" style="background:var(--green)"></div><div class="sw-meta"><div class="n">Success</div><div class="h">#1f9d57</div></div></div>
+      <div class="sw"><div class="sw-chip" style="background:var(--amber)"></div><div class="sw-meta"><div class="n">Warning</div><div class="h">#e8990f</div></div></div>
+      <div class="sw"><div class="sw-chip" style="background:var(--red)"></div><div class="sw-meta"><div class="n">Error</div><div class="h">#e5484d</div></div></div>
+      <div class="sw"><div class="sw-chip" style="background:var(--blue-soft)"></div><div class="sw-meta"><div class="n">Accent soft</div><div class="h">#eaf0ff</div></div></div>
+    </div>
+
+    <!-- type -->
+    <h4 class="t-label" style="margin-bottom:6px">Typography · Neutral grotesk + mono numerals</h4>
+    <div style="margin-bottom:40px">
+      <div class="type-row"><span class="lbl">Display / 40</span><span class="t-display">Homes for Sale in Bushwick</span></div>
+      <div class="type-row"><span class="lbl">H1 / 28</span><span class="t-h1">Screen inventory</span></div>
+      <div class="type-row"><span class="lbl">H2 / 21</span><span class="t-h2">Active campaigns this week</span></div>
+      <div class="type-row"><span class="lbl">Body / 14</span><span class="t-body">Manage every screen across every location from one dashboard.</span></div>
+      <div class="type-row"><span class="lbl">Mono / data</span><span class="mono" style="font-size:15px">$1,250,000 · 3 bd · 2 ba · 1,840 sqft</span></div>
+    </div>
+
+    <!-- components -->
+    <h4 class="t-label" style="margin-bottom:14px">Components</h4>
+    <div class="comp-grid">
+      <div class="comp">
+        <div class="ttl">Buttons</div>
+        <div class="row" style="margin-bottom:10px"><button class="btn btn-primary">Publish</button><button class="btn btn-secondary">Preview</button></div>
+        <div class="row"><button class="btn btn-ghost">Cancel</button><button class="btn btn-danger btn-sm">Delete</button></div>
+      </div>
+      <div class="comp">
+        <div class="ttl">Status badges</div>
+        <div class="row">
+          <span class="badge badge-green"><span class="dot"></span>Online</span>
+          <span class="badge badge-red"><span class="dot"></span>Offline</span>
+          <span class="badge badge-amber"><span class="dot"></span>Draft</span>
+          <span class="badge badge-blue">Published</span>
+          <span class="badge badge-teal">Live</span>
+        </div>
+      </div>
+      <div class="comp">
+        <div class="ttl">Inputs</div>
+        <div class="search" style="margin-bottom:10px">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m20 20-3-3"/></svg>
+          <input class="input" placeholder="Search listings…">
+        </div>
+        <select class="select"><option>All sites</option><option>Bushwick Office</option></select>
+      </div>
+      <div class="comp">
+        <div class="ttl">QR preview</div>
+        <div class="row">
+          <div style="width:64px;height:64px;border-radius:8px;background:#0b0d12;display:grid;grid-template-columns:repeat(5,1fr);grid-template-rows:repeat(5,1fr);gap:2px;padding:6px">
+            <span style="background:#fff"></span><span></span><span style="background:#fff"></span><span style="background:#fff"></span><span></span>
+            <span></span><span style="background:#fff"></span><span></span><span style="background:#fff"></span><span style="background:#fff"></span>
+            <span style="background:#fff"></span><span></span><span style="background:#fff"></span><span></span><span style="background:#fff"></span>
+            <span style="background:#fff"></span><span style="background:#fff"></span><span></span><span style="background:#fff"></span><span></span>
+            <span></span><span style="background:#fff"></span><span style="background:#fff"></span><span></span><span style="background:#fff"></span>
+          </div>
+          <div style="font-size:12.5px;color:var(--slate-500);line-height:1.5">Scannable QR with<br>scan-tracking baked in</div>
+        </div>
+      </div>
+      <div class="comp">
+        <div class="ttl">Screen preview card</div>
+        <div style="border:1px solid var(--line);border-radius:9px;overflow:hidden">
+          <div class="ph" data-label="screen 16:9" style="aspect-ratio:16/9"></div>
+          <div style="padding:9px 11px;display:flex;align-items:center;justify-content:space-between">
+            <span style="font-size:12.5px;font-weight:600">Window · North</span>
+            <span class="badge badge-green"><span class="dot"></span>Live</span>
+          </div>
+        </div>
+      </div>
+      <div class="comp">
+        <div class="ttl">Playlist item</div>
+        <div style="display:flex;align-items:center;gap:11px;border:1px solid var(--line);border-radius:9px;padding:9px 11px">
+          <span style="color:var(--slate-300);font-size:16px">⋮⋮</span>
+          <div class="ph" data-label="" style="width:48px;height:30px;border-radius:5px"></div>
+          <div style="flex:1"><div style="font-size:13px;font-weight:600">Hero · 124 Maple Ave</div><div style="font-size:11.5px;color:var(--slate-400)">Hero listing</div></div>
+          <span class="mono" style="font-size:12px;color:var(--slate-500)">0:12</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer class="footer">
+  <div class="wrap">
+    <div class="logo" style="margin-bottom:10px"><span class="logo-mark"><svg viewBox="0 0 24 24" fill="none"><path d="M8 6.5v11l9-5.5-9-5.5z" fill="#fff"/></svg></span><span class="logo-word">Re<b>Play</b></span></div>
+    RePlay — real-estate digital signage platform · Product design system & full application experience.
+  </div>
+</footer>
+
+</body>
+</html>

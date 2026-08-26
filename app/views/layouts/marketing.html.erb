@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+  <head>
+    <title><%= content_for?(:title) ? "#{content_for(:title)} — RePlay" : "RePlay — Digital Signage for Real Estate" %></title>
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <%= csrf_meta_tags %>
+    <%= csp_meta_tag %>
+    <%= stylesheet_link_tag :app, "data-turbo-track": "reload" %>
+    <%= javascript_importmap_tags %>
+  </head>
+
+  <body class="bg-white min-h-screen">
+    <nav class="border-b border-gray-200">
+      <div class="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
+        <a href="/" class="flex items-center gap-2">
+          <span class="flex size-8 items-center justify-center rounded-lg bg-linear-to-br from-indigo-500 to-teal-400">
+            <svg viewBox="0 0 24 24" fill="none" class="size-4"><path d="M8 6.5v11l9-5.5-9-5.5z" fill="#fff"/></svg>
+          </span>
+          <span class="text-lg font-bold tracking-tight">Re<b class="text-indigo-600">Play</b></span>
+        </a>
+        <div class="hidden md:flex items-center gap-6">
+          <%= link_to "Features", "/features", class: "text-sm font-medium text-gray-600 hover:text-gray-900" %>
+          <%= link_to "Pricing", "/pricing", class: "text-sm font-medium text-gray-600 hover:text-gray-900" %>
+          <%= link_to "About", "/about", class: "text-sm font-medium text-gray-600 hover:text-gray-900" %>
+          <%= link_to "Log in", new_session_url(subdomain: "app"), class: "text-sm font-medium text-gray-600 hover:text-gray-900" %>
+          <%= link_to "Start free trial", new_account_url(subdomain: "app"), class: "rounded-md bg-indigo-600 px-3.5 py-2 text-sm font-semibold text-white shadow-xs hover:bg-indigo-500" %>
+        </div>
+      </div>
+    </nav>
+
+    <%= yield %>
+
+    <footer class="border-t border-gray-200 mt-20 bg-gray-50">
+      <div class="max-w-6xl mx-auto px-6 py-12">
+        <div class="flex items-center justify-between">
+          <span class="text-lg font-bold tracking-tight">Re<b class="text-indigo-600">Play</b></span>
+          <p class="text-xs text-gray-400">&copy; <%= Date.current.year %> RePlay. All rights reserved.</p>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>

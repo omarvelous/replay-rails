@@ -1,6 +1,6 @@
 require "rails_helper"
 
-RSpec.describe User, type: :model do
+RSpec.describe User do
   subject(:user) { build(:user) }
 
   describe "validations" do
@@ -41,8 +41,19 @@ RSpec.describe User, type: :model do
   end
 
   describe "associations" do
-    it { is_expected.to belong_to(:account) }
     it { is_expected.to have_many(:sessions).dependent(:destroy) }
+    it { is_expected.to have_many(:account_users).dependent(:destroy) }
+    it { is_expected.to have_many(:accounts).through(:account_users) }
+  end
+
+  describe "#admin?" do
+    it "defaults to false" do
+      expect(build(:user)).not_to be_admin
+    end
+
+    it "returns true when admin is set" do
+      expect(build(:user, admin: true)).to be_admin
+    end
   end
 
   describe "authentication" do

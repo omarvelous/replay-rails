@@ -1,0 +1,5 @@
+<%= render "app/shared/page_header", title: "Edit Brand Ad", back_link: { label: "← Ad", path: ad_path(@ad) } %>
+
+<%= form_with model: @ad, url: ads_brand_ad_path(@ad), method: :patch do |form| %>
+  <%= render "app/ads/brand_ads/form", form: form %>
+<% end %>

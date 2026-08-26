@@ -1,0 +1,5 @@
+<%= render "app/shared/page_header", title: @site.name, subtitle: "Edit site", back_link: { label: "← Site", path: site_path(@site) } %>
+
+<div class="rounded-lg bg-white shadow-sm ring-1 ring-gray-900/5 p-5">
+  <%= render "form", site: @site %>
+</div>

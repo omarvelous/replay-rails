@@ -1,0 +1,19 @@
+<% total_dur = playlist_ads.sum(&:duration) %>
+<% mmss = ->(s) { "#{s / 60}:#{(s % 60).to_s.rjust(2, '0')}" } %>
+<div class="rounded-lg bg-white shadow-sm ring-1 ring-gray-900/5 p-5">
+  <div class="flex justify-between mb-2">
+    <span class="text-xs font-semibold text-gray-500 uppercase tracking-wider">Loop timeline</span>
+    <span class="text-xs font-mono text-gray-400"><%= playlist_ads.size %> slides · <%= mmss.call(total_dur) %></span>
+  </div>
+  <% if total_dur > 0 %>
+    <div class="flex h-3 rounded-full overflow-hidden bg-gray-100 gap-0.5">
+      <% playlist_ads.each do |pa| %>
+        <% seg_tone = %w[#2f6bff #0fb5a6 #7c5cff #e8990f #1f9d57 #e5484d][pa.ad_id % 6] %>
+        <div style="width: <%= (pa.duration.to_f / total_dur * 100).round(1) %>%; background: <%= seg_tone %>;"
+             class="rounded-sm opacity-80 hover:opacity-100 transition-opacity"></div>
+      <% end %>
+    </div>
+  <% else %>
+    <div class="h-3 rounded-full bg-gray-100"></div>
+  <% end %>
+</div>

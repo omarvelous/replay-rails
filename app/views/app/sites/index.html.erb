@@ -1,0 +1,39 @@
+<% actions = capture do %>
+  <%= link_to new_site_path, class: "rounded-md bg-indigo-600 px-2.5 py-1.5 text-sm font-semibold text-white shadow-xs hover:bg-indigo-500" do %>
+    <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 inline -mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15"/></svg>
+    New site
+  <% end %>
+<% end %>
+<%= render "app/shared/page_header", title: "Sites", subtitle: "#{@sites.size} locations · #{@sites.sum { |s| s.screens.count }} screens · #{@sites.sum { |s| s.screens.count }} players online", actions: actions %>
+
+<% if @sites.any? %>
+  <div id="sites_grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+    <% @sites.each do |site| %>
+      <%= render "app/sites/site_card", site: site %>
+    <% end %>
+
+    <%# Add tile — 240px min per spec %>
+    <%= link_to new_site_path, id: "new_site_tile", class: "rounded-lg border-2 border-dashed border-gray-200 hover:border-gray-400 transition-colors cursor-pointer flex items-center justify-center", style: "min-height: 240px;" do %>
+      <div class="flex flex-col items-center gap-2 text-gray-400">
+        <div class="w-11 h-11 rounded-xl bg-white border border-gray-200 grid place-items-center text-indigo-500">
+          <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15"/></svg>
+        </div>
+        <div class="text-center">
+          <p class="text-sm font-semibold text-gray-700">Add a site</p>
+          <p class="text-xs text-gray-400 mt-0.5">Connect a new location</p>
+        </div>
+      </div>
+    <% end %>
+  </div>
+<% else %>
+  <div class="rounded-lg border-2 border-dashed border-gray-200 p-10 text-center">
+    <div class="flex flex-col items-center gap-3">
+      <div class="w-12 h-12 rounded-xl bg-indigo-50 grid place-items-center">
+        <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 text-indigo-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15"/></svg>
+      </div>
+      <p class="font-semibold">No sites yet</p>
+      <p class="text-sm text-gray-500">Add your first location to get started.</p>
+      <%= link_to "New site", new_site_path, class: "rounded-md bg-indigo-600 px-2.5 py-1.5 text-sm font-semibold text-white shadow-xs hover:bg-indigo-500" %>
+    </div>
+  </div>
+<% end %>

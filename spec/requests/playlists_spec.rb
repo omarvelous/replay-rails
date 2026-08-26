@@ -1,0 +1,159 @@
+require "rails_helper"
+
+RSpec.describe "Playlists" do
+  let(:account) { create(:account) }
+  let(:user) { create(:user, account: account) }
+
+  before { sign_in(user) }
+
+  describe "GET /playlists" do
+    it "returns a successful response" do
+      get playlists_path
+      expect(response).to be_successful
+    end
+
+    it "lists playlists for the current account" do
+      playlist = create(:playlist, account: account, name: "Evening Rotation")
+      other_playlist = create(:playlist, name: "Other Playlist")
+
+      get playlists_path
+      expect(response.body).to include("Evening Rotation")
+      expect(response.body).not_to include("Other Playlist")
+    end
+  end
+
+  describe "GET /playlists/new" do
+    it "returns a successful response" do
+      get new_playlist_path
+      expect(response).to be_successful
+    end
+  end
+
+  describe "POST /playlists" do
+    let(:valid_params) do
+      { playlist: { name: "Weekend Showcase", status: "draft" } }
+    end
+
+    context "with valid params" do
+      it "creates a playlist scoped to the current account" do
+        expect {
+          post playlists_path, params: valid_params
+        }.to change(account.playlists, :count).by(1)
+      end
+
+      it "redirects to the playlist" do
+        post playlists_path, params: valid_params
+        expect(response).to redirect_to(playlist_path(Playlist.last))
+      end
+    end
+
+    context "with invalid params" do
+      it "does not create a playlist" do
+        expect {
+          post playlists_path, params: { playlist: { name: "" } }
+        }.not_to change(Playlist, :count)
+      end
+
+      it "returns 422" do
+        post playlists_path, params: { playlist: { name: "" } }
+        expect(response).to have_http_status(:unprocessable_content)
+      end
+    end
+  end
+
+  describe "GET /playlists/:id" do
+    it "shows the playlist" do
+      playlist = create(:playlist, account: account, name: "Evening Rotation")
+      get playlist_path(playlist)
+      expect(response).to be_successful
+      expect(response.body).to include("Evening Rotation")
+    end
+
+    it "returns 404 for another account's playlist" do
+      other_playlist = create(:playlist)
+      get playlist_path(other_playlist)
+      expect(response).to have_http_status(:not_found)
+    end
+  end
+
+  describe "GET /playlists/:id/edit" do
+    it "returns a successful response" do
+      playlist = create(:playlist, account: account)
+      get edit_playlist_path(playlist)
+      expect(response).to be_successful
+    end
+  end
+
+  describe "PATCH /playlists/:id" do
+    let(:playlist) { create(:playlist, account: account, name: "Old Name") }
+
+    context "with valid params" do
+      it "updates the playlist" do
+        patch playlist_path(playlist), params: { playlist: { name: "New Name" } }
+        expect(playlist.reload.name).to eq("New Name")
+      end
+
+      it "updates the status" do
+        patch playlist_path(playlist), params: { playlist: { status: "published" } }
+        expect(playlist.reload.status).to eq("published")
+      end
+
+      it "redirects to the playlist" do
+        patch playlist_path(playlist), params: { playlist: { name: "New Name" } }
+        expect(response).to redirect_to(playlist_path(playlist))
+      end
+    end
+
+    context "with invalid params" do
+      it "returns 422" do
+        patch playlist_path(playlist), params: { playlist: { name: "" } }
+        expect(response).to have_http_status(:unprocessable_content)
+      end
+    end
+  end
+
+  describe "DELETE /playlists/:id" do
+    it "destroys the playlist" do
+      playlist = create(:playlist, account: account)
+      expect {
+        delete playlist_path(playlist)
+      }.to change(account.playlists, :count).by(-1)
+    end
+
+    it "redirects to the index" do
+      playlist = create(:playlist, account: account)
+      delete playlist_path(playlist)
+      expect(response).to redirect_to(playlists_path)
+    end
+  end
+
+  describe "GET /playlists/:id/preview" do
+    it "returns a successful response" do
+      playlist = create(:playlist, account: account)
+      get preview_playlist_path(playlist)
+      expect(response).to be_successful
+    end
+
+    it "includes ad content in order" do
+      playlist = create(:playlist, account: account)
+      listing1 = create(:listing, account: account, address: "100 First Ave")
+      listing2 = create(:listing, account: account, address: "200 Second Ave")
+      listing_ad1 = create(:listing_ad, listing: listing1)
+      listing_ad2 = create(:listing_ad, listing: listing2)
+      ad1 = create(:ad, account: account, headline: "First", adable: listing_ad1)
+      ad2 = create(:ad, account: account, headline: "Second", adable: listing_ad2)
+      create(:playlist_ad, playlist: playlist, ad: ad1, position: 1, duration: 10)
+      create(:playlist_ad, playlist: playlist, ad: ad2, position: 2, duration: 15)
+
+      get preview_playlist_path(playlist)
+      expect(response.body).to include("100 First Ave")
+      expect(response.body).to include("200 Second Ave")
+    end
+
+    it "returns 404 for another account's playlist" do
+      other_playlist = create(:playlist)
+      get preview_playlist_path(other_playlist)
+      expect(response).to have_http_status(:not_found)
+    end
+  end
+end

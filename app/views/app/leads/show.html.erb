@@ -1,0 +1,146 @@
+<%= render "app/shared/page_header", title: @lead.name, subtitle: @lead.lead_type.humanize, back_link: { label: "← Leads", path: leads_path } %>
+
+<div class="grid grid-cols-1 lg:grid-cols-[1fr_320px] gap-6">
+  <%# Left — Lead detail %>
+  <div class="space-y-6">
+    <%# Contact info %>
+    <div class="rounded-lg bg-white shadow-sm ring-1 ring-gray-900/5 p-5">
+      <h3 class="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-4">Contact</h3>
+      <dl class="space-y-3">
+        <div>
+          <dt class="text-xs text-gray-500">Name</dt>
+          <dd class="text-sm font-semibold"><%= @lead.name %></dd>
+        </div>
+        <% if @lead.email.present? %>
+          <div>
+            <dt class="text-xs text-gray-500">Email</dt>
+            <dd class="text-sm"><a href="mailto:<%= @lead.email %>" class="text-indigo-600 font-semibold hover:text-indigo-500"><%= @lead.email %></a></dd>
+          </div>
+        <% end %>
+        <% if @lead.phone.present? %>
+          <div>
+            <dt class="text-xs text-gray-500">Phone</dt>
+            <dd class="text-sm"><a href="tel:<%= @lead.phone %>" class="text-indigo-600 font-semibold hover:text-indigo-500"><%= @lead.phone %></a></dd>
+          </div>
+        <% end %>
+      </dl>
+    </div>
+
+    <%# Message %>
+    <% if @lead.message.present? %>
+      <div class="rounded-lg bg-white shadow-sm ring-1 ring-gray-900/5 p-5">
+        <h3 class="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-4">Message</h3>
+        <p class="text-sm text-gray-700 whitespace-pre-wrap"><%= @lead.message %></p>
+      </div>
+    <% end %>
+
+    <%# Listing %>
+    <% if @lead.listing %>
+      <div class="rounded-lg bg-white shadow-sm ring-1 ring-gray-900/5 p-5">
+        <h3 class="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-4">Listing</h3>
+        <%= link_to listing_path(@lead.listing), class: "flex items-center gap-4 p-3 -m-1 rounded-lg hover:bg-gray-50 transition-colors" do %>
+          <% if @lead.listing.photos.any? %>
+            <%= image_tag @lead.listing.photos.first.variant(:thumb), class: "w-20 h-14 rounded-md object-cover flex-none" %>
+          <% else %>
+            <div class="w-20 h-14 rounded-md bg-gray-100 flex-none"></div>
+          <% end %>
+          <div class="min-w-0">
+            <p class="text-sm font-semibold truncate"><%= @lead.listing.address %></p>
+            <p class="text-xs text-gray-500 mt-0.5"><%= number_to_currency(@lead.listing.price, precision: 0) %> &middot; <%= @lead.listing.beds %> bed &middot; <%= @lead.listing.baths %> bath</p>
+          </div>
+        <% end %>
+      </div>
+    <% end %>
+
+    <%# Attribution %>
+    <% if @lead.qr_scan %>
+      <div class="rounded-lg bg-white shadow-sm ring-1 ring-gray-900/5 p-5">
+        <h3 class="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-4">Attribution</h3>
+        <dl class="space-y-3 text-sm">
+          <div>
+            <dt class="text-xs text-gray-500">QR Code</dt>
+            <dd><%= @lead.qr_scan.qr_code.label || @lead.qr_scan.qr_code.token %></dd>
+          </div>
+          <% if @lead.qr_scan.ad %>
+            <div>
+              <dt class="text-xs text-gray-500">Ad</dt>
+              <dd><%= @lead.qr_scan.ad.headline %></dd>
+            </div>
+          <% end %>
+          <% if @lead.qr_scan.screen %>
+            <div>
+              <dt class="text-xs text-gray-500">Screen</dt>
+              <dd><%= @lead.qr_scan.screen.name %></dd>
+            </div>
+          <% end %>
+          <div>
+            <dt class="text-xs text-gray-500">Scanned</dt>
+            <dd><%= @lead.qr_scan.created_at.strftime("%b %-d, %Y at %-I:%M %p") %></dd>
+          </div>
+        </dl>
+      </div>
+    <% end %>
+  </div>
+
+  <%# Right — Status + agent assignment %>
+  <div class="space-y-5">
+    <%# Status %>
+    <%= form_with model: @lead, url: lead_path(@lead), method: :patch do |f| %>
+      <div class="rounded-lg bg-white shadow-sm ring-1 ring-gray-900/5 p-5 space-y-4">
+        <h3 class="text-xs font-semibold text-gray-500 uppercase tracking-wider">Status</h3>
+        <%= f.select :status,
+            [["New", "new"], ["Contacted", "contacted"], ["Qualified", "qualified"], ["Closed", "closed"]],
+            {},
+            class: "block w-full rounded-md bg-white py-2 pl-3 pr-8 text-sm text-gray-900 outline-1 -outline-offset-1 outline-gray-300 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600" %>
+        <%= f.submit "Update status",
+            class: "w-full rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 cursor-pointer" %>
+      </div>
+    <% end %>
+
+    <%# Agent %>
+    <div class="rounded-lg bg-white shadow-sm ring-1 ring-gray-900/5 p-5">
+      <h3 class="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-3">Agent</h3>
+      <% if @lead.current_agent %>
+        <div class="flex items-center gap-3 mb-3">
+          <div class="w-9 h-9 rounded-full bg-indigo-50 grid place-items-center text-xs font-bold text-indigo-600 shrink-0 overflow-hidden">
+            <% if @lead.current_agent.photo.attached? %>
+              <%= image_tag @lead.current_agent.photo, class: "w-full h-full object-cover" %>
+            <% else %>
+              <%= @lead.current_agent.name.split.map(&:first).join.first(2).upcase %>
+            <% end %>
+          </div>
+          <div>
+            <p class="text-sm font-semibold"><%= @lead.current_agent.name %></p>
+            <p class="text-xs text-gray-500"><%= @lead.current_agent.email %></p>
+          </div>
+        </div>
+        <%= link_to "Reassign", new_lead_lead_agent_path(@lead),
+            class: "text-sm font-semibold text-indigo-600 hover:text-indigo-500" %>
+      <% else %>
+        <p class="text-sm text-gray-400 mb-3">No agent assigned</p>
+        <%= link_to "Assign agent", new_lead_lead_agent_path(@lead),
+            class: "rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 inline-block" %>
+      <% end %>
+    </div>
+
+    <%# Assignment history %>
+    <% if @lead.lead_agents.count > 1 %>
+      <div class="rounded-lg bg-white shadow-sm ring-1 ring-gray-900/5 p-5">
+        <h3 class="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-3">Assignment History</h3>
+        <div class="space-y-2">
+          <% @lead.lead_agents.includes(:agent).order(created_at: :desc).each do |la| %>
+            <div class="flex items-center justify-between text-sm">
+              <span class="font-medium"><%= la.agent.name %></span>
+              <span class="text-xs text-gray-400"><%= time_ago_in_words(la.created_at) %> ago</span>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    <% end %>
+
+    <%# Submitted timestamp %>
+    <div class="rounded-lg bg-white shadow-sm ring-1 ring-gray-900/5 p-5">
+      <p class="text-xs text-gray-400">Submitted <%= @lead.created_at.strftime("%b %-d, %Y at %-I:%M %p") %></p>
+    </div>
+  </div>
+</div>

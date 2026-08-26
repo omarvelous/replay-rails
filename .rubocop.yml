@@ -3,6 +3,9 @@ inherit_gem:
 
 plugins:
   - rubocop-rspec
+  - rubocop-rspec_rails
+  - rubocop-factory_bot
+  - rubocop-capybara
 
 AllCops:
   NewCops: enable
@@ -12,3 +15,17 @@ RSpec/MultipleExpectations:
 
 RSpec/ExampleLength:
   Max: 15
+
+RSpec/MultipleMemoizedHelpers:
+  Max: 8
+
+RSpec/IndexedLet:
+  Enabled: false
+
+RSpec/ContextWording:
+  Prefixes:
+    - when
+    - with
+    - without
+    - as
+    - "on"

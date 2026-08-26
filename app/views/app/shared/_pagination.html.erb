@@ -1,0 +1,31 @@
+<% if pagy.pages > 1 %>
+  <div class="flex items-center justify-between px-4 py-3 border-t border-gray-200">
+    <p class="text-sm text-gray-500">
+      Showing <span class="font-medium"><%= pagy.from %></span>–<span class="font-medium"><%= pagy.to %></span>
+      of <span class="font-medium"><%= pagy.count %></span>
+    </p>
+    <div class="flex items-center gap-1">
+      <% if pagy.prev %>
+        <%= link_to "←", url_for(page: pagy.prev), class: "rounded-md px-3 py-1.5 text-sm font-medium text-gray-600 hover:bg-gray-100 ring-1 ring-gray-300 ring-inset" %>
+      <% else %>
+        <span class="rounded-md px-3 py-1.5 text-sm font-medium text-gray-300 ring-1 ring-gray-200 ring-inset cursor-not-allowed">←</span>
+      <% end %>
+
+      <% pagy.series.each do |item| %>
+        <% if item == :gap %>
+          <span class="px-2 text-sm text-gray-400">…</span>
+        <% elsif item == pagy.page %>
+          <span class="rounded-md px-3 py-1.5 text-sm font-medium bg-indigo-600 text-white"><%= item %></span>
+        <% else %>
+          <%= link_to item, url_for(page: item), class: "rounded-md px-3 py-1.5 text-sm font-medium text-gray-600 hover:bg-gray-100 ring-1 ring-gray-300 ring-inset" %>
+        <% end %>
+      <% end %>
+
+      <% if pagy.next %>
+        <%= link_to "→", url_for(page: pagy.next), class: "rounded-md px-3 py-1.5 text-sm font-medium text-gray-600 hover:bg-gray-100 ring-1 ring-gray-300 ring-inset" %>
+      <% else %>
+        <span class="rounded-md px-3 py-1.5 text-sm font-medium text-gray-300 ring-1 ring-gray-200 ring-inset cursor-not-allowed">→</span>
+      <% end %>
+    </div>
+  </div>
+<% end %>

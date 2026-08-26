@@ -25,7 +25,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.dev
-    command: bin/rails server -b 0.0.0.0
+    command: bin/dev
     ports:
       - "3000:3000"
     depends_on:
@@ -44,21 +44,6 @@ services:
       - bundle_cache:/usr/local/bundle
     stdin_open: true
     tty: true
-
-  css:
-    build:
-      context: .
-      dockerfile: Dockerfile.dev
-    command: bin/rails tailwindcss:watch
-    depends_on:
-      - web
-    environment:
-      DATABASE_URL: postgres://postgres:postgres@db:5432
-      RAILS_ENV: development
-    volumes:
-      - .:/rails
-      - /rails/node_modules
-      - bundle_cache:/usr/local/bundle
 
 volumes:
   postgres_data:

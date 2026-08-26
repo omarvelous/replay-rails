@@ -1,0 +1,79 @@
+<%# Hero photo %>
+<% if @listing.photos.any? %>
+  <%= image_tag @listing.photos.first, class: "w-full aspect-video object-cover rounded-xl mb-6" %>
+<% else %>
+  <% tone = %w[#2f6bff #0fb5a6 #7c5cff #e8990f #1f9d57][@listing.id % 5] %>
+  <div class="w-full aspect-video rounded-xl mb-6" style="background: linear-gradient(135deg, #0b0d12, <%= tone %>40);"></div>
+<% end %>
+
+<%# Price + status %>
+<div class="flex items-center justify-between mb-2">
+  <h1 class="text-3xl font-extrabold tracking-tight"><%= number_to_currency(@listing.price, precision: 0) %></h1>
+  <% status_colors = { "active" => "bg-green-100 text-green-800", "pending" => "bg-yellow-100 text-yellow-800", "sold" => "bg-gray-100 text-gray-600" } %>
+  <span class="inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-semibold <%= status_colors[@listing.status] %>">
+    <%= @listing.status.capitalize %>
+  </span>
+</div>
+
+<%# Address %>
+<p class="text-base text-gray-600 font-semibold mb-4"><%= @listing.address %></p>
+
+<%# Specs %>
+<div class="flex gap-6 mb-6 text-sm text-gray-500 font-semibold">
+  <% if @listing.beds %>
+    <span><%= @listing.beds %> Beds</span>
+  <% end %>
+  <% if @listing.baths %>
+    <span><%= @listing.baths %> Baths</span>
+  <% end %>
+  <% if @listing.sqft %>
+    <span><%= number_with_delimiter(@listing.sqft) %> Sq Ft</span>
+  <% end %>
+</div>
+
+<%# Additional photos %>
+<% if @listing.photos.size > 1 %>
+  <div class="grid grid-cols-2 gap-2 mb-6">
+    <% @listing.photos.drop(1).each do |photo| %>
+      <%= image_tag photo, class: "w-full aspect-video object-cover rounded-lg" %>
+    <% end %>
+  </div>
+<% end %>
+
+<%# Agents %>
+<%# Lead capture form %>
+<div class="border-t border-gray-200 pt-6 mt-6">
+  <h2 class="text-sm font-semibold text-gray-500 uppercase tracking-wider mb-4">Interested in this property?</h2>
+  <%= render "go/leads/form",
+      listing: @listing,
+      agent: @listing.primary_agent,
+      scan_id: params[:scan_id] %>
+</div>
+
+<% if @agents.any? %>
+  <div class="border-t border-gray-200 pt-6">
+    <h2 class="text-sm font-semibold text-gray-500 uppercase tracking-wider mb-4">Contact</h2>
+    <div class="space-y-4">
+      <% @agents.each do |agent| %>
+        <div class="flex items-center gap-4 p-4 bg-white rounded-xl ring-1 ring-gray-200">
+          <div class="w-12 h-12 rounded-full bg-indigo-50 grid place-items-center text-sm font-bold text-indigo-600 shrink-0 overflow-hidden">
+            <% if agent.photo.attached? %>
+              <%= image_tag agent.photo, class: "w-full h-full object-cover" %>
+            <% else %>
+              <%= agent.name.split.map(&:first).join.first(2).upcase %>
+            <% end %>
+          </div>
+          <div class="flex-1 min-w-0">
+            <p class="font-semibold text-sm"><%= agent.name %></p>
+            <div class="flex flex-wrap gap-3 mt-1">
+              <% if agent.phone.present? %>
+                <a href="tel:<%= agent.phone %>" class="text-sm text-indigo-600 font-semibold hover:text-indigo-500"><%= agent.phone %></a>
+              <% end %>
+              <a href="mailto:<%= agent.email %>" class="text-sm text-indigo-600 font-semibold hover:text-indigo-500"><%= agent.email %></a>
+            </div>
+          </div>
+        </div>
+      <% end %>
+    </div>
+  </div>
+<% end %>

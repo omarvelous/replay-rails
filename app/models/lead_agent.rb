@@ -1,0 +1,4 @@
+class LeadAgent < ApplicationRecord
+  belongs_to :lead
+  belongs_to :agent
+end

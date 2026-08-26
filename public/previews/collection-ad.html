@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Collection Ad Previews — RePlay</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    .preview-frame { aspect-ratio: 16/9; font-weight: 600; }
+  </style>
+</head>
+<body class="bg-gray-950 text-white min-h-screen">
+  <!-- Nav -->
+  <div class="sticky top-0 z-50 bg-gray-950/90 backdrop-blur border-b border-white/10 px-8 py-4 flex items-center justify-between">
+    <div class="flex items-center gap-4">
+      <a href="/previews/index.html" class="text-sm text-gray-400 hover:text-white">&larr; All types</a>
+      <h1 class="text-lg font-bold">Collection Ad</h1>
+    </div>
+    <div class="flex gap-2 text-xs">
+      <a href="#grid" class="px-3 py-1.5 rounded-full bg-white/10 hover:bg-white/20">Grid</a>
+    </div>
+  </div>
+
+  <div class="max-w-6xl mx-auto px-8 py-10 space-y-16">
+
+    <!-- ============================================================ -->
+    <!-- GRID LAYOUT                                                  -->
+    <!-- ============================================================ -->
+    <section id="grid">
+      <h2 class="text-xl font-bold mb-2">Grid Layout</h2>
+      <p class="text-sm text-gray-500 mb-6">Multiple listings in a responsive grid with collection title.</p>
+      <div class="space-y-8">
+
+        <!-- Grid / Dark -->
+        <div>
+          <span class="text-xs font-mono text-gray-500 mb-3 block">grid &middot; dark</span>
+          <div class="preview-frame rounded-xl overflow-hidden p-[7%] flex flex-col" style="background: #0b0d12;">
+            <h2 class="text-2xl font-bold text-white mb-1">Open Houses This Weekend</h2>
+            <p class="text-sm font-semibold text-white/45 mb-6">4 properties &middot; Saturday &amp; Sunday</p>
+            <div class="grid grid-cols-4 gap-4 flex-1">
+              <!-- Card 1 -->
+              <div class="rounded-xl overflow-hidden flex flex-col" style="background: #14171f;">
+                <div class="flex-1 relative" style="background: linear-gradient(135deg, #14171f, #2f6bff33); min-height: 50%;">
+                  <div class="absolute top-3 left-3">
+                    <span class="inline-flex items-center rounded-full bg-amber-500 px-3 py-1 text-xl font-bold text-white uppercase">Open House</span>
+                  </div>
+                </div>
+                <div class="p-4">
+                  <div class="text-lg font-bold text-white">$1,250,000</div>
+                  <div class="text-sm font-semibold text-white/60 mt-1">742 Evergreen Terrace</div>
+                  <div class="text-xs font-semibold text-white/45 mt-0.5">4 bd &middot; 3 ba &middot; 2,850 sqft</div>
+                  <div class="text-xl font-semibold text-amber-400 mt-2">Sat 1:00 – 3:00 PM</div>
+                </div>
+              </div>
+              <!-- Card 2 -->
+              <div class="rounded-xl overflow-hidden flex flex-col" style="background: #14171f;">
+                <div class="flex-1 relative" style="background: linear-gradient(135deg, #14171f, #0fb5a633); min-height: 50%;">
+                  <div class="absolute top-3 left-3">
+                    <span class="inline-flex items-center rounded-full bg-amber-500 px-3 py-1 text-xl font-bold text-white uppercase">Open House</span>
+                  </div>
+                </div>
+                <div class="p-4">
+                  <div class="text-lg font-bold text-white">$875,000</div>
+                  <div class="text-sm font-semibold text-white/60 mt-1">18 Oak Avenue</div>
+                  <div class="text-xs font-semibold text-white/45 mt-0.5">3 bd &middot; 2 ba &middot; 1,940 sqft</div>
+                  <div class="text-xl font-semibold text-amber-400 mt-2">Sat 2:00 – 4:00 PM</div>
+                </div>
+              </div>
+              <!-- Card 3 -->
+              <div class="rounded-xl overflow-hidden flex flex-col" style="background: #14171f;">
+                <div class="flex-1 relative" style="background: linear-gradient(135deg, #14171f, #7c5cff33); min-height: 50%;">
+                  <div class="absolute top-3 left-3">
+                    <span class="inline-flex items-center rounded-full bg-amber-500 px-3 py-1 text-xl font-bold text-white uppercase">Open House</span>
+                  </div>
+                </div>
+                <div class="p-4">
+                  <div class="text-lg font-bold text-white">$1,475,000</div>
+                  <div class="text-sm font-semibold text-white/60 mt-1">305 Maple Drive</div>
+                  <div class="text-xs font-semibold text-white/45 mt-0.5">5 bd &middot; 4 ba &middot; 3,400 sqft</div>
+                  <div class="text-xl font-semibold text-amber-400 mt-2">Sun 1:00 – 3:00 PM</div>
+                </div>
+              </div>
+              <!-- Card 4 -->
+              <div class="rounded-xl overflow-hidden flex flex-col" style="background: #14171f;">
+                <div class="flex-1 relative" style="background: linear-gradient(135deg, #14171f, #e8990f33); min-height: 50%;">
+                  <div class="absolute top-3 left-3">
+                    <span class="inline-flex items-center rounded-full bg-amber-500 px-3 py-1 text-xl font-bold text-white uppercase">Open House</span>
+                  </div>
+                </div>
+                <div class="p-4">
+                  <div class="text-lg font-bold text-white">$650,000</div>
+                  <div class="text-sm font-semibold text-white/60 mt-1">92 Pine Street</div>
+                  <div class="text-xs font-semibold text-white/45 mt-0.5">2 bd &middot; 2 ba &middot; 1,280 sqft</div>
+                  <div class="text-xl font-semibold text-amber-400 mt-2">Sun 11:00 AM – 1:00 PM</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Grid / Light -->
+        <div>
+          <span class="text-xs font-mono text-gray-500 mb-3 block">grid &middot; light</span>
+          <div class="preview-frame rounded-xl overflow-hidden p-[7%] flex flex-col border border-gray-200" style="background: #f9fafb;">
+            <h2 class="text-2xl font-bold text-gray-900 mb-1">Open Houses This Weekend</h2>
+            <p class="text-sm font-semibold text-gray-500 mb-6">4 properties &middot; Saturday &amp; Sunday</p>
+            <div class="grid grid-cols-4 gap-4 flex-1">
+              <div class="rounded-xl overflow-hidden flex flex-col bg-white ring-1 ring-gray-200">
+                <div class="flex-1 relative" style="background: linear-gradient(135deg, #e5e7eb, #2f6bff22); min-height: 50%;">
+                  <div class="absolute top-3 left-3">
+                    <span class="inline-flex items-center rounded-full bg-amber-500 px-3 py-1 text-xl font-bold text-white uppercase">Open House</span>
+                  </div>
+                </div>
+                <div class="p-4">
+                  <div class="text-lg font-bold text-gray-900">$1,250,000</div>
+                  <div class="text-sm font-semibold text-gray-500 mt-1">742 Evergreen Terrace</div>
+                  <div class="text-xs font-semibold text-gray-500 mt-0.5">4 bd &middot; 3 ba</div>
+                  <div class="text-xl font-semibold text-amber-600 mt-2">Sat 1:00 – 3:00 PM</div>
+                </div>
+              </div>
+              <div class="rounded-xl overflow-hidden flex flex-col bg-white ring-1 ring-gray-200">
+                <div class="flex-1 relative" style="background: linear-gradient(135deg, #e5e7eb, #0fb5a622); min-height: 50%;"></div>
+                <div class="p-4">
+                  <div class="text-lg font-bold text-gray-900">$875,000</div>
+                  <div class="text-sm font-semibold text-gray-500 mt-1">18 Oak Avenue</div>
+                  <div class="text-xs font-semibold text-gray-500 mt-0.5">3 bd &middot; 2 ba</div>
+                  <div class="text-xl font-semibold text-amber-600 mt-2">Sat 2:00 – 4:00 PM</div>
+                </div>
+              </div>
+              <div class="rounded-xl overflow-hidden flex flex-col bg-white ring-1 ring-gray-200">
+                <div class="flex-1 relative" style="background: linear-gradient(135deg, #e5e7eb, #7c5cff22); min-height: 50%;"></div>
+                <div class="p-4">
+                  <div class="text-lg font-bold text-gray-900">$1,475,000</div>
+                  <div class="text-sm font-semibold text-gray-500 mt-1">305 Maple Drive</div>
+                  <div class="text-xs font-semibold text-gray-500 mt-0.5">5 bd &middot; 4 ba</div>
+                  <div class="text-xl font-semibold text-amber-600 mt-2">Sun 1:00 – 3:00 PM</div>
+                </div>
+              </div>
+              <div class="rounded-xl overflow-hidden flex flex-col bg-white ring-1 ring-gray-200">
+                <div class="flex-1 relative" style="background: linear-gradient(135deg, #e5e7eb, #e8990f22); min-height: 50%;"></div>
+                <div class="p-4">
+                  <div class="text-lg font-bold text-gray-900">$650,000</div>
+                  <div class="text-sm font-semibold text-gray-500 mt-1">92 Pine Street</div>
+                  <div class="text-xs font-semibold text-gray-500 mt-0.5">2 bd &middot; 2 ba</div>
+                  <div class="text-xl font-semibold text-amber-600 mt-2">Sun 11:00 AM – 1:00 PM</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Grid / Brand -->
+        <div>
+          <span class="text-xs font-mono text-gray-500 mb-3 block">grid &middot; brand</span>
+          <div class="preview-frame rounded-xl overflow-hidden p-[7%] flex flex-col" style="background: #2f6bff;">
+            <h2 class="text-2xl font-bold text-white mb-1">Open Houses This Weekend</h2>
+            <p class="text-sm font-semibold text-white/60 mb-6">4 properties &middot; Saturday &amp; Sunday</p>
+            <div class="grid grid-cols-4 gap-4 flex-1">
+              <div class="rounded-xl overflow-hidden flex flex-col bg-white/10">
+                <div class="flex-1 relative bg-white/5" style="min-height: 50%;"></div>
+                <div class="p-4">
+                  <div class="text-lg font-bold text-white">$1,250,000</div>
+                  <div class="text-sm font-semibold text-white/60 mt-1">742 Evergreen Terrace</div>
+                  <div class="text-xs font-semibold text-white/45 mt-0.5">4 bd &middot; 3 ba</div>
+                  <div class="text-xl font-semibold text-white/80 mt-2">Sat 1:00 – 3:00 PM</div>
+                </div>
+              </div>
+              <div class="rounded-xl overflow-hidden flex flex-col bg-white/10">
+                <div class="flex-1 relative bg-white/5" style="min-height: 50%;"></div>
+                <div class="p-4">
+                  <div class="text-lg font-bold text-white">$875,000</div>
+                  <div class="text-sm font-semibold text-white/60 mt-1">18 Oak Avenue</div>
+                  <div class="text-xs font-semibold text-white/45 mt-0.5">3 bd &middot; 2 ba</div>
+                  <div class="text-xl font-semibold text-white/80 mt-2">Sat 2:00 – 4:00 PM</div>
+                </div>
+              </div>
+              <div class="rounded-xl overflow-hidden flex flex-col bg-white/10">
+                <div class="flex-1 relative bg-white/5" style="min-height: 50%;"></div>
+                <div class="p-4">
+                  <div class="text-lg font-bold text-white">$1,475,000</div>
+                  <div class="text-sm font-semibold text-white/60 mt-1">305 Maple Drive</div>
+                  <div class="text-xs font-semibold text-white/45 mt-0.5">5 bd &middot; 4 ba</div>
+                  <div class="text-xl font-semibold text-white/80 mt-2">Sun 1:00 – 3:00 PM</div>
+                </div>
+              </div>
+              <div class="rounded-xl overflow-hidden flex flex-col bg-white/10">
+                <div class="flex-1 relative bg-white/5" style="min-height: 50%;"></div>
+                <div class="p-4">
+                  <div class="text-lg font-bold text-white">$650,000</div>
+                  <div class="text-sm font-semibold text-white/60 mt-1">92 Pine Street</div>
+                  <div class="text-xs font-semibold text-white/45 mt-0.5">2 bd &middot; 2 ba</div>
+                  <div class="text-xl font-semibold text-white/80 mt-2">Sun 11:00 AM – 1:00 PM</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </div>
+</body>
+</html>

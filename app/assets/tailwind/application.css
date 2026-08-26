@@ -1,4 +1,35 @@
 @import "tailwindcss";
-@plugin "daisyui" {
-  themes: light --default, dark --prefersdark;
+@source "../../../app/views";
+@source "../../../app/javascript";
+
+/* Ad canvas — dark theme as default + container-relative signage scale */
+.ad-canvas {
+  container-type: inline-size;
+  font-weight: 600;
+
+  /* Theme colors (dark default) */
+  --ad-bg: #0b0d12;
+  --ad-text: #ffffff;
+  --ad-text-muted: rgba(255, 255, 255, 0.6);
+  --ad-text-faint: rgba(255, 255, 255, 0.45);
+  --ad-accent: #5b8eff;
+  --ad-surface: rgba(255, 255, 255, 0.1);
+
+  /* Signage scale — proportional to container width */
+  --s-xs: 1cqw;
+  --s-sm: 1.3cqw;
+  --s-base: 1.8cqw;
+  --s-lg: 2.2cqw;
+  --s-xl: 2.6cqw;
+  --s-2xl: 3.2cqw;
+  --s-3xl: 4cqw;
+  --s-4xl: 5cqw;
+  --s-hero: 7cqw;
+  --s-pad: 5cqw;
+  --s-pad-lg: 7cqw;
+  --s-gap: 1.5cqw;
+  --s-qr: 8cqw;
+  --s-avatar: 15cqw;
+  --s-badge-px: 1.2cqw;
+  --s-badge-py: 0.4cqw;
 }

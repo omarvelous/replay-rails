@@ -1,0 +1,60 @@
+<% actions = capture do %>
+  <span class="text-sm text-gray-500"><%= @unread_count %> unread</span>
+<% end %>
+<%= render "app/shared/page_header", title: "Leads", subtitle: "#{@pagy.count} leads", actions: actions %>
+
+<%= form_with url: leads_path, method: :get do |f| %>
+  <div class="flex flex-wrap items-center gap-3 mb-5">
+    <div class="grid grid-cols-1">
+      <%= f.select :status,
+          [["All leads", ""], ["New", "new"], ["Contacted", "contacted"], ["Qualified", "qualified"], ["Closed", "closed"]],
+          { selected: params[:status].to_s },
+          class: "col-start-1 row-start-1 w-full appearance-none rounded-md bg-white py-1.5 pr-8 pl-3 text-sm/6 text-gray-900 outline-1 -outline-offset-1 outline-gray-300 focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-indigo-600",
+          onchange: "this.form.requestSubmit()" %>
+      <svg viewBox="0 0 16 16" fill="currentColor" aria-hidden="true" class="pointer-events-none col-start-1 row-start-1 mr-2 size-4 self-center justify-self-end text-gray-500">
+        <path d="M4.22 6.22a.75.75 0 0 1 1.06 0L8 8.94l2.72-2.72a.75.75 0 1 1 1.06 1.06l-3.25 3.25a.75.75 0 0 1-1.06 0L4.22 7.28a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd" fill-rule="evenodd" />
+      </svg>
+    </div>
+  </div>
+<% end %>
+
+<% if @leads.any? %>
+  <div class="space-y-2">
+    <% @leads.each do |lead| %>
+      <%= link_to lead_path(lead), class: "block rounded-lg bg-white shadow-sm ring-1 ring-gray-900/5 p-4 hover:shadow-md transition-shadow" do %>
+        <div class="flex items-start justify-between gap-3">
+          <div class="flex items-center gap-3 min-w-0">
+            <%# Status indicator %>
+            <% status_colors = { "new" => "bg-indigo-500", "contacted" => "bg-gray-400", "qualified" => "bg-amber-500", "closed" => "bg-green-500" } %>
+            <span class="w-2.5 h-2.5 rounded-full shrink-0 <%= status_colors[lead.status] %>"></span>
+            <div class="min-w-0">
+              <p class="font-semibold text-sm truncate"><%= lead.name %></p>
+              <p class="text-xs text-gray-500 mt-0.5">
+                <% if lead.listing %>
+                  <%= lead.listing.address %> &middot;
+                <% elsif lead.current_agent %>
+                  <%= lead.current_agent.name %> &middot;
+                <% end %>
+                <%= lead.lead_type.humanize %>
+              </p>
+            </div>
+          </div>
+          <div class="text-right shrink-0">
+            <span class="inline-flex items-center rounded-md bg-gray-50 px-1.5 py-0.5 text-[10.5px] font-medium text-gray-500 ring-1 ring-gray-500/10 ring-inset"><%= lead.status.capitalize %></span>
+            <p class="text-xs text-gray-400 mt-1"><%= time_ago_in_words(lead.created_at) %> ago</p>
+          </div>
+        </div>
+        <% if lead.message.present? %>
+          <p class="text-xs text-gray-500 mt-2 truncate pl-5.5">"<%= lead.message.truncate(80) %>"</p>
+        <% end %>
+      <% end %>
+    <% end %>
+  </div>
+<% else %>
+  <div class="rounded-lg border-2 border-dashed border-gray-200 p-10 text-center">
+    <p class="font-semibold">No leads yet</p>
+    <p class="text-sm text-gray-500 mt-1">Leads will appear here when someone submits a contact form.</p>
+  </div>
+<% end %>
+
+<%= render "app/shared/pagination", pagy: @pagy %>

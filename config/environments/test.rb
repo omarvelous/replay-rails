@@ -50,4 +50,13 @@ Rails.application.configure do
 
   # Raise error when a before_action's only/except options reference missing actions.
   config.action_controller.raise_on_missing_callback_actions = true
+
+  # Subdomain routing
+  config.action_dispatch.tld_length = 1
+  config.action_mailer.default_url_options = { host: "app.replay.localhost" }
+
+  # Disable Rack::Attack by default in tests — enable explicitly in rate limiting specs
+  config.after_initialize do
+    Rack::Attack.enabled = false
+  end
 end

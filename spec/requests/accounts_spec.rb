@@ -1,6 +1,6 @@
 require "rails_helper"
 
-RSpec.describe "Accounts", type: :request do
+RSpec.describe "Accounts" do
   describe "GET /accounts/new (signup form)" do
     it "returns a successful response" do
       get new_account_path
@@ -34,7 +34,7 @@ RSpec.describe "Accounts", type: :request do
         expect {
           post accounts_path, params: valid_params
         }.to change(User, :count).by(1)
-        expect(User.last.account).to be_a(Account)
+        expect(User.last.accounts.first).to be_a(Account)
       end
 
       it "redirects after signup" do
@@ -55,7 +55,7 @@ RSpec.describe "Accounts", type: :request do
       it "returns 422" do
         params = valid_params.deep_merge(user: { first_name: "" })
         post accounts_path, params: params
-        expect(response).to have_http_status(:unprocessable_entity)
+        expect(response).to have_http_status(:unprocessable_content)
       end
     end
 
@@ -70,7 +70,7 @@ RSpec.describe "Accounts", type: :request do
 
       it "returns 422" do
         post accounts_path, params: valid_params
-        expect(response).to have_http_status(:unprocessable_entity)
+        expect(response).to have_http_status(:unprocessable_content)
       end
     end
   end

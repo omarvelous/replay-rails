@@ -2,7 +2,7 @@
 
 ## Project Overview
 
-replay_rails is a Rails 8.1 application with PostgreSQL, Hotwire (Turbo + Stimulus), and Tailwind CSS v4 + DaisyUI v5. It uses a multi-tenant authentication pattern with Account and User models (Rails 8 built-in authentication). Background jobs, caching, and WebSockets are handled by Solid Queue, Solid Cache, and Solid Cable (all DB-backed, no Redis).
+replay_rails is a Rails 8.1 application with PostgreSQL, Hotwire (Turbo + Stimulus), and Tailwind CSS v4 + DaisyUI v5. It uses a multi-tenant authentication pattern with Account, User, and AccountUser models (Rails 8 built-in authentication). Authorization is handled by Pundit with policy classes per model. Background jobs, caching, and WebSockets are handled by Solid Queue, Solid Cache, and Solid Cable (all DB-backed, no Redis).
 
 ## Development Setup
 
@@ -44,6 +44,7 @@ The test suite uses:
 - **FactoryBot** — Test data factories (`spec/factories/`)
 - **Faker** — Realistic random data generation
 - **shoulda-matchers** — One-liner tests for validations and associations
+- **pundit-matchers** — Policy spec matchers (`permit_action`, `forbid_action`)
 - **database_cleaner** — Clean database state between tests
 - **Capybara** — System/integration tests with browser simulation
 
@@ -65,20 +66,34 @@ No implementation code is written without a failing spec. Factories are created 
 
 ## Architecture
 
-### Authentication
+### Authentication & Multi-tenancy
 
-Uses Rails 8 built-in authentication with a multi-tenant Account model:
+Uses Rails 8 built-in authentication with a many-to-many Account-User relationship:
 
 - `Account` — Tenant model. All resources are scoped to an account.
-- `User` — Belongs to Account. Has `email_address` and `password_digest`.
+- `User` — Has `email_address` and `password_digest`. Can belong to multiple accounts.
+- `AccountUser` — Join model between User and Account. Carries the `role` (owner, manager, agent).
 - `Session` — Tracks active sessions per user.
-- `Current` — `ActiveSupport::CurrentAttributes` provides `Current.user` and `Current.session` throughout the request.
+- `Current` — `ActiveSupport::CurrentAttributes` provides `Current.user`, `Current.account_user`, and `Current.account` throughout the request.
+
+`Current.account_user` is set on login/session resume and provides both the account context and the user's role within that account. `Current.account` delegates through it.
 
 All queries must be scoped through the current account:
 ```ruby
-Current.user.account.buildings    # Correct
-Building.all                      # Wrong — leaks data across tenants
+Current.account.listings          # Correct
+Listing.all                       # Wrong — leaks data across tenants
 ```
+
+### Authorization (Pundit)
+
+Every app controller action calls `authorize @record` and index actions use `policy_scope`. Policy classes live in `app/policies/`.
+
+- `ApplicationPolicy` — default: read-all, write-managers+
+- `ListingPolicy` / `LeadPolicy` — agent scoping via `Scope` class
+- `AgentPolicy` — agents can edit their own profile
+- `AccountPolicy` — owner-only for settings/billing
+
+`pundit_user` returns `Current.account_user` (the membership, not the bare User). Policies check `account_user.can_manage?`, `account_user.owner?`, etc.
 
 ### Database
 
@@ -113,9 +128,10 @@ This project follows documented standards in `agent-os/standards/`. See `agent-o
 ## Coding Conventions
 
 - **Thin controllers** — Controllers handle HTTP concerns only (params, redirects, status codes). Business logic lives in models or service objects.
+- **Pundit for authorization** — Every mutating controller action calls `authorize`. Index actions use `policy_scope`. Policy classes in `app/policies/`.
 - **Concerns for shared behavior** — Use `ActiveSupport::Concern` in `app/models/concerns/` and `app/controllers/concerns/` for reusable behavior.
 - **Service objects for complex logic** — POROs in `app/services/` with a single `call` method for operations spanning multiple models.
-- **Follow Rails omakase style** — RuboCop is configured with `rubocop-rails-omakase` and `rubocop-rspec`. Run `make lint` before committing.
-- **Multi-tenant scoping** — Always scope queries through `Current.user.account` to prevent cross-tenant data access.
+- **Follow Rails omakase style** — RuboCop is configured with `rubocop-rails-omakase`, `rubocop-rspec`, `rubocop-rspec_rails`, `rubocop-factory_bot`, and `rubocop-capybara`. Run `make lint` before committing.
+- **Multi-tenant scoping** — Always scope queries through `Current.account` to prevent cross-tenant data access.
 - **Flash messages** — Use `flash[:notice]` for success, `flash[:alert]` for errors. Display with DaisyUI alert components.
-- **Form errors** — Re-render with `status: :unprocessable_entity` for Turbo compatibility. Display errors inline with `model.errors`.
+- **Form errors** — Re-render with `status: :unprocessable_content` for Turbo compatibility. Display errors inline with `model.errors`.

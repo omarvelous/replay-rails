@@ -1,0 +1,1 @@
+class ScreenPlayerPolicy < ApplicationPolicy; end

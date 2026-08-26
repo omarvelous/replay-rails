@@ -23,5 +23,8 @@ module ReplayRails
     #
     # config.time_zone = "Central Time (US & Canada)"
     # config.eager_load_paths << Rails.root.join("extras")
+
+    # Session cookies shared across subdomains
+    config.session_store :cookie_store, key: "_replay_session", domain: :all
   end
 end
