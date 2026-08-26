@@ -3,9 +3,11 @@ module App
   before_action :set_screen
 
   def new
+    authorize ScreenPlayer
   end
 
   def create
+    authorize ScreenPlayer
     player = Player.find_by(pairing_code: params[:code]&.strip&.upcase)
 
     if player.nil?
@@ -31,6 +33,7 @@ module App
   end
 
   def destroy
+    authorize ScreenPlayer
     @screen.unpair_player!
     redirect_to @screen, notice: "Player unpaired."
   end

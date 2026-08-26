@@ -3,18 +3,21 @@ module App
   before_action :set_site, only: %i[ show edit update destroy ]
 
   def index
-    @sites = Current.account.sites.order(:name)
+    @sites = policy_scope(Current.account.sites).order(:name)
   end
 
   def show
+    authorize @site
   end
 
   def new
     @site = Current.account.sites.build
+    authorize @site
   end
 
   def create
     @site = Current.account.sites.build(site_params)
+    authorize @site
 
     if @site.save
       redirect_to @site, notice: t(".success")
@@ -24,9 +27,11 @@ module App
   end
 
   def edit
+    authorize @site
   end
 
   def update
+    authorize @site
     if @site.update(site_params)
       redirect_to @site, notice: t(".success")
     else
@@ -35,6 +40,7 @@ module App
   end
 
   def destroy
+    authorize @site
     @site.destroy
     redirect_to sites_path, notice: t(".success")
   end

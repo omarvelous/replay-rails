@@ -7,11 +7,13 @@ module Ads
       @listing_ad = ::Ads::ListingAd.new
       @ad = @listing_ad.build_ad(account: Current.account)
       @ad.apply_defaults
+      authorize @ad
     end
 
     def create
       @listing_ad = ::Ads::ListingAd.new(listing_ad_params)
       @ad = @listing_ad.build_ad(ad_params.merge(account: Current.account))
+      authorize @ad
 
       if @ad.valid? & @listing_ad.valid? # non-short-circuit: validate both
         @listing_ad.save!
@@ -22,10 +24,12 @@ module Ads
     end
 
     def edit
+      authorize @ad
       @listing_ad = @ad.adable
     end
 
     def update
+      authorize @ad
       @listing_ad = @ad.adable
       @listing_ad.assign_attributes(listing_ad_params)
       @ad.assign_attributes(ad_params)

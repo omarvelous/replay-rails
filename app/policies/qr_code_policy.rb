@@ -1,0 +1,1 @@
+class QrCodePolicy < ApplicationPolicy; end

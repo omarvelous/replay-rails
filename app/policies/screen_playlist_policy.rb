@@ -1,0 +1,1 @@
+class ScreenPlaylistPolicy < ApplicationPolicy; end

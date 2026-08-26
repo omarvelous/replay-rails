@@ -3,23 +3,26 @@ module App
   before_action :set_playlist, only: %i[ show edit update destroy preview ]
 
   def index
-    base = Current.account.playlists
+    base = policy_scope(Current.account.playlists)
     base = base.search(params[:q]) if params[:q].present?
     base = base.by_status(params[:status]) if params[:status].present?
     @pagy, @playlists = pagy(base.order(created_at: :desc))
   end
 
   def show
+    authorize @playlist
     @playlist_ads = @playlist.playlist_ads.includes(:ad).order(:position)
     @screen_playlists = @playlist.screen_playlists.includes(screen: :site).where(active: true)
   end
 
   def new
     @playlist = Current.account.playlists.build(status: "draft")
+    authorize @playlist
   end
 
   def create
     @playlist = Current.account.playlists.build(playlist_params)
+    authorize @playlist
 
     if @playlist.save
       redirect_to @playlist, notice: t(".success")
@@ -29,10 +32,12 @@ module App
   end
 
   def edit
+    authorize @playlist
     @playlist_ads = @playlist.playlist_ads.includes(:ad).order(:position)
   end
 
   def update
+    authorize @playlist
     if @playlist.update(playlist_params)
       redirect_to @playlist, notice: t(".success")
     else
@@ -42,11 +47,13 @@ module App
   end
 
   def preview
+    authorize @playlist, :show?
     @playlist_ads = @playlist.playlist_ads.includes(:ad)
     render layout: "preview"
   end
 
   def destroy
+    authorize @playlist
     @playlist.destroy
     redirect_to playlists_path, notice: t(".success")
   end

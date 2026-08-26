@@ -7,12 +7,14 @@ module Ads
       @collection_ad = ::Ads::CollectionAd.new
       @ad = @collection_ad.build_ad(account: Current.account, layout: "grid")
       @ad.apply_defaults
+      authorize @ad
       @available_ads = Current.account.ads.where.not(adable_type: "Ads::CollectionAd").order(:headline)
     end
 
     def create
       @collection_ad = ::Ads::CollectionAd.new(collection_ad_params)
       @ad = @collection_ad.build_ad(ad_params.merge(account: Current.account, layout: "grid"))
+      authorize @ad
 
       if @ad.valid? & @collection_ad.valid?
         @collection_ad.save!
@@ -24,11 +26,13 @@ module Ads
     end
 
     def edit
+      authorize @ad
       @collection_ad = @ad.adable
       @available_ads = Current.account.ads.where.not(adable_type: "Ads::CollectionAd").order(:headline)
     end
 
     def update
+      authorize @ad
       @collection_ad = @ad.adable
       @collection_ad.assign_attributes(collection_ad_params)
       @ad.assign_attributes(ad_params.merge(layout: "grid"))
