@@ -1,5 +1,6 @@
 class Account < ApplicationRecord
-  has_many :users, dependent: :destroy
+  has_many :account_users, dependent: :destroy
+  has_many :users, through: :account_users
   has_many :sites, dependent: :destroy
   has_many :screens, through: :sites
   has_many :listings, dependent: :destroy

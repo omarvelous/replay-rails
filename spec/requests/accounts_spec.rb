@@ -34,7 +34,7 @@ RSpec.describe "Accounts" do
         expect {
           post accounts_path, params: valid_params
         }.to change(User, :count).by(1)
-        expect(User.last.account).to be_a(Account)
+        expect(User.last.accounts.first).to be_a(Account)
       end
 
       it "redirects after signup" do

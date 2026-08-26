@@ -77,6 +77,7 @@ Rails.application.routes.draw do
       resources :qr_scans
       resources :leads
       resources :lead_agents
+      resources :account_users
     end
   end
 

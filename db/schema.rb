@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_08_26_004304) do
+ActiveRecord::Schema[8.1].define(version: 2026_08_26_004822) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -308,7 +308,6 @@ ActiveRecord::Schema[8.1].define(version: 2026_08_26_004304) do
   end
 
   create_table "users", force: :cascade do |t|
-    t.bigint "account_id"
     t.boolean "admin", default: false, null: false
     t.datetime "created_at", null: false
     t.string "email_address", null: false
@@ -317,7 +316,6 @@ ActiveRecord::Schema[8.1].define(version: 2026_08_26_004304) do
     t.string "password_digest", null: false
     t.string "phone"
     t.datetime "updated_at", null: false
-    t.index ["account_id"], name: "index_users_on_account_id"
     t.index ["email_address"], name: "index_users_on_email_address", unique: true
   end
 
@@ -356,5 +354,4 @@ ActiveRecord::Schema[8.1].define(version: 2026_08_26_004304) do
   add_foreign_key "screens", "sites"
   add_foreign_key "sessions", "users"
   add_foreign_key "sites", "accounts"
-  add_foreign_key "users", "accounts"
 end

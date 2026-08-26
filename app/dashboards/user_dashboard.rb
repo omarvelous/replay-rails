@@ -8,13 +8,13 @@ class UserDashboard < Administrate::BaseDashboard
     email_address: Field::String,
     phone: Field::String,
     admin: Field::Boolean,
-    account: Field::BelongsTo,
+    account_users: Field::HasMany,
     sessions: Field::HasMany,
     created_at: Field::DateTime
   }.freeze
 
-  COLLECTION_ATTRIBUTES = %i[ id first_name last_name email_address admin account ].freeze
-  SHOW_PAGE_ATTRIBUTES = %i[ id first_name last_name email_address phone admin account sessions created_at ].freeze
+  COLLECTION_ATTRIBUTES = %i[ id first_name last_name email_address admin ].freeze
+  SHOW_PAGE_ATTRIBUTES = %i[ id first_name last_name email_address phone admin account_users sessions created_at ].freeze
   FORM_ATTRIBUTES = %i[ first_name last_name email_address phone admin ].freeze
   COLLECTION_FILTERS = {}.freeze
 

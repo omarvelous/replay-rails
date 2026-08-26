@@ -41,20 +41,20 @@ end
 unless User.exists?(email_address: "demo@example.com")
   account = Account.create!
 
-  User.create!(
-    account:        account,
+  user = User.create!(
     email_address:  "demo@example.com",
     first_name:     "Demo",
     last_name:      "User",
     phone:          "+12125550001",
     password:       "password"
   )
-  puts "Created demo user: demo@example.com / password"
+  AccountUser.create!(account: account, user: user, role: "owner")
+  puts "Created demo user: demo@example.com / password (owner)"
 end
 
 demo_user_record = User.find_by(email_address: "demo@example.com")
 demo_user_record&.update!(admin: true) unless demo_user_record&.admin?
-demo_account = demo_user_record&.account
+demo_account = demo_user_record&.accounts&.first
 
 # -----------------------------------------------------------------------
 # Sites

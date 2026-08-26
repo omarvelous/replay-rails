@@ -9,9 +9,14 @@ module App
 
   def create
     @account = Account.new(account_params)
-    @user    = @account.users.build(user_params)
+    @user    = User.new(user_params)
 
-    if @account.save
+    if @user.valid? && @account.valid?
+      ActiveRecord::Base.transaction do
+        @account.save!
+        @user.save!
+        AccountUser.create!(account: @account, user: @user, role: "owner")
+      end
       start_new_session_for @user
       redirect_to app_root_path
     else
