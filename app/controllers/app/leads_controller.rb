@@ -1,11 +1,11 @@
 module App
   class LeadsController < App::BaseController
     def index
-      base = authorized_scope(Current.account.leads)
+      base = authorized_scope(Lead.all)
       base = base.includes(:listing, :lead_agents, :agents)
       base = base.by_status(params[:status]) if params[:status].present?
       @pagy, @leads = pagy(base.order(created_at: :desc))
-      @unread_count = authorized_scope(Current.account.leads).unread.count
+      @unread_count = authorized_scope(Lead.all).unread.count
     end
 
     def show

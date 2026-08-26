@@ -54,7 +54,7 @@ RSpec.describe ListingPolicy do
 
     it "returns only the agent's listings for agents" do
       scope = described_class.new(own_listing, user: user, account: account)
-                             .apply_scope(account.listings, type: :active_record_relation)
+                             .apply_scope(Listing.all, type: :active_record_relation)
       expect(scope).to include(own_listing)
       expect(scope).not_to include(other_listing)
     end
@@ -62,8 +62,16 @@ RSpec.describe ListingPolicy do
     it "returns all listings for managers" do
       manager = create(:user, account: account, role: "manager")
       scope = described_class.new(own_listing, user: manager, account: account)
-                             .apply_scope(account.listings, type: :active_record_relation)
+                             .apply_scope(Listing.all, type: :active_record_relation)
       expect(scope).to include(own_listing, other_listing)
+    end
+
+    it "excludes listings from other accounts" do
+      other_account_listing = create(:listing)
+      manager = create(:user, account: account, role: "manager")
+      scope = described_class.new(own_listing, user: manager, account: account)
+                             .apply_scope(Listing.all, type: :active_record_relation)
+      expect(scope).not_to include(other_account_listing)
     end
   end
 end

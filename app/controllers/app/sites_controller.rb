@@ -3,7 +3,7 @@ module App
   before_action :set_site, only: %i[ show edit update destroy ]
 
   def index
-    @sites = authorized_scope(Current.account.sites).order(:name)
+    @sites = authorized_scope(Site.all).order(:name)
   end
 
   def show

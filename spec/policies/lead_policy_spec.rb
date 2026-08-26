@@ -54,7 +54,7 @@ RSpec.describe LeadPolicy do
 
     it "returns only the agent's leads for agents" do
       scope = described_class.new(own_lead, user: user, account: account)
-                             .apply_scope(account.leads, type: :active_record_relation)
+                             .apply_scope(Lead.all, type: :active_record_relation)
       expect(scope).to include(own_lead)
       expect(scope).not_to include(other_lead)
     end
@@ -62,7 +62,7 @@ RSpec.describe LeadPolicy do
     it "returns all leads for managers" do
       manager = create(:user, account: account, role: "manager")
       scope = described_class.new(own_lead, user: manager, account: account)
-                             .apply_scope(account.leads, type: :active_record_relation)
+                             .apply_scope(Lead.all, type: :active_record_relation)
       expect(scope).to include(own_lead, other_lead)
     end
   end

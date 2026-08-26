@@ -3,7 +3,7 @@ module App
   before_action :set_listing, only: %i[ show edit update destroy ]
 
   def index
-    base = authorized_scope(Current.account.listings)
+    base = authorized_scope(Listing.all)
     base = base.search(params[:q]) if params[:q].present?
     base = base.by_status(params[:status]) if params[:status].present?
     @pagy, @listings = pagy(base.order(created_at: :desc))

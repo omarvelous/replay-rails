@@ -590,10 +590,40 @@ Pundit's `policy(@record).action?`.
 
 ---
 
+## Post-migration improvement: Policy-owned tenant scoping
+
+After the initial migration, tenant scoping was moved from controllers
+into policy scopes. Controllers no longer reference `Current.account`
+for index queries — the policy handles both tenant and role scoping.
+
+**Before:**
+```ruby
+# Controller pre-scopes to tenant, policy only does role filtering
+base = authorized_scope(Current.account.listings)
+```
+
+**After:**
+```ruby
+# Controller passes the model, policy handles everything
+base = authorized_scope(Listing.all)
+
+# ApplicationPolicy default scope
+scope_for :active_record_relation do |relation|
+  relation.where(account: account)
+end
+```
+
+This means:
+- Controllers can't accidentally forget tenant scoping
+- All access control decisions live in one place (the policy)
+- Models that reach account through a parent (Screen → Site → Account)
+  override the scope in their own policy
+
+---
+
 ## What this does NOT change
 
 - **Controller actions** — `authorize!` is the same call, just with a bang
-- **Tenant scoping** — `Current.account` still used everywhere
 - **Join tables** — ListingAgent, LeadAgent stay as-is (domain data)
 - **Admin panel** — Administrate uses `admin?` boolean, unaffected
 - **Public controllers** — Go::, Marketing::, Scans — no policies

@@ -3,7 +3,7 @@ module App
   before_action :set_qr_code, only: :show
 
   def index
-    @qr_codes = authorized_scope(Current.account.qr_codes)
+    @qr_codes = authorized_scope(QrCode.all)
                        .includes(:destination_record)
                        .order(created_at: :desc)
   end

@@ -3,7 +3,7 @@ module App
   before_action :set_ad, only: %i[ show edit update destroy preview ]
 
   def index
-    base = authorized_scope(Current.account.ads)
+    base = authorized_scope(Ad.all)
     base = base.search(params[:q]) if params[:q].present?
     base = base.where(adable_type: params[:ad_type]) if params[:ad_type].present?
     @pagy, @ads = pagy(base.order(created_at: :desc))

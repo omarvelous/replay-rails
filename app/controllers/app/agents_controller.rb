@@ -3,7 +3,7 @@ module App
   before_action :set_agent, only: %i[ show edit update destroy ]
 
   def index
-    @agents = authorized_scope(Current.account.agents).order(:name)
+    @agents = authorized_scope(Agent.all).order(:name)
   end
 
   def show
