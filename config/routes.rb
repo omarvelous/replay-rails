@@ -102,12 +102,9 @@ Rails.application.routes.draw do
   # Play — play subdomain (HTML, visual content for screens)
   # ---------------------------------------------------------------
   constraints subdomain: "play" do
-    # Legacy routes — keep during migration, remove later
-    post "/register",  to: "player_api#register"
-    get  "/status",    to: "player_api#status"
-    get  "/",          to: "player_api#play", as: :play_root
-    post "/heartbeat", to: "player_api#heartbeat"
-    post "/impression", to: "player_api#impression"
+    scope module: "play" do
+      resources :players, param: :token, only: [ :new, :show ]
+    end
   end
 
   # ---------------------------------------------------------------

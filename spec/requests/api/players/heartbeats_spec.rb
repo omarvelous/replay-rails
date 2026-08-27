@@ -1,12 +1,13 @@
 require "rails_helper"
 
 RSpec.describe "Api::Players::Heartbeats" do
-  before { host! "api.replay.localhost" }
-
   let(:player) { create(:player) }
   let(:screen) { create(:screen) }
 
-  before { screen.pair_player!(player) }
+  before do
+    host! "api.replay.localhost"
+    screen.pair_player!(player)
+  end
 
   describe "POST /players/:token/heartbeat" do
     it "updates last_heartbeat_at" do
