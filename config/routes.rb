@@ -90,8 +90,10 @@ Rails.application.routes.draw do
   constraints subdomain: "api" do
     scope module: "api" do
       resources :players, param: :token, only: [ :create, :show ] do
-        resource :heartbeat, only: [ :create ]
-        resources :impressions, only: [ :create ]
+        scope module: "players" do
+          resource :heartbeat, only: [ :create ]
+          resources :impressions, only: [ :create ]
+        end
       end
     end
   end
