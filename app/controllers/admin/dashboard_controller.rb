@@ -8,6 +8,10 @@ module Admin
       @total_qr_codes = QrCode.count
       @total_scans = QrScan.qualified.count
       @scans_today = QrScan.qualified.where("created_at > ?", Date.current.beginning_of_day).count
+      @total_impressions = Impression.count
+      @impressions_today = Impression.where("created_at > ?", Date.current.beginning_of_day).count
+      @total_leads = Lead.count
+      @leads_this_week = Lead.where("created_at > ?", 7.days.ago).count
     end
   end
 end

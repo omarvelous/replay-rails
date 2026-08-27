@@ -22,13 +22,36 @@
   </div>
 </div>
 
-<div class="grid grid-cols-2 md:grid-cols-3 gap-4">
+<div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
   <div class="rounded-lg bg-white shadow-sm ring-1 ring-gray-900/5 p-5">
-    <p class="text-3xl font-bold tabular-nums"><%= @total_scans %></p>
+    <p class="text-3xl font-bold tabular-nums"><%= number_with_delimiter(@total_impressions) %></p>
+    <p class="text-sm text-gray-500">Impressions (all time)</p>
+  </div>
+  <div class="rounded-lg bg-white shadow-sm ring-1 ring-gray-900/5 p-5">
+    <p class="text-3xl font-bold tabular-nums"><%= number_with_delimiter(@impressions_today) %></p>
+    <p class="text-sm text-gray-500">Impressions today</p>
+  </div>
+  <div class="rounded-lg bg-white shadow-sm ring-1 ring-gray-900/5 p-5">
+    <p class="text-3xl font-bold tabular-nums"><%= number_with_delimiter(@total_scans) %></p>
     <p class="text-sm text-gray-500">Qualified scans (all time)</p>
   </div>
   <div class="rounded-lg bg-white shadow-sm ring-1 ring-gray-900/5 p-5">
     <p class="text-3xl font-bold tabular-nums"><%= @scans_today %></p>
     <p class="text-sm text-gray-500">Scans today</p>
+  </div>
+</div>
+
+<div class="grid grid-cols-2 md:grid-cols-3 gap-4">
+  <div class="rounded-lg bg-white shadow-sm ring-1 ring-gray-900/5 p-5">
+    <p class="text-3xl font-bold tabular-nums"><%= @total_leads %></p>
+    <p class="text-sm text-gray-500">Leads (all time)</p>
+  </div>
+  <div class="rounded-lg bg-white shadow-sm ring-1 ring-gray-900/5 p-5">
+    <p class="text-3xl font-bold tabular-nums"><%= @leads_this_week %></p>
+    <p class="text-sm text-gray-500">Leads this week</p>
+  </div>
+  <div class="rounded-lg bg-white shadow-sm ring-1 ring-gray-900/5 p-5">
+    <p class="text-3xl font-bold tabular-nums"><%= @total_scans > 0 ? number_to_percentage(@total_leads.to_f / @total_scans * 100, precision: 1) : "—" %></p>
+    <p class="text-sm text-gray-500">Scan → Lead conversion</p>
   </div>
 </div>
