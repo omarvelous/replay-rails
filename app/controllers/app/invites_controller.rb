@@ -4,10 +4,9 @@ module App
     before_action :set_invite, only: %i[show update destroy]
     before_action :require_authentication_for_existing_users, only: :show
 
-    # GET /invites — team page
+    # GET /invites
     def index
-      @members = authorized_scope(AccountUser.all).includes(:user).order(:created_at)
-      @invites = authorized_scope(Invite.all).pending.order(created_at: :desc)
+      @invites = authorized_scope(Invite.all).order(created_at: :desc)
     end
 
     # GET /invites/new

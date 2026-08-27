@@ -12,11 +12,6 @@ RSpec.describe "Invites" do
       expect(response).to be_successful
     end
 
-    it "shows current members" do
-      get invites_path
-      expect(response.body).to include(user.email_address)
-    end
-
     it "shows pending invites" do
       invite = create(:invite, account: account, email: "pending@example.com", invited_by: user)
       get invites_path
