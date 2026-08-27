@@ -1,10 +1,10 @@
 require "rails_helper"
 
 RSpec.describe "Home" do
-  describe "GET / (app root)" do
-    it "returns a successful response when not authenticated" do
+  describe "GET / (app root → dashboard)" do
+    it "redirects to login when not authenticated" do
       get app_root_path
-      expect(response).to be_successful
+      expect(response).to redirect_to(new_session_path)
     end
 
     it "returns a successful response when authenticated" do

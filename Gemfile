@@ -58,6 +58,8 @@ gem "administrate-field-active_storage"
 gem "action_policy"
 gem "rack-attack"
 gem "rack-cors"
+gem "chartkick"
+gem "groupdate"
 
 group :development, :test do
   # See https://guides.rubyonrails.org/debugging_rails_applications.html#debugging-with-the-debug-gem

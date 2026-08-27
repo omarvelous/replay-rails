@@ -1,0 +1,89 @@
+<%= render "app/shared/page_header", title: "Dashboard" %>
+
+<%# Summary cards %>
+<div class="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+  <div class="rounded-lg bg-white shadow-sm ring-1 ring-gray-900/5 p-5">
+    <p class="text-3xl font-bold tabular-nums"><%= @screens_online %>/<%= @screens_total %></p>
+    <p class="text-xs text-gray-400 mt-1">Screens online</p>
+  </div>
+  <div class="rounded-lg bg-white shadow-sm ring-1 ring-gray-900/5 p-5">
+    <p class="text-3xl font-bold tabular-nums"><%= number_with_delimiter(@impressions_month) %></p>
+    <p class="text-xs text-gray-400 mt-1">Impressions this month</p>
+  </div>
+  <div class="rounded-lg bg-white shadow-sm ring-1 ring-gray-900/5 p-5">
+    <p class="text-3xl font-bold tabular-nums"><%= number_with_delimiter(@scans_month) %></p>
+    <p class="text-xs text-gray-400 mt-1">Scans this month</p>
+  </div>
+  <div class="rounded-lg bg-white shadow-sm ring-1 ring-gray-900/5 p-5">
+    <p class="text-3xl font-bold tabular-nums"><%= @leads_month %></p>
+    <p class="text-xs text-gray-400 mt-1">Leads this month</p>
+  </div>
+</div>
+
+<%# Charts %>
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+  <div class="rounded-lg bg-white shadow-sm ring-1 ring-gray-900/5 p-5">
+    <h3 class="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-4">Impressions & Scans (30 days)</h3>
+    <%= line_chart [
+      { name: "Impressions", data: Impression.where(account: Current.account)
+          .where("created_at > ?", 30.days.ago).group_by_day(:created_at).count },
+      { name: "Scans", data: QrScan.qualified.where(account: Current.account)
+          .where("created_at > ?", 30.days.ago).group_by_day(:created_at).count }
+    ], library: { scales: { y: { beginAtZero: true } } } %>
+  </div>
+  <div class="rounded-lg bg-white shadow-sm ring-1 ring-gray-900/5 p-5">
+    <h3 class="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-4">Leads (30 days)</h3>
+    <%= line_chart Current.account.leads
+          .where("created_at > ?", 30.days.ago)
+          .group_by_day(:created_at).count,
+        library: { scales: { y: { beginAtZero: true } } } %>
+  </div>
+</div>
+
+<%# Funnel %>
+<div class="rounded-lg bg-white shadow-sm ring-1 ring-gray-900/5 p-5 mb-8">
+  <h3 class="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-4">Funnel (30 days)</h3>
+  <div class="flex items-center gap-2 text-sm">
+    <span class="font-bold tabular-nums"><%= number_with_delimiter(@impressions_month) %></span>
+    <span class="text-gray-400">impressions</span>
+    <span class="text-gray-300">&rarr;</span>
+    <span class="font-bold tabular-nums"><%= @scans_month %></span>
+    <span class="text-gray-400">scans</span>
+    <% if @impressions_month > 0 %>
+      <span class="text-xs text-gray-400">(<%= number_to_percentage(@scans_month.to_f / @impressions_month * 100, precision: 1) %>)</span>
+    <% end %>
+    <span class="text-gray-300">&rarr;</span>
+    <span class="font-bold tabular-nums"><%= @leads_month %></span>
+    <span class="text-gray-400">leads</span>
+    <% if @scans_month > 0 %>
+      <span class="text-xs text-gray-400">(<%= number_to_percentage(@leads_month.to_f / @scans_month * 100, precision: 1) %>)</span>
+    <% end %>
+  </div>
+</div>
+
+<%# Recent leads %>
+<div class="rounded-lg bg-white shadow-sm ring-1 ring-gray-900/5">
+  <div class="flex items-center justify-between p-4 border-b border-gray-200">
+    <h3 class="font-semibold text-sm">Recent Leads</h3>
+    <%= link_to "View all", leads_path, class: "text-sm text-indigo-600 font-semibold hover:text-indigo-500" %>
+  </div>
+  <% if @recent_leads.any? %>
+    <div class="divide-y divide-gray-100">
+      <% @recent_leads.each do |lead| %>
+        <%= link_to lead_path(lead), class: "flex items-center justify-between p-4 hover:bg-gray-50 transition-colors" do %>
+          <div class="flex items-center gap-3">
+            <% status_colors = { "new" => "bg-indigo-500", "contacted" => "bg-gray-400", "qualified" => "bg-amber-500", "closed" => "bg-green-500" } %>
+            <span class="w-2.5 h-2.5 rounded-full shrink-0 <%= status_colors[lead.status] %>"></span>
+            <div>
+              <p class="text-sm font-semibold"><%= lead.name %></p>
+              <p class="text-xs text-gray-500"><%= lead.lead_type.humanize %></p>
+            </div>
+          </div>
+          <span class="text-xs text-gray-400"><%= time_ago_in_words(lead.created_at) %> ago</span>
+        <% end %>
+      <% end %>
+    </div>
+  <% else %>
+    <div class="p-6 text-center text-sm text-gray-500">No leads yet.</div>
+  <% end %>
+</div>

@@ -11,6 +11,19 @@
 
   <nav class="flex flex-1 flex-col">
     <ul role="list" class="flex flex-1 flex-col gap-y-7">
+      <%# Dashboard %>
+      <li>
+        <ul role="list" class="-mx-2 space-y-1">
+          <li>
+            <% active = controller_name == 'dashboard' %>
+            <%= link_to app_root_path, class: "group flex gap-x-3 rounded-md p-2 text-sm/6 font-semibold #{active ? 'bg-white/5 text-white' : 'text-gray-400 hover:bg-white/5 hover:text-white'}" do %>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true" class="size-6 shrink-0"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 3v11.25A2.25 2.25 0 006 16.5h2.25M3.75 3h-1.5m1.5 0h16.5m0 0h1.5m-1.5 0v11.25A2.25 2.25 0 0118 16.5h-2.25m-7.5 0h7.5m-7.5 0l-1 3m8.5-3l1 3m0 0l.5 1.5m-.5-1.5h-9.5m0 0l-.5 1.5"/></svg>
+              Dashboard
+            <% end %>
+          </li>
+        </ul>
+      </li>
+
       <%# Network group %>
       <li>
         <div class="text-xs/6 font-semibold text-gray-400">Network</div>
