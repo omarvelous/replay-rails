@@ -53,6 +53,7 @@ Rails.application.routes.draw do
       resources :leads, only: %i[ index show update ] do
         resources :lead_agents, only: %i[ new create ]
       end
+      resources :invites, param: :token, only: %i[ index new create show update destroy ]
       resource :session
       resources :passwords, param: :token
     end

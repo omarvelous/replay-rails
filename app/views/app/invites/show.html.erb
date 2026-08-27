@@ -1,0 +1,49 @@
+<div class="max-w-md mx-auto">
+  <h1 class="text-2xl font-extrabold tracking-tight mb-2">Join RePlay</h1>
+  <p class="text-sm text-gray-600 mb-6">
+    You've been invited as <strong><%= @invite.role.capitalize %></strong>
+    by <%= @invite.invited_by.first_name %>.
+  </p>
+
+  <%= form_with model: @user, url: invite_path(token: @invite.token),
+      method: :patch do |f| %>
+    <div class="mb-4">
+      <label class="block text-sm font-medium text-gray-700 mb-1">Email</label>
+      <p class="text-sm text-gray-900 py-2 px-3 bg-gray-50 rounded-md"><%= @invite.email %></p>
+    </div>
+
+    <div class="grid grid-cols-2 gap-3 mb-4">
+      <div>
+        <%= f.label :first_name, class: "block text-sm font-medium text-gray-700 mb-1" %>
+        <%= f.text_field :first_name, required: true,
+            class: "block w-full rounded-md bg-white px-3 py-2 text-sm text-gray-900 outline-1 -outline-offset-1 outline-gray-300 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600" %>
+      </div>
+      <div>
+        <%= f.label :last_name, class: "block text-sm font-medium text-gray-700 mb-1" %>
+        <%= f.text_field :last_name, required: true,
+            class: "block w-full rounded-md bg-white px-3 py-2 text-sm text-gray-900 outline-1 -outline-offset-1 outline-gray-300 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600" %>
+      </div>
+    </div>
+
+    <div class="mb-4">
+      <%= f.label :phone, class: "block text-sm font-medium text-gray-700 mb-1" %>
+      <%= f.telephone_field :phone,
+          class: "block w-full rounded-md bg-white px-3 py-2 text-sm text-gray-900 outline-1 -outline-offset-1 outline-gray-300 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600" %>
+    </div>
+
+    <div class="mb-4">
+      <%= f.label :password, class: "block text-sm font-medium text-gray-700 mb-1" %>
+      <%= f.password_field :password, required: true,
+          class: "block w-full rounded-md bg-white px-3 py-2 text-sm text-gray-900 outline-1 -outline-offset-1 outline-gray-300 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600" %>
+    </div>
+
+    <div class="mb-6">
+      <%= f.label :password_confirmation, class: "block text-sm font-medium text-gray-700 mb-1" %>
+      <%= f.password_field :password_confirmation, required: true,
+          class: "block w-full rounded-md bg-white px-3 py-2 text-sm text-gray-900 outline-1 -outline-offset-1 outline-gray-300 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600" %>
+    </div>
+
+    <%= f.submit "Join",
+        class: "w-full rounded-md bg-indigo-600 px-3 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 cursor-pointer" %>
+  <% end %>
+</div>

@@ -52,7 +52,7 @@ RSpec.describe InvitePolicy do
 
   context "when user matches invite email (invitee)" do
     let(:user) { create(:user, account: account, role: "agent") }
-    let(:invite) { create(:invite, account: account, email: user.email_address) }
+    let(:invite) { create(:invite, account: account, email: user.email_address, role: "manager") }
     let(:policy) { described_class.new(invite, user: user, account: account) }
 
     it { expect(policy).to permit(:show?) }
