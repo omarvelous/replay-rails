@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_08_27_162424) do
+ActiveRecord::Schema[8.1].define(version: 2026_08_27_172851) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -227,6 +227,18 @@ ActiveRecord::Schema[8.1].define(version: 2026_08_27_162424) do
     t.index ["account_id"], name: "index_listings_on_account_id"
   end
 
+  create_table "metric_snapshots", force: :cascade do |t|
+    t.bigint "account_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "ends_at", null: false
+    t.string "metric_name", null: false
+    t.datetime "starts_at", null: false
+    t.datetime "updated_at", null: false
+    t.decimal "value", null: false
+    t.index ["account_id", "metric_name", "starts_at"], name: "idx_on_account_id_metric_name_starts_at_62dda274d6"
+    t.index ["account_id"], name: "index_metric_snapshots_on_account_id"
+  end
+
   create_table "players", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.string "firmware_version"
@@ -386,6 +398,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_08_27_162424) do
   add_foreign_key "listing_agents", "agents"
   add_foreign_key "listing_agents", "listings"
   add_foreign_key "listings", "accounts"
+  add_foreign_key "metric_snapshots", "accounts"
   add_foreign_key "playlist_ads", "ads"
   add_foreign_key "playlist_ads", "playlists"
   add_foreign_key "playlists", "accounts"

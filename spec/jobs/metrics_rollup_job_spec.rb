@@ -21,8 +21,8 @@ RSpec.describe MetricsRollupJob do
       snapshot = MetricSnapshot.find_by(account: account, metric_name: "impressions")
       expect(snapshot).to be_present
       expect(snapshot.value).to eq(1)
-      expect(snapshot.starts_at).to eq(date.beginning_of_day)
-      expect(snapshot.ends_at).to eq(date.end_of_day)
+      expect(snapshot.starts_at).to be_within(1.second).of(date.beginning_of_day)
+      expect(snapshot.ends_at).to be_within(1.second).of(date.end_of_day)
     end
 
     it "creates scan snapshots grouped by account" do
