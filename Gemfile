@@ -50,7 +50,7 @@ gem "positioning"
 gem "pagy", "~> 9.0"
 
 # QR code generation [https://github.com/whomwah/rqrcode]
-gem "rqrcode", "~> 2.2"
+gem "rqrcode", "~> 3.2"
 
 # Admin dashboard [https://github.com/thoughtbot/administrate]
 gem "administrate"
