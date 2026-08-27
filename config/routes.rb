@@ -79,6 +79,7 @@ Rails.application.routes.draw do
       resources :leads
       resources :lead_agents
       resources :account_users
+      resources :invites
     end
   end
 
