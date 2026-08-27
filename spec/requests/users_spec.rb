@@ -50,9 +50,8 @@ RSpec.describe "Users (Team)" do
 
     it "returns 404 for a user not on this account" do
       other_user = create(:user)
-      expect {
-        get user_path(other_user)
-      }.to raise_error(ActiveRecord::RecordNotFound)
+      get user_path(other_user)
+      expect(response).to have_http_status(:not_found)
     end
   end
 
