@@ -47,7 +47,7 @@ gem "ruby-vips", "~> 2.0"
 gem "positioning"
 
 # Pagination [https://github.com/ddnexus/pagy]
-gem "pagy", "~> 9.0"
+gem "pagy", "~> 43.6"
 
 # QR code generation [https://github.com/whomwah/rqrcode]
 gem "rqrcode", "~> 3.2"
