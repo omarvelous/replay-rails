@@ -431,3 +431,54 @@ if demo_account && demo_user_record
   end
 end
 puts "Seeded #{Invite.count} invite(s)"
+
+# -----------------------------------------------------------------------
+# Impressions (last 30 days of simulated data)
+# -----------------------------------------------------------------------
+if demo_account && Impression.where(account: demo_account).empty?
+  screen = Screen.joins(:site).find_by(sites: { account_id: demo_account.id })
+  player = screen&.player
+  site = screen&.site
+  playlist = Playlist.find_by(account: demo_account, status: "published")
+  ads = Ad.where(account: demo_account).limit(5).to_a
+
+  if screen && player && site && ads.any?
+    impressions = []
+    now = Time.current
+
+    30.downto(1) do |days_ago|
+      date = days_ago.days.ago.to_date
+      # Simulate 8 hours of display (8am-4pm), 5 ads at ~10s each
+      daily_count = rand(200..400)
+      daily_count.times do
+        ad = ads.sample
+        playlist_ad = playlist&.playlist_ads&.find_by(ad: ad)
+        impressions << {
+          ad_id: ad.id,
+          screen_id: screen.id,
+          player_id: player.id,
+          site_id: site.id,
+          playlist_id: playlist&.id,
+          account_id: demo_account.id,
+          position: playlist_ad&.position || rand(1..5),
+          duration: playlist_ad&.duration || 10,
+          created_at: date + rand(8..16).hours + rand(0..59).minutes,
+          updated_at: now
+        }
+      end
+    end
+
+    Impression.insert_all(impressions)
+    puts "Created #{impressions.size} demo impressions (30 days)"
+  end
+end
+
+# -----------------------------------------------------------------------
+# Metric Snapshots (rollup the demo data)
+# -----------------------------------------------------------------------
+if demo_account && MetricSnapshot.where(account: demo_account).empty?
+  30.downto(1) do |days_ago|
+    MetricsRollupJob.new.perform(days_ago.days.ago.to_date)
+  end
+  puts "Rolled up #{MetricSnapshot.count} metric snapshots (30 days)"
+end
