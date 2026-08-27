@@ -13,6 +13,7 @@ module App
     authorize! @ad
     @playlists = @ad.playlists.distinct
     @scan_count = QrScan.qualified.where(ad: @ad).count
+    @impressions_count = Impression.where(ad: @ad).count
   end
 
   def new

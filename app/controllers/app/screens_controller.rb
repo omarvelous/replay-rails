@@ -13,6 +13,7 @@ module App
 
   def show
     authorize! @screen
+    @impressions_count = Impression.where(screen: @screen).count
   end
 
   def new

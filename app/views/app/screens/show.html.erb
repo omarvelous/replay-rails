@@ -37,10 +37,14 @@
 </div>
 
 <%# Stats strip %>
-<div class="grid grid-cols-3 gap-4 mb-5">
+<div class="grid grid-cols-4 gap-4 mb-5">
   <div class="rounded-lg bg-white shadow-sm ring-1 ring-gray-900/5 p-4">
-    <p class="text-xs text-gray-400">Scans (30d)</p>
-    <p class="text-2xl font-bold tabular-nums text-yellow-600">0</p>
+    <p class="text-xs text-gray-400">Impressions</p>
+    <p class="text-2xl font-bold tabular-nums"><%= number_with_delimiter(@impressions_count) %></p>
+  </div>
+  <div class="rounded-lg bg-white shadow-sm ring-1 ring-gray-900/5 p-4">
+    <p class="text-xs text-gray-400">Scans</p>
+    <p class="text-2xl font-bold tabular-nums text-yellow-600"><%= QrScan.qualified.where(screen: @screen).count %></p>
   </div>
   <div class="rounded-lg bg-white shadow-sm ring-1 ring-gray-900/5 p-4">
     <p class="text-xs text-gray-400">Uptime</p>
@@ -112,8 +116,13 @@
     <%# Activity %>
     <div class="rounded-lg bg-white shadow-sm ring-1 ring-gray-900/5 p-5">
       <h3 class="text-sm font-semibold mb-3">Activity</h3>
-      <p class="text-sm font-semibold mb-1 text-gray-500">QR scans · last 14 days</p>
-      <div class="h-14 bg-gray-100 rounded mb-4"></div>
+      <p class="text-sm font-semibold mb-1 text-gray-500">Impressions & scans · last 14 days</p>
+      <%= line_chart [
+        { name: "Impressions", data: Impression.where(screen: @screen)
+            .where("created_at > ?", 14.days.ago).group_by_day(:created_at).count },
+        { name: "Scans", data: QrScan.qualified.where(screen: @screen)
+            .where("created_at > ?", 14.days.ago).group_by_day(:created_at).count }
+      ], height: "56px", library: { scales: { y: { display: false }, x: { display: false } }, plugins: { legend: { display: false } } } %>
 
       <h3 class="text-sm font-semibold mb-3">Event log</h3>
       <div class="flex flex-col gap-1">
