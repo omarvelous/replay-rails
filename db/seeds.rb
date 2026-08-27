@@ -224,6 +224,38 @@ end
 puts "Seeded #{Agent.count} agent(s)"
 
 # -----------------------------------------------------------------------
+# Listing Agents (assign agents to listings)
+# -----------------------------------------------------------------------
+if demo_account
+  jane_agent = Agent.find_by(account: demo_account, email: "jane.broker@example.com")
+  tom_agent = Agent.find_by(account: demo_account, email: "tom.realtor@example.com")
+  fifth_ave = Listing.find_by(account: demo_account, address: "350 Fifth Ave, New York, NY 10118")
+  w34th = Listing.find_by(account: demo_account, address: "20 W 34th St, New York, NY 10001")
+
+  if jane_agent && fifth_ave
+    unless ListingAgent.exists?(listing: fifth_ave, agent: jane_agent)
+      ListingAgent.create!(listing: fifth_ave, agent: jane_agent, role: "listing_agent", primary_at: Time.current)
+      puts "Assigned Jane Broker to 350 Fifth Ave (primary)"
+    end
+  end
+
+  if tom_agent && fifth_ave
+    unless ListingAgent.exists?(listing: fifth_ave, agent: tom_agent)
+      ListingAgent.create!(listing: fifth_ave, agent: tom_agent, role: "listing_agent")
+      puts "Assigned Tom Realtor to 350 Fifth Ave"
+    end
+  end
+
+  if jane_agent && w34th
+    unless ListingAgent.exists?(listing: w34th, agent: jane_agent)
+      ListingAgent.create!(listing: w34th, agent: jane_agent, role: "listing_agent", primary_at: Time.current)
+      puts "Assigned Jane Broker to 20 W 34th St (primary)"
+    end
+  end
+end
+puts "Seeded #{ListingAgent.count} listing agent(s)"
+
+# -----------------------------------------------------------------------
 # Ads (delegated types: ListingAd, CollectionAd, AgentAd, BrandAd)
 # -----------------------------------------------------------------------
 if demo_account
