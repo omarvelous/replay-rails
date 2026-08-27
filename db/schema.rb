@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_08_26_184731) do
+ActiveRecord::Schema[8.1].define(version: 2026_08_27_123557) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -116,6 +116,21 @@ ActiveRecord::Schema[8.1].define(version: 2026_08_26_184731) do
     t.string "collection_title", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+  end
+
+  create_table "invites", force: :cascade do |t|
+    t.datetime "accepted_at"
+    t.bigint "account_id", null: false
+    t.datetime "created_at", null: false
+    t.string "email", null: false
+    t.bigint "invited_by_id", null: false
+    t.string "role", default: "agent", null: false
+    t.string "token", null: false
+    t.datetime "updated_at", null: false
+    t.index ["account_id", "email"], name: "index_invites_on_account_id_and_email"
+    t.index ["account_id"], name: "index_invites_on_account_id"
+    t.index ["invited_by_id"], name: "index_invites_on_invited_by_id"
+    t.index ["token"], name: "index_invites_on_token", unique: true
   end
 
   create_table "lead_agents", force: :cascade do |t|
@@ -329,6 +344,8 @@ ActiveRecord::Schema[8.1].define(version: 2026_08_26_184731) do
   add_foreign_key "agents", "users"
   add_foreign_key "collection_ad_ads", "ads"
   add_foreign_key "collection_ad_ads", "collection_ads"
+  add_foreign_key "invites", "accounts"
+  add_foreign_key "invites", "users", column: "invited_by_id"
   add_foreign_key "lead_agents", "agents"
   add_foreign_key "lead_agents", "leads"
   add_foreign_key "leads", "accounts"

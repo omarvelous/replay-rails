@@ -1,4 +1,4 @@
-.PHONY: setup test test-file lint lint-fix migrate seed db-reset generate console routes up down build restart logs
+.PHONY: setup test test-file lint lint-fix scan migrate seed db-reset generate console routes up down build restart logs
 
 # Setup (create DBs, migrate, seed)
 setup:
@@ -20,6 +20,10 @@ lint:
 
 lint-fix:
 	docker compose exec web bundle exec rubocop -A
+
+# Security
+scan:
+	docker compose exec web bundle exec brakeman --no-pager
 
 # Database
 migrate:

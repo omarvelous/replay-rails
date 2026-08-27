@@ -25,6 +25,11 @@ class Rack::Attack
     req.ip if req.path == "/accounts" && req.post?
   end
 
+  # Invite creation: 5 per hour per IP
+  throttle("invites/ip", limit: 5, period: 1.hour) do |req|
+    req.ip if req.path == "/invites" && req.post?
+  end
+
   # Login: 10 per 15 minutes per IP
   throttle("login/ip", limit: 10, period: 15.minutes) do |req|
     req.ip if req.path == "/session" && req.post?

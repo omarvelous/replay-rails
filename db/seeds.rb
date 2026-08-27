@@ -415,3 +415,19 @@ if demo_account
   end
 end
 puts "Seeded #{Lead.count} lead(s)"
+
+# -----------------------------------------------------------------------
+# Invites
+# -----------------------------------------------------------------------
+if demo_account && demo_user_record
+  unless Invite.exists?(account: demo_account, email: "tom.realtor@example.com")
+    Invite.create!(
+      account: demo_account,
+      invited_by: demo_user_record,
+      email: "tom.realtor@example.com",
+      role: "agent"
+    )
+    puts "Created demo invite: tom.realtor@example.com (agent, pending)"
+  end
+end
+puts "Seeded #{Invite.count} invite(s)"

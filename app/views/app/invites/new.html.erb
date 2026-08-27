@@ -1,0 +1,28 @@
+<%= render "app/shared/page_header", title: "Invite User", back_link: { label: "← Team", path: invites_path } %>
+
+<div class="max-w-md">
+  <div class="rounded-lg bg-white shadow-sm ring-1 ring-gray-900/5 p-5">
+    <%= form_with model: @invite, url: invites_path do |f| %>
+      <div class="mb-4">
+        <%= f.label :email, class: "block text-sm font-medium text-gray-700 mb-1" %>
+        <%= f.email_field :email, required: true, placeholder: "agent@example.com",
+            class: "block w-full rounded-md bg-white px-3 py-2 text-sm text-gray-900 outline-1 -outline-offset-1 outline-gray-300 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600" %>
+      </div>
+
+      <div class="mb-6">
+        <%= f.label :invited_role, "Role", class: "block text-sm font-medium text-gray-700 mb-1" %>
+        <%= f.select :invited_role,
+            Current.user.owner_of?(Current.account) ? [["Agent", "agent"], ["Manager", "manager"]] : [["Agent", "agent"]],
+            {},
+            class: "block w-full rounded-md bg-white py-2 pl-3 pr-8 text-sm text-gray-900 outline-1 -outline-offset-1 outline-gray-300 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600" %>
+      </div>
+
+      <div class="flex items-center gap-3">
+        <%= f.submit "Send invite",
+            class: "rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 cursor-pointer" %>
+        <%= link_to "Cancel", invites_path,
+            class: "text-sm font-semibold text-gray-600 hover:text-gray-900" %>
+      </div>
+    <% end %>
+  </div>
+</div>

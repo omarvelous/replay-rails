@@ -1,0 +1,56 @@
+<% actions = capture do %>
+  <%= link_to new_invite_path, class: "rounded-md bg-indigo-600 px-2.5 py-1.5 text-sm font-semibold text-white shadow-xs hover:bg-indigo-500 inline-flex items-center gap-1.5" do %>
+    <svg viewBox="0 0 20 20" fill="currentColor" class="size-4"><path d="M10.75 4.75a.75.75 0 0 0-1.5 0v4.5h-4.5a.75.75 0 0 0 0 1.5h4.5v4.5a.75.75 0 0 0 1.5 0v-4.5h4.5a.75.75 0 0 0 0-1.5h-4.5v-4.5Z"/></svg>
+    Invite user
+  <% end %>
+<% end %>
+<%= render "app/shared/page_header", title: "Team", subtitle: "#{@members.map(&:user_id).uniq.size} members", actions: actions %>
+
+<%# Members %>
+<div class="rounded-lg bg-white shadow-sm ring-1 ring-gray-900/5 mb-6">
+  <div class="p-4 border-b border-gray-200">
+    <h3 class="font-semibold text-sm">Members</h3>
+  </div>
+  <div class="divide-y divide-gray-100">
+    <% @members.group_by(&:user).each do |member, account_users| %>
+      <div class="flex items-center justify-between p-4">
+        <div class="flex items-center gap-3">
+          <div class="w-9 h-9 rounded-full bg-indigo-50 grid place-items-center text-xs font-bold text-indigo-600 shrink-0">
+            <%= member.first_name&.first %><%= member.last_name&.first %>
+          </div>
+          <div>
+            <p class="text-sm font-semibold"><%= member.first_name %> <%= member.last_name %></p>
+            <p class="text-xs text-gray-500"><%= member.email_address %></p>
+          </div>
+        </div>
+        <div class="flex gap-1.5">
+          <% account_users.each do |au| %>
+            <span class="inline-flex items-center rounded-md bg-gray-50 px-1.5 py-0.5 text-[10.5px] font-medium text-gray-500 ring-1 ring-gray-500/10 ring-inset"><%= au.role.capitalize %></span>
+          <% end %>
+        </div>
+      </div>
+    <% end %>
+  </div>
+</div>
+
+<%# Pending invites %>
+<% if @invites.any? %>
+  <div class="rounded-lg bg-white shadow-sm ring-1 ring-gray-900/5">
+    <div class="p-4 border-b border-gray-200">
+      <h3 class="font-semibold text-sm">Pending Invites</h3>
+    </div>
+    <div class="divide-y divide-gray-100">
+      <% @invites.each do |invite| %>
+        <div class="flex items-center justify-between p-4">
+          <div>
+            <p class="text-sm font-semibold"><%= invite.email %></p>
+            <p class="text-xs text-gray-500"><%= invite.role.capitalize %> &middot; sent <%= time_ago_in_words(invite.created_at) %> ago</p>
+          </div>
+          <%= button_to "Revoke", invite_path(token: invite.token), method: :delete,
+              class: "text-sm font-semibold text-red-600 hover:text-red-500",
+              data: { turbo_confirm: "Revoke this invite?" } %>
+        </div>
+      <% end %>
+    </div>
+  </div>
+<% end %>
