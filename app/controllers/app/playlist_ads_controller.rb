@@ -5,12 +5,12 @@ module App
 
   def new
     @playlist_ad = @playlist.playlist_ads.build(duration: 10)
-    authorize @playlist_ad
+    authorize! @playlist_ad
   end
 
   def create
     @playlist_ad = @playlist.playlist_ads.build(playlist_ad_params)
-    authorize @playlist_ad
+    authorize! @playlist_ad
 
     if @playlist_ad.save
       redirect_to @playlist, notice: t(".success")
@@ -20,11 +20,11 @@ module App
   end
 
   def edit
-    authorize @playlist_ad
+    authorize! @playlist_ad
   end
 
   def update
-    authorize @playlist_ad
+    authorize! @playlist_ad
     if @playlist_ad.update(playlist_ad_params)
       redirect_to @playlist, notice: t(".success")
     else
@@ -33,7 +33,7 @@ module App
   end
 
   def destroy
-    authorize @playlist_ad
+    authorize! @playlist_ad
     @playlist_ad.destroy
     redirect_to @playlist, notice: t(".success")
   end

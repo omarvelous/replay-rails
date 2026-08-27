@@ -5,13 +5,5 @@ class AccountUser < ApplicationRecord
   ROLES = %w[owner manager agent].freeze
 
   validates :role, inclusion: { in: ROLES }
-  validates :user_id, uniqueness: { scope: :account_id }
-
-  def owner?      = role == "owner"
-  def manager?    = role == "manager"
-  def agent_role? = role == "agent"
-
-  def can_manage?
-    owner? || manager?
-  end
+  validates :role, uniqueness: { scope: [ :account_id, :user_id ] }
 end

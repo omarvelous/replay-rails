@@ -7,13 +7,13 @@ module Ads
       @agent_ad = ::Ads::AgentAd.new
       @ad = @agent_ad.build_ad(account: Current.account)
       @ad.apply_defaults
-      authorize @ad
+      authorize! @ad
     end
 
     def create
       @agent_ad = ::Ads::AgentAd.new(agent_ad_params)
       @ad = @agent_ad.build_ad(ad_params.merge(account: Current.account))
-      authorize @ad
+      authorize! @ad
 
       if @ad.valid? & @agent_ad.valid?
         @agent_ad.save!
@@ -24,12 +24,12 @@ module Ads
     end
 
     def edit
-      authorize @ad
+      authorize! @ad
       @agent_ad = @ad.adable
     end
 
     def update
-      authorize @ad
+      authorize! @ad
       @agent_ad = @ad.adable
       @agent_ad.assign_attributes(agent_ad_params)
       @ad.assign_attributes(ad_params)

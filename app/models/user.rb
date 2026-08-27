@@ -1,4 +1,6 @@
 class User < ApplicationRecord
+  include Authorizable
+
   has_secure_password
   has_many :sessions, dependent: :destroy
   has_many :account_users, dependent: :destroy

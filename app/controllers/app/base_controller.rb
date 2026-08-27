@@ -1,18 +1,25 @@
 module App
   class BaseController < ApplicationController
-    include Pundit::Authorization
+    include ActionPolicy::Controller
     layout "app"
 
-    rescue_from Pundit::NotAuthorizedError, with: :handle_unauthorized
+    authorize :user, through: :current_user
+    authorize :account, through: :current_account
+
+    rescue_from ActionPolicy::Unauthorized, with: :handle_unauthorized
 
     private
 
-      def handle_unauthorized
-        redirect_to app_root_path, alert: "You don't have permission to do that."
+      def current_user
+        Current.user
       end
 
-      def pundit_user
-        Current.account_user
+      def current_account
+        Current.account
+      end
+
+      def handle_unauthorized
+        redirect_to app_root_path, alert: "You don't have permission to do that."
       end
   end
 end

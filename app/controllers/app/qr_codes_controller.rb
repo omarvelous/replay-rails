@@ -3,13 +3,13 @@ module App
   before_action :set_qr_code, only: :show
 
   def index
-    @qr_codes = policy_scope(Current.account.qr_codes)
+    @qr_codes = authorized_scope(QrCode.all)
                        .includes(:destination_record)
                        .order(created_at: :desc)
   end
 
   def show
-    authorize @qr_code
+    authorize! @qr_code
     @scans = @qr_code.scans.order(created_at: :desc).limit(50)
     @scan_count = @qr_code.scans.count
   end

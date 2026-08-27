@@ -3,21 +3,21 @@ module App
   before_action :set_agent, only: %i[ show edit update destroy ]
 
   def index
-    @agents = policy_scope(Current.account.agents).order(:name)
+    @agents = authorized_scope(Agent.all).order(:name)
   end
 
   def show
-    authorize @agent
+    authorize! @agent
   end
 
   def new
     @agent = Current.account.agents.build
-    authorize @agent
+    authorize! @agent
   end
 
   def create
     @agent = Current.account.agents.build(agent_params)
-    authorize @agent
+    authorize! @agent
 
     if @agent.save
       redirect_to @agent, notice: t(".success")
@@ -27,11 +27,11 @@ module App
   end
 
   def edit
-    authorize @agent
+    authorize! @agent
   end
 
   def update
-    authorize @agent
+    authorize! @agent
     if @agent.update(agent_params)
       redirect_to @agent, notice: t(".success")
     else
@@ -40,7 +40,7 @@ module App
   end
 
   def destroy
-    authorize @agent
+    authorize! @agent
     @agent.destroy
     redirect_to agents_path, notice: t(".success")
   end

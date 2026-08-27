@@ -7,13 +7,13 @@ module Ads
       @brand_ad = ::Ads::BrandAd.new
       @ad = @brand_ad.build_ad(account: Current.account)
       @ad.apply_defaults
-      authorize @ad
+      authorize! @ad
     end
 
     def create
       @brand_ad = ::Ads::BrandAd.new
       @ad = @brand_ad.build_ad(ad_params.merge(account: Current.account))
-      authorize @ad
+      authorize! @ad
 
       if @ad.valid? & @brand_ad.valid?
         @brand_ad.save!
@@ -24,12 +24,12 @@ module Ads
     end
 
     def edit
-      authorize @ad
+      authorize! @ad
       @brand_ad = @ad.adable
     end
 
     def update
-      authorize @ad
+      authorize! @ad
       @brand_ad = @ad.adable
       @ad.assign_attributes(ad_params)
 

@@ -4,21 +4,19 @@ RSpec.describe LeadAgentPolicy do
   let(:account) { create(:account) }
   let(:lead_agent) { create(:lead_agent) }
 
-  context "as a manager" do
-    subject { described_class.new(account_user, lead_agent) }
+  context "when user is manager" do
+    let(:user) { create(:user, account: account, role: "manager") }
+    let(:policy) { described_class.new(lead_agent, user: user, account: account) }
 
-    let(:account_user) { create(:account_user, :manager, account: account) }
-
-
-    it { is_expected.to permit_actions(%i[new create]) }
+    it { expect(policy).to permit(:new?) }
+    it { expect(policy).to permit(:create?) }
   end
 
-  context "as an agent" do
-    subject { described_class.new(account_user, lead_agent) }
+  context "when user is agent" do
+    let(:user) { create(:user, account: account, role: "agent") }
+    let(:policy) { described_class.new(lead_agent, user: user, account: account) }
 
-    let(:account_user) { create(:account_user, :agent, account: account) }
-
-
-    it { is_expected.to forbid_actions(%i[new create]) }
+    it { expect(policy).not_to permit(:new?) }
+    it { expect(policy).not_to permit(:create?) }
   end
 end
