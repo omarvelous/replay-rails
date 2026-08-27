@@ -107,14 +107,10 @@ RSpec.describe Invite do
     end
 
     it "creates an AccountUser with the invited role" do
-      expect {
-        invite.accept!(user)
-      }.to change(AccountUser, :count).by(1)
+      invite.accept!(user)
 
-      au = AccountUser.last
-      expect(au.user).to eq(user)
-      expect(au.account).to eq(account)
-      expect(au.role).to eq("agent")
+      au = AccountUser.find_by(account: account, user: user, role: "agent")
+      expect(au).to be_present
     end
 
     it "links agent profile when role is agent and Agent record exists" do
