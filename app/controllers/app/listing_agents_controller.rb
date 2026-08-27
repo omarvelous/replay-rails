@@ -9,7 +9,7 @@ module App
   end
 
   def create
-    @listing_agent = @listing.listing_agents.build(listing_agent_params)
+    @listing_agent = @listing.listing_agents.build(listing_agent_params.merge(role: "listing_agent"))
     authorize! @listing_agent
 
     if @listing_agent.save
@@ -49,7 +49,7 @@ module App
     end
 
     def listing_agent_params
-      params.require(:listing_agent).permit(:agent_id, :role)
+      params.require(:listing_agent).permit(:agent_id)
     end
   end
 end

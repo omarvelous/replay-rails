@@ -44,9 +44,10 @@ RSpec.describe "ListingAgents" do
 
     describe "PATCH /listings/:id/listing_agents/:id" do
       it "updates the listing agent" do
-        la = create(:listing_agent, listing: listing, agent: agent, role: "listing_agent")
-        patch listing_listing_agent_path(listing, la), params: { listing_agent: { role: "selling_agent" } }
-        expect(la.reload.role).to eq("selling_agent")
+        other_agent = create(:agent, account: account)
+        la = create(:listing_agent, listing: listing, agent: agent)
+        patch listing_listing_agent_path(listing, la), params: { listing_agent: { agent_id: other_agent.id } }
+        expect(la.reload.agent).to eq(other_agent)
       end
     end
 
