@@ -4,7 +4,7 @@ RSpec.describe ListingAgent do
   subject(:listing_agent) { build(:listing_agent) }
 
   describe "validations" do
-    it { is_expected.to validate_presence_of(:role) }
+    it { is_expected.to validate_inclusion_of(:role).in_array(ListingAgent::ROLES) }
 
     it "is invalid when listing and agent belong to different accounts" do
       listing = create(:listing)

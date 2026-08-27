@@ -2,7 +2,9 @@ class ListingAgent < ApplicationRecord
   belongs_to :listing
   belongs_to :agent
 
-  validates :role, presence: true
+  ROLES = %w[listing_agent co_listing_agent].freeze
+
+  validates :role, inclusion: { in: ROLES }
   validate :same_account
 
   scope :primary, -> { where.not(primary_at: nil).order(primary_at: :desc) }

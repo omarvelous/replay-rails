@@ -14,7 +14,7 @@ class ScansController < ApplicationController
     )
 
     if qr.destination_url.present?
-      redirect_to qr.destination_url, allow_other_host: true
+      redirect_to URI.parse(qr.destination_url).to_s, allow_other_host: true
     elsif qr.destination_record.present?
       redirect_to polymorphic_url([ :go, qr.destination_record ], subdomain: "", scan_id: scan.id),
                   allow_other_host: true
