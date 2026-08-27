@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_08_27_123557) do
+ActiveRecord::Schema[8.1].define(version: 2026_08_27_162424) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -116,6 +116,31 @@ ActiveRecord::Schema[8.1].define(version: 2026_08_27_123557) do
     t.string "collection_title", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+  end
+
+  create_table "impressions", force: :cascade do |t|
+    t.bigint "account_id", null: false
+    t.bigint "ad_id", null: false
+    t.datetime "created_at", null: false
+    t.integer "duration"
+    t.bigint "player_id", null: false
+    t.bigint "playlist_id"
+    t.integer "position"
+    t.bigint "screen_id", null: false
+    t.bigint "site_id", null: false
+    t.datetime "updated_at", null: false
+    t.index ["account_id", "created_at"], name: "index_impressions_on_account_id_and_created_at"
+    t.index ["account_id"], name: "index_impressions_on_account_id"
+    t.index ["ad_id", "created_at"], name: "index_impressions_on_ad_id_and_created_at"
+    t.index ["ad_id"], name: "index_impressions_on_ad_id"
+    t.index ["player_id", "created_at"], name: "index_impressions_on_player_id_and_created_at"
+    t.index ["player_id"], name: "index_impressions_on_player_id"
+    t.index ["playlist_id", "created_at"], name: "index_impressions_on_playlist_id_and_created_at"
+    t.index ["playlist_id"], name: "index_impressions_on_playlist_id"
+    t.index ["screen_id", "created_at"], name: "index_impressions_on_screen_id_and_created_at"
+    t.index ["screen_id"], name: "index_impressions_on_screen_id"
+    t.index ["site_id", "created_at"], name: "index_impressions_on_site_id_and_created_at"
+    t.index ["site_id"], name: "index_impressions_on_site_id"
   end
 
   create_table "invites", force: :cascade do |t|
@@ -344,6 +369,12 @@ ActiveRecord::Schema[8.1].define(version: 2026_08_27_123557) do
   add_foreign_key "agents", "users"
   add_foreign_key "collection_ad_ads", "ads"
   add_foreign_key "collection_ad_ads", "collection_ads"
+  add_foreign_key "impressions", "accounts"
+  add_foreign_key "impressions", "ads"
+  add_foreign_key "impressions", "players"
+  add_foreign_key "impressions", "playlists"
+  add_foreign_key "impressions", "screens"
+  add_foreign_key "impressions", "sites"
   add_foreign_key "invites", "accounts"
   add_foreign_key "invites", "users", column: "invited_by_id"
   add_foreign_key "lead_agents", "agents"
