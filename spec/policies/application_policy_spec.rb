@@ -35,4 +35,12 @@ RSpec.describe ApplicationPolicy do
     it { expect(policy).not_to permit(:update?) }
     it { expect(policy).not_to permit(:destroy?) }
   end
+
+  context "when user is nil" do
+    let(:policy) { described_class.new(nil, user: nil, account: account) }
+
+    it { expect(policy).not_to permit(:create?) }
+    it { expect(policy).not_to permit(:update?) }
+    it { expect(policy).not_to permit(:destroy?) }
+  end
 end
