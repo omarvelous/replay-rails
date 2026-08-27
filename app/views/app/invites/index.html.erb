@@ -4,53 +4,54 @@
     Invite user
   <% end %>
 <% end %>
-<%= render "app/shared/page_header", title: "Team", subtitle: "#{@members.map(&:user_id).uniq.size} members", actions: actions %>
 
-<%# Members %>
-<div class="rounded-lg bg-white shadow-sm ring-1 ring-gray-900/5 mb-6">
-  <div class="p-4 border-b border-gray-200">
-    <h3 class="font-semibold text-sm">Members</h3>
-  </div>
-  <div class="divide-y divide-gray-100">
-    <% @members.group_by(&:user).each do |member, account_users| %>
-      <div class="flex items-center justify-between p-4">
-        <div class="flex items-center gap-3">
-          <div class="w-9 h-9 rounded-full bg-indigo-50 grid place-items-center text-xs font-bold text-indigo-600 shrink-0">
-            <%= member.first_name&.first %><%= member.last_name&.first %>
-          </div>
-          <div>
-            <p class="text-sm font-semibold"><%= member.first_name %> <%= member.last_name %></p>
-            <p class="text-xs text-gray-500"><%= member.email_address %></p>
-          </div>
-        </div>
-        <div class="flex gap-1.5">
-          <% account_users.each do |au| %>
-            <span class="inline-flex items-center rounded-md bg-gray-50 px-1.5 py-0.5 text-[10.5px] font-medium text-gray-500 ring-1 ring-gray-500/10 ring-inset"><%= au.role.capitalize %></span>
-          <% end %>
-        </div>
-      </div>
-    <% end %>
-  </div>
-</div>
+<% pending = @invites.select(&:pending?) %>
+<%= render "app/shared/page_header", title: "Invites", subtitle: "#{pending.size} pending", actions: actions %>
 
-<%# Pending invites %>
 <% if @invites.any? %>
   <div class="rounded-lg bg-white shadow-sm ring-1 ring-gray-900/5">
-    <div class="p-4 border-b border-gray-200">
-      <h3 class="font-semibold text-sm">Pending Invites</h3>
-    </div>
     <div class="divide-y divide-gray-100">
       <% @invites.each do |invite| %>
         <div class="flex items-center justify-between p-4">
-          <div>
-            <p class="text-sm font-semibold"><%= invite.email %></p>
-            <p class="text-xs text-gray-500"><%= invite.role.capitalize %> &middot; sent <%= time_ago_in_words(invite.created_at) %> ago</p>
+          <div class="flex items-center gap-3">
+            <% if invite.accepted? %>
+              <span class="w-2.5 h-2.5 rounded-full bg-green-500 shrink-0"></span>
+            <% elsif invite.expired? %>
+              <span class="w-2.5 h-2.5 rounded-full bg-gray-300 shrink-0"></span>
+            <% else %>
+              <span class="w-2.5 h-2.5 rounded-full bg-amber-500 shrink-0"></span>
+            <% end %>
+            <div>
+              <p class="text-sm font-semibold"><%= invite.email %></p>
+              <p class="text-xs text-gray-500">
+                <%= invite.role.capitalize %> &middot;
+                <% if invite.accepted? %>
+                  accepted <%= time_ago_in_words(invite.accepted_at) %> ago
+                <% elsif invite.expired? %>
+                  expired
+                <% else %>
+                  sent <%= time_ago_in_words(invite.created_at) %> ago
+                <% end %>
+              </p>
+            </div>
           </div>
-          <%= button_to "Revoke", invite_path(token: invite.token), method: :delete,
-              class: "text-sm font-semibold text-red-600 hover:text-red-500",
-              data: { turbo_confirm: "Revoke this invite?" } %>
+          <% if invite.pending? %>
+            <%= button_to "Revoke", invite_path(token: invite.token), method: :delete,
+                class: "text-sm font-semibold text-red-600 hover:text-red-500",
+                data: { turbo_confirm: "Revoke this invite?" } %>
+          <% else %>
+            <span class="inline-flex items-center rounded-md bg-gray-50 px-1.5 py-0.5 text-[10.5px] font-medium text-gray-500 ring-1 ring-gray-500/10 ring-inset">
+              <%= invite.accepted? ? "Accepted" : "Expired" %>
+            </span>
+          <% end %>
         </div>
       <% end %>
     </div>
+  </div>
+<% else %>
+  <div class="rounded-lg border-2 border-dashed border-gray-200 p-10 text-center">
+    <p class="font-semibold">No invites yet</p>
+    <p class="text-sm text-gray-500 mt-1">Invite a team member to get started.</p>
+    <%= link_to "Invite user", new_invite_path, class: "rounded-md bg-indigo-600 px-2.5 py-1.5 text-sm font-semibold text-white shadow-xs hover:bg-indigo-500 mt-3 inline-block" %>
   </div>
 <% end %>
