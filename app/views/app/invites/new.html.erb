@@ -10,8 +10,8 @@
       </div>
 
       <div class="mb-6">
-        <%= f.label :role, class: "block text-sm font-medium text-gray-700 mb-1" %>
-        <%= f.select :role,
+        <%= f.label :invited_role, "Role", class: "block text-sm font-medium text-gray-700 mb-1" %>
+        <%= f.select :invited_role,
             Current.user.owner_of?(Current.account) ? [["Agent", "agent"], ["Manager", "manager"]] : [["Agent", "agent"]],
             {},
             class: "block w-full rounded-md bg-white py-2 pl-3 pr-8 text-sm text-gray-900 outline-1 -outline-offset-1 outline-gray-300 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600" %>

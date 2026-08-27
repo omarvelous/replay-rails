@@ -34,7 +34,7 @@ RSpec.describe "Invites" do
   describe "POST /invites" do
     it "creates an invite and enqueues email" do
       expect {
-        post invites_path, params: { invite: { email: "newagent@example.com", role: "agent" } }
+        post invites_path, params: { invite: { email: "newagent@example.com", invited_role: "agent" } }
       }.to change(Invite, :count).by(1)
 
       expect(ActionMailer::MailDeliveryJob).to have_been_enqueued
@@ -42,7 +42,7 @@ RSpec.describe "Invites" do
     end
 
     it "rejects invalid params" do
-      post invites_path, params: { invite: { email: "", role: "agent" } }
+      post invites_path, params: { invite: { email: "", invited_role: "agent" } }
       expect(response).to have_http_status(:unprocessable_content)
     end
 
@@ -50,12 +50,12 @@ RSpec.describe "Invites" do
       let(:user) { create(:user, account: account, role: "manager") }
 
       it "allows inviting agents" do
-        post invites_path, params: { invite: { email: "agent@example.com", role: "agent" } }
+        post invites_path, params: { invite: { email: "agent@example.com", invited_role: "agent" } }
         expect(response).to redirect_to(invites_path)
       end
 
       it "denies inviting managers" do
-        post invites_path, params: { invite: { email: "mgr@example.com", role: "manager" } }
+        post invites_path, params: { invite: { email: "mgr@example.com", invited_role: "manager" } }
         expect(response).to redirect_to(app_root_path)
         expect(flash[:alert]).to be_present
       end
@@ -65,7 +65,7 @@ RSpec.describe "Invites" do
       let(:user) { create(:user, account: account, role: "agent") }
 
       it "denies access" do
-        post invites_path, params: { invite: { email: "test@example.com", role: "agent" } }
+        post invites_path, params: { invite: { email: "test@example.com", invited_role: "agent" } }
         expect(response).to redirect_to(app_root_path)
       end
     end

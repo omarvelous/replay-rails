@@ -96,7 +96,9 @@ module App
     end
 
     def invite_params
-      params.require(:invite).permit(:email, :role)
+      permitted = params.require(:invite).permit(:email, :invited_role)
+      permitted[:role] = permitted.delete(:invited_role) if permitted[:invited_role]
+      permitted
     end
 
     def user_params
