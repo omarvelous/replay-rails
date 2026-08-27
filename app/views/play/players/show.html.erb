@@ -1,10 +1,16 @@
-<div class="w-full h-screen flex items-center justify-center relative" data-controller="slideshow device-playback">
+<div class="w-full h-screen flex items-center justify-center relative"
+     data-controller="slideshow device-playback"
+     data-device-playback-api-host-value="<%= request.protocol %>api.<%= request.domain %><%= ":#{request.port}" unless request.port == 80 || request.port == 443 %>"
+     data-device-playback-player-token-value="<%= params[:token] %>"
+     data-device-playback-playlist-id-value="<%= @playlist&.id %>">
   <% if @playlist_ads.any? %>
     <% @playlist_ads.each_with_index do |pa, index| %>
       <div class="slide absolute inset-0 transition-opacity duration-700 <%= index == 0 ? 'opacity-100' : 'opacity-0' %>"
            style="z-index: 1; contain: content;"
            data-slideshow-target="slide"
-           data-duration="<%= pa.duration %>">
+           data-duration="<%= pa.duration %>"
+           data-ad-id="<%= pa.ad.id %>"
+           data-position="<%= pa.position %>">
         <%= render "app/ads/layouts/#{pa.ad.layout}", ad: pa.ad %>
       </div>
     <% end %>

@@ -85,14 +85,26 @@ Rails.application.routes.draw do
   end
 
   # ---------------------------------------------------------------
-  # Play — play subdomain (device API, token auth)
+  # API — api subdomain (JSON, device communication)
+  # ---------------------------------------------------------------
+  constraints subdomain: "api" do
+    scope module: "api" do
+      resources :players, param: :token, only: [ :create, :show ] do
+        scope module: "players" do
+          resource :heartbeat, only: [ :create ]
+          resources :impressions, only: [ :create ]
+        end
+      end
+    end
+  end
+
+  # ---------------------------------------------------------------
+  # Play — play subdomain (HTML, visual content for screens)
   # ---------------------------------------------------------------
   constraints subdomain: "play" do
-    post "/register",  to: "player_api#register"
-    get  "/status",    to: "player_api#status"
-    get  "/",          to: "player_api#play", as: :play_root
-    post "/heartbeat", to: "player_api#heartbeat"
-    post "/impression", to: "player_api#impression"
+    scope module: "play" do
+      resources :players, param: :token, only: [ :new, :show ]
+    end
   end
 
   # ---------------------------------------------------------------

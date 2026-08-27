@@ -20,7 +20,8 @@ The app uses subdomain routing. Visit:
 | [replay.localhost:3000](http://replay.localhost:3000) | Marketing site |
 | [app.replay.localhost:3000](http://app.replay.localhost:3000) | App (login here) |
 | [admin.replay.localhost:3000](http://admin.replay.localhost:3000) | Admin panel (Administrate) |
-| [play.replay.localhost:3000](http://play.replay.localhost:3000) | Player device API |
+| [play.replay.localhost:3000](http://play.replay.localhost:3000) | Player screens (HTML) |
+| [api.replay.localhost:3000](http://api.replay.localhost:3000) | Player API (JSON) |
 
 **Demo logins** (at `app.replay.localhost:3000`):
 
@@ -155,7 +156,7 @@ environment by default.
 
 Physical devices pair to screens via a 6-character code:
 
-1. Device boots → `POST play.replay.com/register` → shows pairing code on screen
+1. Device opens `play.replay.com/players/new` → JS registers via `api.replay.com/players` → shows pairing code on screen
 2. Admin enters code on the Screen show page → `screen.pair_player!(player)`
 3. Device detects pairing (ActionCable + polling fallback) → transitions to playback
 4. Device heartbeats every 30s → screen shows online/offline status
@@ -198,7 +199,8 @@ Public landing pages live under `/go/` (e.g. `/go/listings/42`, `/go/agents/7`) 
 | (none) | `Go::` | Public landing pages (`/go/listings`, `/go/agents`, `/go/leads`) |
 | `app.replay.com` | `App::` | Authenticated product (all CRUD) |
 | `admin.replay.com` | `Admin::` | Internal admin panel (Administrate) |
-| `play.replay.com` | `PlayerApiController` | Device API (register, status, play, heartbeat) |
+| `play.replay.com` | `Play::` | Player screens — pairing and playback (HTML) |
+| `api.replay.com` | `Api::` | Player API — register, status, heartbeat, impressions (JSON) |
 | any | `ScansController` | `/s/:token` scan redirect |
 
 ### Controllers
@@ -238,10 +240,18 @@ Admin::DashboardController   — platform stats
 Admin::{Resource}Controller  — CRUD for all models
 ```
 
-Device API (token auth, `play` subdomain):
+Player screens (`play` subdomain, HTML):
 
 ```
-PlayerApiController — register, status, play, heartbeat
+Play::PlayersController — new (pairing screen), show (playback)
+```
+
+Player API (`api` subdomain, JSON, token-in-URL auth):
+
+```
+Api::PlayersController              — create (register), show (status)
+Api::Players::HeartbeatsController  — create (device health)
+Api::Players::ImpressionsController — create (ad impression, future)
 ```
 
 ### Multi-tenancy & Authorization
