@@ -82,7 +82,7 @@ group :test do
   gem "capybara"
   gem "selenium-webdriver"
 end
-gem "psych", "~> 5.0"
+gem "psych", "~> 5.5"
 
 group :development, :test do
   gem "rspec-rails", "~> 7.0"
