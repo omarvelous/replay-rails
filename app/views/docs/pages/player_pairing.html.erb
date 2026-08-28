@@ -1,0 +1,48 @@
+<h1>Pairing a Player</h1>
+<p>A player is the physical device connected to your TV. Pairing links the device to a screen in RePlay so it can display your content.</p>
+
+<%= render "docs/shared/callout", type: "tip" do %>
+  <p>Make sure the player device is connected to WiFi before starting. It needs internet access to register and receive content.</p>
+<% end %>
+
+<h2>Step by step</h2>
+
+<%= render "docs/shared/steps" do %>
+  <div class="space-y-3">
+    <div>
+      <p class="font-semibold text-sm text-gray-900">1. Plug in the player device and turn on the TV</p>
+      <p class="text-sm text-gray-600">The player boots up and opens a browser automatically.</p>
+    </div>
+    <div>
+      <p class="font-semibold text-sm text-gray-900">2. The TV displays a 6-character code</p>
+      <p class="text-sm text-gray-600">Something like <strong>A7B3K2</strong>. This code expires after 10 minutes.</p>
+    </div>
+    <div>
+      <p class="font-semibold text-sm text-gray-900">3. In RePlay, go to your screen and click "Pair a player"</p>
+      <p class="text-sm text-gray-600">Navigate to <strong>Screens → your screen</strong> in the app.</p>
+    </div>
+    <div>
+      <p class="font-semibold text-sm text-gray-900">4. Enter the code and click "Pair device"</p>
+      <p class="text-sm text-gray-600">Type in the 6-character code shown on the TV.</p>
+    </div>
+    <div>
+      <p class="font-semibold text-sm text-gray-900">5. Your content starts playing</p>
+      <p class="text-sm text-gray-600">The TV automatically switches to your playlist within seconds. No refresh needed.</p>
+    </div>
+  </div>
+<% end %>
+
+<h2>How it works</h2>
+<p>When the player displays the pairing code, it's listening for a confirmation from RePlay. As soon as you enter the code in the app, the player receives a real-time signal to start playing. The whole process takes about 30 seconds.</p>
+
+<h2>Moving a player</h2>
+<p>If you need to move a player to a different screen, <strong>unpair</strong> it first from the current screen's detail page. Then pair it to the new screen. Pairing history is preserved so you can see which players were previously connected.</p>
+
+<h2>Troubleshooting</h2>
+<ul>
+  <li><strong>Code expired?</strong> Refresh the page on the TV to generate a new code.</li>
+  <li><strong>Player showing offline?</strong> Check that the device is connected to WiFi and has internet access.</li>
+  <li><strong>Content not updating?</strong> The player checks for changes automatically. Try refreshing the TV's browser if content seems stuck.</li>
+</ul>
+
+<%= render "docs/shared/related", pages: { "screens" => "Managing Screens", "playlists" => "Building Playlists" } %>

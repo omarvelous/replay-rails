@@ -1,0 +1,30 @@
+<h1>Managing Listings</h1>
+<p>Listings are your property records. Each listing holds the address, price, photos, and details that power your ads and landing pages.</p>
+
+<h2>Adding a listing</h2>
+<p>Go to <strong>Listings</strong> and click <strong>New Listing</strong>. Fill in the property details:</p>
+<ul>
+  <li><strong>Address</strong> — the full street address</li>
+  <li><strong>Price</strong> — the listing price</li>
+  <li><strong>Bedrooms, bathrooms, square footage</strong> — key property stats</li>
+  <li><strong>Status</strong> — active, pending, sold, etc.</li>
+  <li><strong>Photos</strong> — upload one or more property photos</li>
+</ul>
+
+<%= render "docs/shared/callout", type: "tip" do %>
+  <p>The first photo you upload becomes the hero image used in listing ads. Choose a strong exterior or interior shot.</p>
+<% end %>
+
+<h2>Editing a listing</h2>
+<p>Click on any listing to view its details, then click <strong>Edit</strong>. Changes to a listing automatically update any ads created from it.</p>
+
+<h2>Assigning agents</h2>
+<p>Each listing can have one or more agents assigned to it. Go to the listing detail page and click <strong>Add Agent</strong>. You can set one agent as the <strong>primary agent</strong> — this agent receives lead notifications by default.</p>
+
+<h2>Creating ads from listings</h2>
+<p>From any listing, click <strong>Create Ad</strong> to generate a listing ad. The ad pulls in the property details, photos, and price automatically. See <%= link_to "Creating Ads", doc_path("ads/overview") %> for details on layouts and themes.</p>
+
+<h2>QR codes</h2>
+<p>Each listing automatically gets a QR code. When scanned, it takes visitors to a landing page with the listing details and a contact form. See <%= link_to "QR Codes", doc_path("qr-codes") %> for more.</p>
+
+<%= render "docs/shared/related", pages: { "ads/overview" => "Creating Ads", "agents" => "Agents", "leads" => "Lead Capture" } %>

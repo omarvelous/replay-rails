@@ -1,0 +1,37 @@
+<h1>Building Playlists</h1>
+<p>A playlist is an ordered sequence of ads that plays on a screen. Think of it like a slideshow — each ad displays for a set duration before advancing to the next.</p>
+
+<h2>Creating a playlist</h2>
+<ol>
+  <li>Go to <strong>Playlists</strong> and click <strong>New Playlist</strong></li>
+  <li>Give it a name (e.g., "Front Window - Summer 2026")</li>
+  <li>Add ads to the playlist</li>
+  <li>Set the display duration for each ad (in seconds)</li>
+  <li>Drag to reorder if needed</li>
+</ol>
+
+<h2>Adding ads</h2>
+<p>Click <strong>Add Ad</strong> on your playlist to browse available ads. You can add any ad from your account — listing ads, agent ads, brand ads, or collection ads. The same ad can appear in multiple playlists.</p>
+
+<h2>Duration</h2>
+<p>Each ad in the playlist has its own display duration. This controls how long the slide shows before advancing. A typical duration is 8-15 seconds, but you can adjust based on content:</p>
+<ul>
+  <li><strong>Simple ads</strong> (brand, minimal) — 8-10 seconds</li>
+  <li><strong>Detail-heavy ads</strong> (stat grid, listing) — 12-15 seconds</li>
+  <li><strong>Collection ads</strong> (multiple listings) — 15-20 seconds</li>
+</ul>
+
+<h2>Ordering</h2>
+<p>Ads play in the order they appear in the playlist. Drag ads to reorder them. The playlist loops continuously — after the last ad plays, it starts again from the first.</p>
+
+<h2>Assigning to screens</h2>
+<p>Once your playlist is ready, assign it to a screen. Go to <strong>Screens</strong>, select a screen, and assign the playlist. The paired player will start displaying the content immediately.</p>
+
+<%= render "docs/shared/callout", type: "tip" do %>
+  <p>Changes to a playlist take effect immediately. When you add, remove, or reorder ads, the player reloads the content within seconds.</p>
+<% end %>
+
+<h2>Previewing</h2>
+<p>Click <strong>Preview</strong> on any playlist to see the full slideshow in your browser, complete with transitions and timing.</p>
+
+<%= render "docs/shared/related", pages: { "ads/overview" => "Creating Ads", "screens" => "Managing Screens", "player-pairing" => "Pairing a Player" } %>

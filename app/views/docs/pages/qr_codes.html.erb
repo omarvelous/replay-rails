@@ -1,0 +1,32 @@
+<h1>QR Codes</h1>
+<p>Every listing and agent in RePlay gets a QR code. When someone scans the QR code on your storefront display, they're taken to a landing page where they can learn more and submit a contact form.</p>
+
+<h2>How QR codes work</h2>
+<ol>
+  <li>Your listing or agent ad displays on a screen with a QR code badge in the corner</li>
+  <li>A passerby scans the code with their phone</li>
+  <li>They're taken to a landing page with property details and a contact form</li>
+  <li>If they fill out the form, a lead is created and the assigned agent is notified</li>
+</ol>
+
+<h2>Attribution tracking</h2>
+<p>RePlay tracks every scan with full context:</p>
+<ul>
+  <li><strong>Which ad</strong> was displaying when the code was scanned</li>
+  <li><strong>Which screen</strong> the ad was on</li>
+  <li><strong>Which playlist</strong> was playing</li>
+  <li><strong>When</strong> the scan happened</li>
+</ul>
+<p>This lets you see which ads, screens, and locations are driving the most engagement.</p>
+
+<h2>Viewing scan data</h2>
+<p>Go to <strong>QR Codes</strong> to see all your codes and their scan counts. Click on a QR code to see its scan history, including timestamps and which ads were showing at the time.</p>
+
+<%= render "docs/shared/callout", type: "info" do %>
+  <p>RePlay distinguishes between <strong>qualified scans</strong> (from an active screen display) and other scans (shared links, test scans). Only qualified scans count toward your analytics.</p>
+<% end %>
+
+<h2>QR code on ads</h2>
+<p>The QR code appears automatically as a badge on listing and agent ads. You don't need to create or manage QR codes separately — they're generated when you create a listing or agent record.</p>
+
+<%= render "docs/shared/related", pages: { "leads" => "Lead Capture", "ads/overview" => "Creating Ads", "listings" => "Managing Listings" } %>
