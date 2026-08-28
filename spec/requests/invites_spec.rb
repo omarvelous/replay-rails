@@ -12,6 +12,11 @@ RSpec.describe "Invites" do
       expect(response).to be_successful
     end
 
+    it "renders pagination" do
+      get invites_path
+      expect(assigns(:pagy)).to be_present
+    end
+
     it "shows pending invites" do
       invite = create(:invite, account: account, email: "pending@example.com", invited_by: user)
       get invites_path
