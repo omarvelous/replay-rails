@@ -18,6 +18,9 @@ standards:
     - id: git/commit-cadence
       file: git/commit-cadence.md
       summary: "Commit after every significant step; RED and GREEN are separate commits"
+    - id: git/work-lifecycle
+      file: git/work-lifecycle.md
+      summary: "Promote plan, update roadmap/docs before and after every feature"
 
   frontend:
     - id: frontend/daisyui-tailwind

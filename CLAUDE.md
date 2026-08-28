@@ -124,6 +124,7 @@ This project follows documented standards in `.claude/standards/`. See `.claude/
 | Security & Environment | `.claude/standards/security/environment.md` | CSP, parameter filtering, env vars, rate limiting, HTTPS |
 | Code Organization | `.claude/standards/code-organization/patterns.md` | Thin controllers, concerns, service objects, naming, tenant scoping |
 | Error Handling | `.claude/standards/error-handling/conventions.md` | Flash messages, rescue_from, form validation, logging, error pages |
+| Work Lifecycle | `.claude/standards/git/work-lifecycle.md` | Promote plan, update roadmap/docs before and after every feature |
 
 ## Coding Conventions
 

@@ -8,7 +8,7 @@ Commit after every significant, discrete step. Do not accumulate changes across 
 
 Each of the following is a commit boundary:
 
-- A new standard or documentation file added to `agent-os/`
+- A new standard or documentation file added to `.claude/`
 - A RED spec written and confirmed failing (one commit per spec file)
 - A GREEN implementation that makes a spec pass (one commit per red-green pair)
 - A migration created and run
