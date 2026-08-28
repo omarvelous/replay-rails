@@ -55,3 +55,5 @@
     <%= link_to "Invite user", new_invite_path, class: "rounded-md bg-indigo-600 px-2.5 py-1.5 text-sm font-semibold text-white shadow-xs hover:bg-indigo-500 mt-3 inline-block" %>
   </div>
 <% end %>
+
+<%= render "app/shared/pagination", pagy: @pagy %>

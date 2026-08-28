@@ -12,6 +12,7 @@ RSpec.describe "Agents" do
       expect(response).to be_successful
     end
 
+
     it "lists agents for the current account" do
       agent = create(:agent, account: account, name: "Jane Smith")
       other_agent = create(:agent, name: "Other Agent")

@@ -12,6 +12,7 @@ RSpec.describe "Invites" do
       expect(response).to be_successful
     end
 
+
     it "shows pending invites" do
       invite = create(:invite, account: account, email: "pending@example.com", invited_by: user)
       get invites_path

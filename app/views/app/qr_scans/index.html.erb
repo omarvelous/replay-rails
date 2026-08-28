@@ -1,0 +1,46 @@
+<%= render "app/shared/page_header",
+    title: "Scan History",
+    subtitle: "#{@pagy.count} scans",
+    back_link: { label: "← #{@qr_code.label || 'QR Code'}", path: qr_code_path(@qr_code) } %>
+
+<% if @scans.any? %>
+  <div class="rounded-lg bg-white shadow-sm ring-1 ring-gray-900/5">
+    <div class="overflow-x-auto">
+      <table class="min-w-full divide-y divide-gray-300">
+        <thead>
+          <tr>
+            <th class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900">When</th>
+            <th class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Ad</th>
+            <th class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Screen</th>
+            <th class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">IP</th>
+            <th class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Qualified</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-gray-200">
+          <% @scans.each do |scan| %>
+            <tr>
+              <td class="py-3 pl-4 pr-3 text-sm text-gray-900"><%= scan.created_at.strftime("%b %-d, %Y %-I:%M %p") %></td>
+              <td class="px-3 py-3 text-sm text-gray-500"><%= scan.ad&.headline || "—" %></td>
+              <td class="px-3 py-3 text-sm text-gray-500"><%= scan.screen&.name || "—" %></td>
+              <td class="px-3 py-3 text-sm text-gray-500 font-mono text-xs"><%= scan.ip_address %></td>
+              <td class="px-3 py-3 text-sm">
+                <% if scan.ad.present? && scan.screen.present? %>
+                  <span class="inline-flex items-center rounded-full bg-green-50 px-2 py-0.5 text-xs font-medium text-green-700">Yes</span>
+                <% else %>
+                  <span class="inline-flex items-center rounded-full bg-gray-50 px-2 py-0.5 text-xs font-medium text-gray-500">No</span>
+                <% end %>
+              </td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+  </div>
+<% else %>
+  <div class="rounded-lg border-2 border-dashed border-gray-200 p-10 text-center">
+    <p class="font-semibold">No scans yet</p>
+    <p class="text-sm text-gray-500 mt-1">Scans will appear here when someone scans this QR code.</p>
+  </div>
+<% end %>
+
+<%= render "app/shared/pagination", pagy: @pagy %>

@@ -12,6 +12,7 @@ RSpec.describe "Users (Team)" do
       expect(response).to be_successful
     end
 
+
     it "lists members of the current account" do
       agent = create(:user, account: account, role: "agent", first_name: "Jane")
       get users_path

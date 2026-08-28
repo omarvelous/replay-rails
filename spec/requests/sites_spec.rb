@@ -12,6 +12,7 @@ RSpec.describe "Sites" do
       expect(response).to be_successful
     end
 
+
     it "lists sites for the current account" do
       site = create(:site, account: account, name: "Main Office")
       other_account_site = create(:site, name: "Other Office")

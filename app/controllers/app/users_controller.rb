@@ -2,9 +2,11 @@ module App
   class UsersController < App::BaseController
     def index
       authorize! User
-      @users = authorized_scope(User.all)
-                 .includes(:account_users)
-                 .order(:first_name)
+      @pagy, @users = pagy(
+        authorized_scope(User.all)
+          .includes(:account_users)
+          .order(:first_name)
+      )
     end
 
     def show
