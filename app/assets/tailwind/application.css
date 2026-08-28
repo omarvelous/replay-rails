@@ -1,4 +1,5 @@
 @import "tailwindcss";
+@plugin "@tailwindcss/typography";
 @source "../../../app/views";
 @source "../../../app/javascript";
 
