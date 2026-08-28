@@ -2,15 +2,12 @@
   <%= link_to "Dashboard", admin_root_path, class: "navigation__link navigation__link--#{controller_name == 'dashboard' ? 'active' : 'inactive'}" %>
 
   <% Administrate::Namespace.new(namespace).resources_with_index_route.each do |resource| %>
-    <% next if resource.to_s == "versions" %>
     <%= link_to(
       display_resource_name(resource),
       resource_index_route(resource),
       class: "navigation__link navigation__link--#{nav_link_state(resource)}"
     ) if accessible_action?(model_from_resource(resource), :index) %>
   <% end %>
-
-  <%= link_to "Activity Log", admin_versions_path, class: "navigation__link navigation__link--#{controller_name == 'versions' ? 'active' : 'inactive'}" %>
 
   <hr class="navigation__divider" style="border: none; border-top: 1px solid rgba(0,0,0,0.1); margin: 1rem 0;">
 
