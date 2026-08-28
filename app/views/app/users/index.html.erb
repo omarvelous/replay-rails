@@ -4,7 +4,7 @@
     Invite user
   <% end %>
 <% end %>
-<%= render "app/shared/page_header", title: "Team", subtitle: "#{@users.size} members", actions: actions %>
+<%= render "app/shared/page_header", title: "Team", subtitle: "#{@pagy.count} members", actions: actions %>
 
 <div class="rounded-lg bg-white shadow-sm ring-1 ring-gray-900/5">
   <div class="divide-y divide-gray-100">
@@ -32,3 +32,5 @@
     <% end %>
   </div>
 </div>
+
+<%= render "app/shared/pagination", pagy: @pagy %>

@@ -6,7 +6,7 @@ module App
 
     # GET /invites
     def index
-      @invites = authorized_scope(Invite.all).order(created_at: :desc)
+      @pagy, @invites = pagy(authorized_scope(Invite.all).order(created_at: :desc))
     end
 
     # GET /invites/new

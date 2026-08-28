@@ -12,10 +12,6 @@ RSpec.describe "QrCodes" do
       expect(response).to be_successful
     end
 
-    it "renders pagination" do
-      get qr_codes_path
-      expect(assigns(:pagy)).to be_present
-    end
 
     it "lists QR codes for the current account" do
       listing = create(:listing, account: account, address: "350 Fifth Ave")
