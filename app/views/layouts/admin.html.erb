@@ -10,23 +10,38 @@
   </head>
 
   <body class="bg-gray-50 min-h-screen">
-    <nav class="bg-gray-900 text-white px-6 py-3 flex items-center justify-between">
-      <div class="flex items-center gap-6">
-        <a href="/" class="font-bold">
-          RePlay <span class="text-xs bg-red-500 px-1.5 py-0.5 rounded ml-1">Admin</span>
-        </a>
-        <%= link_to "Dashboard", admin_root_path, class: "text-sm #{controller_name == 'dashboard' ? 'text-white' : 'text-gray-300 hover:text-white'}" %>
-        <%= link_to "Accounts", admin_accounts_path, class: "text-sm #{controller_name == 'accounts' ? 'text-white' : 'text-gray-300 hover:text-white'}" %>
-        <%= link_to "Users", admin_users_path, class: "text-sm #{controller_name == 'users' ? 'text-white' : 'text-gray-300 hover:text-white'}" %>
-        <%= link_to "Sites", admin_sites_path, class: "text-sm #{controller_name == 'sites' ? 'text-white' : 'text-gray-300 hover:text-white'}" %>
-        <%= link_to "Players", admin_players_path, class: "text-sm #{controller_name == 'players' ? 'text-white' : 'text-gray-300 hover:text-white'}" %>
-        <%= link_to "Screens", admin_screens_path, class: "text-sm #{controller_name == 'screens' ? 'text-white' : 'text-gray-300 hover:text-white'}" %>
-        <%= link_to "QR Codes", admin_qr_codes_path, class: "text-sm #{controller_name == 'qr_codes' ? 'text-white' : 'text-gray-300 hover:text-white'}" %>
-        <%= link_to "Scans", admin_qr_scans_path, class: "text-sm #{controller_name == 'qr_scans' ? 'text-white' : 'text-gray-300 hover:text-white'}" %>
+    <nav class="bg-gray-900 text-white">
+      <div class="max-w-7xl mx-auto px-6 py-3 flex items-center justify-between">
+        <div class="flex items-center gap-6">
+          <a href="<%= admin_root_path %>" class="font-bold flex items-center gap-2">
+            RePlay <span class="text-[10px] bg-red-500 px-1.5 py-0.5 rounded font-semibold uppercase tracking-wider">Admin</span>
+          </a>
+        </div>
+        <div class="flex items-center gap-4">
+          <%= link_to "App", app_root_url(subdomain: "app"), class: "text-sm text-gray-400 hover:text-white" %>
+          <span class="text-sm text-gray-400"><%= Current.user&.email_address %></span>
+        </div>
       </div>
-      <div class="flex items-center gap-4">
-        <%= link_to "← App", app_root_url(subdomain: "app"), class: "text-sm text-gray-400 hover:text-white" %>
-        <span class="text-sm text-gray-400"><%= Current.user&.email_address %></span>
+      <div class="max-w-7xl mx-auto px-6 pb-2 flex items-center gap-1 text-sm overflow-x-auto">
+        <% nav_items = [
+          ["Dashboard", admin_root_path, "dashboard"],
+          ["Accounts", admin_accounts_path, "accounts"],
+          ["Users", admin_users_path, "users"],
+          ["Sites", admin_sites_path, "sites"],
+          ["Screens", admin_screens_path, "screens"],
+          ["Players", admin_players_path, "players"],
+          ["Listings", admin_listings_path, "listings"],
+          ["Agents", admin_agents_path, "agents"],
+          ["Ads", admin_ads_path, "ads"],
+          ["Playlists", admin_playlists_path, "playlists"],
+          ["QR Codes", admin_qr_codes_path, "qr_codes"],
+          ["Scans", admin_qr_scans_path, "qr_scans"],
+          ["Leads", admin_leads_path, "leads"],
+          ["Invites", admin_invites_path, "invites"],
+        ] %>
+        <% nav_items.each do |label, path, cn| %>
+          <%= link_to label, path, class: "px-2.5 py-1 rounded-md font-medium #{controller_name == cn ? 'bg-white/10 text-white' : 'text-gray-400 hover:text-white hover:bg-white/5'}" %>
+        <% end %>
       </div>
     </nav>
 
