@@ -47,3 +47,4 @@
 /.tailwindplus-downloader-session.json
 
 /design/
+/node_modules/
