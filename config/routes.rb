@@ -49,7 +49,9 @@ Rails.application.routes.draw do
         member { get :preview }
         resources :playlist_ads, only: %i[ new create edit update destroy ]
       end
-      resources :qr_codes, only: %i[ index show ]
+      resources :qr_codes, only: %i[ index show ] do
+        resources :scans, controller: "qr_scans", only: :index
+      end
       resources :leads, only: %i[ index show update ] do
         resources :lead_agents, only: %i[ new create ]
       end

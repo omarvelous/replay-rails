@@ -11,7 +11,7 @@ module App
 
   def show
     authorize! @qr_code
-    @scans = @qr_code.scans.order(created_at: :desc).limit(50)
+    @scans = @qr_code.scans.order(created_at: :desc).limit(5)
     @scan_count = @qr_code.scans.count
   end
 
