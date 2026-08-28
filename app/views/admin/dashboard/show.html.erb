@@ -83,4 +83,36 @@
       <div style="font-size: 32px; font-weight: 700; font-variant-numeric: tabular-nums;"><%= Agent.count %></div>
     </div>
   </div>
+
+  <h2 style="font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; color: #999; margin-bottom: 12px; margin-top: 32px;">Recent Activity</h2>
+  <div style="background: #fff; border: 1px solid #e8e8e8; border-radius: 6px;">
+    <% if @recent_versions.any? %>
+      <% @recent_versions.each_with_index do |version, i| %>
+        <div style="padding: 12px 20px; display: flex; align-items: flex-start; gap: 10px; <%= i < @recent_versions.size - 1 ? 'border-bottom: 1px solid #f0f0f0;' : '' %>">
+          <% color = version.event == 'create' ? '#22c55e' : version.event == 'destroy' ? '#ef4444' : '#3b82f6' %>
+          <span style="width: 8px; height: 8px; border-radius: 50%; background: <%= color %>; margin-top: 5px; flex-shrink: 0;"></span>
+          <div style="flex: 1; min-width: 0;">
+            <div style="font-size: 13px; color: #333;">
+              <% who = version.whodunnit.present? ? User.find_by(id: version.whodunnit) : nil %>
+              <strong><%= who ? "#{who.first_name} #{who.last_name}" : "System" %></strong>
+              <%= version.event %>d
+              <span style="color: #666;"><%= version.item_type.demodulize.underscore.humanize.downcase %></span>
+              <span style="color: #aaa;">#<%= version.item_id %></span>
+            </div>
+            <% if version.event == 'update' && version.object_changes.present? %>
+              <div style="font-size: 11px; color: #aaa; margin-top: 2px;">
+                Changed: <%= version.object_changes.keys.reject { |k| k == 'updated_at' }.join(', ') %>
+              </div>
+            <% end %>
+            <div style="font-size: 11px; color: #bbb; margin-top: 2px;"><%= time_ago_in_words(version.created_at) %> ago</div>
+          </div>
+          <% if version.account_id %>
+            <span style="font-size: 10px; color: #aaa; background: #f5f5f5; padding: 1px 6px; border-radius: 4px;">Acct #<%= version.account_id %></span>
+          <% end %>
+        </div>
+      <% end %>
+    <% else %>
+      <div style="padding: 20px; text-align: center; color: #999; font-size: 13px;">No activity yet.</div>
+    <% end %>
+  </div>
 </section>
