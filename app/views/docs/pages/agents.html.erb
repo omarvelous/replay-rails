@@ -1,0 +1,27 @@
+<h1>Agents</h1>
+<p>Agents are the real estate professionals on your team. Each agent has a profile that appears on ads, landing pages, and lead assignments.</p>
+
+<h2>Agent profiles</h2>
+<p>Go to <strong>Agents</strong> to see all agents on your account. Each agent has:</p>
+<ul>
+  <li><strong>Name</strong> — displayed on ads and landing pages</li>
+  <li><strong>Email and phone</strong> — used for lead notifications</li>
+  <li><strong>Title</strong> — their role at the brokerage (e.g., "Senior Agent")</li>
+  <li><strong>Photo</strong> — appears on agent ads and landing pages</li>
+</ul>
+
+<h2>Linking agents to users</h2>
+<p>An agent profile can be linked to a user account. When you <%= link_to "invite a team member", doc_path("team") %> with the <strong>agent</strong> role, their user account is automatically linked to their agent profile. This lets them:</p>
+<ul>
+  <li>See leads assigned to them</li>
+  <li>View their listings</li>
+  <li>Edit their own profile</li>
+</ul>
+
+<h2>Assigning agents to listings</h2>
+<p>Agents are assigned to listings from the listing detail page. Each listing can have multiple agents, but one is marked as <strong>primary</strong>. The primary agent receives lead notifications when someone submits a contact form from that listing's landing page.</p>
+
+<h2>Agent ads</h2>
+<p>You can create spotlight ads featuring an agent. These use the agent's photo, name, and title. See <%= link_to "Creating Ads", doc_path("ads/overview") %> for layout options.</p>
+
+<%= render "docs/shared/related", pages: { "listings" => "Managing Listings", "leads" => "Lead Capture", "team" => "Managing Your Team" } %>

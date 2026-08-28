@@ -1,0 +1,56 @@
+<h1>Lead Capture</h1>
+<p>Leads are contact form submissions from people who scanned a QR code on your signage. RePlay captures their information, assigns an agent, and sends a notification — all automatically.</p>
+
+<h2>The lead pipeline</h2>
+
+<%= render "docs/shared/steps" do %>
+  <div class="space-y-3">
+    <div>
+      <p class="font-semibold text-sm text-gray-900">1. Someone scans a QR code on your screen</p>
+      <p class="text-sm text-gray-600">The scan is recorded with full attribution — which ad, screen, and playlist.</p>
+    </div>
+    <div>
+      <p class="font-semibold text-sm text-gray-900">2. They land on a contact page</p>
+      <p class="text-sm text-gray-600">The landing page shows the listing or agent details with a contact form.</p>
+    </div>
+    <div>
+      <p class="font-semibold text-sm text-gray-900">3. They fill out the form</p>
+      <p class="text-sm text-gray-600">Name, email, phone, and message are captured as a lead.</p>
+    </div>
+    <div>
+      <p class="font-semibold text-sm text-gray-900">4. An agent is assigned automatically</p>
+      <p class="text-sm text-gray-600">The listing's primary agent receives the lead.</p>
+    </div>
+    <div>
+      <p class="font-semibold text-sm text-gray-900">5. The agent gets an email notification</p>
+      <p class="text-sm text-gray-600">Immediate email with the lead's details so they can follow up fast.</p>
+    </div>
+  </div>
+<% end %>
+
+<h2>Lead inbox</h2>
+<p>Go to <strong>Leads</strong> to see all incoming leads. Each lead shows:</p>
+<ul>
+  <li>Contact information (name, email, phone)</li>
+  <li>Which listing or agent they inquired about</li>
+  <li>The assigned agent</li>
+  <li>Status and lead type</li>
+  <li>Attribution — which ad and screen generated the lead</li>
+</ul>
+
+<h2>Lead status</h2>
+<p>Track each lead through your pipeline:</p>
+<ul>
+  <li><strong>New</strong> — just submitted, not yet contacted</li>
+  <li><strong>Contacted</strong> — you've reached out</li>
+  <li><strong>Qualified</strong> — confirmed as a real opportunity</li>
+  <li><strong>Closed</strong> — resolved (won or lost)</li>
+</ul>
+
+<h2>Lead types</h2>
+<p>Leads are categorized by inquiry type: buyer inquiry, renter inquiry, seller inquiry, open house RSVP, general inquiry, or agent recruitment.</p>
+
+<h2>Reassigning agents</h2>
+<p>If a lead needs a different agent, you can reassign from the lead detail page. Assignment history is preserved — you can always see who was previously assigned and when.</p>
+
+<%= render "docs/shared/related", pages: { "qr-codes" => "QR Codes", "agents" => "Agents", "listings" => "Managing Listings" } %>

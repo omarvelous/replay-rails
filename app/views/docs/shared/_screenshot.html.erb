@@ -1,0 +1,6 @@
+<figure class="not-prose my-6">
+  <%= image_tag src, class: "rounded-lg ring-1 ring-gray-200 shadow-sm w-full" %>
+  <% if local_assigns[:caption] %>
+    <figcaption class="text-sm text-gray-500 text-center mt-2"><%= caption %></figcaption>
+  <% end %>
+</figure>

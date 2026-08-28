@@ -2,7 +2,7 @@
 
 ## Project Overview
 
-replay_rails is a Rails 8.1 application with PostgreSQL, Hotwire (Turbo + Stimulus), and Tailwind CSS v4 + DaisyUI v5. It uses a multi-tenant authentication pattern with Account, User, and AccountUser models (Rails 8 built-in authentication). Authorization is handled by Pundit with policy classes per model. Background jobs, caching, and WebSockets are handled by Solid Queue, Solid Cache, and Solid Cable (all DB-backed, no Redis).
+replay_rails is a Rails 8.1 application with PostgreSQL, Hotwire (Turbo + Stimulus), and Tailwind CSS v4 + DaisyUI v5. It uses a multi-tenant authentication pattern with Account, User, and AccountUser models (Rails 8 built-in authentication). Authorization is handled by Action Policy with policy classes per model. Background jobs, caching, and WebSockets are handled by Solid Queue, Solid Cache, and Solid Cable (all DB-backed, no Redis).
 
 ## Development Setup
 
@@ -62,7 +62,7 @@ Follow the red-green cycle for all implementation work:
 2. **Green** — Write the minimum implementation to make the spec pass.
 3. **Refactor** — Clean up without breaking the spec.
 
-No implementation code is written without a failing spec. Factories are created in the red step, not the green step. See `agent-os/standards/testing/tdd.md` for the full standard.
+No implementation code is written without a failing spec. Factories are created in the red step, not the green step. See `.claude/standards/testing/tdd.md` for the full standard.
 
 ## Architecture
 
@@ -84,22 +84,22 @@ Current.account.listings          # Correct
 Listing.all                       # Wrong — leaks data across tenants
 ```
 
-### Authorization (Pundit)
+### Authorization (Action Policy)
 
-Every app controller action calls `authorize @record` and index actions use `policy_scope`. Policy classes live in `app/policies/`.
+Every app controller action calls `authorize! @record` and index actions use `authorized_scope`. Policy classes live in `app/policies/`.
 
 - `ApplicationPolicy` — default: read-all, write-managers+
-- `ListingPolicy` / `LeadPolicy` — agent scoping via `Scope` class
+- `ListingPolicy` / `LeadPolicy` — agent scoping via `relation_scope`
 - `AgentPolicy` — agents can edit their own profile
 - `AccountPolicy` — owner-only for settings/billing
 
-`pundit_user` returns `Current.account_user` (the membership, not the bare User). Policies check `account_user.can_manage?`, `account_user.owner?`, etc.
+Authorization context provides `user` (via `Current.user`) and `account` (via `Current.account`). Policies check `user.can_manage?(account)`, `user.owner_of?(account)`, etc.
 
 ### Database
 
 - PostgreSQL with `t.timestamps` placed first in all `create_table` blocks
-- Migrations follow the timestamps-first convention (see `agent-os/standards/database/migrations.md`)
-- Seeds use FactoryBot factories and are always idempotent (see `agent-os/standards/database/seeds.md`)
+- Migrations follow the timestamps-first convention (see `.claude/standards/database/migrations.md`)
+- Seeds use FactoryBot factories and are always idempotent (see `.claude/standards/database/seeds.md`)
 
 ## Frontend
 
@@ -107,28 +107,28 @@ Every app controller action calls `authorize @record` and index actions use `pol
 - Use DaisyUI semantic classes for UI components (`btn btn-primary`, `input input-bordered`, `card`, `alert`, etc.)
 - Use raw Tailwind utilities for layout and spacing (`flex`, `grid`, `mt-4`, `p-6`)
 - Theme: `data-theme="light"` on the `<html>` tag
-- See `agent-os/standards/frontend/daisyui-tailwind.md` for the full component class reference
+- See `.claude/standards/frontend/daisyui-tailwind.md` for the full component class reference
 
 ## Standards
 
-This project follows documented standards in `agent-os/standards/`. See `agent-os/standards/index.yml` for the full index.
+This project follows documented standards in `.claude/standards/`. See `.claude/standards/index.yml` for the full index.
 
 | Standard | File | Summary |
 |----------|------|---------|
-| Database Migrations | `agent-os/standards/database/migrations.md` | Place `t.timestamps` first in all `create_table` blocks |
-| Seed Data | `agent-os/standards/database/seeds.md` | Update seeds for every new model; use FactoryBot; always idempotent |
-| TDD | `agent-os/standards/testing/tdd.md` | Write failing spec before implementing (red-green cycle) |
-| Commit Cadence | `agent-os/standards/git/commit-cadence.md` | Commit after every significant step; RED and GREEN are separate commits |
-| DaisyUI + Tailwind | `agent-os/standards/frontend/daisyui-tailwind.md` | Use DaisyUI v5 component classes; installed via @plugin in Tailwind CSS |
-| Makefile | `agent-os/standards/tooling/makefile.md` | Use make targets instead of raw docker compose commands |
-| Security & Environment | `agent-os/standards/security/environment.md` | CSP, parameter filtering, env vars, rate limiting, HTTPS |
-| Code Organization | `agent-os/standards/code-organization/patterns.md` | Thin controllers, concerns, service objects, naming, tenant scoping |
-| Error Handling | `agent-os/standards/error-handling/conventions.md` | Flash messages, rescue_from, form validation, logging, error pages |
+| Database Migrations | `.claude/standards/database/migrations.md` | Place `t.timestamps` first in all `create_table` blocks |
+| Seed Data | `.claude/standards/database/seeds.md` | Update seeds for every new model; use FactoryBot; always idempotent |
+| TDD | `.claude/standards/testing/tdd.md` | Write failing spec before implementing (red-green cycle) |
+| Commit Cadence | `.claude/standards/git/commit-cadence.md` | Commit after every significant step; RED and GREEN are separate commits |
+| DaisyUI + Tailwind | `.claude/standards/frontend/daisyui-tailwind.md` | Use DaisyUI v5 component classes; installed via @plugin in Tailwind CSS |
+| Makefile | `.claude/standards/tooling/makefile.md` | Use make targets instead of raw docker compose commands |
+| Security & Environment | `.claude/standards/security/environment.md` | CSP, parameter filtering, env vars, rate limiting, HTTPS |
+| Code Organization | `.claude/standards/code-organization/patterns.md` | Thin controllers, concerns, service objects, naming, tenant scoping |
+| Error Handling | `.claude/standards/error-handling/conventions.md` | Flash messages, rescue_from, form validation, logging, error pages |
 
 ## Coding Conventions
 
 - **Thin controllers** — Controllers handle HTTP concerns only (params, redirects, status codes). Business logic lives in models or service objects.
-- **Pundit for authorization** — Every mutating controller action calls `authorize`. Index actions use `policy_scope`. Policy classes in `app/policies/`.
+- **Action Policy for authorization** — Every mutating controller action calls `authorize!`. Index actions use `authorized_scope`. Policy classes in `app/policies/`.
 - **Concerns for shared behavior** — Use `ActiveSupport::Concern` in `app/models/concerns/` and `app/controllers/concerns/` for reusable behavior.
 - **Service objects for complex logic** — POROs in `app/services/` with a single `call` method for operations spanning multiple models.
 - **Follow Rails omakase style** — RuboCop is configured with `rubocop-rails-omakase`, `rubocop-rspec`, `rubocop-rspec_rails`, `rubocop-factory_bot`, and `rubocop-capybara`. Run `make lint` before committing.

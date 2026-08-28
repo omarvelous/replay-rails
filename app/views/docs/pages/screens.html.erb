@@ -1,0 +1,34 @@
+<h1>Managing Screens</h1>
+<p>A screen represents a physical display — the TV or monitor in your storefront window, lobby, or conference room.</p>
+
+<h2>Adding a screen</h2>
+<ol>
+  <li>First, make sure you have a <strong>site</strong> (your office location) — go to <strong>Sites</strong> to add one if needed</li>
+  <li>Go to <strong>Screens</strong> and click <strong>New Screen</strong></li>
+  <li>Select the site where this screen is located</li>
+  <li>Give it a descriptive name (e.g., "Front Window Left," "Lobby Display")</li>
+</ol>
+
+<h2>Assigning a playlist</h2>
+<p>A screen needs a playlist to display content. From the screen detail page, click <strong>Assign Playlist</strong> and select from your available playlists. Each screen can have one active playlist at a time.</p>
+
+<%= render "docs/shared/callout", type: "info" do %>
+  <p>Changing a screen's playlist takes effect immediately. The paired player reloads and starts playing the new content within seconds.</p>
+<% end %>
+
+<h2>Pairing a player</h2>
+<p>A screen needs a paired player device to display content on a TV. See <%= link_to "Pairing a Player", doc_path("player-pairing") %> for the step-by-step process.</p>
+
+<h2>Screen status</h2>
+<p>Each screen shows its current status:</p>
+<ul>
+  <li><strong>Online</strong> — player is connected and sending heartbeats</li>
+  <li><strong>Offline</strong> — player hasn't checked in recently (check power and WiFi)</li>
+  <li><strong>No player</strong> — no device is paired to this screen</li>
+  <li><strong>No playlist</strong> — paired but no content assigned</li>
+</ul>
+
+<h2>Sites</h2>
+<p>Screens are organized by site. A site represents a physical location (your office, a branch, etc.). All screens at that location are grouped together for easy management.</p>
+
+<%= render "docs/shared/related", pages: { "player-pairing" => "Pairing a Player", "playlists" => "Building Playlists", "getting-started" => "Quick Start Guide" } %>

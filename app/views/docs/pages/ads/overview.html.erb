@@ -1,0 +1,51 @@
+<h1>Creating Ads</h1>
+<p>Ads are the visual content displayed on your screens. RePlay supports four types of ads, each designed for a different purpose.</p>
+
+<h2>Ad types</h2>
+
+<h3>Listing ads</h3>
+<p>Created from a property listing. Automatically pulls in the address, price, photos, and property details. Best for showcasing individual properties in your window display.</p>
+<p><strong>Layouts:</strong> Hero (full-bleed image), Split (image left, details right), Minimal (centered text), Stat Grid (property stats featured).</p>
+<p><strong>Badges:</strong> Add optional overlays like "Just Listed," "Open House," "Price Reduction," "Just Sold," or "Coming Soon."</p>
+
+<h3>Collection ads</h3>
+<p>Group up to 8 existing ads into a single grid slide. Great for showing multiple properties at once or creating a "Featured Listings" display.</p>
+<p><strong>Layout:</strong> Grid.</p>
+
+<h3>Agent ads</h3>
+<p>Spotlight ads for individual agents. Shows the agent's photo, name, title, and contact info. Use these to build brand recognition for your top agents.</p>
+<p><strong>Layouts:</strong> Profile (centered), Split (photo left, details right).</p>
+
+<h3>Brand ads</h3>
+<p>Freeform ads for brokerage branding. Add a custom headline, body text, and image. Use these for office announcements, seasonal messages, or brand awareness.</p>
+<p><strong>Layouts:</strong> Hero, Minimal.</p>
+
+<h2>Themes</h2>
+<p>Every ad supports three color themes:</p>
+<ul>
+  <li><strong>Dark</strong> — dark background with light text (default, high contrast)</li>
+  <li><strong>Light</strong> — light background with dark text</li>
+  <li><strong>Brand</strong> — your brokerage's brand colors</li>
+</ul>
+
+<h2>Creating an ad</h2>
+<ol>
+  <li>Go to <strong>Ads → New Ad</strong> and choose the ad type</li>
+  <li>Select the source (a listing, agent, or enter custom content)</li>
+  <li>Choose a layout and theme</li>
+  <li>Upload a hero image</li>
+  <li>Preview your ad to see how it will look on screen</li>
+  <li>Save — the ad is ready to add to a playlist</li>
+</ol>
+
+<%= render "docs/shared/callout", type: "info" do %>
+  <p>Ads scale automatically to any screen size. Whether your TV is 32" or 65", the content adjusts proportionally.</p>
+<% end %>
+
+<h2>Previewing ads</h2>
+<p>Click <strong>Preview</strong> on any ad to see a full-resolution rendering. This shows exactly how the ad will appear on a screen, including the QR code badge.</p>
+
+<h2>QR codes on ads</h2>
+<p>Every listing ad and agent ad automatically includes a QR code badge in the corner. When scanned, it takes visitors to a landing page with a contact form. See <%= link_to "QR Codes", doc_path("qr-codes") %> for details.</p>
+
+<%= render "docs/shared/related", pages: { "listings" => "Managing Listings", "playlists" => "Building Playlists", "qr-codes" => "QR Codes" } %>

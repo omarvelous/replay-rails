@@ -1,0 +1,55 @@
+<h1>Managing Your Team</h1>
+<p>RePlay supports multiple users per account with role-based access. Invite your office managers and agents to collaborate.</p>
+
+<h2>Roles</h2>
+<p>Each team member has a role that controls what they can do:</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Role</th>
+      <th>Can do</th>
+      <th>Can't do</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>Owner</strong></td>
+      <td>Everything — full access to all features, billing, and user management</td>
+      <td>—</td>
+    </tr>
+    <tr>
+      <td><strong>Manager</strong></td>
+      <td>Create and manage listings, ads, playlists, screens. Invite agents. Manage leads.</td>
+      <td>Billing, account deletion, removing the owner</td>
+    </tr>
+    <tr>
+      <td><strong>Agent</strong></td>
+      <td>View their assigned listings and leads. Update lead status. Edit their own profile.</td>
+      <td>Create or delete listings, ads, playlists. Manage other users.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2>Inviting team members</h2>
+<ol>
+  <li>Go to <strong>Team</strong> (or <strong>Invites</strong>)</li>
+  <li>Click <strong>Invite User</strong></li>
+  <li>Enter their email address</li>
+  <li>Select a role (manager or agent)</li>
+  <li>Click <strong>Send Invite</strong></li>
+</ol>
+
+<p>The invited person receives an email with a link to join. If they already have a RePlay account, they're added to your account immediately. If they're new, they'll create an account first.</p>
+
+<%= render "docs/shared/callout", type: "info" do %>
+  <p>Invites expire after 7 days. You can resend or cancel pending invites from the Team page.</p>
+<% end %>
+
+<h2>Agent invites</h2>
+<p>When you invite someone with the <strong>agent</strong> role, RePlay automatically links their user account to an agent profile. If an agent record already exists with their email, it's connected. If not, a new agent profile is created.</p>
+
+<h2>Viewing your team</h2>
+<p>The <strong>Team</strong> page shows all current members with their roles, plus any pending invites. Owners and managers can view this page.</p>
+
+<%= render "docs/shared/related", pages: { "agents" => "Agents", "leads" => "Lead Capture", "getting-started" => "Quick Start Guide" } %>

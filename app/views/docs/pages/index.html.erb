@@ -1,0 +1,14 @@
+<h1>RePlay Documentation</h1>
+<p class="text-lg text-gray-600">Everything you need to get your digital signage up and running.</p>
+
+<% @categories.each do |category| %>
+  <h2><%= category["name"] %></h2>
+  <div class="not-prose grid gap-3">
+    <% category["pages"].each do |page| %>
+      <%= link_to doc_path(page["slug"]), class: "block p-4 rounded-lg border border-gray-200 hover:border-indigo-300 hover:bg-indigo-50/50 transition" do %>
+        <div class="font-semibold text-gray-900 text-sm"><%= page["title"] %></div>
+        <div class="text-sm text-gray-500 mt-1"><%= page["description"] %></div>
+      <% end %>
+    <% end %>
+  </div>
+<% end %>

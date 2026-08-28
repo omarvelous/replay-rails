@@ -12,6 +12,12 @@ Rails.application.routes.draw do
       get "/about",    to: "pages#about",    as: :about
     end
 
+    # Documentation — own module, public
+    scope module: "docs" do
+      get "/docs",       to: "pages#index", as: :docs
+      get "/docs/*slug", to: "pages#show",  as: :doc
+    end
+
     # Public destination pages (consumer-facing, marketing domain)
     namespace :go do
       resources :listings, only: :show
