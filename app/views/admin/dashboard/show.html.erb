@@ -84,7 +84,10 @@
     </div>
   </div>
 
-  <h2 style="font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; color: #999; margin-bottom: 12px; margin-top: 32px;">Recent Activity</h2>
+  <div style="display: flex; align-items: center; justify-content: space-between; margin-top: 32px; margin-bottom: 12px;">
+    <h2 style="font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; color: #999;">Recent Activity</h2>
+    <%= link_to "View all", admin_versions_path, style: "font-size: 13px; color: #4f46e5; font-weight: 600; text-decoration: none;" %>
+  </div>
   <div style="background: #fff; border: 1px solid #e8e8e8; border-radius: 6px;">
     <% if @recent_versions.any? %>
       <% @recent_versions.each_with_index do |version, i| %>
