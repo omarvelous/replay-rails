@@ -1,4 +1,4 @@
-# Plan: Explicit Tenant Scoping (Draft)
+# Plan: Explicit Tenant Scoping
 
 ## Problem
 

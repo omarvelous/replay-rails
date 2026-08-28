@@ -23,6 +23,8 @@ ready for a private beta.
 | Pagination | `pagination` | Pagy on all index pages with custom Tailwind pagination partial. |
 | Audit trail | `audit-trail` | paper_trail on 16 models with jsonb columns, account_id on versions, whodunnit via Current.user. Admin dashboard activity feed + Administrate versions index. |
 | API restructure | `play-to-api-refactor` | Split monolithic player API into `play` subdomain (HTML) and `api` subdomain (JSON). |
+| Documentation | `documentation` #23 | In-app docs system (Docs::Manifest, Docs::PagesController), 12 developer docs, 10 user-facing doc pages, repo reorg. |
+| Tenant scoping | `tenant-scoping` | In progress — `acts_as_tenant` for model-level tenant isolation. |
 
 ---
 
