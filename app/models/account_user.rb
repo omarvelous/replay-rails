@@ -1,4 +1,6 @@
 class AccountUser < ApplicationRecord
+  has_paper_trail
+
   belongs_to :account
   belongs_to :user
 

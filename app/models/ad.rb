@@ -1,4 +1,5 @@
 class Ad < ApplicationRecord
+  has_paper_trail ignore: [ :updated_at ]
   belongs_to :account
   delegated_type :adable, types: %w[Ads::ListingAd Ads::CollectionAd Ads::AgentAd Ads::BrandAd], dependent: :destroy
 

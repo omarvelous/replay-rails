@@ -1,4 +1,5 @@
 class ScreenPlaylist < ApplicationRecord
+  has_paper_trail
   belongs_to :screen
   belongs_to :playlist
 

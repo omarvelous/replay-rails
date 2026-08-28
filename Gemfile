@@ -59,6 +59,7 @@ gem "action_policy"
 gem "rack-attack"
 gem "rack-cors"
 gem "chartkick"
+gem "paper_trail"
 gem "groupdate"
 
 group :development, :test do

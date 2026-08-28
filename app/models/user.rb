@@ -1,4 +1,5 @@
 class User < ApplicationRecord
+  has_paper_trail ignore: [ :updated_at ]
   include Authorizable
 
   has_secure_password

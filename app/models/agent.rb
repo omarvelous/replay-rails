@@ -1,4 +1,5 @@
 class Agent < ApplicationRecord
+  has_paper_trail ignore: [ :updated_at ]
   belongs_to :account
   belongs_to :user, optional: true
 

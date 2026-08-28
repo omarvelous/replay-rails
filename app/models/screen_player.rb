@@ -1,4 +1,5 @@
 class ScreenPlayer < ApplicationRecord
+  has_paper_trail
   belongs_to :screen
   belongs_to :player
   belongs_to :paired_by, class_name: "User", optional: true
