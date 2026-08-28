@@ -1,4 +1,5 @@
 class Site < ApplicationRecord
+  has_paper_trail ignore: [ :updated_at ]
   belongs_to :account
 
   has_one_attached :photo do |attachable|

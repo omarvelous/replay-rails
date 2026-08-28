@@ -1,4 +1,5 @@
 class Screen < ApplicationRecord
+  has_paper_trail ignore: [ :updated_at ]
   belongs_to :site
   has_many :screen_playlists, dependent: :destroy
   has_many :playlists, through: :screen_playlists

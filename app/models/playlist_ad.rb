@@ -1,4 +1,5 @@
 class PlaylistAd < ApplicationRecord
+  has_paper_trail
   belongs_to :playlist
   belongs_to :ad
 

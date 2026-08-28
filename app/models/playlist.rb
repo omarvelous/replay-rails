@@ -1,4 +1,5 @@
 class Playlist < ApplicationRecord
+  has_paper_trail ignore: [ :updated_at ]
   belongs_to :account
   has_many :playlist_ads, -> { order(:position) }, dependent: :destroy, inverse_of: :playlist
   has_many :ads, through: :playlist_ads
