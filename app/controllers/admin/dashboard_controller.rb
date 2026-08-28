@@ -23,7 +23,7 @@ module Admin
       @total_qr_codes = QrCode.count
 
       # Recent activity
-      @recent_versions = PaperTrail::Version.order(created_at: :desc).limit(15)
+      @recent_versions = ::PaperTrail::Version.order(created_at: :desc).limit(15)
     end
   end
 end

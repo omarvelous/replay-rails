@@ -83,7 +83,9 @@ Rails.application.routes.draw do
       resources :lead_agents
       resources :account_users
       resources :invites
-      resources :versions, only: :index
+      namespace :paper_trail do
+        resources :versions, only: :index
+      end
     end
   end
 
