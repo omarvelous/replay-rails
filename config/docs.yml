@@ -1,0 +1,55 @@
+categories:
+  - name: Getting Started
+    pages:
+      - title: Quick Start Guide
+        slug: getting-started
+        template: getting_started
+        description: Go from signup to a live screen in 15 minutes
+
+  - name: Content
+    pages:
+      - title: Managing Listings
+        slug: listings
+        template: listings
+        description: Add, edit, and organize your property listings
+      - title: Creating Ads
+        slug: ads/overview
+        template: ads/overview
+        description: "The four ad types: listing, collection, agent, and brand"
+      - title: Building Playlists
+        slug: playlists
+        template: playlists
+        description: Arrange ads into playlists for your screens
+
+  - name: Screens & Players
+    pages:
+      - title: Managing Screens
+        slug: screens
+        template: screens
+        description: Set up screens and assign playlists
+      - title: Pairing a Player
+        slug: player-pairing
+        template: player_pairing
+        description: Connect a player device to your screen
+
+  - name: Leads & QR Codes
+    pages:
+      - title: QR Codes
+        slug: qr-codes
+        template: qr_codes
+        description: How QR codes work and scan tracking
+      - title: Lead Capture
+        slug: leads
+        template: leads
+        description: The QR-to-lead pipeline and agent assignment
+
+  - name: Team
+    pages:
+      - title: Managing Your Team
+        slug: team
+        template: team
+        description: Invite users, assign roles, manage access
+      - title: Agents
+        slug: agents
+        template: agents
+        description: Agent profiles and listing assignments

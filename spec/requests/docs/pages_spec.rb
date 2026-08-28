@@ -32,9 +32,8 @@ RSpec.describe "Docs::Pages" do
     end
 
     it "returns 404 for a nonexistent page" do
-      expect {
-        get "/docs/nonexistent-page"
-      }.to raise_error(ActionController::RoutingError)
+      get "/docs/nonexistent-page"
+      expect(response).to have_http_status(:not_found)
     end
   end
 end

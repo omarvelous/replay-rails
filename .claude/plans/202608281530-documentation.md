@@ -307,7 +307,7 @@ Small, focused partials in `app/views/docs/shared/`:
 Developer docs stay in the repo as plain markdown — no app rendering needed. Read on GitHub or locally.
 
 ```
-docs/dev/
+docs/
 ├── onboarding.md
 ├── architecture/
 │   ├── overview.md
@@ -368,18 +368,18 @@ Consolidate scattered docs under `.claude/` and clean up `tmp/`.
 
 ### Phase 1 — Developer docs (repo only, no app changes)
 
-10. `docs/dev/onboarding.md` — new dev first day
-11. `docs/dev/architecture/overview.md` — high-level architecture
-12. `docs/dev/architecture/domain-model.md` — Mermaid ER diagram + model table
-13. `docs/dev/architecture/subdomains.md` — subdomain routing
-14. `docs/dev/architecture/ad-templates.md` — Ads:: namespace, delegated types
-15. `docs/dev/architecture/lead-capture.md` — lead pipeline, attribution
-16. `docs/dev/architecture/qr-codes.md` — scan flow, qualified scans
-17. `docs/dev/architecture/player-pairing.md` — three models, heartbeat
-18. `docs/dev/architecture/signage-css.md` — cqw units, custom properties
-19. `docs/dev/api/player-api.md` — play + api subdomain endpoints
-20. `docs/dev/api/scan-api.md` — `/s/:token` redirect logic
-21. `docs/dev/testing.md` — TDD workflow, SimpleCov, thresholds
+10. `docs/onboarding.md` — new dev first day
+11. `docs/architecture/overview.md` — high-level architecture
+12. `docs/architecture/domain-model.md` — Mermaid ER diagram + model table
+13. `docs/architecture/subdomains.md` — subdomain routing
+14. `docs/architecture/ad-templates.md` — Ads:: namespace, delegated types
+15. `docs/architecture/lead-capture.md` — lead pipeline, attribution
+16. `docs/architecture/qr-codes.md` — scan flow, qualified scans
+17. `docs/architecture/player-pairing.md` — three models, heartbeat
+18. `docs/architecture/signage-css.md` — cqw units, custom properties
+19. `docs/api/player-api.md` — play + api subdomain endpoints
+20. `docs/api/scan-api.md` — `/s/:token` redirect logic
+21. `docs/testing.md` — TDD workflow, SimpleCov, thresholds
 
 ### Phase 2 — In-app docs infrastructure (TDD)
 
@@ -412,7 +412,7 @@ Consolidate scattered docs under `.claude/` and clean up `tmp/`.
 ### Phase 4 — Polish
 
 44. App sidebar link to docs (cross-subdomain)
-45. `docs/dev/deployment.md` — Kamal, Docker, env vars
+45. `docs/deployment.md` — Kamal, Docker, env vars
 
 ---
 

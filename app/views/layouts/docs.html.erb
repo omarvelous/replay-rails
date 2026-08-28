@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+  <head>
+    <title><%= @page ? "#{@page[:title]} — RePlay Docs" : "RePlay Docs" %></title>
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <%= csrf_meta_tags %>
+    <%= csp_meta_tag %>
+    <%= stylesheet_link_tag :app, "data-turbo-track": "reload" %>
+    <%= javascript_importmap_tags %>
+  </head>
+
+  <body class="bg-white min-h-screen">
+    <nav class="border-b border-gray-200">
+      <div class="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
+        <%= link_to marketing_root_path do %>
+          <span class="flex items-center gap-2">
+            <span class="flex size-8 items-center justify-center rounded-lg bg-linear-to-br from-indigo-500 to-teal-400">
+              <svg viewBox="0 0 24 24" fill="none" class="size-4"><path d="M8 6.5v11l9-5.5-9-5.5z" fill="#fff"/></svg>
+            </span>
+            <span class="text-lg font-bold tracking-tight">Re<b class="text-indigo-600">Play</b></span>
+          </span>
+        <% end %>
+        <div class="flex items-center gap-4 text-sm">
+          <%= link_to "Docs", docs_path, class: "font-semibold text-indigo-600" %>
+          <%= link_to "Log in", new_session_url(subdomain: "app"), class: "text-gray-600 hover:text-gray-900" %>
+        </div>
+      </div>
+    </nav>
+
+    <div class="max-w-6xl mx-auto px-6 py-10 flex gap-10">
+      <aside class="hidden lg:block w-56 shrink-0">
+        <%= render "docs/sidebar" %>
+      </aside>
+
+      <article class="prose prose-indigo max-w-none flex-1 min-w-0">
+        <%= yield %>
+      </article>
+    </div>
+  </body>
+</html>
