@@ -1,5 +1,5 @@
 module Admin
-  class DashboardController < ApplicationController
+  class DashboardController < Admin::ApplicationController
     def show
       # Infrastructure
       @total_accounts = Account.count

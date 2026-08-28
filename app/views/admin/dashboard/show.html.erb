@@ -1,120 +1,86 @@
-<h1 class="text-2xl font-bold text-gray-900 mb-1">Platform Dashboard</h1>
-<p class="text-sm text-gray-500 mb-8">System health and platform-wide metrics</p>
+<header class="main-content__header">
+  <h1 class="main-content__page-title">Platform Dashboard</h1>
+</header>
 
-<%# Infrastructure %>
-<div class="mb-8">
-  <h2 class="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-3">Infrastructure</h2>
-  <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-    <div class="rounded-lg bg-white shadow-sm ring-1 ring-gray-900/5 p-5">
-      <div class="flex items-center gap-3 mb-3">
-        <div class="w-8 h-8 rounded-lg bg-indigo-50 grid place-items-center">
-          <svg viewBox="0 0 20 20" fill="currentColor" class="size-4 text-indigo-600"><path d="M4.25 2A2.25 2.25 0 002 4.25v2.5A2.25 2.25 0 004.25 9h2.5A2.25 2.25 0 009 6.75v-2.5A2.25 2.25 0 006.75 2h-2.5zm0 9A2.25 2.25 0 002 13.25v2.5A2.25 2.25 0 004.25 18h2.5A2.25 2.25 0 009 15.75v-2.5A2.25 2.25 0 006.75 11h-2.5zm9-9A2.25 2.25 0 0011 4.25v2.5A2.25 2.25 0 0013.25 9h2.5A2.25 2.25 0 0018 6.75v-2.5A2.25 2.25 0 0015.75 2h-2.5z"/></svg>
-        </div>
-        <p class="text-sm font-medium text-gray-500">Accounts</p>
-      </div>
-      <p class="text-3xl font-bold tabular-nums"><%= @total_accounts %></p>
+<section class="main-content__body">
+  <h2 style="font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; color: #999; margin-bottom: 12px;">Infrastructure</h2>
+  <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 32px;">
+    <div style="background: #fff; border: 1px solid #e8e8e8; border-radius: 6px; padding: 20px;">
+      <div style="font-size: 32px; font-weight: 700; font-variant-numeric: tabular-nums;"><%= @total_accounts %></div>
+      <div style="font-size: 13px; color: #888;">Accounts</div>
     </div>
-
-    <div class="rounded-lg bg-white shadow-sm ring-1 ring-gray-900/5 p-5">
-      <div class="flex items-center gap-3 mb-3">
-        <div class="w-8 h-8 rounded-lg bg-green-50 grid place-items-center">
-          <svg viewBox="0 0 20 20" fill="currentColor" class="size-4 text-green-600"><path fill-rule="evenodd" d="M2 4.25A2.25 2.25 0 014.25 2h11.5A2.25 2.25 0 0118 4.25v8.5A2.25 2.25 0 0115.75 15h-3.105a3.501 3.501 0 001.1 1.677A.75.75 0 0113.26 18H6.74a.75.75 0 01-.484-1.323A3.501 3.501 0 007.355 15H4.25A2.25 2.25 0 012 12.75v-8.5z" clip-rule="evenodd"/></svg>
-        </div>
-        <p class="text-sm font-medium text-gray-500">Players</p>
+    <div style="background: #fff; border: 1px solid #e8e8e8; border-radius: 6px; padding: 20px;">
+      <div style="font-size: 32px; font-weight: 700; font-variant-numeric: tabular-nums;">
+        <span style="color: #22c55e;"><%= @players_online %></span>
+        <span style="color: #ccc; font-size: 18px; font-weight: 500;">/ <%= @total_players %></span>
       </div>
-      <p class="text-3xl font-bold tabular-nums">
-        <span class="text-green-600"><%= @players_online %></span>
-        <span class="text-gray-300 text-lg font-medium">/ <%= @total_players %></span>
-      </p>
-      <p class="text-xs text-gray-400 mt-1">online now</p>
+      <div style="font-size: 13px; color: #888;">Players online</div>
     </div>
-
-    <div class="rounded-lg bg-white shadow-sm ring-1 ring-gray-900/5 p-5">
-      <div class="flex items-center gap-3 mb-3">
-        <div class="w-8 h-8 rounded-lg bg-blue-50 grid place-items-center">
-          <svg viewBox="0 0 20 20" fill="currentColor" class="size-4 text-blue-600"><path fill-rule="evenodd" d="M2 4.25A2.25 2.25 0 014.25 2h11.5A2.25 2.25 0 0118 4.25v8.5A2.25 2.25 0 0115.75 15H4.25A2.25 2.25 0 012 12.75v-8.5z" clip-rule="evenodd"/></svg>
-        </div>
-        <p class="text-sm font-medium text-gray-500">Screens</p>
-      </div>
-      <p class="text-3xl font-bold tabular-nums"><%= @total_screens %></p>
+    <div style="background: #fff; border: 1px solid #e8e8e8; border-radius: 6px; padding: 20px;">
+      <div style="font-size: 32px; font-weight: 700; font-variant-numeric: tabular-nums;"><%= @total_screens %></div>
+      <div style="font-size: 13px; color: #888;">Screens</div>
     </div>
-
-    <div class="rounded-lg bg-white shadow-sm ring-1 ring-gray-900/5 p-5">
-      <div class="flex items-center gap-3 mb-3">
-        <div class="w-8 h-8 rounded-lg bg-purple-50 grid place-items-center">
-          <svg viewBox="0 0 20 20" fill="currentColor" class="size-4 text-purple-600"><path d="M3.75 4.875c0-.621.504-1.125 1.125-1.125h4.5c.621 0 1.125.504 1.125 1.125v4.5c0 .621-.504 1.125-1.125 1.125h-4.5A1.125 1.125 0 013.75 9.375v-4.5z"/></svg>
-        </div>
-        <p class="text-sm font-medium text-gray-500">QR Codes</p>
-      </div>
-      <p class="text-3xl font-bold tabular-nums"><%= @total_qr_codes %></p>
+    <div style="background: #fff; border: 1px solid #e8e8e8; border-radius: 6px; padding: 20px;">
+      <div style="font-size: 32px; font-weight: 700; font-variant-numeric: tabular-nums;"><%= @total_qr_codes %></div>
+      <div style="font-size: 13px; color: #888;">QR Codes</div>
     </div>
   </div>
-</div>
 
-<%# Funnel %>
-<div class="mb-8">
-  <h2 class="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-3">Funnel</h2>
-  <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
-    <div class="rounded-lg bg-white shadow-sm ring-1 ring-gray-900/5 p-5">
-      <p class="text-sm font-medium text-gray-500 mb-1">Impressions</p>
-      <p class="text-3xl font-bold tabular-nums"><%= number_with_delimiter(@total_impressions) %></p>
-      <p class="text-xs text-gray-400 mt-1"><%= number_with_delimiter(@impressions_today) %> today</p>
+  <h2 style="font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; color: #999; margin-bottom: 12px;">Funnel</h2>
+  <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 16px;">
+    <div style="background: #fff; border: 1px solid #e8e8e8; border-radius: 6px; padding: 20px;">
+      <div style="font-size: 13px; color: #888; margin-bottom: 4px;">Impressions</div>
+      <div style="font-size: 32px; font-weight: 700; font-variant-numeric: tabular-nums;"><%= number_with_delimiter(@total_impressions) %></div>
+      <div style="font-size: 12px; color: #aaa; margin-top: 4px;"><%= number_with_delimiter(@impressions_today) %> today</div>
     </div>
-
-    <div class="rounded-lg bg-white shadow-sm ring-1 ring-gray-900/5 p-5">
-      <p class="text-sm font-medium text-gray-500 mb-1">Scans</p>
-      <p class="text-3xl font-bold tabular-nums"><%= number_with_delimiter(@total_scans) %></p>
-      <p class="text-xs text-gray-400 mt-1"><%= @scans_today %> today</p>
+    <div style="background: #fff; border: 1px solid #e8e8e8; border-radius: 6px; padding: 20px;">
+      <div style="font-size: 13px; color: #888; margin-bottom: 4px;">Scans</div>
+      <div style="font-size: 32px; font-weight: 700; font-variant-numeric: tabular-nums;"><%= number_with_delimiter(@total_scans) %></div>
+      <div style="font-size: 12px; color: #aaa; margin-top: 4px;"><%= @scans_today %> today</div>
     </div>
-
-    <div class="rounded-lg bg-white shadow-sm ring-1 ring-gray-900/5 p-5">
-      <p class="text-sm font-medium text-gray-500 mb-1">Leads</p>
-      <p class="text-3xl font-bold tabular-nums"><%= @total_leads %></p>
-      <div class="flex items-center gap-2 mt-1">
-        <p class="text-xs text-gray-400"><%= @leads_this_week %> this week</p>
+    <div style="background: #fff; border: 1px solid #e8e8e8; border-radius: 6px; padding: 20px;">
+      <div style="font-size: 13px; color: #888; margin-bottom: 4px;">Leads</div>
+      <div style="font-size: 32px; font-weight: 700; font-variant-numeric: tabular-nums;"><%= @total_leads %></div>
+      <div style="font-size: 12px; color: #aaa; margin-top: 4px;">
+        <%= @leads_this_week %> this week
         <% if @leads_unread > 0 %>
-          <span class="bg-red-500 text-white text-[10px] rounded-full px-1.5 py-0.5 font-semibold"><%= @leads_unread %> new</span>
+          <span style="background: #ef4444; color: #fff; font-size: 10px; padding: 1px 5px; border-radius: 8px; margin-left: 4px;"><%= @leads_unread %> new</span>
         <% end %>
       </div>
     </div>
-
-    <div class="rounded-lg bg-white shadow-sm ring-1 ring-gray-900/5 p-5">
-      <p class="text-sm font-medium text-gray-500 mb-1">Conversion</p>
-      <p class="text-3xl font-bold tabular-nums"><%= @total_scans > 0 ? number_to_percentage(@total_leads.to_f / @total_scans * 100, precision: 1) : "—" %></p>
-      <p class="text-xs text-gray-400 mt-1">scan &rarr; lead</p>
+    <div style="background: #fff; border: 1px solid #e8e8e8; border-radius: 6px; padding: 20px;">
+      <div style="font-size: 13px; color: #888; margin-bottom: 4px;">Conversion</div>
+      <div style="font-size: 32px; font-weight: 700; font-variant-numeric: tabular-nums;"><%= @total_scans > 0 ? number_to_percentage(@total_leads.to_f / @total_scans * 100, precision: 1) : "—" %></div>
+      <div style="font-size: 12px; color: #aaa; margin-top: 4px;">scan &rarr; lead</div>
     </div>
   </div>
 
-  <%# Funnel chart %>
-  <div class="rounded-lg bg-white shadow-sm ring-1 ring-gray-900/5 p-5">
-    <h3 class="text-sm font-semibold text-gray-700 mb-3">Platform activity (30 days)</h3>
+  <div style="background: #fff; border: 1px solid #e8e8e8; border-radius: 6px; padding: 20px; margin-bottom: 32px;">
+    <div style="font-size: 14px; font-weight: 600; color: #333; margin-bottom: 12px;">Platform activity (30 days)</div>
     <%= line_chart [
       { name: "Impressions", data: Impression.where("created_at > ?", 30.days.ago).group_by_day(:created_at).count },
       { name: "Scans", data: QrScan.qualified.where("created_at > ?", 30.days.ago).group_by_day(:created_at).count },
       { name: "Leads", data: Lead.where("created_at > ?", 30.days.ago).group_by_day(:created_at).count }
     ], library: { scales: { y: { beginAtZero: true } } } %>
   </div>
-</div>
 
-<%# Content %>
-<div>
-  <h2 class="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-3">Content</h2>
-  <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-    <div class="rounded-lg bg-white shadow-sm ring-1 ring-gray-900/5 p-5">
-      <p class="text-sm font-medium text-gray-500 mb-1">Listings</p>
-      <p class="text-3xl font-bold tabular-nums"><%= @total_listings %></p>
+  <h2 style="font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; color: #999; margin-bottom: 12px;">Content</h2>
+  <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px;">
+    <div style="background: #fff; border: 1px solid #e8e8e8; border-radius: 6px; padding: 20px;">
+      <div style="font-size: 13px; color: #888; margin-bottom: 4px;">Listings</div>
+      <div style="font-size: 32px; font-weight: 700; font-variant-numeric: tabular-nums;"><%= @total_listings %></div>
     </div>
-    <div class="rounded-lg bg-white shadow-sm ring-1 ring-gray-900/5 p-5">
-      <p class="text-sm font-medium text-gray-500 mb-1">Ads</p>
-      <p class="text-3xl font-bold tabular-nums"><%= @total_ads %></p>
+    <div style="background: #fff; border: 1px solid #e8e8e8; border-radius: 6px; padding: 20px;">
+      <div style="font-size: 13px; color: #888; margin-bottom: 4px;">Ads</div>
+      <div style="font-size: 32px; font-weight: 700; font-variant-numeric: tabular-nums;"><%= @total_ads %></div>
     </div>
-    <div class="rounded-lg bg-white shadow-sm ring-1 ring-gray-900/5 p-5">
-      <p class="text-sm font-medium text-gray-500 mb-1">Playlists</p>
-      <p class="text-3xl font-bold tabular-nums"><%= @total_playlists %></p>
+    <div style="background: #fff; border: 1px solid #e8e8e8; border-radius: 6px; padding: 20px;">
+      <div style="font-size: 13px; color: #888; margin-bottom: 4px;">Playlists</div>
+      <div style="font-size: 32px; font-weight: 700; font-variant-numeric: tabular-nums;"><%= @total_playlists %></div>
     </div>
-    <div class="rounded-lg bg-white shadow-sm ring-1 ring-gray-900/5 p-5">
-      <p class="text-sm font-medium text-gray-500 mb-1">Agents</p>
-      <p class="text-3xl font-bold tabular-nums"><%= Agent.count %></p>
+    <div style="background: #fff; border: 1px solid #e8e8e8; border-radius: 6px; padding: 20px;">
+      <div style="font-size: 13px; color: #888; margin-bottom: 4px;">Agents</div>
+      <div style="font-size: 32px; font-weight: 700; font-variant-numeric: tabular-nums;"><%= Agent.count %></div>
     </div>
   </div>
-</div>
+</section>
