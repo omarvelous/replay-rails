@@ -1,34 +1,86 @@
-<h1 class="text-2xl font-bold text-gray-900 mb-6">Platform Dashboard</h1>
+<header class="main-content__header">
+  <h1 class="main-content__page-title">Platform Dashboard</h1>
+</header>
 
-<div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
-  <div class="rounded-lg bg-white shadow-sm ring-1 ring-gray-900/5 p-5">
-    <p class="text-3xl font-bold tabular-nums"><%= @total_accounts %></p>
-    <p class="text-sm text-gray-500">Accounts</p>
+<section class="main-content__body">
+  <h2 style="font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; color: #999; margin-bottom: 12px;">Infrastructure</h2>
+  <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 32px;">
+    <div style="background: #fff; border: 1px solid #e8e8e8; border-radius: 6px; padding: 20px;">
+      <div style="font-size: 32px; font-weight: 700; font-variant-numeric: tabular-nums;"><%= @total_accounts %></div>
+      <div style="font-size: 13px; color: #888;">Accounts</div>
+    </div>
+    <div style="background: #fff; border: 1px solid #e8e8e8; border-radius: 6px; padding: 20px;">
+      <div style="font-size: 32px; font-weight: 700; font-variant-numeric: tabular-nums;">
+        <span style="color: #22c55e;"><%= @players_online %></span>
+        <span style="color: #ccc; font-size: 18px; font-weight: 500;">/ <%= @total_players %></span>
+      </div>
+      <div style="font-size: 13px; color: #888;">Players online</div>
+    </div>
+    <div style="background: #fff; border: 1px solid #e8e8e8; border-radius: 6px; padding: 20px;">
+      <div style="font-size: 32px; font-weight: 700; font-variant-numeric: tabular-nums;"><%= @total_screens %></div>
+      <div style="font-size: 13px; color: #888;">Screens</div>
+    </div>
+    <div style="background: #fff; border: 1px solid #e8e8e8; border-radius: 6px; padding: 20px;">
+      <div style="font-size: 32px; font-weight: 700; font-variant-numeric: tabular-nums;"><%= @total_qr_codes %></div>
+      <div style="font-size: 13px; color: #888;">QR Codes</div>
+    </div>
   </div>
-  <div class="rounded-lg bg-white shadow-sm ring-1 ring-gray-900/5 p-5">
-    <p class="text-3xl font-bold tabular-nums">
-      <span class="text-green-600"><%= @players_online %></span>
-      <span class="text-gray-400 text-lg">/ <%= @total_players %></span>
-    </p>
-    <p class="text-sm text-gray-500">Players online</p>
-  </div>
-  <div class="rounded-lg bg-white shadow-sm ring-1 ring-gray-900/5 p-5">
-    <p class="text-3xl font-bold tabular-nums"><%= @total_screens %></p>
-    <p class="text-sm text-gray-500">Screens</p>
-  </div>
-  <div class="rounded-lg bg-white shadow-sm ring-1 ring-gray-900/5 p-5">
-    <p class="text-3xl font-bold tabular-nums"><%= @total_qr_codes %></p>
-    <p class="text-sm text-gray-500">QR Codes</p>
-  </div>
-</div>
 
-<div class="grid grid-cols-2 md:grid-cols-3 gap-4">
-  <div class="rounded-lg bg-white shadow-sm ring-1 ring-gray-900/5 p-5">
-    <p class="text-3xl font-bold tabular-nums"><%= @total_scans %></p>
-    <p class="text-sm text-gray-500">Qualified scans (all time)</p>
+  <h2 style="font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; color: #999; margin-bottom: 12px;">Funnel</h2>
+  <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 16px;">
+    <div style="background: #fff; border: 1px solid #e8e8e8; border-radius: 6px; padding: 20px;">
+      <div style="font-size: 13px; color: #888; margin-bottom: 4px;">Impressions</div>
+      <div style="font-size: 32px; font-weight: 700; font-variant-numeric: tabular-nums;"><%= number_with_delimiter(@total_impressions) %></div>
+      <div style="font-size: 12px; color: #aaa; margin-top: 4px;"><%= number_with_delimiter(@impressions_today) %> today</div>
+    </div>
+    <div style="background: #fff; border: 1px solid #e8e8e8; border-radius: 6px; padding: 20px;">
+      <div style="font-size: 13px; color: #888; margin-bottom: 4px;">Scans</div>
+      <div style="font-size: 32px; font-weight: 700; font-variant-numeric: tabular-nums;"><%= number_with_delimiter(@total_scans) %></div>
+      <div style="font-size: 12px; color: #aaa; margin-top: 4px;"><%= @scans_today %> today</div>
+    </div>
+    <div style="background: #fff; border: 1px solid #e8e8e8; border-radius: 6px; padding: 20px;">
+      <div style="font-size: 13px; color: #888; margin-bottom: 4px;">Leads</div>
+      <div style="font-size: 32px; font-weight: 700; font-variant-numeric: tabular-nums;"><%= @total_leads %></div>
+      <div style="font-size: 12px; color: #aaa; margin-top: 4px;">
+        <%= @leads_this_week %> this week
+        <% if @leads_unread > 0 %>
+          <span style="background: #ef4444; color: #fff; font-size: 10px; padding: 1px 5px; border-radius: 8px; margin-left: 4px;"><%= @leads_unread %> new</span>
+        <% end %>
+      </div>
+    </div>
+    <div style="background: #fff; border: 1px solid #e8e8e8; border-radius: 6px; padding: 20px;">
+      <div style="font-size: 13px; color: #888; margin-bottom: 4px;">Conversion</div>
+      <div style="font-size: 32px; font-weight: 700; font-variant-numeric: tabular-nums;"><%= @total_scans > 0 ? number_to_percentage(@total_leads.to_f / @total_scans * 100, precision: 1) : "—" %></div>
+      <div style="font-size: 12px; color: #aaa; margin-top: 4px;">scan &rarr; lead</div>
+    </div>
   </div>
-  <div class="rounded-lg bg-white shadow-sm ring-1 ring-gray-900/5 p-5">
-    <p class="text-3xl font-bold tabular-nums"><%= @scans_today %></p>
-    <p class="text-sm text-gray-500">Scans today</p>
+
+  <div style="background: #fff; border: 1px solid #e8e8e8; border-radius: 6px; padding: 20px; margin-bottom: 32px;">
+    <div style="font-size: 14px; font-weight: 600; color: #333; margin-bottom: 12px;">Platform activity (30 days)</div>
+    <%= line_chart [
+      { name: "Impressions", data: Impression.where("created_at > ?", 30.days.ago).group_by_day(:created_at).count },
+      { name: "Scans", data: QrScan.qualified.where("created_at > ?", 30.days.ago).group_by_day(:created_at).count },
+      { name: "Leads", data: Lead.where("created_at > ?", 30.days.ago).group_by_day(:created_at).count }
+    ], library: { scales: { y: { beginAtZero: true } } } %>
   </div>
-</div>
+
+  <h2 style="font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; color: #999; margin-bottom: 12px;">Content</h2>
+  <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px;">
+    <div style="background: #fff; border: 1px solid #e8e8e8; border-radius: 6px; padding: 20px;">
+      <div style="font-size: 13px; color: #888; margin-bottom: 4px;">Listings</div>
+      <div style="font-size: 32px; font-weight: 700; font-variant-numeric: tabular-nums;"><%= @total_listings %></div>
+    </div>
+    <div style="background: #fff; border: 1px solid #e8e8e8; border-radius: 6px; padding: 20px;">
+      <div style="font-size: 13px; color: #888; margin-bottom: 4px;">Ads</div>
+      <div style="font-size: 32px; font-weight: 700; font-variant-numeric: tabular-nums;"><%= @total_ads %></div>
+    </div>
+    <div style="background: #fff; border: 1px solid #e8e8e8; border-radius: 6px; padding: 20px;">
+      <div style="font-size: 13px; color: #888; margin-bottom: 4px;">Playlists</div>
+      <div style="font-size: 32px; font-weight: 700; font-variant-numeric: tabular-nums;"><%= @total_playlists %></div>
+    </div>
+    <div style="background: #fff; border: 1px solid #e8e8e8; border-radius: 6px; padding: 20px;">
+      <div style="font-size: 13px; color: #888; margin-bottom: 4px;">Agents</div>
+      <div style="font-size: 32px; font-weight: 700; font-variant-numeric: tabular-nums;"><%= Agent.count %></div>
+    </div>
+  </div>
+</section>

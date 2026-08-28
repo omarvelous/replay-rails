@@ -25,7 +25,7 @@ Rails.application.routes.draw do
   # ---------------------------------------------------------------
   constraints subdomain: "app" do
     scope module: "app" do
-      root "home#index", as: :app_root
+      root "dashboard#show", as: :app_root
       resources :accounts, only: %i[ new create ]
       resources :sites
       resources :screens do

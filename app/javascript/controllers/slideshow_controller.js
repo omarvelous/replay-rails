@@ -6,6 +6,7 @@ export default class extends Controller {
   connect() {
     this.currentIndex = 0
     this.startProgress()
+    this.dispatchImpression()
   }
 
   disconnect() {
@@ -73,5 +74,22 @@ export default class extends Controller {
     }
 
     this.startProgress()
+    this.dispatchImpression()
+  }
+
+  dispatchImpression() {
+    const slide = this.slideTargets[this.currentIndex]
+    if (!slide.dataset.adId) return
+
+    this.element.dispatchEvent(
+      new CustomEvent("slideshow:impression", {
+        detail: {
+          adId: slide.dataset.adId,
+          position: slide.dataset.position,
+          duration: slide.dataset.duration
+        },
+        bubbles: true
+      })
+    )
   }
 }

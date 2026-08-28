@@ -224,6 +224,38 @@ end
 puts "Seeded #{Agent.count} agent(s)"
 
 # -----------------------------------------------------------------------
+# Listing Agents (assign agents to listings)
+# -----------------------------------------------------------------------
+if demo_account
+  jane_agent = Agent.find_by(account: demo_account, email: "jane.broker@example.com")
+  tom_agent = Agent.find_by(account: demo_account, email: "tom.realtor@example.com")
+  fifth_ave = Listing.find_by(account: demo_account, address: "350 Fifth Ave, New York, NY 10118")
+  w34th = Listing.find_by(account: demo_account, address: "20 W 34th St, New York, NY 10001")
+
+  if jane_agent && fifth_ave
+    unless ListingAgent.exists?(listing: fifth_ave, agent: jane_agent)
+      ListingAgent.create!(listing: fifth_ave, agent: jane_agent, role: "listing_agent", primary_at: Time.current)
+      puts "Assigned Jane Broker to 350 Fifth Ave (primary)"
+    end
+  end
+
+  if tom_agent && fifth_ave
+    unless ListingAgent.exists?(listing: fifth_ave, agent: tom_agent)
+      ListingAgent.create!(listing: fifth_ave, agent: tom_agent, role: "listing_agent")
+      puts "Assigned Tom Realtor to 350 Fifth Ave"
+    end
+  end
+
+  if jane_agent && w34th
+    unless ListingAgent.exists?(listing: w34th, agent: jane_agent)
+      ListingAgent.create!(listing: w34th, agent: jane_agent, role: "listing_agent", primary_at: Time.current)
+      puts "Assigned Jane Broker to 20 W 34th St (primary)"
+    end
+  end
+end
+puts "Seeded #{ListingAgent.count} listing agent(s)"
+
+# -----------------------------------------------------------------------
 # Ads (delegated types: ListingAd, CollectionAd, AgentAd, BrandAd)
 # -----------------------------------------------------------------------
 if demo_account
@@ -413,6 +445,32 @@ if demo_account
     )
     puts "Created demo lead: David Kim (seller inquiry, closed)"
   end
+  # Time-distributed leads for chart data (30 days)
+  if Lead.where(account: demo_account).count < 10
+    jane = Agent.find_by(account: demo_account, email: "jane.broker@example.com")
+    fifth_ave = Listing.find_by(account: demo_account, address: "350 Fifth Ave, New York, NY 10118")
+    names = [ "Alex Rivera", "Priya Patel", "Marcus Chen", "Olivia Brown", "James Wilson",
+             "Sofia Garcia", "Liam O'Brien", "Amara Okafor", "Noah Taylor", "Isla Nguyen",
+             "Ethan Roberts", "Maya Johansson" ]
+    types = Lead::TYPES
+    statuses = Lead::STATUSES
+
+    names.each_with_index do |name, i|
+      days_ago = rand(1..28)
+      lead = Lead.create!(
+        account: demo_account,
+        listing: [ fifth_ave, nil ].sample,
+        name: name,
+        email: "#{name.downcase.tr(" '", ".")}@example.com",
+        lead_type: types.sample,
+        status: statuses.sample,
+        message: [ "Interested in scheduling a viewing", "What's the asking price?", "Is this still available?", nil ].sample,
+        created_at: days_ago.days.ago + rand(8..20).hours
+      )
+      lead.lead_agents.create!(agent: jane) if jane && rand < 0.7
+    end
+    puts "Created #{names.size} time-distributed demo leads"
+  end
 end
 puts "Seeded #{Lead.count} lead(s)"
 
@@ -431,3 +489,90 @@ if demo_account && demo_user_record
   end
 end
 puts "Seeded #{Invite.count} invite(s)"
+
+# -----------------------------------------------------------------------
+# Impressions (last 30 days of simulated data)
+# -----------------------------------------------------------------------
+if demo_account && Impression.where(account: demo_account).empty?
+  screen = Screen.joins(:site).find_by(sites: { account_id: demo_account.id })
+  player = screen&.player
+  site = screen&.site
+  playlist = Playlist.find_by(account: demo_account, status: "published")
+  ads = Ad.where(account: demo_account).limit(5).to_a
+
+  if screen && player && site && ads.any?
+    impressions = []
+    now = Time.current
+
+    30.downto(1) do |days_ago|
+      date = days_ago.days.ago.to_date
+      # Simulate 8 hours of display (8am-4pm), 5 ads at ~10s each
+      daily_count = rand(200..400)
+      daily_count.times do
+        ad = ads.sample
+        playlist_ad = playlist&.playlist_ads&.find_by(ad: ad)
+        impressions << {
+          ad_id: ad.id,
+          screen_id: screen.id,
+          player_id: player.id,
+          site_id: site.id,
+          playlist_id: playlist&.id,
+          account_id: demo_account.id,
+          position: playlist_ad&.position || rand(1..5),
+          duration: playlist_ad&.duration || 10,
+          created_at: date + rand(8..16).hours + rand(0..59).minutes,
+          updated_at: now
+        }
+      end
+    end
+
+    Impression.insert_all(impressions)
+    puts "Created #{impressions.size} demo impressions (30 days)"
+  end
+end
+
+# -----------------------------------------------------------------------
+# QR Scans (last 30 days — ~1% of impressions convert to scans)
+# -----------------------------------------------------------------------
+if demo_account && QrScan.where(account: demo_account).empty?
+  screen = Screen.joins(:site).find_by(sites: { account_id: demo_account.id })
+  ads = Ad.where(account: demo_account).limit(5).to_a
+  qr_codes = QrCode.where(account: demo_account).to_a
+
+  if screen && ads.any? && qr_codes.any?
+    scans = []
+    now = Time.current
+
+    30.downto(1) do |days_ago|
+      date = days_ago.days.ago.to_date
+      daily_count = rand(2..8)
+      daily_count.times do
+        ad = ads.sample
+        qr_code = qr_codes.sample
+        scans << {
+          qr_code_id: qr_code.id,
+          account_id: demo_account.id,
+          ad_id: ad.id,
+          screen_id: screen.id,
+          ip_address: "192.168.1.#{rand(1..254)}",
+          user_agent: "Mozilla/5.0 (iPhone; CPU iPhone OS 17_0 like Mac OS X)",
+          created_at: date + rand(8..20).hours + rand(0..59).minutes,
+          updated_at: now
+        }
+      end
+    end
+
+    QrScan.insert_all(scans)
+    puts "Created #{scans.size} demo QR scans (30 days)"
+  end
+end
+
+# -----------------------------------------------------------------------
+# Metric Snapshots (rollup the demo data)
+# -----------------------------------------------------------------------
+if demo_account && MetricSnapshot.where(account: demo_account).empty?
+  30.downto(1) do |days_ago|
+    MetricsRollupJob.new.perform(days_ago.days.ago.to_date)
+  end
+  puts "Rolled up #{MetricSnapshot.count} metric snapshots (30 days)"
+end

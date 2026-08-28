@@ -11,6 +11,9 @@ module App
 
   def show
     authorize! @listing
+    ad_ids = @listing.ads.pluck(:id)
+    @impressions_count = ad_ids.any? ? Impression.where(ad_id: ad_ids).count : 0
+    @scans_count = @listing.qr_code&.scans&.qualified&.count || 0
   end
 
   def new
