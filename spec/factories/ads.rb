@@ -5,6 +5,6 @@ FactoryBot.define do
     layout { "hero" }
     theme { "dark" }
     account
-    adable factory: %i[listing_ad]
+    adable { association :listing_ad, listing: association(:listing, account: instance.account) }
   end
 end

@@ -1,6 +1,6 @@
 class Listing < ApplicationRecord
   has_paper_trail ignore: [ :updated_at ]
-  belongs_to :account
+  acts_as_tenant :account
   has_many_attached :photos do |attachable|
     attachable.variant :thumb, resize_to_fill: [ 400, 225 ]
     attachable.variant :card,  resize_to_fill: [ 800, 450 ]

@@ -20,9 +20,6 @@ RSpec.describe "Tenant scoping" do
         listing = Listing.create!(
           address: "123 Main St",
           price: 500_000,
-          bedrooms: 3,
-          bathrooms: 2,
-          sqft: 1500,
           status: "active"
         )
         expect(listing.account).to eq(account_a)
