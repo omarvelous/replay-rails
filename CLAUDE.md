@@ -78,11 +78,14 @@ Uses Rails 8 built-in authentication with a many-to-many Account-User relationsh
 
 `Current.account_user` is set on login/session resume and provides both the account context and the user's role within that account. `Current.account` delegates through it.
 
-All queries must be scoped through the current account:
+Tenant isolation is enforced at the model level via `acts_as_tenant :account`. When a tenant is set (authenticated controllers), all queries on scoped models are automatically filtered by account. No need to prefix with `Current.account.`:
+
 ```ruby
-Current.account.listings          # Correct
-Listing.all                       # Wrong — leaks data across tenants
+Listing.all                       # Automatically scoped to current tenant
+Listing.find(id)                  # Only finds within current tenant
 ```
+
+In contexts without a tenant (admin, public pages, background jobs), use `ActsAsTenant.without_tenant` or `ActsAsTenant.with_tenant(account)` blocks.
 
 ### Authorization (Action Policy)
 

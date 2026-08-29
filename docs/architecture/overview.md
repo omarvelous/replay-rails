@@ -22,21 +22,31 @@ No Redis. All infrastructure is DB-backed via the Solid trifecta.
 
 ## Multi-tenancy
 
-Every resource belongs to an `Account`. The `Current` object provides request-scoped context:
+Every resource belongs to an `Account`. Tenant isolation is enforced at two levels:
+
+1. **Model level** — `acts_as_tenant :account` on all tenant-scoped models automatically filters queries
+2. **Policy level** — Action Policy handles role-based access within the tenant
+
+The `Current` object provides request-scoped context:
 
 ```ruby
 Current.user     # The authenticated user
 Current.account  # The tenant (falls back to user's first account)
 ```
 
-All queries must scope through the account:
+When a tenant is set, queries are automatically scoped:
 
 ```ruby
-Current.account.listings  # Correct
-Listing.all               # Wrong — leaks data across tenants
+Listing.all      # Only returns listings for the current tenant
+Listing.find(id) # Only finds within the current tenant
 ```
 
-Authorization policies enforce this via `authorized_scope` in controllers.
+Cross-tenant access (admin panel, background jobs) uses explicit opt-out:
+
+```ruby
+ActsAsTenant.without_tenant { Listing.all }     # All tenants
+ActsAsTenant.with_tenant(account) { ... }       # Specific tenant
+```
 
 ## Core domain loop
 
