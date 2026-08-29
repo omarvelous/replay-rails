@@ -1,11 +1,6 @@
 class Lead < ApplicationRecord
   has_paper_trail ignore: [ :updated_at ]
   acts_as_tenant :account
-  belongs_to :listing, optional: true
-  belongs_to :qr_scan, optional: true
-
-  has_many :lead_agents, dependent: :destroy
-  has_many :agents, through: :lead_agents
 
   TYPES = %w[
     buyer_inquiry
@@ -17,6 +12,11 @@ class Lead < ApplicationRecord
   ].freeze
 
   STATUSES = %w[new contacted qualified closed].freeze
+
+  belongs_to :listing, optional: true
+  belongs_to :qr_scan, optional: true
+  has_many :lead_agents, dependent: :destroy
+  has_many :agents, through: :lead_agents
 
   validates :name, presence: true
   validates :email, presence: true, unless: -> { phone.present? }

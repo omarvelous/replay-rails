@@ -1,11 +1,10 @@
 class Invite < ApplicationRecord
   has_paper_trail ignore: [ :updated_at ]
   acts_as_tenant :account
-  belongs_to :invited_by, class_name: "User"
 
   ROLES = %w[manager agent].freeze
 
-  before_create :generate_token
+  belongs_to :invited_by, class_name: "User"
 
   normalizes :email, with: ->(e) { e.strip.downcase }
 
@@ -15,6 +14,8 @@ class Invite < ApplicationRecord
 
   scope :pending, -> { where(accepted_at: nil).where(created_at: 7.days.ago..) }
   scope :expired, -> { where(accepted_at: nil).where(created_at: ...7.days.ago) }
+
+  before_create :generate_token
 
   def pending?
     accepted_at.nil? && created_at > 7.days.ago

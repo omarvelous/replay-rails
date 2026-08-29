@@ -2,9 +2,8 @@ module Ads
 class AgentAd < ApplicationRecord
   LAYOUTS = %w[profile split].freeze
 
-  has_one :ad, as: :adable, dependent: :destroy, touch: true
-
   belongs_to :agent
+  has_one :ad, as: :adable, dependent: :destroy, touch: true
 
   validates :agent, presence: true
 
