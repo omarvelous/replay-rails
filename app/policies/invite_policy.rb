@@ -17,5 +17,4 @@ class InvitePolicy < ApplicationPolicy
   def update?
     user.nil? || user.email_address == record.email
   end
-
 end
