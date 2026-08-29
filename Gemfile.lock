@@ -77,6 +77,8 @@ GEM
       securerandom (>= 0.3)
       tzinfo (~> 2.0, >= 2.0.5)
       uri (>= 0.13.1)
+    acts_as_tenant (1.0.1)
+      rails (>= 6.0)
     addressable (2.9.0)
       public_suffix (>= 2.0.2, < 8.0)
     administrate (1.0.0)
@@ -483,6 +485,7 @@ PLATFORMS
 
 DEPENDENCIES
   action_policy
+  acts_as_tenant
   administrate
   administrate-field-active_storage
   bcrypt (~> 3.1.7)
