@@ -25,7 +25,7 @@ ready for a private beta.
 | API restructure | `play-to-api-refactor` | Split monolithic player API into `play` subdomain (HTML) and `api` subdomain (JSON). |
 | Documentation | `documentation` #23 | In-app docs system (Docs::Manifest, Docs::PagesController), 12 developer docs, 10 user-facing doc pages, repo reorg. |
 | Tenant scoping | `tenant-scoping` | `acts_as_tenant` on 11 models for automatic query scoping. Simplified policy scopes. Cross-tenant access via `without_tenant` for admin and jobs. |
-| Code organization | `code-organization` | In progress — file structure standards for models, controllers, routes, policies, specs, factories, Gemfile. |
+| Code organization | `code-organization` | File structure standard for 7 file types. Audited and fixed all models, controllers, routes, policies, factories, Gemfile. Contributing guide. |
 
 ---
 
