@@ -1,6 +1,6 @@
 class Lead < ApplicationRecord
   has_paper_trail ignore: [ :updated_at ]
-  belongs_to :account
+  acts_as_tenant :account
   belongs_to :listing, optional: true
   belongs_to :qr_scan, optional: true
 

@@ -8,10 +8,11 @@ Every feature follows a consistent lifecycle from draft to shipped. Documentatio
 
 Before writing any code:
 
-1. **Promote the plan** — move from `drafts/` to `.claude/plans/` with a timestamp prefix
-2. **Create a branch** — named after the feature
+1. **Create a branch** — named after the feature
+2. **Promote the plan** — move from `drafts/` to `.claude/plans/` with a timestamp prefix
 3. **Review the plan** — check if anything has changed since drafting (new models, renamed concepts, shipped dependencies)
 4. **Update the roadmap** — mark the item as "In progress" in `.claude/product/roadmap.md`
+5. **Commit** — the plan promotion and roadmap update are the first commit on the branch
 
 ## During work
 

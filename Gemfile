@@ -60,6 +60,7 @@ gem "rack-attack"
 gem "rack-cors"
 gem "chartkick"
 gem "paper_trail"
+gem "acts_as_tenant"
 gem "groupdate"
 
 group :development, :test do

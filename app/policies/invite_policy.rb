@@ -17,8 +17,4 @@ class InvitePolicy < ApplicationPolicy
   def update?
     user.nil? || user.email_address == record.email
   end
-
-  scope_for :active_record_relation do |relation|
-    relation.where(account: account)
-  end
 end

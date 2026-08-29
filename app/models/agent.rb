@@ -1,6 +1,6 @@
 class Agent < ApplicationRecord
   has_paper_trail ignore: [ :updated_at ]
-  belongs_to :account
+  acts_as_tenant :account
   belongs_to :user, optional: true
 
   has_one_attached :photo do |attachable|

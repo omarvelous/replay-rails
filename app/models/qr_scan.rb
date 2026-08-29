@@ -1,6 +1,6 @@
 class QrScan < ApplicationRecord
   belongs_to :qr_code
-  belongs_to :account
+  acts_as_tenant :account
   belongs_to :ad, optional: true
   belongs_to :screen, optional: true
 

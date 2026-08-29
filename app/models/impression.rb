@@ -4,5 +4,5 @@ class Impression < ApplicationRecord
   belongs_to :player
   belongs_to :site
   belongs_to :playlist, optional: true
-  belongs_to :account
+  acts_as_tenant :account
 end

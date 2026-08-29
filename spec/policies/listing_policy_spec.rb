@@ -67,11 +67,13 @@ RSpec.describe ListingPolicy do
     end
 
     it "excludes listings from other accounts" do
-      other_account_listing = create(:listing)
+      other_account_listing = ActsAsTenant.without_tenant { create(:listing) }
       manager = create(:user, account: account, role: "manager")
-      scope = described_class.new(own_listing, user: manager, account: account)
-                             .apply_scope(Listing.all, type: :active_record_relation)
-      expect(scope).not_to include(other_account_listing)
+      ActsAsTenant.with_tenant(account) do
+        scope = described_class.new(own_listing, user: manager, account: account)
+                               .apply_scope(Listing.all, type: :active_record_relation)
+        expect(scope).not_to include(other_account_listing)
+      end
     end
   end
 end

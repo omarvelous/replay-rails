@@ -1,6 +1,6 @@
 class Site < ApplicationRecord
   has_paper_trail ignore: [ :updated_at ]
-  belongs_to :account
+  acts_as_tenant :account
 
   has_one_attached :photo do |attachable|
     attachable.variant :thumb, resize_to_fill: [ 400, 225 ]
