@@ -1,11 +1,13 @@
 class MetricsRollupJob < ApplicationJob
   def perform(date = Date.yesterday)
-    range = date.beginning_of_day..date.end_of_day
-    now = Time.current
+    ActsAsTenant.without_tenant do
+      range = date.beginning_of_day..date.end_of_day
+      now = Time.current
 
-    bulk_insert("impressions", Impression.where(created_at: range).group(:account_id).count, range, now)
-    bulk_insert("scans", QrScan.qualified.where(created_at: range).group(:account_id).count, range, now)
-    bulk_insert("leads", Lead.where(created_at: range).group(:account_id).count, range, now)
+      bulk_insert("impressions", Impression.where(created_at: range).group(:account_id).count, range, now)
+      bulk_insert("scans", QrScan.qualified.where(created_at: range).group(:account_id).count, range, now)
+      bulk_insert("leads", Lead.where(created_at: range).group(:account_id).count, range, now)
+    end
   end
 
   private
