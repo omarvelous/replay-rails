@@ -4,12 +4,11 @@ class LeadPolicy < ApplicationPolicy
   def destroy? = user.can_manage?(account)
 
   scope_for :active_record_relation do |relation|
-    base = relation.where(account: account)
     if user.can_manage?(account)
-      base
+      relation
     else
-      base.joins(:lead_agents)
-          .where(lead_agents: { agent_id: user.agent_profile&.id })
+      relation.joins(:lead_agents)
+              .where(lead_agents: { agent_id: user.agent_profile&.id })
     end
   end
 

@@ -10,6 +10,6 @@ class ApplicationPolicy < ActionPolicy::Base
   def destroy? = user&.can_manage?(account)
 
   scope_for :active_record_relation do |relation|
-    relation.where(account: account)
+    relation
   end
 end
