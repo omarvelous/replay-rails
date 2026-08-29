@@ -1,5 +1,5 @@
 class QrCode < ApplicationRecord
-  belongs_to :account
+  acts_as_tenant :account
   belongs_to :destination_record, polymorphic: true, optional: true
 
   has_many :scans, class_name: "QrScan", dependent: :destroy
