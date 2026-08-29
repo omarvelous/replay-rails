@@ -2,10 +2,6 @@ module Play
   class PlayersController < Play::BaseController
     before_action :authenticate_player!, only: :show
 
-    # GET /players/new — pairing screen
-    def new
-    end
-
     # GET /players/:token — playback content
     def show
       @screen = @player.screen
@@ -21,6 +17,10 @@ module Play
       else
         render :idle
       end
+    end
+
+    # GET /players/new — pairing screen
+    def new
     end
   end
 end
