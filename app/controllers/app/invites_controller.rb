@@ -9,27 +9,6 @@ module App
       @pagy, @invites = pagy(authorized_scope(Invite.all).order(created_at: :desc))
     end
 
-    # GET /invites/new
-    def new
-      @invite = Invite.new(account: Current.account, role: "agent")
-      authorize! @invite
-    end
-
-    # POST /invites
-    def create
-      @invite = Invite.new(invite_params)
-      @invite.account = Current.account
-      @invite.invited_by = Current.user
-      authorize! @invite
-
-      if @invite.save
-        InviteMailer.invite(@invite).deliver_later
-        redirect_to invites_path, notice: "Invite sent to #{@invite.email}."
-      else
-        render :new, status: :unprocessable_content
-      end
-    end
-
     # GET /invites/:token — accept page
     def show
       authorize! @invite
@@ -51,6 +30,27 @@ module App
       end
 
       @user = User.new
+    end
+
+    # GET /invites/new
+    def new
+      @invite = Invite.new(account: Current.account, role: "agent")
+      authorize! @invite
+    end
+
+    # POST /invites
+    def create
+      @invite = Invite.new(invite_params)
+      @invite.account = Current.account
+      @invite.invited_by = Current.user
+      authorize! @invite
+
+      if @invite.save
+        InviteMailer.invite(@invite).deliver_later
+        redirect_to invites_path, notice: "Invite sent to #{@invite.email}."
+      else
+        render :new, status: :unprocessable_content
+      end
     end
 
     # PATCH /invites/:token — register + accept
@@ -87,13 +87,6 @@ module App
       @invite = Invite.find_by!(token: params[:token])
     end
 
-    def require_authentication_for_existing_users
-      return if Current.user
-      return unless User.exists?(email_address: @invite.email)
-
-      require_authentication
-    end
-
     def invite_params
       permitted = params.require(:invite).permit(:email, :invited_role)
       permitted[:role] = permitted.delete(:invited_role) if permitted[:invited_role]
@@ -105,6 +98,13 @@ module App
         :first_name, :last_name, :phone,
         :password, :password_confirmation
       )
+    end
+
+    def require_authentication_for_existing_users
+      return if Current.user
+      return unless User.exists?(email_address: @invite.email)
+
+      require_authentication
     end
   end
 end

@@ -11,9 +11,8 @@ class ListingAd < ApplicationRecord
     "coming_soon"     => "Coming Soon"
   }.freeze
 
-  has_one :ad, as: :adable, dependent: :destroy, touch: true
-
   belongs_to :listing
+  has_one :ad, as: :adable, dependent: :destroy, touch: true
 
   validates :badge, inclusion: { in: BADGES }
   validates :listing, presence: true

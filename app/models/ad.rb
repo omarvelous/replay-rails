@@ -3,16 +3,16 @@ class Ad < ApplicationRecord
   acts_as_tenant :account
   delegated_type :adable, types: %w[Ads::ListingAd Ads::CollectionAd Ads::AgentAd Ads::BrandAd], dependent: :destroy
 
-  has_one_attached :image do |attachable|
-    attachable.variant :thumb,   resize_to_fill: [ 400, 225 ]
-    attachable.variant :preview, resize_to_fill: [ 1920, 1080 ]
-  end
+  THEMES = %w[dark light brand].freeze
 
   has_many :playlist_ads, dependent: :destroy
   has_many :playlists, through: :playlist_ads
   has_many :collection_ad_ads, class_name: "Ads::CollectionAdAd", dependent: :restrict_with_error
 
-  THEMES = %w[dark light brand].freeze
+  has_one_attached :image do |attachable|
+    attachable.variant :thumb,   resize_to_fill: [ 400, 225 ]
+    attachable.variant :preview, resize_to_fill: [ 1920, 1080 ]
+  end
 
   validates :headline, presence: true
   validates :theme, inclusion: { in: THEMES }

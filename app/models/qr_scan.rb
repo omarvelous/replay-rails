@@ -1,11 +1,11 @@
 class QrScan < ApplicationRecord
-  belongs_to :qr_code
   acts_as_tenant :account
-  belongs_to :ad, optional: true
-  belongs_to :screen, optional: true
 
   store_accessor :context, :playlist_id, :slide_position
 
+  belongs_to :qr_code
+  belongs_to :ad, optional: true
+  belongs_to :screen, optional: true
   has_many :leads
 
   scope :qualified, -> { where.not(ad_id: nil).where.not(screen_id: nil) }

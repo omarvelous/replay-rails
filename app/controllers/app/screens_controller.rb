@@ -55,15 +55,6 @@ module App
 
   private
 
-    def current_site
-      @current_site ||= Current.account.sites.find(params[:site_id]) if params[:site_id]
-    end
-    helper_method :current_site
-
-    def scope
-      current_site&.screens || Current.account.screens
-    end
-
     def set_screen
       @screen = Current.account.screens.find(params[:id])
       @site = @screen.site
@@ -71,6 +62,15 @@ module App
 
     def screen_params
       params.require(:screen).permit(:name, :orientation)
+    end
+
+    def current_site
+      @current_site ||= Current.account.sites.find(params[:site_id]) if params[:site_id]
+    end
+    helper_method :current_site
+
+    def scope
+      current_site&.screens || Current.account.screens
     end
   end
 end

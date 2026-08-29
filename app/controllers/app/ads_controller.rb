@@ -34,15 +34,15 @@ module App
     end
   end
 
-  def preview
-    authorize! @ad, to: :show?
-    render layout: "preview"
-  end
-
   def destroy
     authorize! @ad
     @ad.destroy
     redirect_to ads_path, notice: t(".success")
+  end
+
+  def preview
+    authorize! @ad, to: :show?
+    render layout: "preview"
   end
 
   private

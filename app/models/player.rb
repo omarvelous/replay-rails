@@ -5,10 +5,10 @@ class Player < ApplicationRecord
   has_one  :active_assignment, -> { active }, class_name: "ScreenPlayer"
   has_one  :screen, through: :active_assignment
 
+  validates :token, uniqueness: true
+
   before_validation :generate_token, on: :create
   before_validation :generate_pairing_code, on: :create
-
-  validates :token, uniqueness: true
 
   def paired?
     active_assignment.present?

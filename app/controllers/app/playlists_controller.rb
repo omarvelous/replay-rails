@@ -46,16 +46,16 @@ module App
     end
   end
 
-  def preview
-    authorize! @playlist, to: :show?
-    @playlist_ads = @playlist.playlist_ads.includes(:ad)
-    render layout: "preview"
-  end
-
   def destroy
     authorize! @playlist
     @playlist.destroy
     redirect_to playlists_path, notice: t(".success")
+  end
+
+  def preview
+    authorize! @playlist, to: :show?
+    @playlist_ads = @playlist.playlist_ads.includes(:ad)
+    render layout: "preview"
   end
 
   private

@@ -1,7 +1,7 @@
 FactoryBot.define do
   factory :site do
+    account
     name { Faker::Company.name }
     address { Faker::Address.full_address }
-    account
   end
 end

@@ -488,7 +488,7 @@ DEPENDENCIES
   acts_as_tenant
   administrate
   administrate-field-active_storage
-  bcrypt (~> 3.1.7)
+  bcrypt (~> 3.1)
   bootsnap
   brakeman
   bundler-audit
