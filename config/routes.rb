@@ -12,13 +12,13 @@ Rails.application.routes.draw do
       get "/about",    to: "pages#about",    as: :about
     end
 
-    # Documentation — own module, public
+    # Documentation
     scope module: "docs" do
       get "/docs",       to: "pages#index", as: :docs
       get "/docs/*slug", to: "pages#show",  as: :doc
     end
 
-    # Public destination pages (consumer-facing, marketing domain)
+    # Consumer-facing landing pages
     namespace :go do
       resources :listings, only: :show
       resources :agents, only: :show
@@ -32,39 +32,49 @@ Rails.application.routes.draw do
   constraints subdomain: "app" do
     scope module: "app" do
       root "dashboard#show", as: :app_root
-      resources :accounts, only: %i[ new create ]
-      resources :sites
-      resources :screens do
-        resource :screen_playlist, only: %i[ new create destroy ]
-        resource :screen_player, only: %i[ new create destroy ]
-      end
+
+      # Auth
+      resource :session
+      resources :passwords, param: :token
+      resources :accounts, only: %i[new create]
+
+      # Content
       resources :listings do
-        resources :listing_agents, only: %i[ new create edit update destroy ]
+        resources :listing_agents, only: %i[new create edit update destroy]
       end
       resources :agents
       namespace :ads do
-        resources :listing_ads,    only: %i[ new create edit update ]
-        resources :collection_ads, only: %i[ new create edit update ]
-        resources :agent_ads,      only: %i[ new create edit update ]
-        resources :brand_ads,      only: %i[ new create edit update ]
+        resources :listing_ads,    only: %i[new create edit update]
+        resources :collection_ads, only: %i[new create edit update]
+        resources :agent_ads,      only: %i[new create edit update]
+        resources :brand_ads,      only: %i[new create edit update]
       end
-      resources :ads, only: %i[ index new show edit update destroy ] do
+      resources :ads, only: %i[index new show edit update destroy] do
         member { get :preview }
+      end
+
+      # Playback
+      resources :sites
+      resources :screens do
+        resource :screen_playlist, only: %i[new create destroy]
+        resource :screen_player, only: %i[new create destroy]
       end
       resources :playlists do
         member { get :preview }
-        resources :playlist_ads, only: %i[ new create edit update destroy ]
+        resources :playlist_ads, only: %i[new create edit update destroy]
       end
-      resources :qr_codes, only: %i[ index show ] do
+
+      # Engagement
+      resources :qr_codes, only: %i[index show] do
         resources :scans, controller: "qr_scans", only: :index
       end
-      resources :leads, only: %i[ index show update ] do
-        resources :lead_agents, only: %i[ new create ]
+      resources :leads, only: %i[index show update] do
+        resources :lead_agents, only: %i[new create]
       end
-      resources :users, only: %i[ index show ]
-      resources :invites, param: :token, only: %i[ index new create show update destroy ]
-      resource :session
-      resources :passwords, param: :token
+
+      # Team
+      resources :users, only: %i[index show]
+      resources :invites, param: :token, only: %i[index new create show update destroy]
     end
   end
 
@@ -74,21 +84,31 @@ Rails.application.routes.draw do
   constraints subdomain: "admin" do
     scope module: "admin", as: "admin" do
       root "dashboard#show", as: :root
+
+      # Content
       resources :accounts
-      resources :users
-      resources :sites
-      resources :players
-      resources :screens
       resources :listings
       resources :agents
       resources :ads
+
+      # Playback
+      resources :sites
+      resources :screens
+      resources :players
       resources :playlists
+
+      # Engagement
       resources :qr_codes
       resources :qr_scans
       resources :leads
       resources :lead_agents
+
+      # Team
+      resources :users
       resources :account_users
       resources :invites
+
+      # Audit
       namespace :paper_trail do
         resources :versions, only: :index
       end
@@ -100,10 +120,10 @@ Rails.application.routes.draw do
   # ---------------------------------------------------------------
   constraints subdomain: "api" do
     scope module: "api" do
-      resources :players, param: :token, only: [ :create, :show ] do
+      resources :players, param: :token, only: %i[create show] do
         scope module: "players" do
-          resource :heartbeat, only: [ :create ]
-          resources :impressions, only: [ :create ]
+          resource :heartbeat, only: :create
+          resources :impressions, only: :create
         end
       end
     end
@@ -114,7 +134,7 @@ Rails.application.routes.draw do
   # ---------------------------------------------------------------
   constraints subdomain: "play" do
     scope module: "play" do
-      resources :players, param: :token, only: [ :new, :show ]
+      resources :players, param: :token, only: %i[new show]
     end
   end
 
