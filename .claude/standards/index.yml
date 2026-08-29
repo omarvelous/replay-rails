@@ -41,6 +41,9 @@ standards:
     - id: code-organization/patterns
       file: code-organization/patterns.md
       summary: "Thin controllers, concerns, service objects, naming conventions, and tenant scoping"
+    - id: code-organization/file-structure
+      file: code-organization/file-structure.md
+      summary: "Canonical ordering for models, controllers, routes, policies, specs, factories, and Gemfile"
 
   error-handling:
     - id: error-handling/conventions

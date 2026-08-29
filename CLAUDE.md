@@ -126,6 +126,7 @@ This project follows documented standards in `.claude/standards/`. See `.claude/
 | Makefile | `.claude/standards/tooling/makefile.md` | Use make targets instead of raw docker compose commands |
 | Security & Environment | `.claude/standards/security/environment.md` | CSP, parameter filtering, env vars, rate limiting, HTTPS |
 | Code Organization | `.claude/standards/code-organization/patterns.md` | Thin controllers, concerns, service objects, naming, tenant scoping |
+| File Structure | `.claude/standards/code-organization/file-structure.md` | Canonical ordering for models, controllers, routes, policies, specs, factories, Gemfile |
 | Error Handling | `.claude/standards/error-handling/conventions.md` | Flash messages, rescue_from, form validation, logging, error pages |
 | Work Lifecycle | `.claude/standards/git/work-lifecycle.md` | Promote plan, update roadmap/docs before and after every feature |
 
