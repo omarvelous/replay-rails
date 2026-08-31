@@ -111,7 +111,7 @@ projects:
             runtime: docker
             plan: 0.5c-1g
             region: ohio
-            branch: main
+            branch: staging
             healthCheckPath: /up
             envVars:
               - key: RAILS_ENV
@@ -132,7 +132,7 @@ projects:
             runtime: docker
             plan: 0.5c-1g
             region: ohio
-            branch: main
+            branch: staging
             dockerCommand: bundle exec rake solid_queue:start
             envVars:
               - key: RAILS_ENV
