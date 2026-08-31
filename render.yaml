@@ -34,7 +34,7 @@ projects:
           - type: web
             name: replay-web
             runtime: docker
-            plan: 0.5c-1g
+            plan: 0.5c-512mb
             region: ohio
             branch: main
             healthCheckPath: /up
@@ -57,13 +57,13 @@ projects:
                 - Gemfile*
                 - Dockerfile
             previews:
-              plan: 0.5c-1g
+              plan: 0.5c-512mb
               generation: manual
 
           - type: worker
             name: replay-worker
             runtime: docker
-            plan: 0.5c-1g
+            plan: 0.5c-512mb
             region: ohio
             branch: main
             dockerCommand: bundle exec rake solid_queue:start
@@ -109,7 +109,7 @@ projects:
           - type: web
             name: replay-staging-web
             runtime: docker
-            plan: 0.5c-1g
+            plan: 0.5c-512mb
             region: ohio
             branch: staging
             healthCheckPath: /up
@@ -124,13 +124,13 @@ projects:
                 value: replay-staging
               - fromGroup: replay-staging-shared
             previews:
-              plan: 0.5c-1g
+              plan: 0.5c-512mb
               generation: automatic
 
           - type: worker
             name: replay-staging-worker
             runtime: docker
-            plan: 0.5c-1g
+            plan: 0.5c-512mb
             region: ohio
             branch: staging
             dockerCommand: bundle exec rake solid_queue:start
