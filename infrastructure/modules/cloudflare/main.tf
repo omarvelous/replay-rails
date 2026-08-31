@@ -1,3 +1,12 @@
+terraform {
+  required_providers {
+    cloudflare = {
+      source  = "cloudflare/cloudflare"
+      version = "~> 5.0"
+    }
+  }
+}
+
 # ── DNS Records ─────────────────────────────────────
 
 # Root domain → Render
@@ -7,6 +16,7 @@ resource "cloudflare_dns_record" "root" {
   content = var.render_cname
   type    = "CNAME"
   proxied = true
+  ttl     = 1
 }
 
 # Subdomains → Render (app, admin, play, api)
@@ -18,6 +28,7 @@ resource "cloudflare_dns_record" "subdomains" {
   content = var.render_cname
   type    = "CNAME"
   proxied = true
+  ttl     = 1
 }
 
 # ── SSL / Security Settings ─────────────────────────
