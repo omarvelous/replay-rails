@@ -1,3 +1,7 @@
+previews:
+  generation: automatic
+  expireAfterDays: 3
+
 projects:
   - name: replay
     environments:
@@ -138,6 +142,3 @@ projects:
                   name: replay-staging-db
                   property: connectionString
               - fromGroup: replay-staging-shared
-
-    previewsEnabled: true
-    previewsExpireAfterDays: 3
