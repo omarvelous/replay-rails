@@ -1,0 +1,143 @@
+projects:
+  - name: replay
+    environments:
+      # ── Production ──────────────────────────────────
+      - name: production
+        databases:
+          - name: replay-db
+            plan: starter
+            databaseName: replay_production
+            user: replay
+            region: ohio
+
+        envVarGroups:
+          - name: replay-shared
+            envVars:
+              - key: RAILS_LOG_TO_STDOUT
+                value: "true"
+              - key: RAILS_SERVE_STATIC_FILES
+                value: "true"
+              - key: RAILS_MASTER_KEY
+                sync: false
+              - key: R2_ACCESS_KEY_ID
+                sync: false
+              - key: R2_SECRET_ACCESS_KEY
+                sync: false
+              - key: R2_ENDPOINT
+                sync: false
+
+        services:
+          - type: web
+            name: replay-web
+            runtime: docker
+            plan: starter
+            region: ohio
+            branch: main
+            healthCheckPath: /up
+            envVars:
+              - key: RAILS_ENV
+                value: production
+              - key: DATABASE_URL
+                fromDatabase:
+                  name: replay-db
+                  property: connectionString
+              - key: R2_BUCKET
+                value: replay-production
+              - fromGroup: replay-shared
+            buildFilter:
+              paths:
+                - app/**
+                - config/**
+                - db/**
+                - lib/**
+                - Gemfile*
+                - Dockerfile
+            previews:
+              plan: starter
+              generation: manual
+
+          - type: worker
+            name: replay-worker
+            runtime: docker
+            plan: starter
+            region: ohio
+            branch: main
+            dockerCommand: bundle exec rake solid_queue:start
+            envVars:
+              - key: RAILS_ENV
+                value: production
+              - key: DATABASE_URL
+                fromDatabase:
+                  name: replay-db
+                  property: connectionString
+              - fromGroup: replay-shared
+
+        networking:
+          isolation: enabled
+
+      # ── Staging ─────────────────────────────────────
+      - name: staging
+        databases:
+          - name: replay-staging-db
+            plan: starter
+            databaseName: replay_staging
+            user: replay
+            region: ohio
+            previewPlan: starter
+
+        envVarGroups:
+          - name: replay-staging-shared
+            envVars:
+              - key: RAILS_LOG_TO_STDOUT
+                value: "true"
+              - key: RAILS_SERVE_STATIC_FILES
+                value: "true"
+              - key: RAILS_MASTER_KEY
+                sync: false
+              - key: R2_ACCESS_KEY_ID
+                sync: false
+              - key: R2_SECRET_ACCESS_KEY
+                sync: false
+              - key: R2_ENDPOINT
+                sync: false
+
+        services:
+          - type: web
+            name: replay-staging-web
+            runtime: docker
+            plan: starter
+            region: ohio
+            branch: staging
+            healthCheckPath: /up
+            envVars:
+              - key: RAILS_ENV
+                value: staging
+              - key: DATABASE_URL
+                fromDatabase:
+                  name: replay-staging-db
+                  property: connectionString
+              - key: R2_BUCKET
+                value: replay-staging
+              - fromGroup: replay-staging-shared
+            previews:
+              plan: starter
+              generation: automatic
+
+          - type: worker
+            name: replay-staging-worker
+            runtime: docker
+            plan: starter
+            region: ohio
+            branch: staging
+            dockerCommand: bundle exec rake solid_queue:start
+            envVars:
+              - key: RAILS_ENV
+                value: staging
+              - key: DATABASE_URL
+                fromDatabase:
+                  name: replay-staging-db
+                  property: connectionString
+              - fromGroup: replay-staging-shared
+
+    previewsEnabled: true
+    previewsExpireAfterDays: 3

@@ -26,6 +26,7 @@ gem "rack-attack"
 # ── Content & Media ───────────────────────────────────
 gem "chartkick"
 gem "groupdate"
+gem "aws-sdk-s3", require: false
 gem "image_processing", "~> 2.0"
 gem "pagy", "~> 43.6"
 gem "paper_trail"
