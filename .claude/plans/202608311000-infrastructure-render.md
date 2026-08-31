@@ -1,4 +1,4 @@
-# Plan: Infrastructure with Render (Draft)
+# Plan: Infrastructure with Render
 
 ## Goal
 
