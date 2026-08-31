@@ -9,7 +9,7 @@ projects:
       - name: production
         databases:
           - name: replay-db
-            plan: starter
+            plan: 0.5c-1g
             databaseName: replay_production
             user: replay
             region: ohio
@@ -34,7 +34,7 @@ projects:
           - type: web
             name: replay-web
             runtime: docker
-            plan: starter
+            plan: 0.5c-1g
             region: ohio
             branch: main
             healthCheckPath: /up
@@ -57,13 +57,13 @@ projects:
                 - Gemfile*
                 - Dockerfile
             previews:
-              plan: starter
+              plan: 0.5c-1g
               generation: manual
 
           - type: worker
             name: replay-worker
             runtime: docker
-            plan: starter
+            plan: 0.5c-1g
             region: ohio
             branch: main
             dockerCommand: bundle exec rake solid_queue:start
@@ -83,11 +83,11 @@ projects:
       - name: staging
         databases:
           - name: replay-staging-db
-            plan: starter
+            plan: 0.5c-1g
             databaseName: replay_staging
             user: replay
             region: ohio
-            previewPlan: starter
+            previewPlan: 0.1c-256mb
 
         envVarGroups:
           - name: replay-staging-shared
@@ -109,7 +109,7 @@ projects:
           - type: web
             name: replay-staging-web
             runtime: docker
-            plan: starter
+            plan: 0.5c-1g
             region: ohio
             branch: staging
             healthCheckPath: /up
@@ -124,13 +124,13 @@ projects:
                 value: replay-staging
               - fromGroup: replay-staging-shared
             previews:
-              plan: starter
+              plan: 0.5c-1g
               generation: automatic
 
           - type: worker
             name: replay-staging-worker
             runtime: docker
-            plan: starter
+            plan: 0.5c-1g
             region: ohio
             branch: staging
             dockerCommand: bundle exec rake solid_queue:start
