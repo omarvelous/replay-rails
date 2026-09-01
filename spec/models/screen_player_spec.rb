@@ -28,5 +28,12 @@ RSpec.describe ScreenPlayer do
       expect(sp.active).to be false
       expect(sp.unpaired_at).to be_present
     end
+
+    it "broadcasts an unpaired event to the screen channel" do
+      sp = create(:screen_player)
+      expect(ActionCable.server).to receive(:broadcast)
+        .with("screen_#{sp.screen_id}", { event: "unpaired" })
+      sp.unpair!
+    end
   end
 end
