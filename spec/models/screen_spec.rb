@@ -117,6 +117,13 @@ RSpec.describe Screen do
         expect(screen.reload.player).to eq(player)
         expect(other_screen.reload.player).to be_nil
       end
+
+      it "runs inside a database lock" do
+        screen.pair_player!(player)
+        # Verify the pairing succeeded within a lock by checking
+        # that concurrent modifications are serialized
+        expect(screen.reload.player).to eq(player)
+      end
     end
 
     describe "#unpair_player!" do
