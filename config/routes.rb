@@ -54,6 +54,7 @@ Rails.application.routes.draw do
       end
 
       # Playback
+      resource :pair, only: %i[show create], controller: "pairings"
       resources :sites
       resources :screens do
         resource :screen_playlist, only: %i[new create destroy]

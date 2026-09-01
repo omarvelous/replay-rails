@@ -45,7 +45,18 @@ RSpec.describe "Api::Players" do
   describe "POST /players/:token/pairing_code" do
     let(:player) { create(:player) }
 
-    it "generates a new pairing code for an existing player" do
+    it "returns the existing code if still valid" do
+      existing_code = player.pairing_code
+
+      post "/players/#{player.token}/pairing_code", as: :json
+
+      expect(response).to have_http_status(:created)
+      expect(response.parsed_body["pairing_code"]).to eq(existing_code)
+      expect(response.parsed_body["expires_in"]).to be_between(1, 600)
+    end
+
+    it "generates a new code if the current one has expired" do
+      player.update!(pairing_code_expires_at: 1.minute.ago)
       old_code = player.pairing_code
 
       post "/players/#{player.token}/pairing_code", as: :json
