@@ -1,14 +1,14 @@
 import { Controller } from "@hotwired/stimulus"
 import consumer from "channels/consumer"
+import QrCreator from "qr-creator"
 
 export default class extends Controller {
-  static values = { apiHost: String }
+  static values = { apiHost: String, pairHost: String }
 
   async connect() {
     const existingToken = localStorage.getItem("player_token")
 
     if (existingToken) {
-      // Check if already paired — skip pairing screen entirely
       const alreadyPaired = await this.checkIfPaired(existingToken)
       if (alreadyPaired) return
 
@@ -40,7 +40,7 @@ export default class extends Controller {
     this.token = data.token
     this.pairingCode = data.pairing_code
     localStorage.setItem("player_token", this.token)
-    this.element.querySelector("[data-code]").textContent = data.pairing_code
+    this.displayCode(data.pairing_code)
   }
 
   async checkIfPaired(token) {
@@ -69,11 +69,28 @@ export default class extends Controller {
       const data = await res.json()
       this.token = token
       this.pairingCode = data.pairing_code
-      this.element.querySelector("[data-code]").textContent = data.pairing_code
+      this.displayCode(data.pairing_code)
     } else {
-      // Token invalid — register fresh
       localStorage.removeItem("player_token")
       await this.registerNewPlayer()
+    }
+  }
+
+  displayCode(code) {
+    this.element.querySelector("[data-code]").textContent = code
+
+    const qrContainer = this.element.querySelector("[data-qr]")
+    if (qrContainer) {
+      qrContainer.innerHTML = ""
+      const pairUrl = `${this.pairHostValue}/pair?code=${code}`
+      QrCreator.render({
+        text: pairUrl,
+        radius: 0,
+        ecLevel: "M",
+        fill: "#000",
+        background: "#fff",
+        size: 120
+      }, qrContainer)
     }
   }
 

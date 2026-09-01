@@ -1,8 +1,16 @@
 <div class="flex flex-col items-center justify-center h-screen text-white gap-8"
      data-controller="device-pairing"
-     data-device-pairing-api-host-value="<%= request.protocol %>api.<%= request.domain %><%= ":#{request.port}" unless request.port == 80 || request.port == 443 %>">
+     data-device-pairing-api-host-value="<%= request.protocol %>api.<%= request.domain %><%= ":#{request.port}" unless request.port == 80 || request.port == 443 %>"
+     data-device-pairing-pair-host-value="<%= request.protocol %>app.<%= request.domain %><%= ":#{request.port}" unless request.port == 80 || request.port == 443 %>">
   <p class="text-sm uppercase tracking-widest text-white/40 font-semibold">Pair this screen</p>
   <div class="font-mono text-7xl font-bold tracking-widest" data-code>------</div>
-  <p class="text-sm text-white/30 font-semibold">Enter this code at replay.com &rarr; Screens</p>
-  <p class="text-xs text-white/20 mt-8">Code expires in 10 minutes</p>
+  <div class="flex items-center gap-6 mt-2">
+    <div class="bg-white rounded-xl p-3" style="width: 120px; height: 120px;" data-qr>
+    </div>
+    <div class="text-left">
+      <p class="text-sm text-white/50 font-semibold">Scan to pair</p>
+      <p class="text-xs text-white/20 mt-1">or enter the code in the app</p>
+    </div>
+  </div>
+  <p class="text-xs text-white/20 mt-4">Code expires in 10 minutes</p>
 </div>
