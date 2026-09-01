@@ -2,6 +2,10 @@ module Play
   class PlayersController < Play::BaseController
     before_action :authenticate_player!, only: :show
 
+    # GET / — check localStorage for token, redirect accordingly
+    def landing
+    end
+
     # GET /players/:token — playback content
     def show
       @screen = @player.screen
