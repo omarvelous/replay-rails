@@ -13,6 +13,10 @@ export default class extends Controller {
       {
         received: ({ event }) => {
           if (event === "playlist_changed") window.location.reload()
+          if (event === "unpaired") this.handleUnpaired()
+        },
+        rejected: () => {
+          this.handleUnpaired()
         }
       }
     )
@@ -32,9 +36,10 @@ export default class extends Controller {
 
   async sendHeartbeat() {
     try {
-      await fetch(`${this.apiHostValue}/players/${this.playerTokenValue}/heartbeat`, {
+      const res = await fetch(`${this.apiHostValue}/players/${this.playerTokenValue}/heartbeat`, {
         method: "POST"
       })
+      if (res.status === 410) this.handleUnpaired()
     } catch {
       // Network error — will retry next interval
     }
@@ -42,7 +47,7 @@ export default class extends Controller {
 
   async recordImpression({ adId, position, duration }) {
     try {
-      await fetch(`${this.apiHostValue}/players/${this.playerTokenValue}/impressions`, {
+      const res = await fetch(`${this.apiHostValue}/players/${this.playerTokenValue}/impressions`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -52,8 +57,16 @@ export default class extends Controller {
           duration: duration
         })
       })
+      if (res.status === 410) this.handleUnpaired()
     } catch {
       // Network error — impression lost, acceptable
     }
+  }
+
+  handleUnpaired() {
+    clearInterval(this.heartbeat)
+    this.subscription?.unsubscribe()
+    localStorage.removeItem("player_token")
+    window.location.href = "/players/new"
   }
 }
