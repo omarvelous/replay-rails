@@ -17,17 +17,15 @@ export default class extends Controller {
       await this.registerNewPlayer()
     }
 
-    this.subscription = consumer.subscriptions.create(
-      { channel: "PairingChannel", code: this.pairingCode },
-      { received: (msg) => { if (msg.paired) this.onPaired() } }
-    )
-
+    this.subscribeToPairing()
     this.poll = setInterval(() => this.checkStatus(), 3000)
+    this.startCountdown()
   }
 
   disconnect() {
     this.subscription?.unsubscribe()
     clearInterval(this.poll)
+    clearInterval(this.countdownInterval)
   }
 
   async registerNewPlayer() {
@@ -76,6 +74,14 @@ export default class extends Controller {
     }
   }
 
+  subscribeToPairing() {
+    this.subscription?.unsubscribe()
+    this.subscription = consumer.subscriptions.create(
+      { channel: "PairingChannel", code: this.pairingCode },
+      { received: (msg) => { if (msg.paired) this.onPaired() } }
+    )
+  }
+
   displayCode(code) {
     this.element.querySelector("[data-code]").textContent = code
 
@@ -95,6 +101,39 @@ export default class extends Controller {
     }
   }
 
+  startCountdown() {
+    this.secondsRemaining = 600 // 10 minutes
+    this.updateCountdownDisplay()
+
+    this.countdownInterval = setInterval(() => {
+      this.secondsRemaining -= 1
+
+      if (this.secondsRemaining <= 0) {
+        this.onCodeExpired()
+      } else {
+        this.updateCountdownDisplay()
+      }
+    }, 1000)
+  }
+
+  updateCountdownDisplay() {
+    const el = this.element.querySelector("[data-countdown]")
+    if (!el) return
+
+    const minutes = Math.floor(this.secondsRemaining / 60)
+    const seconds = this.secondsRemaining % 60
+    el.textContent = `${minutes}:${seconds.toString().padStart(2, "0")}`
+  }
+
+  async onCodeExpired() {
+    clearInterval(this.countdownInterval)
+
+    // Refresh the code using the existing token
+    await this.refreshPairingCode(this.token)
+    this.subscribeToPairing()
+    this.startCountdown()
+  }
+
   async checkStatus() {
     try {
       const res = await fetch(`${this.apiHostValue}/players/${this.token}`)
@@ -108,6 +147,7 @@ export default class extends Controller {
 
   onPaired() {
     clearInterval(this.poll)
+    clearInterval(this.countdownInterval)
     this.subscription?.unsubscribe()
     localStorage.setItem("player_token", this.token)
     window.location.href = `/players/${this.token}`
