@@ -23,5 +23,14 @@ RSpec.describe "Api::Players::Heartbeats" do
       post "/players/invalid/heartbeat"
       expect(response).to have_http_status(:unauthorized)
     end
+
+    it "returns 410 when player is unpaired" do
+      screen.unpair_player!
+
+      post "/players/#{player.token}/heartbeat"
+
+      expect(response).to have_http_status(:gone)
+      expect(response.parsed_body["error"]).to eq("unpaired")
+    end
   end
 end
