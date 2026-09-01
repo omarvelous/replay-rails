@@ -48,3 +48,11 @@
 
 /design/
 /node_modules/
+
+# OpenTofu
+infrastructure/**/.terraform/
+infrastructure/**/*.tfstate
+infrastructure/**/*.tfstate.backup
+infrastructure/**/*.tfvars
+!infrastructure/**/variables.tf
+*.tfplan

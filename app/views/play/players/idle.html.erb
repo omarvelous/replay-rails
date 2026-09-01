@@ -1,4 +1,7 @@
-<div class="flex flex-col items-center justify-center h-screen text-white gap-4">
+<div class="flex flex-col items-center justify-center h-screen text-white gap-4"
+     data-controller="device-playback"
+     data-device-playback-api-host-value="<%= request.protocol %>api.<%= request.domain %><%= ":#{request.port}" unless request.port == 80 || request.port == 443 %>"
+     data-device-playback-player-token-value="<%= params[:token] %>">
   <p class="text-2xl text-white/30 font-semibold">No content assigned</p>
   <p class="text-sm text-white/20 font-semibold">Assign a playlist to this screen in the dashboard</p>
 </div>

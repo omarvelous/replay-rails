@@ -6,6 +6,8 @@ module Api
       # POST /players/:token/impressions
       def create
         screen = @player.screen
+        return render json: { error: "unpaired" }, status: :gone unless screen
+
         Impression.create!(
           ad_id: params[:ad_id],
           screen: screen,
