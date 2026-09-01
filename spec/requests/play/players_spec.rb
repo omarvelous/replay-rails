@@ -42,9 +42,9 @@ RSpec.describe "Play::Players" do
       expect(response.body).to include("not paired")
     end
 
-    it "returns 401 for invalid token" do
+    it "redirects to pairing for invalid token" do
       get "/players/invalid"
-      expect(response).to have_http_status(:unauthorized)
+      expect(response).to redirect_to(new_player_path)
     end
   end
 end
