@@ -37,6 +37,7 @@ export default class extends Controller {
 
     this.token = data.token
     this.pairingCode = data.pairing_code
+    this.expiresIn = data.expires_in
     localStorage.setItem("player_token", this.token)
     this.displayCode(data.pairing_code)
   }
@@ -67,6 +68,7 @@ export default class extends Controller {
       const data = await res.json()
       this.token = token
       this.pairingCode = data.pairing_code
+      this.expiresIn = data.expires_in
       this.displayCode(data.pairing_code)
     } else {
       localStorage.removeItem("player_token")
@@ -102,7 +104,7 @@ export default class extends Controller {
   }
 
   startCountdown() {
-    this.secondsRemaining = 600 // 10 minutes
+    this.secondsRemaining = this.expiresIn || 600
     this.updateCountdownDisplay()
 
     this.countdownInterval = setInterval(() => {

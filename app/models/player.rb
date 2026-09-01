@@ -1,5 +1,5 @@
 class Player < ApplicationRecord
-  has_paper_trail ignore: [ :last_heartbeat_at, :ip_address, :user_agent, :updated_at ]
+  has_paper_trail ignore: [ :last_heartbeat_at, :ip_address, :user_agent, :pairing_code, :pairing_code_expires_at, :updated_at ]
 
   has_many :screen_players, dependent: :destroy
   has_one  :active_assignment, -> { active }, class_name: "ScreenPlayer"
