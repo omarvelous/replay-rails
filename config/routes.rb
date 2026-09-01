@@ -124,6 +124,7 @@ Rails.application.routes.draw do
         scope module: "players" do
           resource :heartbeat, only: :create
           resources :impressions, only: :create
+          resource :pairing_code, only: :create
         end
       end
     end

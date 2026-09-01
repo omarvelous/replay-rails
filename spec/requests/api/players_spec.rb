@@ -41,4 +41,32 @@ RSpec.describe "Api::Players" do
       expect(response).to have_http_status(:unauthorized)
     end
   end
+
+  describe "POST /players/:token/pairing_code" do
+    let(:player) { create(:player) }
+
+    it "generates a new pairing code for an existing player" do
+      old_code = player.pairing_code
+
+      post "/players/#{player.token}/pairing_code", as: :json
+
+      expect(response).to have_http_status(:created)
+      expect(response.parsed_body["pairing_code"]).to match(/\A[A-Z0-9]{6}\z/)
+      expect(response.parsed_body["pairing_code"]).not_to eq(old_code)
+      expect(response.parsed_body["expires_in"]).to eq(600)
+    end
+
+    it "does not create a new player" do
+      player # ensure created
+
+      expect {
+        post "/players/#{player.token}/pairing_code", as: :json
+      }.not_to change(Player, :count)
+    end
+
+    it "returns 401 for invalid token" do
+      post "/players/invalid/pairing_code", as: :json
+      expect(response).to have_http_status(:unauthorized)
+    end
+  end
 end
