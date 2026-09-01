@@ -89,7 +89,8 @@ export default class extends Controller {
         ecLevel: "M",
         fill: "#000",
         background: "#fff",
-        size: 120
+        size: 140,
+        quiet: 2
       }, qrContainer)
     }
   }
