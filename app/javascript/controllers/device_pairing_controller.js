@@ -8,6 +8,10 @@ export default class extends Controller {
     const existingToken = localStorage.getItem("player_token")
 
     if (existingToken) {
+      // Check if already paired — skip pairing screen entirely
+      const alreadyPaired = await this.checkIfPaired(existingToken)
+      if (alreadyPaired) return
+
       await this.refreshPairingCode(existingToken)
     } else {
       await this.registerNewPlayer()
@@ -37,6 +41,22 @@ export default class extends Controller {
     this.pairingCode = data.pairing_code
     localStorage.setItem("player_token", this.token)
     this.element.querySelector("[data-code]").textContent = data.pairing_code
+  }
+
+  async checkIfPaired(token) {
+    try {
+      const res = await fetch(`${this.apiHostValue}/players/${token}`)
+      if (!res.ok) return false
+      const data = await res.json()
+      if (data.paired) {
+        this.token = token
+        window.location.replace(`/players/${token}`)
+        return true
+      }
+    } catch {
+      // Network error — fall through to pairing
+    }
+    return false
   }
 
   async refreshPairingCode(token) {
