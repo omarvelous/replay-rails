@@ -36,6 +36,6 @@ class Screen < ApplicationRecord
   end
 
   def unpair_player!
-    active_player_assignment&.unpair!
+    reload_active_player_assignment&.unpair!
   end
 end
