@@ -18,13 +18,14 @@ export default class extends Controller {
     }
 
     this.subscribeToPairing()
-    this.poll = setInterval(() => this.checkStatus(), 3000)
+    this.pollDelay = 3000
+    this.schedulePoll()
     this.startCountdown()
   }
 
   disconnect() {
     this.subscription?.unsubscribe()
-    clearInterval(this.poll)
+    clearTimeout(this.pollTimeout)
     clearInterval(this.countdownInterval)
   }
 
@@ -136,19 +137,32 @@ export default class extends Controller {
     this.startCountdown()
   }
 
+  schedulePoll() {
+    this.pollTimeout = setTimeout(() => this.checkStatus(), this.pollDelay)
+  }
+
   async checkStatus() {
     try {
       const res = await fetch(`${this.apiHostValue}/players/${this.token}`)
-      if (!res.ok) return
+      if (!res.ok) {
+        this.backoff()
+        return
+      }
       const data = await res.json()
-      if (data.paired) this.onPaired()
+      if (data.paired) return this.onPaired()
+      this.pollDelay = 3000 // reset on success
     } catch {
-      // Network error — keep polling
+      this.backoff()
     }
+    this.schedulePoll()
+  }
+
+  backoff() {
+    this.pollDelay = Math.min(this.pollDelay * 2, 60000)
   }
 
   onPaired() {
-    clearInterval(this.poll)
+    clearTimeout(this.pollTimeout)
     clearInterval(this.countdownInterval)
     this.subscription?.unsubscribe()
     localStorage.setItem("player_token", this.token)
