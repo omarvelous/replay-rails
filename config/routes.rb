@@ -124,6 +124,7 @@ Rails.application.routes.draw do
         scope module: "players" do
           resource :heartbeat, only: :create
           resources :impressions, only: :create
+          resource :pairing_code, only: :create
         end
       end
     end
@@ -134,6 +135,7 @@ Rails.application.routes.draw do
   # ---------------------------------------------------------------
   constraints subdomain: "play" do
     scope module: "play" do
+      root "players#landing", as: :play_root
       resources :players, param: :token, only: %i[new show]
     end
   end

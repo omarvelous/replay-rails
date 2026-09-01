@@ -7,13 +7,20 @@ module QrHelper
     url += "?#{query.to_query}" if query.any?
 
     qr = RQRCode::QRCode.new(url)
-    qr.as_svg(
+    svg = qr.as_svg(
       offset: 0,
       color: "000",
       shape_rendering: "crispEdges",
       module_size: 4,
       standalone: true,
       use_path: true
-    ).html_safe
+    )
+
+    # Extract original dimensions to build a viewBox, then scale to 100%
+    size = qr.modules.length * 4 # module_count * module_size
+    svg = svg.sub("<svg ", "<svg viewBox=\"0 0 #{size} #{size}\" ")
+    svg = svg.sub(/width="[^"]*"/, 'width="100%"')
+    svg = svg.sub(/height="[^"]*"/, 'height="100%"')
+    svg.html_safe
   end
 end

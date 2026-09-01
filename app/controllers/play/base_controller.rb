@@ -6,7 +6,7 @@ module Play
 
     def authenticate_player!
       @player = Player.find_by(token: params[:token])
-      head :unauthorized unless @player
+      redirect_to new_player_path unless @player
     end
   end
 end

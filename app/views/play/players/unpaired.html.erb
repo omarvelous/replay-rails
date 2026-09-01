@@ -1,4 +1,8 @@
 <div class="flex flex-col items-center justify-center h-screen text-white gap-4">
   <p class="text-2xl text-white/30 font-semibold">Player not paired</p>
-  <p class="text-sm text-white/20 font-semibold">This player has been unpaired from its screen</p>
+  <p class="text-sm text-white/20 font-semibold">Redirecting to pairing screen...</p>
 </div>
+
+<script>
+  setTimeout(() => { window.location.replace("/players/new") }, 2000)
+</script>

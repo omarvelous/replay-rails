@@ -48,5 +48,16 @@ RSpec.describe "Api::Players::Impressions" do
 
       expect(response).to have_http_status(:unauthorized)
     end
+
+    it "returns 410 when player is unpaired" do
+      screen.unpair_player!
+
+      post "/players/#{player.token}/impressions",
+        params: { ad_id: ad.id, position: 1, duration: 10 },
+        as: :json
+
+      expect(response).to have_http_status(:gone)
+      expect(response.parsed_body["error"]).to eq("unpaired")
+    end
   end
 end

@@ -9,5 +9,6 @@ class ScreenPlayer < ApplicationRecord
 
   def unpair!
     update!(active: false, unpaired_at: Time.current)
+    ActionCable.server.broadcast("screen_#{screen_id}", { event: "unpaired" })
   end
 end

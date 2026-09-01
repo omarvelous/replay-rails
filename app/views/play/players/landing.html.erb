@@ -1,0 +1,12 @@
+<div class="flex flex-col items-center justify-center h-screen text-white gap-4">
+  <p class="text-sm text-white/30 font-semibold">Loading...</p>
+</div>
+
+<script>
+  const token = localStorage.getItem("player_token")
+  if (token) {
+    window.location.replace(`/players/${token}`)
+  } else {
+    window.location.replace("/players/new")
+  }
+</script>

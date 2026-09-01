@@ -17,7 +17,7 @@ class Rack::Attack
 
   # Player registration: 5 per hour per IP
   throttle("player/register/ip", limit: 5, period: 1.hour) do |req|
-    req.ip if req.path == "/register" && req.post?
+    req.ip if req.path == "/players" && req.post?
   end
 
   # Account signup: 5 per hour per IP
