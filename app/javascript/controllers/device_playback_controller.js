@@ -66,7 +66,9 @@ export default class extends Controller {
   handleUnpaired() {
     clearInterval(this.heartbeat)
     this.subscription?.unsubscribe()
-    localStorage.removeItem("player_token")
+    // Keep player_token in localStorage — same device, just needs a new pairing code.
+    // Only clear token when the Player record itself is deleted (handled by redirect to /players/new
+    // which falls back to registerNewPlayer if the token is invalid).
     window.location.href = "/players/new"
   }
 }
