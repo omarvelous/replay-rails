@@ -16,7 +16,9 @@ module QrHelper
       use_path: true
     )
 
-    # Replace fixed width/height with 100% so the SVG scales to fill its container
+    # Extract original dimensions to build a viewBox, then scale to 100%
+    size = qr.modules.length * 4 # module_count * module_size
+    svg = svg.sub("<svg ", "<svg viewBox=\"0 0 #{size} #{size}\" ")
     svg = svg.sub(/width="[^"]*"/, 'width="100%"')
     svg = svg.sub(/height="[^"]*"/, 'height="100%"')
     svg.html_safe
