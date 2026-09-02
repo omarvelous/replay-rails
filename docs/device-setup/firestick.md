@@ -65,25 +65,23 @@ Using the Fire TV remote, configure these settings in Fully Kiosk:
 
 ### Start URL
 
-Set to your play subdomain:
+Set to the play subdomain root — the landing page auto-detects whether the device needs to pair or resume playback:
 
 ```
-https://play.replay.com/players/new
+https://play.replaytv.co
 ```
 
-For local development, use your Mac's local IP with [nip.io](https://nip.io) for subdomain routing (the Fire TV Stick can't resolve `localhost`):
-
-```bash
-# Find your Mac's IP
-ipconfig getifaddr en0
-# e.g., 192.168.1.100
-```
+For staging:
 
 ```
-http://play.192.168.0.147.nip.io:3000/players/new
+https://play.staging.replaytv.co
 ```
 
-nip.io resolves any subdomain of `<ip>.nip.io` to that IP, so Rails sees `play` as the subdomain.
+For local development, set up local DNS resolution (see `docs/` local network plan) or use nip.io with your Mac's local IP:
+
+```
+http://play.<your-mac-ip>.nip.io:3000
+```
 
 ### Web Content Settings
 
@@ -140,7 +138,7 @@ To re-enable later if needed:
 adb shell pm enable com.amazon.device.software.ota
 ```
 
-## Step 10: Set Fully Kiosk as Default Launcher (optional)
+## Step 10: Set Fully Kiosk as Default Launcher
 
 This makes Fully Kiosk the home screen, preventing the Fire TV home from appearing on boot:
 
@@ -163,13 +161,22 @@ adb reboot
 After reboot, the stick should:
 
 1. Boot directly into Fully Kiosk Browser
-2. Load the RePlay pairing page
-3. Display a 6-character pairing code
-4. Wait for pairing via ActionCable
+2. Load the RePlay landing page
+3. If previously paired → resume playback automatically
+4. If not paired → display a 6-character pairing code and a QR code
 
 ## Step 12: Pair in RePlay
 
-1. Log into RePlay at `app.replay.com`
+**Option A — Scan the QR code (recommended):**
+
+1. Scan the QR code on the TV with your phone
+2. Log into RePlay if prompted
+3. Select the screen to pair with
+4. Tap **Pair Device** — content starts playing within seconds
+
+**Option B — Enter the code manually:**
+
+1. Log into RePlay at `app.replaytv.co`
 2. Go to **Screens → your screen → Pair a player**
 3. Enter the 6-character code from the TV
 4. Content starts playing within seconds
@@ -179,11 +186,14 @@ After reboot, the stick should:
 After setup, verify:
 
 - [ ] Stick boots directly to Fully Kiosk (no Fire TV home screen)
-- [ ] Pairing page loads with a 6-character code
+- [ ] Pairing page loads with a 6-character code and QR code
+- [ ] QR code scans and opens the pairing page in the app
 - [ ] Pairing completes and content plays
 - [ ] Slide transitions are smooth (no jank on crossfades)
 - [ ] QR codes on ads are sharp and scannable
 - [ ] Playlist changes push in real-time (change playlist in app, TV updates)
+- [ ] Unpair from app → device redirects to pairing screen automatically
+- [ ] Re-pair → same player record reused (check code on screen matches previous device)
 - [ ] Power cycle: unplug, wait 10 seconds, replug — content resumes automatically
 - [ ] Heartbeat: device shows as "online" in RePlay after 30 seconds
 
@@ -247,7 +257,7 @@ adb shell pm disable-user <package.name>
 adb shell pm enable <package.name>
 
 # Open a URL in Fully Kiosk remotely
-curl "http://<ip>:2323/?cmd=loadURL&url=https://play.replay.com/players/new&password=<your-password>"
+curl "http://<ip>:2323/?cmd=loadURL&url=https://play.replaytv.co/players/new&password=<your-password>"
 ```
 
 ## Fully Kiosk Remote Admin API
