@@ -1,4 +1,4 @@
-# Plan: Staging Domain Strategy (Draft)
+# Plan: Staging Domain Strategy
 
 ## Problem
 

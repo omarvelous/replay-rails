@@ -27,7 +27,8 @@ ready for a private beta.
 | Tenant scoping | `tenant-scoping` | `acts_as_tenant` on 11 models for automatic query scoping. Simplified policy scopes. Cross-tenant access via `without_tenant` for admin and jobs. |
 | Code organization | `code-organization` | File structure standard for 7 file types. Audited and fixed all models, controllers, routes, policies, factories, Gemfile. Contributing guide. |
 | Infrastructure | `infrastructure` | Render + Cloudflare (OpenTofu) + R2. Staging and production environments. |
-| Player UX | `player-ux` | In progress — unpair events, API resilience, device fingerprinting, visual fixes. |
+| Player UX | `player-ux` #32, `player-ux-phase4` #33 | Unpair events, API resilience, device fingerprinting, QR pairing, countdown timer, visual fixes. |
+| Staging domain | `staging-domain` | In progress — migrate from staging.replaytv.co to replaytv.dev. |
 
 ---
 
