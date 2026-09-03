@@ -22,7 +22,7 @@ Rails.application.configure do
   # config.asset_host = "http://assets.example.com"
 
   # Store uploaded files on Cloudflare R2 (S3-compatible). Falls back to local if R2 not configured.
-  config.active_storage.service = ENV["R2_ENDPOINT"].present? ? :cloudflare : :local
+  config.active_storage.service = Rails.application.credentials.dig(:r2, :endpoint).present? ? :cloudflare : :local
 
   # Assume all access to the app is happening through a SSL-terminating reverse proxy.
   # config.assume_ssl = true

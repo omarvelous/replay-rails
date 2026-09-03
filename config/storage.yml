@@ -28,10 +28,10 @@ local:
 
 cloudflare:
   service: S3
-  endpoint: <%= ENV["R2_ENDPOINT"] %>
-  access_key_id: <%= ENV["R2_ACCESS_KEY_ID"] %>
-  secret_access_key: <%= ENV["R2_SECRET_ACCESS_KEY"] %>
-  bucket: <%= ENV.fetch("R2_BUCKET", "replay-#{Rails.env}") %>
+  endpoint: <%= Rails.application.credentials.dig(:r2, :endpoint) %>
+  access_key_id: <%= Rails.application.credentials.dig(:r2, :access_key_id) %>
+  secret_access_key: <%= Rails.application.credentials.dig(:r2, :secret_access_key) %>
+  bucket: <%= Rails.application.credentials.dig(:r2, :bucket) || "replay-#{Rails.env}" %>
   region: auto
   request_checksum_calculation: when_required
   response_checksum_validation: when_required
