@@ -23,12 +23,6 @@ projects:
                 value: "true"
               - key: RAILS_MASTER_KEY
                 sync: false
-              - key: R2_ACCESS_KEY_ID
-                sync: false
-              - key: R2_SECRET_ACCESS_KEY
-                sync: false
-              - key: R2_ENDPOINT
-                sync: false
 
         services:
           - type: web
@@ -45,8 +39,6 @@ projects:
                 fromDatabase:
                   name: replay-db
                   property: connectionString
-              - key: R2_BUCKET
-                value: replay-production
               - fromGroup: replay-shared
             buildFilter:
               paths:
@@ -98,12 +90,6 @@ projects:
                 value: "true"
               - key: RAILS_MASTER_KEY
                 sync: false
-              - key: R2_ACCESS_KEY_ID
-                sync: false
-              - key: R2_SECRET_ACCESS_KEY
-                sync: false
-              - key: R2_ENDPOINT
-                sync: false
 
         services:
           - type: web
@@ -120,8 +106,6 @@ projects:
                 fromDatabase:
                   name: replay-staging-db
                   property: connectionString
-              - key: R2_BUCKET
-                value: replay-staging
               - fromGroup: replay-staging-shared
             previews:
               plan: 0.5c-512mb
