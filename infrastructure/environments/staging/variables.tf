@@ -9,8 +9,8 @@ variable "cloudflare_account_id" {
   type        = string
 }
 
-variable "cloudflare_zone_id_replaytv" {
-  description = "Zone ID for replaytv.co"
+variable "cloudflare_zone_id_replaytv_dev" {
+  description = "Zone ID for replaytv.dev"
   type        = string
 }
 

@@ -1,24 +1,17 @@
 require_relative "production"
 
 Rails.application.configure do
-  # staging.replaytv.co is the base domain — tell Rails that
-  # "staging.replaytv.co" has 2 dots in the TLD portion so
-  # app.staging.replaytv.co parses subdomain as "app" not "app.staging"
-  config.action_dispatch.tld_length = 2
+  # replaytv.dev — separate domain from production (replaytv.co).
+  # No tld_length override needed (both are standard TLD length 1).
+  # Override default_url_options inherited from production (replay.com).
 
-  # Default host for all URL helpers (session_url, root_url, etc.)
   config.action_controller.default_url_options = {
-    host: "staging.replaytv.co",
+    host: "replaytv.dev",
     protocol: "https"
   }
 
-  # Default host for mailer links
   config.action_mailer.default_url_options = {
-    host: "app.staging.replaytv.co",
+    host: "app.replaytv.dev",
     protocol: "https"
   }
 end
-
-# Route-level default_url_options — must be set outside the configure block
-Rails.application.routes.default_url_options[:host] = "staging.replaytv.co"
-Rails.application.routes.default_url_options[:protocol] = "https"
