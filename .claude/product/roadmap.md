@@ -28,7 +28,8 @@ ready for a private beta.
 | Code organization | `code-organization` | File structure standard for 7 file types. Audited and fixed all models, controllers, routes, policies, factories, Gemfile. Contributing guide. |
 | Infrastructure | `infrastructure` | Render + Cloudflare (OpenTofu) + R2. Staging and production environments. |
 | Player UX | `player-ux` #32, `player-ux-phase4` #33 | Unpair events, API resilience, device fingerprinting, QR pairing, countdown timer, visual fixes. |
-| Staging domain | `staging-domain` | In progress — migrate from staging.replaytv.co to replaytv.dev. |
+| Staging domain | `staging-domain` #35 | Migrated from staging.replaytv.co to replaytv.dev. Zero config drift. |
+| Credentials | `credentials` | Per-environment Rails credentials for R2 and Cloudflare secrets. |
 
 ---
 
