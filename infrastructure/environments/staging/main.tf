@@ -25,11 +25,11 @@ provider "cloudflare" {
   api_token = var.cloudflare_api_token
 }
 
-module "cloudflare_replaytv" {
+module "cloudflare_replaytv_dev" {
   source = "../../modules/cloudflare"
 
-  zone_id               = var.cloudflare_zone_id_replaytv
-  domain                = "staging.replaytv.co"
+  zone_id               = var.cloudflare_zone_id_replaytv_dev
+  domain                = "replaytv.dev"
   render_cname          = var.render_cname
   subdomains            = ["app", "admin", "play", "api"]
   cloudflare_account_id = var.cloudflare_account_id
