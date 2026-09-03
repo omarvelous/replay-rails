@@ -37,7 +37,7 @@
 </div>
 
 <%# Stats strip %>
-<div class="grid grid-cols-4 gap-4 mb-5">
+<div class="grid grid-cols-3 gap-4 mb-5">
   <div class="rounded-lg bg-white shadow-sm ring-1 ring-gray-900/5 p-4">
     <p class="text-xs text-gray-400">Impressions</p>
     <p class="text-2xl font-bold tabular-nums"><%= number_with_delimiter(@impressions_count) %></p>
@@ -45,10 +45,6 @@
   <div class="rounded-lg bg-white shadow-sm ring-1 ring-gray-900/5 p-4">
     <p class="text-xs text-gray-400">Scans</p>
     <p class="text-2xl font-bold tabular-nums text-yellow-600"><%= QrScan.qualified.where(screen: @screen).count %></p>
-  </div>
-  <div class="rounded-lg bg-white shadow-sm ring-1 ring-gray-900/5 p-4">
-    <p class="text-xs text-gray-400">Uptime</p>
-    <p class="text-2xl font-bold tabular-nums <%= is_live ? 'text-green-600' : 'text-red-600' %>"><%= is_live ? "99.4%" : "—" %></p>
   </div>
   <div class="rounded-lg bg-white shadow-sm ring-1 ring-gray-900/5 p-4">
     <p class="text-xs text-gray-400">Loop length</p>
@@ -123,22 +119,6 @@
         { name: "Scans", data: QrScan.qualified.where(screen: @screen)
             .where("created_at > ?", 14.days.ago).group_by_day(:created_at).count }
       ], height: "56px", library: { scales: { y: { display: false }, x: { display: false } }, plugins: { legend: { display: false } } } %>
-
-      <h3 class="text-sm font-semibold mb-3">Event log</h3>
-      <div class="flex flex-col gap-1">
-        <% [
-          ["ok", "Screen registered", "just now"],
-          ["ok", "Playlist published", "2m ago"],
-          ["warn", "Content swapped", "15m ago"],
-          ["ok", "Heartbeat received", "1h ago"],
-        ].each do |evt_status, text, time| %>
-          <div class="flex items-center gap-3 py-1.5">
-            <span class="w-2 h-2 rounded-full flex-none <%= evt_status == 'ok' ? 'bg-green-500' : evt_status == 'warn' ? 'bg-yellow-500' : 'bg-red-500' %>"></span>
-            <span class="text-sm flex-1"><%= text %></span>
-            <span class="font-mono text-xs text-gray-400"><%= time %></span>
-          </div>
-        <% end %>
-      </div>
     </div>
   </div>
 
@@ -237,18 +217,6 @@
       <% end %>
     </div>
 
-    <%# Schedule %>
-    <div class="rounded-lg bg-white shadow-sm ring-1 ring-gray-900/5 p-5">
-      <h3 class="text-sm font-semibold mb-3">Schedule</h3>
-      <div class="divide-y divide-gray-200">
-        <% [["Playing", "Daily · 8:00 AM – 9:00 PM"], ["Timezone", "America/New_York"], ["Overrides", "None"]].each do |label, value| %>
-          <div class="flex justify-between py-2 text-sm">
-            <span class="text-gray-500"><%= label %></span>
-            <span class="font-semibold <%= label == 'Timezone' ? 'font-mono text-xs' : '' %>"><%= value %></span>
-          </div>
-        <% end %>
-      </div>
-    </div>
   </div>
 </div>
 
