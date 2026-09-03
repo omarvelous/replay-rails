@@ -43,7 +43,8 @@
       <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
         <% @screens.each do |screen| %>
             <% active_playlist = screen.screen_playlists.find { |sp| sp.active }&.playlist %>
-            <% is_live = active_playlist.present? %>
+            <% status = screen_status(screen, active_playlist: active_playlist) %>
+            <% is_live = status == :live %>
             <% tone = is_live ? %w[#2f6bff #0fb5a6 #7c5cff #e8990f #1f9d57][screen.id % 5] : nil %>
             <div class="rounded-lg bg-white shadow-sm ring-1 ring-gray-900/5 hover:shadow-md transition-shadow overflow-visible">
               <%# Preview — tinted gradient or idle/offline %>
@@ -60,11 +61,7 @@
                   <div class="absolute inset-0 grid place-items-center text-gray-600 text-xl">—</div>
                 <% end %>
                 <div class="absolute top-2 right-2">
-                  <% if is_live %>
-                    <span class="inline-flex items-center rounded-full bg-green-50 px-2 py-0.5 text-xs font-medium text-green-700 ring-1 ring-green-600/20 ring-inset">Live</span>
-                  <% else %>
-                    <span class="inline-flex items-center rounded-full bg-gray-50 px-2 py-0.5 text-xs font-medium text-gray-600 ring-1 ring-gray-500/10 ring-inset">Idle</span>
-                  <% end %>
+                  <%= screen_status_badge(status) %>
                 </div>
               <% end %>
 
@@ -84,13 +81,8 @@
 
                 <%# Heartbeat row %>
                 <div class="flex items-center gap-1.5 mt-1.5 text-[11.5px] text-gray-400">
-                  <% if is_live %>
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" class="size-3.5 shrink-0 text-green-500"><path stroke-linecap="round" stroke-linejoin="round" d="M8.288 15.038a5.25 5.25 0 017.424 0M5.106 11.856c3.807-3.808 9.98-3.808 13.788 0M1.924 8.674c5.565-5.565 14.587-5.565 20.152 0M12.53 18.22l-.53.53-.53-.53a.75.75 0 011.06 0z"/></svg>
-                    <span>Heartbeat 12s ago</span>
-                  <% else %>
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" class="size-3.5 shrink-0 text-gray-400"><path stroke-linecap="round" stroke-linejoin="round" d="M8.288 15.038a5.25 5.25 0 017.424 0M5.106 11.856c3.807-3.808 9.98-3.808 13.788 0M1.924 8.674c5.565-5.565 14.587-5.565 20.152 0M12.53 18.22l-.53.53-.53-.53a.75.75 0 011.06 0z"/></svg>
-                    <span>No player assigned</span>
-                  <% end %>
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" class="size-3.5 shrink-0 <%= screen_heartbeat_icon_color(status) %>"><path stroke-linecap="round" stroke-linejoin="round" d="M8.288 15.038a5.25 5.25 0 017.424 0M5.106 11.856c3.807-3.808 9.98-3.808 13.788 0M1.924 8.674c5.565-5.565 14.587-5.565 20.152 0M12.53 18.22l-.53.53-.53-.53a.75.75 0 011.06 0z"/></svg>
+                  <span><%= screen_heartbeat_text(screen, status) %></span>
                 </div>
 
                 <%# Change content button %>
@@ -137,7 +129,8 @@
               <tbody class="divide-y divide-gray-200">
                 <% @screens.each do |screen| %>
                   <% active_playlist = screen.screen_playlists.find { |sp| sp.active }&.playlist %>
-                  <% is_live = active_playlist.present? %>
+                  <% status = screen_status(screen, active_playlist: active_playlist) %>
+                  <% is_live = status == :live %>
                   <% tone = is_live ? %w[#2f6bff #0fb5a6 #7c5cff #e8990f #1f9d57][screen.id % 5] : nil %>
                   <tr class="hover:bg-gray-50">
                     <td class="px-3 py-4">
@@ -156,16 +149,10 @@
                       </div>
                     </td>
                     <td class="px-3 py-4 text-sm text-gray-500"><%= screen.site.name %></td>
-                    <td class="px-3 py-4 text-xs font-mono text-gray-400">—</td>
+                    <td class="px-3 py-4 text-xs text-gray-400"><%= screen.paired? ? "Paired" : "—" %></td>
                     <td class="px-3 py-4 text-sm text-gray-500"><%= active_playlist&.name || "—" %></td>
-                    <td class="px-3 py-4">
-                      <% if is_live %>
-                        <span class="inline-flex items-center rounded-full bg-green-50 px-2 py-0.5 text-xs font-medium text-green-700 ring-1 ring-green-600/20 ring-inset">Live</span>
-                      <% else %>
-                        <span class="inline-flex items-center rounded-full bg-gray-50 px-2 py-0.5 text-xs font-medium text-gray-600 ring-1 ring-gray-500/10 ring-inset">Idle</span>
-                      <% end %>
-                    </td>
-                    <td class="px-3 py-4 text-xs font-mono text-gray-400"><%= is_live ? "12s ago" : "—" %></td>
+                    <td class="px-3 py-4"><%= screen_status_badge(status) %></td>
+                    <td class="px-3 py-4 text-xs text-gray-400"><%= screen_heartbeat_text(screen, status) %></td>
                   </tr>
                 <% end %>
               </tbody>
