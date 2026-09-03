@@ -57,8 +57,7 @@ Rails.application.configure do
   # Set this to true and configure the email server for immediate delivery to raise delivery errors.
   # config.action_mailer.raise_delivery_errors = false
 
-  # Set host to be used by links generated in mailer templates.
-  config.action_mailer.default_url_options = { host: "example.com" }
+
 
   # Specify outgoing SMTP server. Remember to add smtp/* credentials via bin/rails credentials:edit.
   # config.action_mailer.smtp_settings = {
@@ -90,6 +89,6 @@ Rails.application.configure do
 
   # Subdomain routing
   config.action_dispatch.tld_length = 1
-  config.action_controller.default_url_options = { host: "replay.com", protocol: "https" }
-  config.action_mailer.default_url_options = { host: "app.replay.com", protocol: "https" }
+  config.action_controller.default_url_options = { host: "replaytv.co", protocol: "https" }
+  config.action_mailer.default_url_options = { host: "app.replaytv.co", protocol: "https" }
 end
