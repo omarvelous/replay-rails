@@ -8,7 +8,7 @@
 <% end %>
 <%= render "app/shared/page_header", title: @screen.name, subtitle: "Screen", actions: actions, back_link: { label: "← Screens", path: screens_path } %>
 
-<% active_assignment = @screen.screen_playlists.includes(playlist: { playlist_ads: :ad }).find_by(active: true) %>
+<% active_assignment = @screen.screen_playlists.find_by(active: true) %>
 <% active_playlist = active_assignment&.playlist %>
 <% is_live = active_playlist.present? %>
 
@@ -95,7 +95,7 @@
       <% if active_playlist&.playlist_ads&.any? %>
         <h3 class="text-sm font-semibold mb-3">Loop</h3>
         <div class="flex flex-col gap-1">
-          <% active_playlist.playlist_ads.order(:position).each_with_index do |pa, i| %>
+          <% active_playlist.playlist_ads.each_with_index do |pa, i| %>
             <% tone = %w[#2f6bff #0fb5a6 #7c5cff #e8990f #1f9d57 #e5484d][pa.ad_id % 6] %>
             <div class="flex items-center gap-3 py-2">
               <span class="font-mono text-xs text-gray-400 w-5 text-right"><%= i + 1 %></span>

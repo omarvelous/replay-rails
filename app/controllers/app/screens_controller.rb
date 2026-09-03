@@ -56,7 +56,9 @@ module App
   private
 
     def set_screen
-      @screen = Current.account.screens.find(params[:id])
+      @screen = Current.account.screens
+        .includes(screen_playlists: { playlist: { playlist_ads: :ad } })
+        .find(params[:id])
       @site = @screen.site
     end
 
