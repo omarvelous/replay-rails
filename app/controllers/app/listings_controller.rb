@@ -58,7 +58,7 @@ module App
     end
 
     def listing_params
-      params.require(:listing).permit(:address, :price, :beds, :baths, :sqft, :status, photos: [])
+      params.require(:listing).permit(:address, :price, :beds, :baths, :sqft, :status, :description, photos: [])
     end
   end
 end
