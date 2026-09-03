@@ -80,10 +80,7 @@
                 </span>
               <% end %>
             </div>
-            <span class="text-xs text-gray-400 w-16 text-right">just now</span>
-            <button class="text-gray-400 hover:text-gray-600" onclick="event.stopPropagation(); event.preventDefault();">
-              <svg viewBox="0 0 20 20" fill="currentColor" class="size-5"><path d="M10 3a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM10 8.5a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM11.5 15.5a1.5 1.5 0 1 0-3 0 1.5 1.5 0 0 0 3 0Z"/></svg>
-            </button>
+            <span class="text-xs text-gray-400 w-16 text-right"><%= time_ago_in_words(playlist.updated_at) %> ago</span>
           </div>
         </div>
       <% end %>
