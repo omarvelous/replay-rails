@@ -5,31 +5,7 @@
 
 /* ── Marketing theme system ── */
 
-/* Theme: Clean / Minimal (default) */
-[data-marketing-theme="minimal"] {
-  --m-bg: #ffffff;
-  --m-bg-alt: #f9fafb;
-  --m-bg-hero: #ffffff;
-  --m-text: #111827;
-  --m-text-muted: #6b7280;
-  --m-text-faint: #9ca3af;
-  --m-accent: #4f46e5;
-  --m-accent-hover: #4338ca;
-  --m-surface: #ffffff;
-  --m-surface-border: #e5e7eb;
-  --m-heading-font: ui-sans-serif, system-ui, sans-serif;
-  --m-heading-weight: 800;
-  --m-radius: 0.5rem;
-  --m-shadow: 0 1px 3px rgba(0,0,0,0.06);
-  --m-hero-text: #111827;
-  --m-hero-muted: #6b7280;
-  --m-cta-bg: #4f46e5;
-  --m-cta-text: #ffffff;
-  --m-cta-hover: #4338ca;
-  --m-section-pad: 5rem;
-}
-
-/* Theme: Bold / Dark */
+/* Theme: Bold (default) — dark hero, indigo/teal gradient, high contrast */
 [data-marketing-theme="bold"] {
   --m-bg: #ffffff;
   --m-bg-alt: #f3f4f6;
@@ -53,28 +29,52 @@
   --m-section-pad: 6rem;
 }
 
-/* Theme: Warm / Editorial */
-[data-marketing-theme="warm"] {
-  --m-bg: #faf8f5;
-  --m-bg-alt: #f5f0eb;
-  --m-bg-hero: #faf8f5;
-  --m-text: #292524;
-  --m-text-muted: #78716c;
-  --m-text-faint: #a8a29e;
-  --m-accent: #b45309;
-  --m-accent-hover: #92400e;
-  --m-surface: #ffffff;
-  --m-surface-border: #e7e5e4;
+/* Theme: Luxe — fully dark, gold accents, premium serif, gallery feel */
+[data-marketing-theme="luxe"] {
+  --m-bg: #0a0a0a;
+  --m-bg-alt: #111111;
+  --m-bg-hero: #000000;
+  --m-text: #f5f5f4;
+  --m-text-muted: #a8a29e;
+  --m-text-faint: #78716c;
+  --m-accent: #d4a853;
+  --m-accent-hover: #e8c36a;
+  --m-surface: #171717;
+  --m-surface-border: #292524;
   --m-heading-font: "DM Serif Display", Georgia, serif;
   --m-heading-weight: 400;
-  --m-radius: 0.75rem;
-  --m-shadow: 0 2px 8px rgba(0,0,0,0.06);
-  --m-hero-text: #292524;
-  --m-hero-muted: #78716c;
-  --m-cta-bg: #b45309;
-  --m-cta-text: #ffffff;
-  --m-cta-hover: #92400e;
-  --m-section-pad: 5rem;
+  --m-radius: 0.25rem;
+  --m-shadow: 0 2px 16px rgba(0,0,0,0.4);
+  --m-hero-text: #ffffff;
+  --m-hero-muted: rgba(255,255,255,0.6);
+  --m-cta-bg: #d4a853;
+  --m-cta-text: #0a0a0a;
+  --m-cta-hover: #e8c36a;
+  --m-section-pad: 6rem;
+}
+
+/* Theme: Midnight — dark with electric blue accents, sharp edges */
+[data-marketing-theme="midnight"] {
+  --m-bg: #0f172a;
+  --m-bg-alt: #1e293b;
+  --m-bg-hero: #020617;
+  --m-text: #e2e8f0;
+  --m-text-muted: #94a3b8;
+  --m-text-faint: #64748b;
+  --m-accent: #38bdf8;
+  --m-accent-hover: #7dd3fc;
+  --m-surface: #1e293b;
+  --m-surface-border: #334155;
+  --m-heading-font: ui-sans-serif, system-ui, sans-serif;
+  --m-heading-weight: 900;
+  --m-radius: 0.5rem;
+  --m-shadow: 0 4px 24px rgba(0,0,0,0.3);
+  --m-hero-text: #ffffff;
+  --m-hero-muted: rgba(255,255,255,0.65);
+  --m-cta-bg: #38bdf8;
+  --m-cta-text: #020617;
+  --m-cta-hover: #7dd3fc;
+  --m-section-pad: 6rem;
 }
 
 /* Ad canvas — dark theme as default + container-relative signage scale */

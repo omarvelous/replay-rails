@@ -2,9 +2,9 @@ import { Controller } from "@hotwired/stimulus"
 
 export default class extends Controller {
   static targets = ["button"]
-  static values = { current: { type: String, default: "minimal" } }
+  static values = { current: { type: String, default: "bold" } }
 
-  themes = ["minimal", "bold", "warm"]
+  themes = ["bold", "luxe", "midnight"]
 
   connect() {
     const saved = localStorage.getItem("marketing-theme")
