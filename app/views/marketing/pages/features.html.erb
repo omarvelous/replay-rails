@@ -1,4 +1,147 @@
-<div class="max-w-6xl mx-auto px-6 py-20">
-  <h1 class="text-4xl font-extrabold tracking-tight text-gray-900">Features</h1>
-  <p class="text-lg text-gray-600 mt-4">Everything you need to turn your storefront into a lead generation surface.</p>
-</div>
+<% content_for(:title) { "Features" } %>
+
+<%# ── Hero ── %>
+<section style="background: var(--m-bg-hero); padding: var(--m-section-pad) 0;">
+  <div class="max-w-6xl mx-auto px-6 text-center">
+    <h1 style="font-family: var(--m-heading-font); font-weight: var(--m-heading-weight); color: var(--m-hero-text);"
+        class="text-4xl sm:text-5xl tracking-tight">Everything you need to<br>sell more listings</h1>
+    <p style="color: var(--m-hero-muted);" class="mt-4 text-lg max-w-xl mx-auto">
+      From storefront window displays to interactive open house signage, RePlay turns your physical spaces into lead generation surfaces.
+    </p>
+  </div>
+</section>
+
+<%# ── For Your Storefront ── %>
+<section style="background: var(--m-bg); padding: var(--m-section-pad) 0;">
+  <div class="max-w-6xl mx-auto px-6">
+    <p style="color: var(--m-accent);" class="text-sm font-bold uppercase tracking-wider">For your storefront</p>
+    <h2 style="font-family: var(--m-heading-font); font-weight: var(--m-heading-weight); color: var(--m-text);"
+        class="text-2xl sm:text-3xl tracking-tight mt-2">Your window, working 24/7</h2>
+    <p style="color: var(--m-text-muted);" class="mt-3 max-w-2xl text-sm sm:text-base">
+      Replace static printed cards with a dynamic display that updates automatically. Every listing change appears on screen instantly.
+    </p>
+
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-5 sm:gap-6 mt-10">
+      <% [
+        { title: "Listing ad builder",
+          desc: "Turn any listing into beautiful signage in one click. Choose a layout, pick a theme, and your ad is ready to display.",
+          icon: "M2.25 15.75l5.159-5.159a2.25 2.25 0 013.182 0l5.159 5.159m-1.5-1.5l1.409-1.409a2.25 2.25 0 013.182 0l2.909 2.909M3.75 21h16.5a2.25 2.25 0 002.25-2.25V5.25a2.25 2.25 0 00-2.25-2.25H3.75a2.25 2.25 0 00-2.25 2.25v13.5A2.25 2.25 0 003.75 21z" },
+        { title: "Playlist management",
+          desc: "Arrange ads into playlists that loop on your screens. Drag to reorder, set durations, and publish changes instantly.",
+          icon: "M3.75 12h16.5m-16.5 3.75h16.5M3.75 19.5h16.5M5.625 4.5h12.75a1.875 1.875 0 010 3.75H5.625a1.875 1.875 0 010-3.75z" },
+        { title: "QR code lead capture",
+          desc: "Every ad generates a QR code automatically. Walk-by scans open a listing page with a contact form — leads land in your inbox.",
+          icon: "M3.75 4.875c0-.621.504-1.125 1.125-1.125h4.5c.621 0 1.125.504 1.125 1.125v4.5c0 .621-.504 1.125-1.125 1.125h-4.5A1.125 1.125 0 013.75 9.375v-4.5zM3.75 14.625c0-.621.504-1.125 1.125-1.125h4.5c.621 0 1.125.504 1.125 1.125v4.5c0 .621-.504 1.125-1.125 1.125h-4.5a1.125 1.125 0 01-1.125-1.125v-4.5zM13.5 4.875c0-.621.504-1.125 1.125-1.125h4.5c.621 0 1.125.504 1.125 1.125v4.5c0 .621-.504 1.125-1.125 1.125h-4.5A1.125 1.125 0 0113.5 9.375v-4.5z" },
+        { title: "Real-time updates",
+          desc: "Change a price, mark a listing as sold, upload new photos — the screen updates in seconds. Manage everything from your phone.",
+          icon: "M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0013.803-3.7M4.031 9.865a8.25 8.25 0 0113.803-3.7l3.181 3.182" }
+      ].each do |feature| %>
+        <div style="background: var(--m-surface); border: 1px solid var(--m-surface-border); border-radius: var(--m-radius); box-shadow: var(--m-shadow);"
+             class="p-6">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" class="w-6 h-6 mb-3" style="color: var(--m-accent);">
+            <path stroke-linecap="round" stroke-linejoin="round" d="<%= feature[:icon] %>" />
+          </svg>
+          <h3 style="color: var(--m-text);" class="font-semibold text-lg"><%= feature[:title] %></h3>
+          <p style="color: var(--m-text-muted);" class="mt-2 text-sm leading-relaxed"><%= feature[:desc] %></p>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</section>
+
+<%# ── For Open Houses ── %>
+<section style="background: var(--m-bg-alt); padding: var(--m-section-pad) 0;">
+  <div class="max-w-6xl mx-auto px-6">
+    <p style="color: var(--m-accent);" class="text-sm font-bold uppercase tracking-wider">For open houses</p>
+    <h2 style="font-family: var(--m-heading-font); font-weight: var(--m-heading-weight); color: var(--m-text);"
+        class="text-2xl sm:text-3xl tracking-tight mt-2">Interactive signage, anywhere</h2>
+    <p style="color: var(--m-text-muted);" class="mt-3 max-w-2xl text-sm sm:text-base">
+      Set up a touch screen at your next open house. Visitors browse, engage, and become leads — no sign-in sheet required.
+    </p>
+
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-5 sm:gap-6 mt-10">
+      <% [
+        { title: "Interactive experiences",
+          desc: "Create a dedicated interactive presentation for any listing. Visitors navigate photos, details, and floor plans by touch.",
+          icon: "M15.042 21.672L13.684 16.6m0 0l-2.51 2.225.569-9.47 5.227 7.917-3.286-.672zM12 2.25V4.5m5.834.166l-1.591 1.591M20.25 10.5H18M7.757 14.743l-1.59 1.59M6 10.5H3.75m4.007-4.243l-1.59-1.59" },
+        { title: "Touch-screen photo gallery",
+          desc: "Full-screen, swipeable photo gallery with pinch-to-zoom. Auto-plays when idle, responds to touch when visitors engage.",
+          icon: "M6.827 6.175A2.31 2.31 0 015.186 7.23c-.38.054-.757.112-1.134.175C2.999 7.58 2.25 8.507 2.25 9.574V18a2.25 2.25 0 002.25 2.25h15A2.25 2.25 0 0021.75 18V9.574c0-1.067-.75-1.994-1.802-2.169a47.865 47.865 0 00-1.134-.175 2.31 2.31 0 01-1.64-1.055l-.822-1.316a2.192 2.192 0 00-1.736-1.039 48.774 48.774 0 00-5.232 0 2.192 2.192 0 00-1.736 1.039l-.821 1.316z M16.5 12.75a4.5 4.5 0 11-9 0 4.5 4.5 0 019 0z" },
+        { title: "On-screen lead capture",
+          desc: "Visitors enter their email to receive floor plans or schedule a showing. Leads are created instantly, tied to the listing and agent.",
+          icon: "M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75" },
+        { title: "Agent branding",
+          desc: "Your photo, name, and contact info on every display. Visitors see who you are and how to reach you, right on screen.",
+          icon: "M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z" }
+      ].each do |feature| %>
+        <div style="background: var(--m-surface); border: 1px solid var(--m-surface-border); border-radius: var(--m-radius); box-shadow: var(--m-shadow);"
+             class="p-6">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" class="w-6 h-6 mb-3" style="color: var(--m-accent);">
+            <path stroke-linecap="round" stroke-linejoin="round" d="<%= feature[:icon] %>" />
+          </svg>
+          <h3 style="color: var(--m-text);" class="font-semibold text-lg"><%= feature[:title] %></h3>
+          <p style="color: var(--m-text-muted);" class="mt-2 text-sm leading-relaxed"><%= feature[:desc] %></p>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</section>
+
+<%# ── For Your Business ── %>
+<section style="background: var(--m-bg); padding: var(--m-section-pad) 0;">
+  <div class="max-w-6xl mx-auto px-6">
+    <p style="color: var(--m-accent);" class="text-sm font-bold uppercase tracking-wider">For your business</p>
+    <h2 style="font-family: var(--m-heading-font); font-weight: var(--m-heading-weight); color: var(--m-text);"
+        class="text-2xl sm:text-3xl tracking-tight mt-2">One dashboard for everything</h2>
+    <p style="color: var(--m-text-muted);" class="mt-3 max-w-2xl text-sm sm:text-base">
+      Manage listings, screens, leads, and your team from a single place.
+    </p>
+
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-5 sm:gap-6 mt-10">
+      <% [
+        { title: "Lead inbox",
+          desc: "Every QR scan and contact form submission lands in one inbox. Track status, assign agents, and follow up — nothing falls through the cracks.",
+          icon: "M2.25 13.5h3.86a2.25 2.25 0 012.012 1.244l.256.512a2.25 2.25 0 002.013 1.244h3.218a2.25 2.25 0 002.013-1.244l.256-.512a2.25 2.25 0 012.013-1.244h3.859m-19.5.338V18a2.25 2.25 0 002.25 2.25h15A2.25 2.25 0 0021.75 18v-4.162c0-.224-.034-.447-.1-.661L19.24 5.338a2.25 2.25 0 00-2.15-1.588H6.911a2.25 2.25 0 00-2.15 1.588L2.35 13.177a2.25 2.25 0 00-.1.661z" },
+        { title: "Multi-screen management",
+          desc: "Manage window displays, lobby screens, and portable open house screens from one dashboard. Assign content to any screen instantly.",
+          icon: "M9 17.25v1.007a3 3 0 01-.879 2.122L7.5 21h9l-.621-.621A3 3 0 0115 18.257V17.25m6-12V15a2.25 2.25 0 01-2.25 2.25H5.25A2.25 2.25 0 013 15V5.25m18 0A2.25 2.25 0 0018.75 3H5.25A2.25 2.25 0 003 5.25m18 0V12a2.25 2.25 0 01-2.25 2.25H5.25A2.25 2.25 0 013 12V5.25" },
+        { title: "Analytics dashboard",
+          desc: "See how your signage performs. Track impressions, QR scans, and leads over time. Know which listings drive the most engagement.",
+          icon: "M3 13.125C3 12.504 3.504 12 4.125 12h2.25c.621 0 1.125.504 1.125 1.125v6.75C7.5 20.496 6.996 21 6.375 21h-2.25A1.125 1.125 0 013 19.875v-6.75zM9.75 8.625c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125v11.25c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V8.625zM16.5 4.125c0-.621.504-1.125 1.125-1.125h2.25C20.496 3 21 3.504 21 4.125v15.75c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V4.125z" },
+        { title: "Team management",
+          desc: "Invite agents and managers to your account. Control who can create listings, manage screens, and view leads with role-based permissions.",
+          icon: "M18 18.72a9.094 9.094 0 003.741-.479 3 3 0 00-4.682-2.72m.94 3.198l.001.031c0 .225-.012.447-.037.666A11.944 11.944 0 0112 21c-2.17 0-4.207-.576-5.963-1.584A6.062 6.062 0 016 18.719m12 0a5.971 5.971 0 00-.941-3.197m0 0A5.995 5.995 0 0012 12.75a5.995 5.995 0 00-5.058 2.772m0 0a3 3 0 00-4.681 2.72 8.986 8.986 0 003.74.477m.94-3.197a5.971 5.971 0 00-.94 3.197M15 6.75a3 3 0 11-6 0 3 3 0 016 0zm6 3a2.25 2.25 0 11-4.5 0 2.25 2.25 0 014.5 0zm-13.5 0a2.25 2.25 0 11-4.5 0 2.25 2.25 0 014.5 0z" }
+      ].each do |feature| %>
+        <div style="background: var(--m-surface); border: 1px solid var(--m-surface-border); border-radius: var(--m-radius); box-shadow: var(--m-shadow);"
+             class="p-6">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" class="w-6 h-6 mb-3" style="color: var(--m-accent);">
+            <path stroke-linecap="round" stroke-linejoin="round" d="<%= feature[:icon] %>" />
+          </svg>
+          <h3 style="color: var(--m-text);" class="font-semibold text-lg"><%= feature[:title] %></h3>
+          <p style="color: var(--m-text-muted);" class="mt-2 text-sm leading-relaxed"><%= feature[:desc] %></p>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</section>
+
+<%# ── CTA ── %>
+<section style="background: var(--m-bg-hero); padding: var(--m-section-pad) 0;">
+  <div class="max-w-6xl mx-auto px-6 text-center">
+    <h2 style="font-family: var(--m-heading-font); font-weight: var(--m-heading-weight); color: var(--m-hero-text);"
+        class="text-2xl sm:text-3xl tracking-tight">See it in action</h2>
+    <p style="color: var(--m-hero-muted);" class="mt-3 max-w-md mx-auto">
+      We'll bring a screen to your office for a live demo. 15 minutes, no commitment.
+    </p>
+    <div class="flex flex-wrap items-center justify-center gap-4 mt-8">
+      <a href="/#demo" style="background: var(--m-cta-bg); color: var(--m-cta-text); border-radius: var(--m-radius);"
+         class="inline-flex items-center px-6 py-3 text-sm font-semibold shadow-sm hover:opacity-90 transition-opacity">
+        Book a demo
+      </a>
+      <a href="<%= new_account_url(subdomain: 'app') %>" style="color: var(--m-accent);"
+         class="text-sm font-semibold hover:opacity-80">
+        or start a free trial &rarr;
+      </a>
+    </div>
+  </div>
+</section>
