@@ -12,30 +12,6 @@
 <% active_playlist = active_assignment&.playlist %>
 <% is_live = active_playlist.present? %>
 
-<%# Dark preview hero %>
-<div class="rounded-xl bg-gray-900 p-6 flex items-center justify-center relative overflow-hidden mb-5" style="min-height: 180px;">
-  <div class="rounded-md overflow-hidden flex items-center justify-center"
-       style="<%= @screen.orientation == 'landscape' ? 'aspect-ratio: 16/9;' : 'aspect-ratio: 9/16;' %> height: 100%; max-height: 160px; width: auto; max-width: 100%; background: #14171f; box-shadow: 0 0 0 5px #1c2029, 0 0 0 6px #2a2f3a, 0 18px 40px rgba(0,0,0,.5);">
-    <% if is_live %>
-      <span class="text-white/20 text-xs">Preview</span>
-    <% else %>
-      <span class="text-white/15 text-2xl">—</span>
-    <% end %>
-  </div>
-  <div class="absolute top-4 left-4">
-    <% if is_live %>
-      <span class="inline-flex items-center gap-1.5 text-xs font-semibold text-white px-2.5 py-1 rounded-full" style="background: rgba(11,13,18,.6); backdrop-filter: blur(4px);">
-        <span class="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span>
-        Live now
-      </span>
-    <% else %>
-      <span class="inline-flex items-center gap-1.5 text-xs font-semibold text-white px-2.5 py-1 rounded-full" style="background: rgba(11,13,18,.6); backdrop-filter: blur(4px);">
-        No content
-      </span>
-    <% end %>
-  </div>
-</div>
-
 <%# Stats strip %>
 <div class="grid grid-cols-3 gap-4 mb-5">
   <div class="rounded-lg bg-white shadow-sm ring-1 ring-gray-900/5 p-4">
