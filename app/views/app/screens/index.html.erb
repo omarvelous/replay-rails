@@ -44,26 +44,14 @@
         <% @screens.each do |screen| %>
             <% active_playlist = screen.screen_playlists.find { |sp| sp.active }&.playlist %>
             <% status = screen_status(screen, active_playlist: active_playlist) %>
-            <% is_live = status == :live %>
-            <% tone = is_live ? %w[#2f6bff #0fb5a6 #7c5cff #e8990f #1f9d57][screen.id % 5] : nil %>
-            <div class="rounded-lg bg-white shadow-sm ring-1 ring-gray-900/5 hover:shadow-md transition-shadow overflow-visible">
-              <%# Preview — tinted gradient or idle/offline %>
-              <%= link_to screen_path(screen), class: "block aspect-video rounded-t-lg relative overflow-hidden cursor-pointer", style: is_live ? "background: linear-gradient(135deg, #14171f, #{tone}33);" : "background: #0b0d12;" do %>
-                <% unless is_live %>
-                  <div class="absolute inset-0 grid place-items-center text-gray-600 text-xl">—</div>
-                <% end %>
-                <div class="absolute top-2 right-2">
-                  <%= screen_status_badge(status) %>
-                </div>
-              <% end %>
-
-              <%# Metadata %>
+            <div class="rounded-lg bg-white shadow-sm ring-1 ring-gray-900/5 hover:shadow-md transition-shadow">
               <div class="p-3">
-                <div class="flex items-center justify-between">
+                <div class="flex items-center gap-2">
+                  <% dot_color = { no_player: "bg-gray-300", offline: "bg-red-500", online: "bg-blue-500", live: "bg-green-500" }[status] %>
+                  <span class="w-2 h-2 rounded-full shrink-0 <%= dot_color %><%= status == :live ? ' animate-pulse' : '' %>"></span>
                   <%= link_to screen.name, screen_path(screen), class: "font-semibold text-sm truncate hover:text-indigo-600 cursor-pointer" %>
-                  <span class="inline-flex items-center rounded-md bg-gray-50 px-1.5 py-0.5 text-[10.5px] font-medium text-gray-500 ring-1 ring-gray-500/10 ring-inset ml-2 shrink-0"><%= screen.orientation.capitalize %></span>
                 </div>
-                <p class="text-xs text-gray-400 mt-0.5"><%= screen.site.name %></p>
+                <p class="text-xs text-gray-400 mt-0.5"><%= screen.site.name %> · <%= screen.orientation.capitalize %></p>
 
                 <%# Playlist row %>
                 <div class="flex items-center gap-1.5 mt-2.5 text-xs text-gray-500">
@@ -122,14 +110,9 @@
                 <% @screens.each do |screen| %>
                   <% active_playlist = screen.screen_playlists.find { |sp| sp.active }&.playlist %>
                   <% status = screen_status(screen, active_playlist: active_playlist) %>
-                  <% is_live = status == :live %>
-                  <% tone = is_live ? %w[#2f6bff #0fb5a6 #7c5cff #e8990f #1f9d57][screen.id % 5] : nil %>
                   <tr class="hover:bg-gray-50">
                     <td class="px-3 py-4">
-                      <div class="flex items-center gap-3">
-                        <div class="w-12 h-7.5 rounded flex-none" style="background: <%= is_live ? "linear-gradient(135deg, #14171f, #{tone}33)" : '#0b0d12' %>;"></div>
-                        <%= link_to screen.name, screen_path(screen), class: "font-semibold text-sm text-gray-900 hover:text-indigo-600" %>
-                      </div>
+                      <%= link_to screen.name, screen_path(screen), class: "font-semibold text-sm text-gray-900 hover:text-indigo-600" %>
                     </td>
                     <td class="px-3 py-4 text-sm text-gray-500"><%= screen.site.name %></td>
                     <td class="px-3 py-4 text-xs font-mono text-gray-400"><%= screen.player ? screen.player.token.first(8) : "—" %></td>
