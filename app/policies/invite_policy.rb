@@ -18,5 +18,6 @@ class InvitePolicy < ApplicationPolicy
     user.nil? || user.email_address == record.email
   end
 
+  def resend?  = user&.can_manage?(account)
   def destroy? = user&.can_manage?(account)
 end

@@ -46,6 +46,18 @@ RSpec.describe Lead do
       create(:lead, status: "new")
       expect(described_class.by_status("contacted")).to eq([ contacted ])
     end
+
+    it ".search matches by name" do
+      match = create(:lead, name: "Jane Doe")
+      create(:lead, name: "Bob Smith")
+      expect(described_class.search("jane")).to eq([ match ])
+    end
+
+    it ".search matches by email" do
+      match = create(:lead, email: "jane@example.com")
+      create(:lead, email: "bob@example.com")
+      expect(described_class.search("jane@")).to eq([ match ])
+    end
   end
 
   describe "#current_agent" do

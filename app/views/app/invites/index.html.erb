@@ -31,14 +31,21 @@
                   expired
                 <% else %>
                   sent <%= time_ago_in_words(invite.created_at) %> ago
+                  <% if invite.resent_at.present? %>
+                    &middot; resent <%= time_ago_in_words(invite.resent_at) %> ago
+                  <% end %>
                 <% end %>
               </p>
             </div>
           </div>
           <% if invite.pending? %>
-            <%= button_to "Revoke", invite_path(token: invite.token), method: :delete,
-                class: "text-sm font-semibold text-red-600 hover:text-red-500",
-                data: { turbo_confirm: "Revoke this invite?" } %>
+            <div class="flex items-center gap-3">
+              <%= button_to "Resend", resend_invite_path(token: invite.token), method: :post,
+                  class: "text-sm font-semibold text-indigo-600 hover:text-indigo-500" %>
+              <%= button_to "Revoke", invite_path(token: invite.token), method: :delete,
+                  class: "text-sm font-semibold text-red-600 hover:text-red-500",
+                  data: { turbo_confirm: "Revoke this invite?" } %>
+            </div>
           <% else %>
             <span class="inline-flex items-center rounded-md bg-gray-50 px-1.5 py-0.5 text-[10.5px] font-medium text-gray-500 ring-1 ring-gray-500/10 ring-inset">
               <%= invite.accepted? ? "Accepted" : "Expired" %>

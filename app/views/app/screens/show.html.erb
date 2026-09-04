@@ -8,36 +8,12 @@
 <% end %>
 <%= render "app/shared/page_header", title: @screen.name, subtitle: "Screen", actions: actions, back_link: { label: "← Screens", path: screens_path } %>
 
-<% active_assignment = @screen.screen_playlists.includes(playlist: { playlist_ads: :ad }).find_by(active: true) %>
+<% active_assignment = @screen.screen_playlists.find_by(active: true) %>
 <% active_playlist = active_assignment&.playlist %>
 <% is_live = active_playlist.present? %>
 
-<%# Dark preview hero %>
-<div class="rounded-xl bg-gray-900 p-6 flex items-center justify-center relative overflow-hidden mb-5" style="min-height: 180px;">
-  <div class="rounded-md overflow-hidden flex items-center justify-center"
-       style="<%= @screen.orientation == 'landscape' ? 'aspect-ratio: 16/9;' : 'aspect-ratio: 9/16;' %> height: 100%; max-height: 160px; width: auto; max-width: 100%; background: #14171f; box-shadow: 0 0 0 5px #1c2029, 0 0 0 6px #2a2f3a, 0 18px 40px rgba(0,0,0,.5);">
-    <% if is_live %>
-      <span class="text-white/20 text-xs">Preview</span>
-    <% else %>
-      <span class="text-white/15 text-2xl">—</span>
-    <% end %>
-  </div>
-  <div class="absolute top-4 left-4">
-    <% if is_live %>
-      <span class="inline-flex items-center gap-1.5 text-xs font-semibold text-white px-2.5 py-1 rounded-full" style="background: rgba(11,13,18,.6); backdrop-filter: blur(4px);">
-        <span class="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span>
-        Live now
-      </span>
-    <% else %>
-      <span class="inline-flex items-center gap-1.5 text-xs font-semibold text-white px-2.5 py-1 rounded-full" style="background: rgba(11,13,18,.6); backdrop-filter: blur(4px);">
-        No content
-      </span>
-    <% end %>
-  </div>
-</div>
-
 <%# Stats strip %>
-<div class="grid grid-cols-4 gap-4 mb-5">
+<div class="grid grid-cols-3 gap-4 mb-5">
   <div class="rounded-lg bg-white shadow-sm ring-1 ring-gray-900/5 p-4">
     <p class="text-xs text-gray-400">Impressions</p>
     <p class="text-2xl font-bold tabular-nums"><%= number_with_delimiter(@impressions_count) %></p>
@@ -45,10 +21,6 @@
   <div class="rounded-lg bg-white shadow-sm ring-1 ring-gray-900/5 p-4">
     <p class="text-xs text-gray-400">Scans</p>
     <p class="text-2xl font-bold tabular-nums text-yellow-600"><%= QrScan.qualified.where(screen: @screen).count %></p>
-  </div>
-  <div class="rounded-lg bg-white shadow-sm ring-1 ring-gray-900/5 p-4">
-    <p class="text-xs text-gray-400">Uptime</p>
-    <p class="text-2xl font-bold tabular-nums <%= is_live ? 'text-green-600' : 'text-red-600' %>"><%= is_live ? "99.4%" : "—" %></p>
   </div>
   <div class="rounded-lg bg-white shadow-sm ring-1 ring-gray-900/5 p-4">
     <p class="text-xs text-gray-400">Loop length</p>
@@ -95,7 +67,7 @@
       <% if active_playlist&.playlist_ads&.any? %>
         <h3 class="text-sm font-semibold mb-3">Loop</h3>
         <div class="flex flex-col gap-1">
-          <% active_playlist.playlist_ads.order(:position).each_with_index do |pa, i| %>
+          <% active_playlist.playlist_ads.each_with_index do |pa, i| %>
             <% tone = %w[#2f6bff #0fb5a6 #7c5cff #e8990f #1f9d57 #e5484d][pa.ad_id % 6] %>
             <div class="flex items-center gap-3 py-2">
               <span class="font-mono text-xs text-gray-400 w-5 text-right"><%= i + 1 %></span>
@@ -123,22 +95,6 @@
         { name: "Scans", data: QrScan.qualified.where(screen: @screen)
             .where("created_at > ?", 14.days.ago).group_by_day(:created_at).count }
       ], height: "56px", library: { scales: { y: { display: false }, x: { display: false } }, plugins: { legend: { display: false } } } %>
-
-      <h3 class="text-sm font-semibold mb-3">Event log</h3>
-      <div class="flex flex-col gap-1">
-        <% [
-          ["ok", "Screen registered", "just now"],
-          ["ok", "Playlist published", "2m ago"],
-          ["warn", "Content swapped", "15m ago"],
-          ["ok", "Heartbeat received", "1h ago"],
-        ].each do |evt_status, text, time| %>
-          <div class="flex items-center gap-3 py-1.5">
-            <span class="w-2 h-2 rounded-full flex-none <%= evt_status == 'ok' ? 'bg-green-500' : evt_status == 'warn' ? 'bg-yellow-500' : 'bg-red-500' %>"></span>
-            <span class="text-sm flex-1"><%= text %></span>
-            <span class="font-mono text-xs text-gray-400"><%= time %></span>
-          </div>
-        <% end %>
-      </div>
     </div>
   </div>
 
@@ -237,18 +193,6 @@
       <% end %>
     </div>
 
-    <%# Schedule %>
-    <div class="rounded-lg bg-white shadow-sm ring-1 ring-gray-900/5 p-5">
-      <h3 class="text-sm font-semibold mb-3">Schedule</h3>
-      <div class="divide-y divide-gray-200">
-        <% [["Playing", "Daily · 8:00 AM – 9:00 PM"], ["Timezone", "America/New_York"], ["Overrides", "None"]].each do |label, value| %>
-          <div class="flex justify-between py-2 text-sm">
-            <span class="text-gray-500"><%= label %></span>
-            <span class="font-semibold <%= label == 'Timezone' ? 'font-mono text-xs' : '' %>"><%= value %></span>
-          </div>
-        <% end %>
-      </div>
-    </div>
   </div>
 </div>
 

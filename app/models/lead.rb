@@ -27,6 +27,7 @@ class Lead < ApplicationRecord
 
   scope :unread, -> { where(status: "new") }
   scope :by_status, ->(s) { where(status: s) }
+  scope :search, ->(q) { where("leads.name ILIKE :q OR leads.email ILIKE :q", q: "%#{sanitize_sql_like(q)}%") }
 
   def current_agent
     agents.order("lead_agents.created_at DESC").first

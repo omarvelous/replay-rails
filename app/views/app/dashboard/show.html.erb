@@ -2,10 +2,10 @@
 
 <%# Summary cards %>
 <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
-  <div class="rounded-lg bg-white shadow-sm ring-1 ring-gray-900/5 p-5">
+  <%= link_to screens_path, class: "rounded-lg bg-white shadow-sm ring-1 ring-gray-900/5 p-5 hover:shadow-md transition-shadow" do %>
     <p class="text-3xl font-bold tabular-nums"><%= @screens_online %>/<%= @screens_total %></p>
     <p class="text-xs text-gray-400 mt-1">Screens online</p>
-  </div>
+  <% end %>
   <div class="rounded-lg bg-white shadow-sm ring-1 ring-gray-900/5 p-5">
     <p class="text-3xl font-bold tabular-nums"><%= number_with_delimiter(@impressions_month) %></p>
     <p class="text-xs text-gray-400 mt-1">Impressions this month</p>
@@ -14,29 +14,37 @@
     <p class="text-3xl font-bold tabular-nums"><%= number_with_delimiter(@scans_month) %></p>
     <p class="text-xs text-gray-400 mt-1">Scans this month</p>
   </div>
-  <div class="rounded-lg bg-white shadow-sm ring-1 ring-gray-900/5 p-5">
-    <p class="text-3xl font-bold tabular-nums"><%= @leads_month %></p>
+  <%= link_to leads_path, class: "rounded-lg bg-white shadow-sm ring-1 ring-gray-900/5 p-5 hover:shadow-md transition-shadow" do %>
+    <div class="flex items-start justify-between">
+      <p class="text-3xl font-bold tabular-nums"><%= @leads_month %></p>
+      <% if @leads_unread > 0 %>
+        <span class="inline-flex items-center rounded-full bg-indigo-600 px-2 py-0.5 text-xs font-semibold text-white"><%= @leads_unread %> new</span>
+      <% end %>
+    </div>
     <p class="text-xs text-gray-400 mt-1">Leads this month</p>
-  </div>
+  <% end %>
 </div>
 
 <%# Charts %>
 <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
   <div class="rounded-lg bg-white shadow-sm ring-1 ring-gray-900/5 p-5">
     <h3 class="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-4">Impressions & Scans (30 days)</h3>
-    <%= line_chart [
-      { name: "Impressions", data: Impression.where(account: Current.account)
-          .where("created_at > ?", 30.days.ago).group_by_day(:created_at).count },
-      { name: "Scans", data: QrScan.qualified.where(account: Current.account)
-          .where("created_at > ?", 30.days.ago).group_by_day(:created_at).count }
-    ], library: { scales: { y: { beginAtZero: true } } } %>
+    <% if @chart_impressions.values.sum > 0 || @chart_scans.values.sum > 0 %>
+      <%= line_chart [
+        { name: "Impressions", data: @chart_impressions },
+        { name: "Scans", data: @chart_scans }
+      ], library: { scales: { y: { beginAtZero: true } } } %>
+    <% else %>
+      <div class="py-8 text-center text-sm text-gray-400">No impressions or scans yet.</div>
+    <% end %>
   </div>
   <div class="rounded-lg bg-white shadow-sm ring-1 ring-gray-900/5 p-5">
     <h3 class="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-4">Leads (30 days)</h3>
-    <%= line_chart Current.account.leads
-          .where("created_at > ?", 30.days.ago)
-          .group_by_day(:created_at).count,
-        library: { scales: { y: { beginAtZero: true } } } %>
+    <% if @chart_leads.values.sum > 0 %>
+      <%= line_chart @chart_leads, library: { scales: { y: { beginAtZero: true } } } %>
+    <% else %>
+      <div class="py-8 text-center text-sm text-gray-400">No leads yet.</div>
+    <% end %>
   </div>
 </div>
 

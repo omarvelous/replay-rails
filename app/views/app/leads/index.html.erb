@@ -5,6 +5,12 @@
 
 <%= form_with url: leads_path, method: :get do |f| %>
   <div class="flex flex-wrap items-center gap-3 mb-5">
+    <div class="flex-1 min-w-50 max-w-xs">
+      <%= f.search_field :q, value: params[:q], placeholder: "Search by name or email…",
+          class: "block w-full rounded-md bg-white px-3 py-1.5 text-sm text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600",
+          oninput: "if (this.value === '') this.form.requestSubmit()" %>
+    </div>
+
     <div class="grid grid-cols-1">
       <%= f.select :status,
           [["All leads", ""], ["New", "new"], ["Contacted", "contacted"], ["Qualified", "qualified"], ["Closed", "closed"]],

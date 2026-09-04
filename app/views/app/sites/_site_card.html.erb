@@ -1,5 +1,4 @@
 <% tone = %w[#2f6bff #0fb5a6 #7c5cff #e8990f #1f9d57 #e5484d][site.id % 6] %>
-<% screen_count = site.screens.count %>
 <%= link_to site_path(site), class: "rounded-lg bg-white shadow-sm ring-1 ring-gray-900/5 hover:shadow-md transition-shadow cursor-pointer group overflow-hidden" do %>
   <%# Site photo or tinted header %>
   <div class="relative overflow-hidden" style="height: 124px; background: <%= tone %>14;">
@@ -8,14 +7,6 @@
     <% else %>
       <div class="absolute inset-0" style="background: linear-gradient(135deg, <%= tone %>26, transparent);"></div>
     <% end %>
-    <%# Type badge top-left %>
-    <span class="absolute top-3 left-3 inline-flex items-center rounded-full bg-gray-900/8 px-2 py-0.5 text-xs font-medium text-gray-600 ring-1 ring-gray-500/10 ring-inset backdrop-blur-sm">Brokerage</span>
-    <%# Status badge top-right — N/N live %>
-    <span class="absolute top-3 right-3 inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-xs font-medium ring-1 ring-inset
-      <%= screen_count > 0 ? 'bg-green-50 text-green-700 ring-green-600/20' : 'bg-gray-50 text-gray-600 ring-gray-500/10' %>">
-      <span class="size-1.5 rounded-full <%= screen_count > 0 ? 'bg-green-500' : 'bg-gray-400' %>"></span>
-      <%= screen_count %>/<%= screen_count %> live
-    </span>
   </div>
 
   <div style="padding: 14px 16px 16px;">
@@ -26,21 +17,5 @@
         <%= site.address %>
       </p>
     <% end %>
-
-    <%# MiniStat footer — 3-up %>
-    <div class="flex gap-5 mt-3.5 pt-3.5 border-t border-gray-200">
-      <div>
-        <div class="text-base font-bold tabular-nums"><%= screen_count %></div>
-        <div class="text-xs text-gray-400">Screens</div>
-      </div>
-      <div>
-        <div class="text-base font-bold tabular-nums <%= screen_count > 0 ? 'text-green-600' : 'text-gray-400' %>"><%= screen_count %></div>
-        <div class="text-xs text-gray-400">Online</div>
-      </div>
-      <div>
-        <div class="text-base font-bold tabular-nums">0</div>
-        <div class="text-xs text-gray-400">Scans</div>
-      </div>
-    </div>
   </div>
 <% end %>

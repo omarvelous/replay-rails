@@ -2,10 +2,10 @@
   <%= link_to edit_listing_path(@listing), class: "rounded-md bg-white px-2.5 py-1.5 text-sm font-semibold text-gray-900 shadow-xs ring-1 ring-gray-300 ring-inset hover:bg-gray-50" do %>Edit listing<% end %>
   <%= link_to new_ad_path(listing_id: @listing.id), class: "rounded-md bg-indigo-600 px-2.5 py-1.5 text-sm font-semibold text-white shadow-xs hover:bg-indigo-500" do %>Use in ad<% end %>
 <% end %>
-<%= render "app/shared/page_header", title: @listing.address, subtitle: "Listing", actions: actions, back_link: { label: "← Listings", path: listings_path } %>
+<%= render "app/shared/page_header", title: @listing.address, subtitle: "#{@listing.property_type.humanize} · #{@listing.listing_type.humanize}", actions: actions, back_link: { label: "← Listings", path: listings_path } %>
 
 <% tone = %w[#2f6bff #0fb5a6 #7c5cff #e8990f #1f9d57 #e5484d][@listing.id % 6] %>
-<% is_rental = @listing.price && @listing.price < 100_000 %>
+<% is_rental = @listing.listing_type == "for_rent" %>
 
 <%# Photo gallery %>
 <% photos = @listing.photos.to_a %>
@@ -52,10 +52,10 @@
 
 <%# Spec strip %>
 <div class="rounded-lg bg-white shadow-sm ring-1 ring-gray-900/5 mb-5 p-0 overflow-hidden">
-  <div class="flex">
+  <div class="flex flex-wrap">
     <div class="flex-1 p-4 bg-gray-50" style="flex: 1.3;">
       <p class="text-2xl font-bold tabular-nums text-indigo-600"><%= number_to_currency(@listing.price, precision: 0) %></p>
-      <p class="text-xs text-gray-400 mt-1"><%= is_rental ? "Asking rent" : "List price" %></p>
+      <p class="text-xs text-gray-400 mt-1"><%= is_rental ? "Asking rent" : @listing.listing_type == "for_lease" ? "Asking lease" : "List price" %></p>
     </div>
     <div class="flex-1 p-4 border-l border-gray-200">
       <p class="text-xl font-bold tabular-nums"><%= @listing.beds || "—" %></p>
@@ -85,57 +85,15 @@
 <div class="grid grid-cols-1 lg:grid-cols-[1fr_320px] gap-5 items-start">
   <%# Main column %>
   <div class="flex flex-col gap-4">
-    <%# About %>
+    <%# Description %>
     <div class="rounded-lg bg-white shadow-sm ring-1 ring-gray-900/5">
       <div class="p-5">
         <h3 class="font-semibold text-base mb-2">About this property</h3>
-        <p class="text-sm leading-relaxed text-gray-600">
-          This <%= @listing.beds || 0 %>-bedroom, <%= @listing.baths || 0 %>-bathroom apartment offers
-          <%= @listing.sqft ? "#{number_with_delimiter(@listing.sqft)} square feet of" : "" %> living space.
-          Located at <%= @listing.address %>, this property is currently <%= @listing.status %>.
-        </p>
-      </div>
-    </div>
-
-    <%# Features & amenities (stubbed) %>
-    <div class="rounded-lg bg-white shadow-sm ring-1 ring-gray-900/5">
-      <div class="p-5">
-        <h3 class="font-semibold text-base mb-3">Features & amenities</h3>
-        <div class="flex flex-wrap gap-2">
-          <% %w[In-unit\ laundry Stainless\ appliances Hardwood\ floors Pet\ friendly High\ ceilings Dishwasher].each do |feat| %>
-            <span class="inline-flex items-center gap-1.5 text-xs font-medium px-3 py-1.5 rounded-full bg-gray-100 border border-gray-200 text-gray-600">
-              <svg xmlns="http://www.w3.org/2000/svg" class="w-3 h-3 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/></svg>
-              <%= feat %>
-            </span>
-          <% end %>
-        </div>
-      </div>
-    </div>
-
-    <%# Property details %>
-    <div class="rounded-lg bg-white shadow-sm ring-1 ring-gray-900/5">
-      <div class="p-5">
-        <h3 class="font-semibold text-base mb-3">Property details</h3>
-        <div class="divide-y divide-gray-200">
-          <% details = [
-            ["Property type", "Apartment"],
-            ["Status", @listing.status.capitalize],
-            ["Bedrooms", @listing.beds],
-            ["Bathrooms", @listing.baths],
-            ["Interior", @listing.sqft ? "#{number_with_delimiter(@listing.sqft)} sq ft" : "—"],
-            ["Year built", "—"],
-            [is_rental ? "Lease term" : "Price per sq ft", is_rental ? "12 months" : (@listing.sqft && @listing.sqft > 0 ? number_to_currency(@listing.price / @listing.sqft, precision: 0) : "—")],
-            ["Neighborhood", "—"],
-            ["MLS #", "RP-#{@listing.id.to_s.rjust(5, '0')}"],
-            ["Days on market", "0"],
-          ] %>
-          <% details.each do |label, value| %>
-            <div class="flex justify-between py-2.5 text-sm">
-              <span class="text-gray-500"><%= label %></span>
-              <span class="font-semibold <%= label == 'MLS #' ? 'font-mono' : '' %>"><%= value %></span>
-            </div>
-          <% end %>
-        </div>
+        <% if @listing.description.present? %>
+          <p class="text-sm leading-relaxed text-gray-600"><%= @listing.description %></p>
+        <% else %>
+          <p class="text-sm text-gray-400"><%= link_to "Add a description", edit_listing_path(@listing), class: "underline hover:text-gray-600" %></p>
+        <% end %>
       </div>
     </div>
 
@@ -228,12 +186,6 @@
       <% end %>
     </div>
 
-    <%# Note %>
-    <div class="rounded-lg bg-white shadow-sm ring-1 ring-gray-900/5">
-      <div class="p-5 text-sm text-gray-500">
-        <strong class="text-gray-700">Synced from MLS.</strong> Property facts update automatically on the next sync — edits here only affect how the listing appears in RePlay signage.
-      </div>
-    </div>
   </div>
 </div>
 

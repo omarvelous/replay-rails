@@ -1,7 +1,7 @@
 module App
   class InvitesController < App::BaseController
     allow_unauthenticated_access only: %i[show update]
-    before_action :set_invite, only: %i[show update destroy]
+    before_action :set_invite, only: %i[show update destroy resend]
     before_action :require_authentication_for_existing_users, only: :show
 
     # GET /invites
@@ -79,6 +79,18 @@ module App
       authorize! @invite
       @invite.destroy
       redirect_to invites_path, notice: "Invite revoked."
+    end
+
+    # POST /invites/:token/resend
+    def resend
+      authorize! @invite
+      if @invite.pending?
+        @invite.update!(resent_at: Time.current)
+        InviteMailer.invite(@invite).deliver_later
+        redirect_to invites_path, notice: "Invite resent to #{@invite.email}."
+      else
+        redirect_to invites_path, alert: "This invite can no longer be resent."
+      end
     end
 
     private

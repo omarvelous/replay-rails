@@ -16,6 +16,13 @@ module App
       @leads_unread = Current.account.leads.unread.count
 
       @recent_leads = Current.account.leads.order(created_at: :desc).limit(5)
+
+      @chart_impressions = Impression.where(account: Current.account)
+                             .where("created_at > ?", 30.days.ago).group_by_day(:created_at).count
+      @chart_scans = QrScan.qualified.where(account: Current.account)
+                       .where("created_at > ?", 30.days.ago).group_by_day(:created_at).count
+      @chart_leads = Current.account.leads
+                       .where("created_at > ?", 30.days.ago).group_by_day(:created_at).count
     end
   end
 end

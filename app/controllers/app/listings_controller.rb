@@ -6,6 +6,8 @@ module App
     base = authorized_scope(Listing.all)
     base = base.search(params[:q]) if params[:q].present?
     base = base.by_status(params[:status]) if params[:status].present?
+    base = base.by_property_type(params[:property_type]) if params[:property_type].present?
+    base = base.by_listing_type(params[:listing_type]) if params[:listing_type].present?
     @pagy, @listings = pagy(base.order(created_at: :desc))
   end
 
@@ -58,7 +60,7 @@ module App
     end
 
     def listing_params
-      params.require(:listing).permit(:address, :price, :beds, :baths, :sqft, :status, photos: [])
+      params.require(:listing).permit(:address, :price, :beds, :baths, :sqft, :status, :property_type, :listing_type, :description, photos: [])
     end
   end
 end
