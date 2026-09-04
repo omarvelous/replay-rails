@@ -149,7 +149,7 @@
                       </div>
                     </td>
                     <td class="px-3 py-4 text-sm text-gray-500"><%= screen.site.name %></td>
-                    <td class="px-3 py-4 text-xs text-gray-400"><%= screen.paired? ? "Paired" : "—" %></td>
+                    <td class="px-3 py-4 text-xs font-mono text-gray-400"><%= screen.player ? screen.player.token.first(8) : "—" %></td>
                     <td class="px-3 py-4 text-sm text-gray-500"><%= active_playlist&.name || "—" %></td>
                     <td class="px-3 py-4"><%= screen_status_badge(status) %></td>
                     <td class="px-3 py-4 text-xs text-gray-400"><%= screen_heartbeat_text(screen, status) %></td>
