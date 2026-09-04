@@ -5,10 +5,11 @@
 The core product loop is built: listings → ads → playlists → screens →
 QR scans → leads → agent inbox. Admin panel (Administrate), subdomain
 architecture (marketing, app, admin, play, api), and test infrastructure
-are in place. 725 specs, 95% line coverage.
+are in place. 801 specs, 96% line / 82% branch coverage.
 
-All Tier 1 launch blockers are shipped. The platform is functionally
-ready for a private beta.
+All Tier 1 launch blockers are shipped. App UX pass complete — fake
+data removed, missing functionality added, UI consistency fixed.
+The platform is functionally ready for a private beta.
 
 ---
 
@@ -30,6 +31,7 @@ ready for a private beta.
 | Player UX | `player-ux` #32, `player-ux-phase4` #33 | Unpair events, API resilience, device fingerprinting, QR pairing, countdown timer, visual fixes. |
 | Staging domain | `staging-domain` #35 | Migrated from staging.replaytv.co to replaytv.dev. Zero config drift. |
 | Credentials | `credentials` | Per-environment Rails credentials for R2 and Cloudflare secrets. |
+| App UX | `app-ux` #37 | Removed all fake/hardcoded data, added role management, invite resend, lead search, listing property_type/listing_type fields, dashboard improvements, mobile fixes, flash type support. 28 commits. |
 
 ---
 
@@ -216,5 +218,6 @@ Documentation is in progress.
 | Plan | Location | Status |
 |------|----------|--------|
 | Documentation | `.claude/plans/202608281530-documentation.md` | In progress |
+| App UX | `.claude/plans/20260904-app-ux.md` | Complete |
 | Day-parting / Scheduling | `.claude/plans/drafts/plan-day-parting-scheduling.md` | Draft — needs review |
 | Live Preview | `.claude/plans/drafts/plan-live-preview.md` | Draft — needs review |
