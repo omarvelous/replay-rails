@@ -86,7 +86,10 @@
                       <span class="font-semibold text-sm text-gray-900"><%= listing.address %></span>
                     </div>
                   </td>
-                  <td class="px-3 py-4 text-sm text-gray-500"><%= listing.property_type.humanize %></td>
+                  <td class="px-3 py-4 text-sm text-gray-500">
+                    <div><%= listing.property_type.humanize %></div>
+                    <div class="text-xs text-gray-400"><%= listing.listing_type.humanize %></div>
+                  </td>
                   <td class="px-3 py-4 text-sm font-semibold font-mono"><%= number_to_currency(listing.price, precision: 0) %></td>
                   <td class="px-3 py-4 text-sm font-mono text-gray-500"><%= listing.beds %></td>
                   <td class="px-3 py-4 text-sm font-mono text-gray-500"><%= listing.baths %></td>
