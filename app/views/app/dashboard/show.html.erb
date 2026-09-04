@@ -15,7 +15,12 @@
     <p class="text-xs text-gray-400 mt-1">Scans this month</p>
   </div>
   <div class="rounded-lg bg-white shadow-sm ring-1 ring-gray-900/5 p-5">
-    <p class="text-3xl font-bold tabular-nums"><%= @leads_month %></p>
+    <div class="flex items-start justify-between">
+      <p class="text-3xl font-bold tabular-nums"><%= @leads_month %></p>
+      <% if @leads_unread > 0 %>
+        <span class="inline-flex items-center rounded-full bg-indigo-600 px-2 py-0.5 text-xs font-semibold text-white"><%= @leads_unread %> new</span>
+      <% end %>
+    </div>
     <p class="text-xs text-gray-400 mt-1">Leads this month</p>
   </div>
 </div>
