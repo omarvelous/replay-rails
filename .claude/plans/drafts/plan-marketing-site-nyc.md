@@ -289,30 +289,65 @@ mailto or Calendly embed, no backend needed initially.
 
 ## Build Order
 
-### Phase 1: Home page (2-3 days)
-1. Hero section with both-product messaging
-2. Two products side-by-side section
-3. How it works (3 steps)
-4. Features grid (6 items)
-5. Pricing preview
-6. Final CTA
+### Phase 0: Theme prototyping (1 day)
+
+Build the home page once with full content (all sections from the
+home page plan above). Add a floating theme switcher that toggles
+between three visual directions. Same markup and copy — only the
+styling changes.
+
+**Implementation:** CSS custom properties on `<html>` toggled by a
+Stimulus controller. Each theme sets colors, typography, spacing,
+card treatment, and hero style. The switcher is a floating pill in
+the bottom-right corner, visible only on the marketing site.
+
+**Three directions:**
+
+1. **Clean/Minimal** — White backgrounds, generous whitespace, muted
+   gray/indigo palette, thin 1px borders, system font stack at normal
+   weight. Cards are flat with subtle ring. Hero is light with dark
+   text. The "premium SaaS" look — Stripe, Linear, Vercel.
+
+2. **Bold/Dark** — Dark hero section (gray-900/950), high-contrast
+   white typography, indigo-to-teal gradient accents, glowing CTAs.
+   Content sections alternate white and dark. Cards have deeper
+   shadows. The "modern tech" look — Raycast, Arc, Framer.
+
+3. **Warm/Editorial** — Off-white/cream base (stone-50), serif font
+   for headings (e.g., DM Serif Display), warmer palette (amber,
+   stone, warm gray), softer rounded corners, subtle paper-like
+   texture. The "boutique real estate" look — feels premium and
+   approachable to brokerages who aren't tech-forward.
+
+**Deliverable:** One page at `/` with all content sections, a
+floating toggle to switch themes, and a deploy to staging so the
+theme decision can be made in a real browser on desktop and mobile.
+
+**Decision gate:** Pick a direction (or hybrid) before proceeding
+to Phase 1. All subsequent work uses the chosen theme.
+
+### Phase 1: Home page polish (1-2 days)
+1. Lock in chosen theme, remove switcher
+2. Refine section spacing and responsive breakpoints
+3. Add placeholder product visuals (screenshots or mockups)
+4. Wire up "Book a demo" CTA (anchor to demo section or page)
 
 ### Phase 2: Supporting pages (1-2 days)
-7. Features page with screenshots
-8. Pricing page with comparison table + FAQ
-9. About page with trust content
-10. Demo request page (form or Calendly)
+5. Features page with screenshots
+6. Pricing page with comparison table + FAQ
+7. About page with trust content
+8. Demo request page (form or Calendly)
 
 ### Phase 3: Layout + polish (1 day)
-11. Nav update (Book a demo as primary CTA)
-12. Mobile nav (hamburger menu)
-13. Footer with columns
-14. Meta tags (title, description, OG image per page)
+9. Nav update (Book a demo as primary CTA)
+10. Mobile nav (hamburger menu)
+11. Footer with columns
+12. Meta tags (title, description, OG image per page)
 
 ### Phase 4: Content (ongoing)
-15. Real product screenshots (needs the product running)
-16. Testimonials as they come in
-17. Blog or case studies (future)
+13. Real product screenshots (needs the product running)
+14. Testimonials as they come in
+15. Blog or case studies (future)
 
 ---
 
