@@ -219,8 +219,8 @@ Documentation is in progress.
 | Plan | Location | Status |
 |------|----------|--------|
 | Documentation | `.claude/plans/202608281530-documentation.md` | In progress |
-| App UX | `.claude/plans/20260904-app-ux.md` | Complete |
-| Marketing site (NYC) | `.claude/plans/20260904-marketing-site-nyc.md` | In progress |
+| App UX | `.claude/plans/202609040100-app-ux.md` | Complete |
+| Marketing site (NYC) | `.claude/plans/202609041200-marketing-site-nyc.md` | In progress |
 | Experiences (kiosk) | `.claude/plans/drafts/plan-experiences-v2.md` | Draft — needs review |
 | NYC product gaps | `.claude/plans/drafts/plan-nyc-product-gaps.md` | Draft — needs review |
 | Day-parting / Scheduling | `.claude/plans/drafts/plan-day-parting-scheduling.md` | Draft — needs review |
