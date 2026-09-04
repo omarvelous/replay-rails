@@ -41,7 +41,7 @@ RSpec.describe AccountUser do
 
       expect(owner.destroy).to be_falsey
       expect(owner.errors[:base]).to include("Cannot remove the last owner")
-      expect(AccountUser.exists?(owner.id)).to be true
+      expect(described_class.exists?(owner.id)).to be true
     end
 
     it "allows destroying an owner when another owner exists" do
@@ -50,7 +50,7 @@ RSpec.describe AccountUser do
       create(:account_user, account: account, role: "owner", user: create(:user))
 
       expect(owner1.destroy).to be_truthy
-      expect(AccountUser.exists?(owner1.id)).to be false
+      expect(described_class.exists?(owner1.id)).to be false
     end
 
     it "allows destroying a non-owner role freely" do
@@ -59,7 +59,7 @@ RSpec.describe AccountUser do
       manager = create(:account_user, :manager, account: account, user: create(:user))
 
       expect(manager.destroy).to be_truthy
-      expect(AccountUser.exists?(manager.id)).to be false
+      expect(described_class.exists?(manager.id)).to be false
     end
   end
 end

@@ -35,12 +35,12 @@ RSpec.describe "AccountUsers (Roles)" do
 
     it "rejects duplicate roles" do
       post user_account_users_path(member), params: { account_user: { role: "agent" } }
-      expect(response).to have_http_status(:unprocessable_entity)
+      expect(response).to have_http_status(:unprocessable_content)
     end
 
     it "rejects invalid roles" do
       post user_account_users_path(member), params: { account_user: { role: "superadmin" } }
-      expect(response).to have_http_status(:unprocessable_entity)
+      expect(response).to have_http_status(:unprocessable_content)
     end
   end
 
@@ -68,7 +68,7 @@ RSpec.describe "AccountUsers (Roles)" do
 
       expect {
         delete user_account_user_path(owner, au)
-      }.not_to change { AccountUser.count }
+      }.not_to change(AccountUser, :count)
 
       expect(response).to redirect_to(user_account_users_path(owner))
       expect(flash[:alert]).to include("Cannot remove the last owner")
