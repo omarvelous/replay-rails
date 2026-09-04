@@ -14,12 +14,12 @@ services:
       timeout: 5s
       retries: 5
 
-  chrome:
-    image: selenium/standalone-chromium:latest
-    ports:
-      - "4444:4444"
-      - "7900:7900"
-    shm_size: 2gb
+  # chrome:
+  #   image: selenium/standalone-chromium:latest
+  #   ports:
+  #     - "4444:4444"
+  #     - "7900:7900"
+  #   shm_size: 2gb
 
   web:
     build:
@@ -31,8 +31,8 @@ services:
     depends_on:
       db:
         condition: service_healthy
-      chrome:
-        condition: service_started
+      # chrome:
+      #   condition: service_started
     environment:
       DATABASE_URL: postgres://postgres:postgres@db:5432
       RAILS_ENV: development
