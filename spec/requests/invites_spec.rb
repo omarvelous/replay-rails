@@ -67,6 +67,41 @@ RSpec.describe "Invites" do
     end
   end
 
+  describe "POST /invites/:token/resend" do
+    it "re-sends the invite email and records resent_at" do
+      invite = create(:invite, account: account, invited_by: user)
+      post resend_invite_path(token: invite.token)
+      expect(ActionMailer::MailDeliveryJob).to have_been_enqueued
+      expect(response).to redirect_to(invites_path)
+      expect(flash[:notice]).to eq("Invite resent to #{invite.email}.")
+      expect(invite.reload.resent_at).to be_present
+    end
+
+    it "does not resend an accepted invite" do
+      invite = create(:invite, account: account, invited_by: user, accepted_at: 1.day.ago)
+      post resend_invite_path(token: invite.token)
+      expect(response).to redirect_to(invites_path)
+      expect(flash[:alert]).to be_present
+    end
+
+    it "does not resend an expired invite" do
+      invite = create(:invite, account: account, invited_by: user, created_at: 8.days.ago)
+      post resend_invite_path(token: invite.token)
+      expect(response).to redirect_to(invites_path)
+      expect(flash[:alert]).to be_present
+    end
+
+    context "when user is agent" do
+      let(:user) { create(:user, account: account, role: "agent") }
+
+      it "denies access" do
+        invite = create(:invite, account: account, invited_by: create(:user, account: account, role: "owner"))
+        post resend_invite_path(token: invite.token)
+        expect(response).to redirect_to(app_root_path)
+      end
+    end
+  end
+
   describe "DELETE /invites/:token" do
     it "revokes the invite" do
       invite = create(:invite, account: account, invited_by: user)

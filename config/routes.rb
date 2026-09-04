@@ -77,7 +77,9 @@ Rails.application.routes.draw do
       resources :users, only: %i[index show] do
         resources :account_users, only: %i[index create destroy]
       end
-      resources :invites, param: :token, only: %i[index new create show update destroy]
+      resources :invites, param: :token, only: %i[index new create show update destroy] do
+        member { post :resend }
+      end
     end
   end
 
