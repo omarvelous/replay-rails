@@ -9,6 +9,10 @@ RSpec.describe Listing do
     it { is_expected.to validate_numericality_of(:price).is_greater_than(0) }
     it { is_expected.to validate_presence_of(:status) }
     it { is_expected.to validate_inclusion_of(:status).in_array(%w[active pending sold]) }
+    it { is_expected.to validate_presence_of(:property_type) }
+    it { is_expected.to validate_inclusion_of(:property_type).in_array(Listing::PROPERTY_TYPES) }
+    it { is_expected.to validate_presence_of(:listing_type) }
+    it { is_expected.to validate_inclusion_of(:listing_type).in_array(Listing::LISTING_TYPES) }
   end
 
   describe "associations" do
