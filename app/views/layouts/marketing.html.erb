@@ -1,40 +1,44 @@
 <!DOCTYPE html>
-<html lang="en" data-theme="light">
+<html lang="en" data-theme="light" data-marketing-theme="minimal">
   <head>
     <title><%= content_for?(:title) ? "#{content_for(:title)} — RePlay" : "RePlay — Digital Signage for Real Estate" %></title>
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&display=swap" rel="stylesheet">
     <%= stylesheet_link_tag :app, "data-turbo-track": "reload" %>
     <%= javascript_importmap_tags %>
   </head>
 
-  <body class="bg-white min-h-screen">
-    <nav class="border-b border-gray-200">
+  <body class="min-h-screen" style="background: var(--m-bg);">
+    <nav style="border-bottom: 1px solid var(--m-surface-border);">
       <div class="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
         <a href="/" class="flex items-center gap-2">
           <span class="flex size-8 items-center justify-center rounded-lg bg-linear-to-br from-indigo-500 to-teal-400">
             <svg viewBox="0 0 24 24" fill="none" class="size-4"><path d="M8 6.5v11l9-5.5-9-5.5z" fill="#fff"/></svg>
           </span>
-          <span class="text-lg font-bold tracking-tight">Re<b class="text-indigo-600">Play</b></span>
+          <span class="text-lg font-bold tracking-tight" style="color: var(--m-text);">Re<b style="color: var(--m-accent);">Play</b></span>
         </a>
         <div class="hidden md:flex items-center gap-6">
-          <%= link_to "Features", "/features", class: "text-sm font-medium text-gray-600 hover:text-gray-900" %>
-          <%= link_to "Pricing", "/pricing", class: "text-sm font-medium text-gray-600 hover:text-gray-900" %>
-          <%= link_to "About", "/about", class: "text-sm font-medium text-gray-600 hover:text-gray-900" %>
-          <%= link_to "Log in", new_session_url(subdomain: "app"), class: "text-sm font-medium text-gray-600 hover:text-gray-900" %>
-          <%= link_to "Start free trial", new_account_url(subdomain: "app"), class: "rounded-md bg-indigo-600 px-3.5 py-2 text-sm font-semibold text-white shadow-xs hover:bg-indigo-500" %>
+          <%= link_to "Features", "/features", class: "text-sm font-medium hover:opacity-80", style: "color: var(--m-text-muted);" %>
+          <%= link_to "Pricing", "/pricing", class: "text-sm font-medium hover:opacity-80", style: "color: var(--m-text-muted);" %>
+          <%= link_to "About", "/about", class: "text-sm font-medium hover:opacity-80", style: "color: var(--m-text-muted);" %>
+          <%= link_to "Log in", new_session_url(subdomain: "app"), class: "text-sm font-medium hover:opacity-80", style: "color: var(--m-text-muted);" %>
+          <a href="/demo" style="background: var(--m-cta-bg); color: var(--m-cta-text); border-radius: var(--m-radius);"
+             class="px-3.5 py-2 text-sm font-semibold shadow-xs hover:opacity-90 transition-opacity">Book a demo</a>
         </div>
       </div>
     </nav>
 
     <%= yield %>
 
-    <footer class="border-t border-gray-200 mt-20 bg-gray-50">
+    <footer style="border-top: 1px solid var(--m-surface-border); background: var(--m-bg-alt);" class="mt-20">
       <div class="max-w-6xl mx-auto px-6 py-12">
         <div class="flex items-center justify-between">
-          <span class="text-lg font-bold tracking-tight">Re<b class="text-indigo-600">Play</b></span>
-          <p class="text-xs text-gray-400">&copy; <%= Date.current.year %> RePlay. All rights reserved.</p>
+          <span class="text-lg font-bold tracking-tight" style="color: var(--m-text);">Re<b style="color: var(--m-accent);">Play</b></span>
+          <p class="text-xs" style="color: var(--m-text-faint);">&copy; <%= Date.current.year %> RePlay. All rights reserved.</p>
         </div>
       </div>
     </footer>

@@ -1,9 +1,240 @@
-<div class="max-w-6xl mx-auto px-6 py-24">
-  <h1 class="text-5xl font-extrabold tracking-tight text-gray-900 leading-tight">
-    Your window,<br>working 24/7
-  </h1>
-  <p class="text-xl text-gray-600 mt-6 max-w-lg">
-    Replace static printed property sheets with dynamic digital signage.
-    Connect passersby to listings via QR codes.
-  </p>
+<%# ── Hero ── %>
+<section style="background: var(--m-bg-hero); padding: var(--m-section-pad) 0;">
+  <div class="max-w-6xl mx-auto px-6">
+    <div class="max-w-2xl">
+      <h1 style="font-family: var(--m-heading-font); font-weight: var(--m-heading-weight); color: var(--m-hero-text);"
+          class="text-5xl md:text-6xl tracking-tight leading-[1.1]">
+        Your storefront,<br>always on
+      </h1>
+      <p style="color: var(--m-hero-muted);" class="text-xl mt-6 leading-relaxed max-w-lg">
+        Dynamic window displays and interactive open house signage for NYC brokerages.
+        No more printed cards. No more stale listings.
+      </p>
+      <div class="flex flex-wrap items-center gap-4 mt-8">
+        <a href="/demo" style="background: var(--m-cta-bg); color: var(--m-cta-text); border-radius: var(--m-radius);"
+           class="inline-flex items-center px-5 py-3 text-sm font-semibold shadow-sm hover:opacity-90 transition-opacity">
+          Book a demo
+        </a>
+        <a href="<%= new_account_url(subdomain: 'app') %>" style="color: var(--m-accent);"
+           class="text-sm font-semibold hover:opacity-80">
+          or start a free trial &rarr;
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<%# ── Two Products ── %>
+<section style="background: var(--m-bg-alt); padding: var(--m-section-pad) 0;">
+  <div class="max-w-6xl mx-auto px-6">
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+      <%# Window Displays %>
+      <div style="background: var(--m-surface); border: 1px solid var(--m-surface-border); border-radius: var(--m-radius); box-shadow: var(--m-shadow);"
+           class="p-8">
+        <div class="w-12 h-12 rounded-xl grid place-items-center mb-5" style="background: rgba(79,70,229,0.1);">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" class="w-6 h-6" style="color: var(--m-accent);">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 21v-7.5a.75.75 0 01.75-.75h3a.75.75 0 01.75.75V21m-4.5 0H2.36m11.14 0H18m0 0h3.64m-1.39 0V9.349M3.75 21V9.349m0 0a3.001 3.001 0 003.75-.615A2.993 2.993 0 009.75 9.75c.896 0 1.7-.393 2.25-1.016a2.993 2.993 0 002.25 1.016c.896 0 1.7-.393 2.25-1.015a3.001 3.001 0 003.75.614m-16.5 0a3.004 3.004 0 01-.621-4.72l1.189-1.19A1.5 1.5 0 015.378 3h13.243a1.5 1.5 0 011.06.44l1.19 1.189a3 3 0 01-.621 4.72M6.75 18h3.75a.75.75 0 00.75-.75V13.5a.75.75 0 00-.75-.75H6.75a.75.75 0 00-.75.75v3.75c0 .414.336.75.75.75z" />
+          </svg>
+        </div>
+        <h3 style="font-family: var(--m-heading-font); font-weight: var(--m-heading-weight); color: var(--m-text);"
+            class="text-2xl tracking-tight">Window Displays</h3>
+        <p style="color: var(--m-text-muted);" class="mt-3 leading-relaxed">
+          Your listings on screen, always current. Replace printed window cards with a dynamic display.
+          Update from your phone. Capture walk-in leads with QR codes.
+        </p>
+      </div>
+
+      <%# Open House %>
+      <div style="background: var(--m-surface); border: 1px solid var(--m-surface-border); border-radius: var(--m-radius); box-shadow: var(--m-shadow);"
+           class="p-8">
+        <div class="w-12 h-12 rounded-xl grid place-items-center mb-5" style="background: rgba(79,70,229,0.1);">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" class="w-6 h-6" style="color: var(--m-accent);">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 1.5H8.25A2.25 2.25 0 006 3.75v16.5a2.25 2.25 0 002.25 2.25h7.5A2.25 2.25 0 0018 20.25V3.75a2.25 2.25 0 00-2.25-2.25H13.5m-3 0V3h3V1.5m-3 0h3m-3 18.75h3" />
+          </svg>
+        </div>
+        <h3 style="font-family: var(--m-heading-font); font-weight: var(--m-heading-weight); color: var(--m-text);"
+            class="text-2xl tracking-tight">Open House Signage</h3>
+        <p style="color: var(--m-text-muted);" class="mt-3 leading-relaxed">
+          Turn every open house into an interactive experience. Visitors browse photos, floor plans,
+          and property details on a touch screen. Leads captured before they leave the building.
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<%# ── How It Works ── %>
+<section style="background: var(--m-bg); padding: var(--m-section-pad) 0;">
+  <div class="max-w-6xl mx-auto px-6">
+    <h2 style="font-family: var(--m-heading-font); font-weight: var(--m-heading-weight); color: var(--m-text);"
+        class="text-3xl tracking-tight text-center">How it works</h2>
+    <p style="color: var(--m-text-muted);" class="text-center mt-3 max-w-lg mx-auto">
+      From listing to live screen in minutes. No technical skills needed.
+    </p>
+
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-10 mt-12">
+      <div class="text-center">
+        <div class="w-10 h-10 rounded-full grid place-items-center mx-auto text-sm font-bold" style="background: var(--m-accent); color: var(--m-cta-text);">1</div>
+        <h3 style="color: var(--m-text);" class="font-semibold text-lg mt-4">Add your listings</h3>
+        <p style="color: var(--m-text-muted);" class="mt-2 text-sm leading-relaxed">
+          Upload photos, enter details. Takes 2 minutes per listing.
+        </p>
+      </div>
+      <div class="text-center">
+        <div class="w-10 h-10 rounded-full grid place-items-center mx-auto text-sm font-bold" style="background: var(--m-accent); color: var(--m-cta-text);">2</div>
+        <h3 style="color: var(--m-text);" class="font-semibold text-lg mt-4">Choose your format</h3>
+        <p style="color: var(--m-text-muted);" class="mt-2 text-sm leading-relaxed">
+          Build a window display playlist or create an interactive open house experience.
+        </p>
+      </div>
+      <div class="text-center">
+        <div class="w-10 h-10 rounded-full grid place-items-center mx-auto text-sm font-bold" style="background: var(--m-accent); color: var(--m-cta-text);">3</div>
+        <h3 style="color: var(--m-text);" class="font-semibold text-lg mt-4">Go live</h3>
+        <p style="color: var(--m-text-muted);" class="mt-2 text-sm leading-relaxed">
+          Assign to a screen. Content appears instantly. Update anytime from your phone.
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<%# ── Features Grid ── %>
+<section style="background: var(--m-bg-alt); padding: var(--m-section-pad) 0;">
+  <div class="max-w-6xl mx-auto px-6">
+    <h2 style="font-family: var(--m-heading-font); font-weight: var(--m-heading-weight); color: var(--m-text);"
+        class="text-3xl tracking-tight text-center">Everything you need</h2>
+    <p style="color: var(--m-text-muted);" class="text-center mt-3 max-w-lg mx-auto">
+      Built specifically for real estate brokerages and agents.
+    </p>
+
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mt-12">
+      <% [
+        { icon: "M2.25 15.75l5.159-5.159a2.25 2.25 0 013.182 0l5.159 5.159m-1.5-1.5l1.409-1.409a2.25 2.25 0 013.182 0l2.909 2.909M3.75 21h16.5a2.25 2.25 0 002.25-2.25V5.25a2.25 2.25 0 00-2.25-2.25H3.75a2.25 2.25 0 00-2.25 2.25v13.5A2.25 2.25 0 003.75 21z",
+           title: "Dynamic listings",
+           desc: "Photos, price, and details — always current on every screen." },
+        { icon: "M3.75 4.875c0-.621.504-1.125 1.125-1.125h4.5c.621 0 1.125.504 1.125 1.125v4.5c0 .621-.504 1.125-1.125 1.125h-4.5A1.125 1.125 0 013.75 9.375v-4.5zM3.75 14.625c0-.621.504-1.125 1.125-1.125h4.5c.621 0 1.125.504 1.125 1.125v4.5c0 .621-.504 1.125-1.125 1.125h-4.5a1.125 1.125 0 01-1.125-1.125v-4.5zM13.5 4.875c0-.621.504-1.125 1.125-1.125h4.5c.621 0 1.125.504 1.125 1.125v4.5c0 .621-.504 1.125-1.125 1.125h-4.5A1.125 1.125 0 0113.5 9.375v-4.5z",
+           title: "QR lead capture",
+           desc: "Walk-by scans become leads in your inbox instantly." },
+        { icon: "M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z",
+           title: "Agent branding",
+           desc: "Your photo, name, and contact on every ad and display." },
+        { icon: "M15.042 21.672L13.684 16.6m0 0l-2.51 2.225.569-9.47 5.227 7.917-3.286-.672zM12 2.25V4.5m5.834.166l-1.591 1.591M20.25 10.5H18M7.757 14.743l-1.59 1.59M6 10.5H3.75m4.007-4.243l-1.59-1.59",
+           title: "Interactive touch",
+           desc: "Visitors swipe through photos and floor plans at open houses." },
+        { icon: "M10.5 1.5H8.25A2.25 2.25 0 006 3.75v16.5a2.25 2.25 0 002.25 2.25h7.5A2.25 2.25 0 0018 20.25V3.75a2.25 2.25 0 00-2.25-2.25H13.5m-3 0V3h3V1.5m-3 0h3m-3 18.75h3",
+           title: "Manage from your phone",
+           desc: "Update listings and content without touching a computer." },
+        { icon: "M9 17.25v1.007a3 3 0 01-.879 2.122L7.5 21h9l-.621-.621A3 3 0 0115 18.257V17.25m6-12V15a2.25 2.25 0 01-2.25 2.25H5.25A2.25 2.25 0 013 15V5.25m18 0A2.25 2.25 0 0018.75 3H5.25A2.25 2.25 0 003 5.25m18 0V12a2.25 2.25 0 01-2.25 2.25H5.25A2.25 2.25 0 013 12V5.25",
+           title: "Multiple screens",
+           desc: "Window, lobby, open house — one dashboard for everything." }
+      ].each do |feature| %>
+        <div style="background: var(--m-surface); border: 1px solid var(--m-surface-border); border-radius: var(--m-radius); box-shadow: var(--m-shadow);"
+             class="p-6">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" class="w-6 h-6 mb-3" style="color: var(--m-accent);">
+            <path stroke-linecap="round" stroke-linejoin="round" d="<%= feature[:icon] %>" />
+          </svg>
+          <h3 style="color: var(--m-text);" class="font-semibold"><%= feature[:title] %></h3>
+          <p style="color: var(--m-text-muted);" class="mt-1 text-sm leading-relaxed"><%= feature[:desc] %></p>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</section>
+
+<%# ── Pricing Preview ── %>
+<section style="background: var(--m-bg); padding: var(--m-section-pad) 0;">
+  <div class="max-w-6xl mx-auto px-6">
+    <h2 style="font-family: var(--m-heading-font); font-weight: var(--m-heading-weight); color: var(--m-text);"
+        class="text-3xl tracking-tight text-center">Simple, transparent pricing</h2>
+    <p style="color: var(--m-text-muted);" class="text-center mt-3 max-w-lg mx-auto">
+      No hidden fees. No long-term contracts. Cancel anytime.
+    </p>
+
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-12 max-w-4xl mx-auto">
+      <% [
+        { name: "Window Display", price: "$99", unit: "/ mo per screen",
+          desc: "Dynamic storefront listings with QR lead capture." },
+        { name: "Open House Kit", price: "$49", unit: "/ mo per agent",
+          desc: "Interactive touch experience for showings and open houses." },
+        { name: "Brokerage Bundle", price: "Custom", unit: "",
+          desc: "Multiple screens, dedicated setup, and priority support." }
+      ].each do |plan| %>
+        <div style="background: var(--m-surface); border: 1px solid var(--m-surface-border); border-radius: var(--m-radius); box-shadow: var(--m-shadow);"
+             class="p-6 text-center">
+          <h3 style="color: var(--m-text);" class="font-semibold text-lg"><%= plan[:name] %></h3>
+          <div class="mt-3">
+            <span style="font-family: var(--m-heading-font); font-weight: var(--m-heading-weight); color: var(--m-text);"
+                  class="text-4xl tracking-tight"><%= plan[:price] %></span>
+            <span style="color: var(--m-text-muted);" class="text-sm"><%= plan[:unit] %></span>
+          </div>
+          <p style="color: var(--m-text-muted);" class="mt-3 text-sm leading-relaxed"><%= plan[:desc] %></p>
+          <% if plan[:price] == "Custom" %>
+            <a href="/demo" style="color: var(--m-accent);" class="inline-block mt-4 text-sm font-semibold hover:opacity-80">
+              Talk to us &rarr;
+            </a>
+          <% else %>
+            <a href="<%= new_account_url(subdomain: 'app') %>" style="border: 1px solid var(--m-surface-border); border-radius: var(--m-radius); color: var(--m-text);"
+               class="inline-block mt-4 px-4 py-2 text-sm font-semibold hover:opacity-80">
+              Start free trial
+            </a>
+          <% end %>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</section>
+
+<%# ── Social Proof ── %>
+<section style="background: var(--m-bg-alt); padding: var(--m-section-pad) 0;">
+  <div class="max-w-6xl mx-auto px-6 text-center">
+    <p style="color: var(--m-text-faint);" class="text-xs font-semibold uppercase tracking-wider mb-6">Built for NYC brokerages</p>
+    <blockquote style="font-family: var(--m-heading-font); color: var(--m-text);" class="text-2xl leading-relaxed max-w-2xl mx-auto">
+      "I used to spend two hours every week updating window cards.
+      Now I update from my phone in 30 seconds."
+    </blockquote>
+    <p style="color: var(--m-text-muted);" class="mt-4 text-sm">
+      &mdash; Future testimonial, NYC Brokerage
+    </p>
+  </div>
+</section>
+
+<%# ── Final CTA ── %>
+<section style="background: var(--m-bg); padding: var(--m-section-pad) 0;">
+  <div class="max-w-6xl mx-auto px-6 text-center">
+    <h2 style="font-family: var(--m-heading-font); font-weight: var(--m-heading-weight); color: var(--m-text);"
+        class="text-3xl tracking-tight">Ready to upgrade your storefront?</h2>
+    <p style="color: var(--m-text-muted);" class="mt-3 max-w-md mx-auto">
+      We'll bring a screen to your office and show you RePlay in action.
+      15 minutes, no commitment.
+    </p>
+    <div class="flex flex-wrap items-center justify-center gap-4 mt-8">
+      <a href="/demo" style="background: var(--m-cta-bg); color: var(--m-cta-text); border-radius: var(--m-radius);"
+         class="inline-flex items-center px-6 py-3 text-sm font-semibold shadow-sm hover:opacity-90 transition-opacity">
+        Book a demo
+      </a>
+      <a href="<%= new_account_url(subdomain: 'app') %>" style="color: var(--m-accent);"
+         class="text-sm font-semibold hover:opacity-80">
+        or start a free trial &rarr;
+      </a>
+    </div>
+  </div>
+</section>
+
+<%# ── Theme Switcher (floating) ── %>
+<div data-controller="theme-switcher" class="fixed bottom-6 right-6 z-50">
+  <div style="background: var(--m-surface); border: 1px solid var(--m-surface-border); box-shadow: 0 4px 24px rgba(0,0,0,0.15);"
+       class="rounded-full px-2 py-1.5 flex items-center gap-1">
+    <button type="button" data-theme-switcher-target="button" data-theme="minimal" data-action="click->theme-switcher#switch"
+            class="rounded-full px-3 py-1 text-xs font-medium transition-all" style="color: var(--m-text);">
+      Minimal
+    </button>
+    <button type="button" data-theme-switcher-target="button" data-theme="bold" data-action="click->theme-switcher#switch"
+            class="rounded-full px-3 py-1 text-xs font-medium transition-all" style="color: var(--m-text);">
+      Bold
+    </button>
+    <button type="button" data-theme-switcher-target="button" data-theme="warm" data-action="click->theme-switcher#switch"
+            class="rounded-full px-3 py-1 text-xs font-medium transition-all" style="color: var(--m-text);">
+      Warm
+    </button>
+  </div>
 </div>

@@ -3,6 +3,80 @@
 @source "../../../app/views";
 @source "../../../app/javascript";
 
+/* ── Marketing theme system ── */
+
+/* Theme: Clean / Minimal (default) */
+[data-marketing-theme="minimal"] {
+  --m-bg: #ffffff;
+  --m-bg-alt: #f9fafb;
+  --m-bg-hero: #ffffff;
+  --m-text: #111827;
+  --m-text-muted: #6b7280;
+  --m-text-faint: #9ca3af;
+  --m-accent: #4f46e5;
+  --m-accent-hover: #4338ca;
+  --m-surface: #ffffff;
+  --m-surface-border: #e5e7eb;
+  --m-heading-font: ui-sans-serif, system-ui, sans-serif;
+  --m-heading-weight: 800;
+  --m-radius: 0.5rem;
+  --m-shadow: 0 1px 3px rgba(0,0,0,0.06);
+  --m-hero-text: #111827;
+  --m-hero-muted: #6b7280;
+  --m-cta-bg: #4f46e5;
+  --m-cta-text: #ffffff;
+  --m-cta-hover: #4338ca;
+  --m-section-pad: 5rem;
+}
+
+/* Theme: Bold / Dark */
+[data-marketing-theme="bold"] {
+  --m-bg: #ffffff;
+  --m-bg-alt: #f3f4f6;
+  --m-bg-hero: #030712;
+  --m-text: #111827;
+  --m-text-muted: #6b7280;
+  --m-text-faint: #9ca3af;
+  --m-accent: #6366f1;
+  --m-accent-hover: #818cf8;
+  --m-surface: #ffffff;
+  --m-surface-border: #e5e7eb;
+  --m-heading-font: ui-sans-serif, system-ui, sans-serif;
+  --m-heading-weight: 900;
+  --m-radius: 0.75rem;
+  --m-shadow: 0 4px 20px rgba(0,0,0,0.12);
+  --m-hero-text: #ffffff;
+  --m-hero-muted: rgba(255,255,255,0.7);
+  --m-cta-bg: linear-gradient(135deg, #6366f1, #14b8a6);
+  --m-cta-text: #ffffff;
+  --m-cta-hover: linear-gradient(135deg, #818cf8, #2dd4bf);
+  --m-section-pad: 6rem;
+}
+
+/* Theme: Warm / Editorial */
+[data-marketing-theme="warm"] {
+  --m-bg: #faf8f5;
+  --m-bg-alt: #f5f0eb;
+  --m-bg-hero: #faf8f5;
+  --m-text: #292524;
+  --m-text-muted: #78716c;
+  --m-text-faint: #a8a29e;
+  --m-accent: #b45309;
+  --m-accent-hover: #92400e;
+  --m-surface: #ffffff;
+  --m-surface-border: #e7e5e4;
+  --m-heading-font: "DM Serif Display", Georgia, serif;
+  --m-heading-weight: 400;
+  --m-radius: 0.75rem;
+  --m-shadow: 0 2px 8px rgba(0,0,0,0.06);
+  --m-hero-text: #292524;
+  --m-hero-muted: #78716c;
+  --m-cta-bg: #b45309;
+  --m-cta-text: #ffffff;
+  --m-cta-hover: #92400e;
+  --m-section-pad: 5rem;
+}
+
 /* Ad canvas — dark theme as default + container-relative signage scale */
 .ad-canvas {
   container-type: inline-size;
