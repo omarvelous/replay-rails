@@ -8,7 +8,8 @@
       <% else %>
         <div class="absolute inset-0" style="background: linear-gradient(160deg, <%= tone %>33, transparent 70%);"></div>
       <% end %>
-      <div class="absolute top-3 right-3">
+      <div class="absolute top-3 right-3 flex items-center gap-1">
+        <span class="inline-flex items-center rounded-full bg-gray-900/60 px-2 py-0.5 text-xs font-medium text-white backdrop-blur-sm"><%= listing.listing_type.humanize %></span>
         <% if listing.status == 'active' %>
           <span class="inline-flex items-center rounded-full bg-green-50 px-2 py-0.5 text-xs font-medium text-green-700 ring-1 ring-green-600/20 ring-inset"><%= listing.status.capitalize %></span>
         <% elsif listing.status == 'pending' %>

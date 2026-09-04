@@ -25,6 +25,8 @@ class Listing < ApplicationRecord
 
   scope :search, ->(q) { where("listings.address ILIKE ?", "%#{sanitize_sql_like(q)}%") }
   scope :by_status, ->(s) { where(status: s) }
+  scope :by_property_type, ->(t) { where(property_type: t) }
+  scope :by_listing_type, ->(t) { where(listing_type: t) }
 
   def primary_agent
     listing_agents.primary.first&.agent || agents.first
