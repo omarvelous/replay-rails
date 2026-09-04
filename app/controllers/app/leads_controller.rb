@@ -3,6 +3,7 @@ module App
     def index
       base = authorized_scope(Lead.all)
       base = base.includes(:listing, :lead_agents, :agents)
+      base = base.search(params[:q]) if params[:q].present?
       base = base.by_status(params[:status]) if params[:status].present?
       @pagy, @leads = pagy(base.order(created_at: :desc))
       @unread_count = authorized_scope(Lead.all).unread.count
