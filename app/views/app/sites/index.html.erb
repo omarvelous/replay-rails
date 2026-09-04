@@ -4,7 +4,7 @@
     New site
   <% end %>
 <% end %>
-<%= render "app/shared/page_header", title: "Sites", subtitle: "#{@sites.size} locations · #{@sites.sum { |s| s.screens.count }} screens · #{@sites.sum { |s| s.screens.count }} players online", actions: actions %>
+<%= render "app/shared/page_header", title: "Sites", subtitle: "#{@sites.size} locations", actions: actions %>
 
 <% if @sites.any? %>
   <div id="sites_grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
