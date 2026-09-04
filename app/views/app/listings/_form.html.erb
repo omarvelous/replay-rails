@@ -26,12 +26,27 @@
           class: "block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6" %>
     </div>
 
-    <div class="grid grid-cols-3 gap-3 mb-5">
+    <div class="grid grid-cols-3 gap-3 mb-3">
       <div>
-        <%= form.label :status, class: "block text-sm/6 font-medium text-gray-900" %>
-        <%= form.select :status, [["Active", "active"], ["For Rent", "pending"], ["Sold", "sold"]],
+        <%= form.label :property_type, "Property type", class: "block text-sm/6 font-medium text-gray-900" %>
+        <%= form.select :property_type,
+            Listing::PROPERTY_TYPES.map { |t| [t.humanize, t] },
             {}, class: "block w-full rounded-md bg-white py-1.5 pl-3 pr-8 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6" %>
       </div>
+      <div>
+        <%= form.label :listing_type, "Listing type", class: "block text-sm/6 font-medium text-gray-900" %>
+        <%= form.select :listing_type,
+            [["For Sale", "for_sale"], ["For Rent", "for_rent"], ["For Lease", "for_lease"]],
+            {}, class: "block w-full rounded-md bg-white py-1.5 pl-3 pr-8 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6" %>
+      </div>
+      <div>
+        <%= form.label :status, class: "block text-sm/6 font-medium text-gray-900" %>
+        <%= form.select :status, [["Active", "active"], ["Pending", "pending"], ["Sold", "sold"]],
+            {}, class: "block w-full rounded-md bg-white py-1.5 pl-3 pr-8 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6" %>
+      </div>
+    </div>
+
+    <div class="grid grid-cols-2 gap-3 mb-5">
       <div>
         <%= form.label :beds, "Bedrooms", class: "block text-sm/6 font-medium text-gray-900" %>
         <%= form.number_field :beds, min: 0, step: 1, class: "block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6" %>
@@ -45,7 +60,7 @@
     <%# Pricing & size section %>
     <p class="text-xs font-semibold uppercase tracking-wider text-gray-400 mb-3">Pricing & size</p>
 
-    <div class="grid grid-cols-3 gap-3 mb-5">
+    <div class="grid grid-cols-2 gap-3 mb-5">
       <div>
         <%= form.label :price, "List price ($)", class: "block text-sm/6 font-medium text-gray-900" %>
         <%= form.number_field :price, required: true, min: 0, step: 0.01, class: "block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6" %>
@@ -53,11 +68,6 @@
       <div>
         <%= form.label :sqft, "Interior sq ft", class: "block text-sm/6 font-medium text-gray-900" %>
         <%= form.number_field :sqft, min: 0, class: "block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6" %>
-      </div>
-      <div>
-        <label class="block text-sm/6 font-medium text-gray-900">MLS #</label>
-        <input type="text" class="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6 font-mono" placeholder="auto" disabled
-               value="RP-<%= listing.persisted? ? listing.id.to_s.rjust(5, '0') : '' %>" />
       </div>
     </div>
 
