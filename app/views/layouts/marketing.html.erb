@@ -1,13 +1,10 @@
 <!DOCTYPE html>
-<html lang="en" data-theme="light" data-marketing-theme="bold">
+<html lang="en" data-theme="light">
   <head>
     <title><%= content_for?(:title) ? "#{content_for(:title)} — RePlay" : "RePlay — Digital Signage for Real Estate" %></title>
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&display=swap" rel="stylesheet">
     <%= stylesheet_link_tag :app, "data-turbo-track": "reload" %>
     <%= javascript_importmap_tags %>
   </head>
