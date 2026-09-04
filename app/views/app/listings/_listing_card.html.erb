@@ -24,7 +24,7 @@
     <%= link_to listing_path(listing), class: "block" do %>
       <p class="text-lg font-bold tabular-nums"><%= number_to_currency(listing.price, precision: 0) %></p>
       <p class="text-sm text-gray-700 truncate"><%= listing.address %></p>
-      <p class="text-xs text-gray-400 mt-0.5">Apartment</p>
+      <p class="text-xs text-gray-400 mt-0.5"><%= listing.property_type.humanize %> · <%= listing.listing_type.humanize %></p>
 
       <%# Specs row %>
       <div class="flex items-center gap-3 mt-2 text-sm text-gray-500">

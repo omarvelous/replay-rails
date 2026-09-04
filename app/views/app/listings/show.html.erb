@@ -2,10 +2,10 @@
   <%= link_to edit_listing_path(@listing), class: "rounded-md bg-white px-2.5 py-1.5 text-sm font-semibold text-gray-900 shadow-xs ring-1 ring-gray-300 ring-inset hover:bg-gray-50" do %>Edit listing<% end %>
   <%= link_to new_ad_path(listing_id: @listing.id), class: "rounded-md bg-indigo-600 px-2.5 py-1.5 text-sm font-semibold text-white shadow-xs hover:bg-indigo-500" do %>Use in ad<% end %>
 <% end %>
-<%= render "app/shared/page_header", title: @listing.address, subtitle: "Listing", actions: actions, back_link: { label: "← Listings", path: listings_path } %>
+<%= render "app/shared/page_header", title: @listing.address, subtitle: "#{@listing.property_type.humanize} · #{@listing.listing_type.humanize}", actions: actions, back_link: { label: "← Listings", path: listings_path } %>
 
 <% tone = %w[#2f6bff #0fb5a6 #7c5cff #e8990f #1f9d57 #e5484d][@listing.id % 6] %>
-<% is_rental = @listing.price && @listing.price < 100_000 %>
+<% is_rental = @listing.listing_type == "for_rent" %>
 
 <%# Photo gallery %>
 <% photos = @listing.photos.to_a %>
@@ -55,7 +55,7 @@
   <div class="flex">
     <div class="flex-1 p-4 bg-gray-50" style="flex: 1.3;">
       <p class="text-2xl font-bold tabular-nums text-indigo-600"><%= number_to_currency(@listing.price, precision: 0) %></p>
-      <p class="text-xs text-gray-400 mt-1"><%= is_rental ? "Asking rent" : "List price" %></p>
+      <p class="text-xs text-gray-400 mt-1"><%= is_rental ? "Asking rent" : @listing.listing_type == "for_lease" ? "Asking lease" : "List price" %></p>
     </div>
     <div class="flex-1 p-4 border-l border-gray-200">
       <p class="text-xl font-bold tabular-nums"><%= @listing.beds || "—" %></p>
