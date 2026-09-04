@@ -3,4 +3,9 @@ set -e
 
 bundle check || bundle install
 
+# If running the rails server, prepare the database
+if [ "${1}" == "./bin/thrust" ] || [ "${1}" == "./bin/rails" ]; then
+  ./bin/rails db:prepare
+fi
+
 exec "$@"
