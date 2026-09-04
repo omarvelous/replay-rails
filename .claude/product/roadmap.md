@@ -47,6 +47,7 @@ Can ship without these but can't sustain a business.
 
 | Item | Why it's needed at launch | Status |
 |------|--------------------------|--------|
+| Marketing site | NYC-focused landing page with both product motions, pricing, demo CTA. | In progress |
 | Subscriptions | Can't charge without billing. Stripe Billing, plan tiers, feature gating. | Not started |
 | Notifications | Leads email agents, but nothing else alerts users. Player offline, milestone scans, new team member. | Not started |
 | Content scheduling | Brokerages want open house ads on weekends only. Day-parting and date ranges. | Plan exists |
@@ -219,5 +220,8 @@ Documentation is in progress.
 |------|----------|--------|
 | Documentation | `.claude/plans/202608281530-documentation.md` | In progress |
 | App UX | `.claude/plans/20260904-app-ux.md` | Complete |
+| Marketing site (NYC) | `.claude/plans/20260904-marketing-site-nyc.md` | In progress |
+| Experiences (kiosk) | `.claude/plans/drafts/plan-experiences-v2.md` | Draft — needs review |
+| NYC product gaps | `.claude/plans/drafts/plan-nyc-product-gaps.md` | Draft — needs review |
 | Day-parting / Scheduling | `.claude/plans/drafts/plan-day-parting-scheduling.md` | Draft — needs review |
 | Live Preview | `.claude/plans/drafts/plan-live-preview.md` | Draft — needs review |
