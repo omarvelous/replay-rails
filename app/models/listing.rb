@@ -14,6 +14,8 @@ class Listing < ApplicationRecord
     attachable.variant :card,  resize_to_fill: [ 800, 450 ]
   end
 
+  has_many_attached :floor_plans
+
   PROPERTY_TYPES = %w[house condo townhouse apartment multifamily commercial land].freeze
   LISTING_TYPES = %w[for_sale for_rent for_lease].freeze
 
