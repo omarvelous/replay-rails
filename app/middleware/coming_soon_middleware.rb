@@ -1,5 +1,5 @@
 class ComingSoonMiddleware
-  ALLOWED_PATHS = ["/up"].freeze
+  ALLOWED_PATHS = [ "/up" ].freeze
 
   def initialize(app)
     @app = app
@@ -9,7 +9,7 @@ class ComingSoonMiddleware
     if !enabled? || allowed?(env)
       @app.call(env)
     else
-      [200, { "content-type" => "text/html; charset=utf-8" }, [html]]
+      [ 200, { "content-type" => "text/html; charset=utf-8" }, [ html ] ]
     end
   end
 

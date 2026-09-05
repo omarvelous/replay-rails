@@ -1,7 +1,7 @@
 require "rails_helper"
 
 RSpec.describe ComingSoonMiddleware do
-  let(:app) { ->(env) { [200, { "content-type" => "text/html" }, ["OK"]] } }
+  let(:app) { ->(env) { [ 200, { "content-type" => "text/html" }, [ "OK" ] ] } }
   let(:middleware) { described_class.new(app) }
 
   def env_for(path, method: "GET")
