@@ -441,6 +441,11 @@ resources :screens do
   resource :screen_content, only: %i[new create destroy]
   # Remove: resource :screen_playlist
 end
+
+# Go subdomain (public, consumer-facing)
+namespace :go do
+  resources :experiences, only: :show
+end
 ```
 
 Update all existing references from `screen_playlist` paths to
@@ -465,26 +470,20 @@ Update all existing references from `screen_playlist` paths to
 - QR code to call/text agent directly
 - "Your agent for this property"
 
-### 4. Lead capture form
-- Touch-friendly form: name, email, phone
-- Configurable headline ("Get the floor plan")
-- Creates Lead with `lead_type: "open_house_rsvp"`
-- Linked to listing and experience's agent
-- Confirmation screen, auto-clears after 5 seconds
-- Consider QR handoff as primary capture (avoids on-screen
-  keyboard issues), with touch form as secondary
-
-### 5. QR handoff
+### 4. QR handoff (primary lead capture)
 - Large QR code linking to `/go/listings/:id`
 - "Continue browsing on your phone"
 - Captures scan as a lead touchpoint
+- Primary lead capture for v1 — avoids on-screen keyboard issues
 
-### 6. Floor plan viewer (if available)
-- Full-screen floor plan image
+### 5. Floor plan viewer (if available)
+- Full-screen floor plan images (`has_many_attached :floor_plans`)
+- Swipe between multiple floor plans
 - Pinch-to-zoom on touch devices
-- Only shown if listing has a floor plan attached
+- Only shown if listing has floor plans attached
 
 ### Deferred sections
+- On-screen lead capture form (pending keyboard detection)
 - Mortgage calculator
 - Neighborhood content
 - Virtual tour embed
@@ -613,23 +612,28 @@ Button on listing show: **"Open house mode"**
 
 ---
 
-## Open Questions
+## Resolved Questions
 
-1. **Should experiences be reusable across screens?** Probably yes —
-   same open house on a lobby screen and a portable screen. The
-   `has_many :screen_contents` already supports this.
+1. **Reusable across screens?** Yes — `has_many :screen_contents`.
+   Same experience can be assigned to multiple screens. Content
+   picker shows existing experiences alongside playlists.
 
-2. **Experience URL for non-screen use?** Agent texts a link to the
-   kiosk view to a client. Could be `/go/experiences/:id` or
-   `/go/listings/:id?kiosk=true`.
+2. **Public URL?** Yes — `/go/experiences/:id`. Dedicated route
+   for sharing the kiosk view via text/email.
 
-3. **Floor plan storage.** New attachment on Listing
-   (`has_one_attached :floor_plan`)? Or tagged photo in gallery?
+3. **Floor plan storage.** `has_many_attached :floor_plans` on
+   Listing. Separate from photos. Supports multiple floor plans
+   per listing (per floor, site plan, etc.).
 
-4. **On-screen keyboard.** Touch screens may not have OS keyboards.
-   QR handoff as primary lead capture avoids this. On-screen form
-   is secondary / nice-to-have.
+4. **On-screen keyboard.** QR handoff is the primary lead capture
+   for v1. On-screen form deferred. Future: detect OS keyboard
+   via viewport resize and fall back to QR if absent.
 
-5. **Naming.** "Experience" is the internal model name. What do
-   agents see in the UI? "Open House Mode"? "Interactive Display"?
-   "Kiosk"? The right label matters for adoption.
+5. **Naming.** "Experience" in both the model and UI. Consistent
+   and not limiting to a single use case.
+
+6. **ScreenPlaylist migration.** Clean cut — replace all at once
+   in Phase A. No deprecation period.
+
+7. **Config storage.** jsonb `config` column on Experience. Extract
+   to a Config model later if complexity warrants it.
