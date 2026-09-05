@@ -3,8 +3,8 @@ class Playlist < ApplicationRecord
   acts_as_tenant :account
   has_many :playlist_ads, -> { order(:position) }, dependent: :destroy, inverse_of: :playlist
   has_many :ads, through: :playlist_ads
-  has_many :screen_playlists, dependent: :destroy
-  has_many :screens, through: :screen_playlists
+  has_many :screen_contents, as: :contentable, dependent: :destroy
+  has_many :screens, through: :screen_contents
 
   validates :name, presence: true
   validates :status, presence: true, inclusion: { in: %w[draft published archived] }
