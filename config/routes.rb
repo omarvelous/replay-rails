@@ -11,6 +11,7 @@ Rails.application.routes.draw do
       get "/pricing",  to: "pages#pricing",  as: :pricing
       get "/about",    to: "pages#about",    as: :about
       get "/demo",     to: "pages#demo",     as: :demo
+      resources :inquiries, only: :create
     end
 
     # Documentation

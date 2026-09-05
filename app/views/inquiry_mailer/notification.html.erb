@@ -1,0 +1,18 @@
+<h2>New <%= @inquiry.inquiry_type.humanize %></h2>
+
+<table>
+  <tr><td><strong>Name:</strong></td><td><%= @inquiry.name %></td></tr>
+  <tr><td><strong>Email:</strong></td><td><%= @inquiry.email %></td></tr>
+  <% if @inquiry.phone.present? %>
+    <tr><td><strong>Phone:</strong></td><td><%= @inquiry.phone %></td></tr>
+  <% end %>
+  <% if @inquiry.company.present? %>
+    <tr><td><strong>Company:</strong></td><td><%= @inquiry.company %></td></tr>
+  <% end %>
+  <% if @inquiry.interest.present? %>
+    <tr><td><strong>Interest:</strong></td><td><%= @inquiry.interest.humanize %></td></tr>
+  <% end %>
+  <% if @inquiry.message.present? %>
+    <tr><td><strong>Message:</strong></td><td><%= @inquiry.message %></td></tr>
+  <% end %>
+</table>
