@@ -27,68 +27,65 @@
           Fill out the form and we'll reach out to schedule a time.
         </p>
 
-        <form action="mailto:hello@replaytv.co" method="get" class="mt-6 space-y-4">
+        <%= form_with url: inquiries_path, method: :post, class: "mt-6 space-y-4" do |f| %>
+          <%= f.hidden_field :inquiry_type, value: "demo_request" %>
+
+          <%# Honeypot — hidden from real users, bots fill it %>
+          <div class="hidden" aria-hidden="true">
+            <input type="text" name="website" tabindex="-1" autocomplete="off">
+          </div>
+
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
-              <label style="color: var(--m-text);" class="block text-sm font-medium mb-1">First name</label>
-              <input type="text" name="first_name" required
-                     style="border: 1px solid var(--m-surface-border); border-radius: var(--m-radius); color: var(--m-text);"
-                     class="block w-full px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-indigo-500">
+              <label style="color: var(--m-text);" class="block text-sm font-medium mb-1">Name</label>
+              <%= f.text_field :name, required: true,
+                  style: "border: 1px solid var(--m-surface-border); border-radius: var(--m-radius); color: var(--m-text);",
+                  class: "block w-full px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-indigo-500" %>
             </div>
             <div>
-              <label style="color: var(--m-text);" class="block text-sm font-medium mb-1">Last name</label>
-              <input type="text" name="last_name" required
-                     style="border: 1px solid var(--m-surface-border); border-radius: var(--m-radius); color: var(--m-text);"
-                     class="block w-full px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-indigo-500">
+              <label style="color: var(--m-text);" class="block text-sm font-medium mb-1">Email</label>
+              <%= f.email_field :email, required: true,
+                  style: "border: 1px solid var(--m-surface-border); border-radius: var(--m-radius); color: var(--m-text);",
+                  class: "block w-full px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-indigo-500" %>
             </div>
           </div>
 
-          <div>
-            <label style="color: var(--m-text);" class="block text-sm font-medium mb-1">Email</label>
-            <input type="email" name="email" required
-                   style="border: 1px solid var(--m-surface-border); border-radius: var(--m-radius); color: var(--m-text);"
-                   class="block w-full px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-indigo-500">
-          </div>
-
-          <div>
-            <label style="color: var(--m-text);" class="block text-sm font-medium mb-1">Phone</label>
-            <input type="tel" name="phone"
-                   style="border: 1px solid var(--m-surface-border); border-radius: var(--m-radius); color: var(--m-text);"
-                   class="block w-full px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-indigo-500">
-          </div>
-
-          <div>
-            <label style="color: var(--m-text);" class="block text-sm font-medium mb-1">Brokerage name</label>
-            <input type="text" name="brokerage"
-                   style="border: 1px solid var(--m-surface-border); border-radius: var(--m-radius); color: var(--m-text);"
-                   class="block w-full px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-indigo-500">
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+              <label style="color: var(--m-text);" class="block text-sm font-medium mb-1">Phone <span style="color: var(--m-text-faint);">(optional)</span></label>
+              <%= f.telephone_field :phone,
+                  style: "border: 1px solid var(--m-surface-border); border-radius: var(--m-radius); color: var(--m-text);",
+                  class: "block w-full px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-indigo-500" %>
+            </div>
+            <div>
+              <label style="color: var(--m-text);" class="block text-sm font-medium mb-1">Brokerage name <span style="color: var(--m-text-faint);">(optional)</span></label>
+              <%= f.text_field :company,
+                  style: "border: 1px solid var(--m-surface-border); border-radius: var(--m-radius); color: var(--m-text);",
+                  class: "block w-full px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-indigo-500" %>
+            </div>
           </div>
 
           <div>
             <label style="color: var(--m-text);" class="block text-sm font-medium mb-1">What are you interested in?</label>
-            <select name="interest"
-                    style="border: 1px solid var(--m-surface-border); border-radius: var(--m-radius); color: var(--m-text);"
-                    class="block w-full px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-indigo-500">
-              <option value="">Select an option</option>
-              <option value="window">Window displays</option>
-              <option value="openhouse">Open house signage</option>
-              <option value="both">Both</option>
-              <option value="other">Something else</option>
-            </select>
+            <%= f.select :interest,
+                [["Select an option", ""], ["Window displays", "window"], ["Open house signage", "openhouse"], ["Both", "both"], ["Something else", "other"]],
+                {},
+                style: "border: 1px solid var(--m-surface-border); border-radius: var(--m-radius); color: var(--m-text);",
+                class: "block w-full px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-indigo-500" %>
           </div>
 
           <div>
             <label style="color: var(--m-text);" class="block text-sm font-medium mb-1">Message <span style="color: var(--m-text-faint);">(optional)</span></label>
-            <textarea name="message" rows="3"
-                      style="border: 1px solid var(--m-surface-border); border-radius: var(--m-radius); color: var(--m-text);"
-                      class="block w-full px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-indigo-500 resize-none"></textarea>
+            <%= f.text_area :message, rows: 3,
+                style: "border: 1px solid var(--m-surface-border); border-radius: var(--m-radius); color: var(--m-text);",
+                class: "block w-full px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-indigo-500 resize-none" %>
           </div>
 
           <button type="submit" style="background: var(--m-cta-bg); color: var(--m-cta-text); border-radius: var(--m-radius);"
                   class="w-full px-6 py-3 text-sm font-semibold shadow-sm hover:opacity-90 transition-opacity cursor-pointer">
             Request a demo
           </button>
-        </form>
+        <% end %>
       </div>
 
       <%# Sidebar %>
