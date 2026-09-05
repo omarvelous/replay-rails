@@ -12,7 +12,7 @@ export default class extends Controller {
       { channel: "ScreenChannel", token },
       {
         received: ({ event }) => {
-          if (event === "playlist_changed") window.location.reload()
+          if (event === "content_changed") window.location.reload()
           if (event === "unpaired") this.handleUnpaired()
         },
         rejected: () => {

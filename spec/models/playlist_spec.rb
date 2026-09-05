@@ -13,6 +13,7 @@ RSpec.describe Playlist do
     it { is_expected.to belong_to(:account) }
     it { is_expected.to have_many(:playlist_ads).dependent(:destroy) }
     it { is_expected.to have_many(:ads).through(:playlist_ads) }
+    it { is_expected.to have_many(:screen_contents) }
   end
 
   describe "scopes" do

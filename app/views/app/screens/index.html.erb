@@ -42,7 +42,8 @@
     <% if @screens.any? %>
       <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
         <% @screens.each do |screen| %>
-            <% active_playlist = screen.screen_playlists.find { |sp| sp.active }&.playlist %>
+            <% content = screen.active_content %>
+            <% active_playlist = content.is_a?(Playlist) ? content : nil %>
             <% status = screen_status(screen, active_playlist: active_playlist) %>
             <div class="rounded-lg bg-white shadow-sm ring-1 ring-gray-900/5 hover:shadow-md transition-shadow">
               <div class="p-3">
@@ -53,10 +54,18 @@
                 </div>
                 <p class="text-xs text-gray-400 mt-0.5"><%= screen.site.name %> · <%= screen.orientation.capitalize %></p>
 
-                <%# Playlist row %>
+                <%# Content row %>
                 <div class="flex items-center gap-1.5 mt-2.5 text-xs text-gray-500">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" class="size-3.5 shrink-0"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 12h16.5m-16.5 3.75h16.5M3.75 19.5h16.5M5.625 4.5h12.75a1.875 1.875 0 010 3.75H5.625a1.875 1.875 0 010-3.75z"/></svg>
-                  <span class="truncate"><%= active_playlist&.name || "No playlist" %></span>
+                  <% if content.is_a?(Playlist) %>
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" class="size-3.5 shrink-0"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 12h16.5m-16.5 3.75h16.5M3.75 19.5h16.5M5.625 4.5h12.75a1.875 1.875 0 010 3.75H5.625a1.875 1.875 0 010-3.75z"/></svg>
+                    <span class="truncate"><%= content.name %></span>
+                  <% elsif content.is_a?(Experience) %>
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" class="size-3.5 shrink-0"><path stroke-linecap="round" stroke-linejoin="round" d="M15.042 21.672L13.684 16.6m0 0l-2.51 2.225.569-9.47 5.227 7.917-3.286-.672zM12 2.25V4.5m5.834.166l-1.591 1.591M20.25 10.5H18M7.757 14.743l-1.59 1.59M6 10.5H3.75m4.007-4.243l-1.59-1.59"/></svg>
+                    <span class="truncate"><%= content.name %></span>
+                  <% else %>
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" class="size-3.5 shrink-0"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 12h16.5m-16.5 3.75h16.5M3.75 19.5h16.5M5.625 4.5h12.75a1.875 1.875 0 010 3.75H5.625a1.875 1.875 0 010-3.75z"/></svg>
+                    <span class="truncate">No content</span>
+                  <% end %>
                 </div>
 
                 <%# Heartbeat row %>
@@ -67,7 +76,7 @@
 
                 <%# Change content button %>
                 <div class="mt-3">
-                  <%= link_to new_screen_screen_playlist_path(screen), class: "flex items-center justify-center gap-1.5 w-full rounded-md bg-white px-2.5 py-1.5 text-sm font-semibold text-gray-700 shadow-xs ring-1 ring-gray-300 ring-inset hover:bg-gray-50" do %>
+                  <%= link_to new_screen_screen_content_path(screen), class: "flex items-center justify-center gap-1.5 w-full rounded-md bg-white px-2.5 py-1.5 text-sm font-semibold text-gray-700 shadow-xs ring-1 ring-gray-300 ring-inset hover:bg-gray-50" do %>
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" class="size-3.5"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 12h16.5m-16.5 3.75h16.5M3.75 19.5h16.5M5.625 4.5h12.75a1.875 1.875 0 010 3.75H5.625a1.875 1.875 0 010-3.75z"/></svg>
                     Change content
                   <% end %>
@@ -101,14 +110,15 @@
                   <th class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Screen</th>
                   <th class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Site</th>
                   <th class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Player</th>
-                  <th class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Playlist</th>
+                  <th class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Content</th>
                   <th class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Status</th>
                   <th class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Heartbeat</th>
                 </tr>
               </thead>
               <tbody class="divide-y divide-gray-200">
                 <% @screens.each do |screen| %>
-                  <% active_playlist = screen.screen_playlists.find { |sp| sp.active }&.playlist %>
+                  <% table_content = screen.active_content %>
+                  <% active_playlist = table_content.is_a?(Playlist) ? table_content : nil %>
                   <% status = screen_status(screen, active_playlist: active_playlist) %>
                   <tr class="hover:bg-gray-50">
                     <td class="px-3 py-4">
@@ -116,7 +126,7 @@
                     </td>
                     <td class="px-3 py-4 text-sm text-gray-500"><%= screen.site.name %></td>
                     <td class="px-3 py-4 text-xs font-mono text-gray-400"><%= screen.player ? screen.player.token.first(8) : "—" %></td>
-                    <td class="px-3 py-4 text-sm text-gray-500"><%= active_playlist&.name || "—" %></td>
+                    <td class="px-3 py-4 text-sm text-gray-500"><%= table_content&.name || "—" %></td>
                     <td class="px-3 py-4"><%= screen_status_badge(status) %></td>
                     <td class="px-3 py-4 text-xs text-gray-400"><%= screen_heartbeat_text(screen, status) %></td>
                   </tr>

@@ -34,6 +34,7 @@ The platform is functionally ready for a private beta.
 | App UX | `app-ux` #37 | Removed all fake/hardcoded data, added role management, invite resend, lead search, listing property_type/listing_type fields, dashboard improvements, mobile fixes, flash type support. 28 commits. |
 | Marketing site | `marketing-site-nyc` #39 | NYC-focused landing page, features, pricing, about, demo, contact pages. Inquiry model for lead capture. Bold theme. |
 | Production deploy | `production-deploy` #40 | DNS via OpenTofu (replaytv.co + subdomains + rply.tv), R2 bucket, QR short URLs. |
+| Experiences | `experiences` | ScreenContent with delegated_type (Playlist/Experience), Experience with delegated_type (ListingExperience), kiosk player rendering, floor_plans attachment. |
 
 ---
 
@@ -224,7 +225,7 @@ Documentation is in progress.
 | App UX | `.claude/plans/202609040100-app-ux.md` | Complete |
 | Marketing site (NYC) | `.claude/plans/202609041200-marketing-site-nyc.md` | Complete |
 | Production deploy | `.claude/plans/202609050100-production-deploy.md` | Complete |
-| Experiences (kiosk) | `.claude/plans/drafts/plan-experiences-v2.md` | Draft — needs review |
+| Experiences (kiosk) | `.claude/plans/202609050300-experiences.md` | Complete |
 | NYC product gaps | `.claude/plans/drafts/plan-nyc-product-gaps.md` | Draft — needs review |
 | Day-parting / Scheduling | `.claude/plans/drafts/plan-day-parting-scheduling.md` | Draft — needs review |
 | Live Preview | `.claude/plans/drafts/plan-live-preview.md` | Draft — needs review |

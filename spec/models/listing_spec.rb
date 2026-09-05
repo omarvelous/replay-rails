@@ -21,6 +21,10 @@ RSpec.describe Listing do
     it "has many attached photos" do
       expect(described_class.new.photos).to be_empty
     end
+
+    it "has many attached floor_plans" do
+      expect(described_class.new.floor_plans).to be_empty
+    end
   end
 
   describe "photos attachment" do

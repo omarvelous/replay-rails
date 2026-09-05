@@ -10,8 +10,51 @@ RSpec.describe Screen do
 
   describe "associations" do
     it { is_expected.to belong_to(:site) }
-    it { is_expected.to have_many(:screen_playlists).dependent(:destroy) }
-    it { is_expected.to have_many(:playlists).through(:screen_playlists) }
+    it { is_expected.to have_many(:screen_contents).dependent(:destroy) }
+  end
+
+  describe "#active_content" do
+    let(:account) { create(:account) }
+    let(:site) { create(:site, account: account) }
+    let(:screen) { create(:screen, site: site) }
+
+    it "returns the active playlist" do
+      playlist = create(:playlist, account: account, status: "published")
+      create(:screen_content, screen: screen, contentable: playlist, active: true)
+      expect(screen.active_content).to eq(playlist)
+    end
+
+    it "returns the active experience" do
+      experience = create(:experience, account: account)
+      create(:screen_content, screen: screen, contentable: experience, active: true)
+      expect(screen.active_content).to eq(experience)
+    end
+
+    it "returns nil when no active content" do
+      expect(screen.active_content).to be_nil
+    end
+  end
+
+  describe "#content_type" do
+    let(:account) { create(:account) }
+    let(:site) { create(:site, account: account) }
+    let(:screen) { create(:screen, site: site) }
+
+    it "returns :playlist when a playlist is active" do
+      playlist = create(:playlist, account: account, status: "published")
+      create(:screen_content, screen: screen, contentable: playlist, active: true)
+      expect(screen.content_type).to eq(:playlist)
+    end
+
+    it "returns :experience when an experience is active" do
+      experience = create(:experience, account: account)
+      create(:screen_content, screen: screen, contentable: experience, active: true)
+      expect(screen.content_type).to eq(:experience)
+    end
+
+    it "returns :none when no content assigned" do
+      expect(screen.content_type).to eq(:none)
+    end
   end
 
   describe "scopes" do
@@ -27,11 +70,11 @@ RSpec.describe Screen do
     end
 
     describe ".live" do
-      it "returns screens with active screen_playlists" do
+      it "returns screens with active screen_contents" do
         live_screen = create(:screen, site: site)
         idle_screen = create(:screen, site: site, name: "Idle")
         playlist = create(:playlist, account: account, status: "published")
-        create(:screen_playlist, screen: live_screen, playlist: playlist, active: true)
+        create(:screen_content, screen: live_screen, contentable: playlist, active: true)
 
         expect(described_class.live).to include(live_screen)
         expect(described_class.live).not_to include(idle_screen)
@@ -39,11 +82,11 @@ RSpec.describe Screen do
     end
 
     describe ".idle" do
-      it "returns screens without active screen_playlists" do
+      it "returns screens without active screen_contents" do
         live_screen = create(:screen, site: site)
         idle_screen = create(:screen, site: site, name: "Idle")
         playlist = create(:playlist, account: account, status: "published")
-        create(:screen_playlist, screen: live_screen, playlist: playlist, active: true)
+        create(:screen_content, screen: live_screen, contentable: playlist, active: true)
 
         expect(described_class.idle).to include(idle_screen)
         expect(described_class.idle).not_to include(live_screen)

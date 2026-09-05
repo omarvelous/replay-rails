@@ -10,7 +10,7 @@
   <% if screens.any? %>
     <div class="divide-y divide-gray-100">
       <% screens.each do |screen| %>
-        <% active_playlist = screen.screen_playlists.find { |sp| sp.active }&.playlist %>
+        <% active_playlist = screen.active_content.is_a?(Playlist) ? screen.active_content : nil %>
         <%= link_to screen_path(screen), class: "flex items-center gap-3 px-4 py-3 hover:bg-gray-50 transition-colors" do %>
           <div class="flex-1 min-w-0">
             <p class="text-sm font-semibold truncate"><%= screen.name %></p>

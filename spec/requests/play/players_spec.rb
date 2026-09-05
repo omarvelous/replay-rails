@@ -23,7 +23,7 @@ RSpec.describe "Play::Players" do
       playlist = create(:playlist, account: account, status: "published")
       ad = create(:ad, account: account, headline: "Test Ad")
       create(:playlist_ad, playlist: playlist, ad: ad, position: 1, duration: 10)
-      create(:screen_playlist, screen: screen, playlist: playlist, active: true)
+      create(:screen_content, screen: screen, contentable: playlist, active: true)
 
       get "/players/#{player.token}"
       expect(response).to be_successful

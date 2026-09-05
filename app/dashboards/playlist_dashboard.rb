@@ -13,7 +13,7 @@ class PlaylistDashboard < Administrate::BaseDashboard
     ads: Field::HasMany,
     name: Field::String,
     playlist_ads: Field::HasMany,
-    screen_playlists: Field::HasMany,
+    screen_contents: Field::HasMany,
     screens: Field::HasMany,
     status: Field::String,
     created_at: Field::DateTime,
@@ -40,7 +40,7 @@ class PlaylistDashboard < Administrate::BaseDashboard
     ads
     name
     playlist_ads
-    screen_playlists
+    screen_contents
     screens
     status
     created_at
@@ -55,7 +55,7 @@ class PlaylistDashboard < Administrate::BaseDashboard
     ads
     name
     playlist_ads
-    screen_playlists
+    screen_contents
     screens
     status
   ].freeze

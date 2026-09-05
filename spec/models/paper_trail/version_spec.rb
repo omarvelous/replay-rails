@@ -87,12 +87,12 @@ RSpec.describe PaperTrail::Version do
       expect(pa.versions.count).to eq(1)
     end
 
-    it "tracks ScreenPlaylist" do
+    it "tracks ScreenContent" do
       site = create(:site, account: account)
       screen = create(:screen, site: site)
       playlist = create(:playlist, account: account)
-      sp = ScreenPlaylist.create!(screen: screen, playlist: playlist, active: true)
-      expect(sp.versions.count).to eq(1)
+      sc = ScreenContent.create!(screen: screen, contentable: playlist, active: true)
+      expect(sc.versions.count).to eq(1)
     end
 
     it "tracks ScreenPlayer" do

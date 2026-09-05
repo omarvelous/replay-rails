@@ -25,6 +25,7 @@ Rails.application.routes.draw do
     namespace :go do
       resources :listings, only: :show
       resources :agents, only: :show
+      resources :experiences, only: :show
       resources :leads, only: :create
     end
   end
@@ -56,11 +57,14 @@ Rails.application.routes.draw do
         member { get :preview }
       end
 
+      # Experiences
+      resources :experiences
+
       # Playback
       resource :pair, only: %i[show create], controller: "pairings"
       resources :sites
       resources :screens do
-        resource :screen_playlist, only: %i[new create destroy]
+        resource :screen_content, only: %i[new create destroy]
         resource :screen_player, only: %i[new create destroy]
       end
       resources :playlists do
@@ -104,6 +108,7 @@ Rails.application.routes.draw do
       resources :screens
       resources :players
       resources :playlists
+      resources :experiences
 
       # Engagement
       resources :qr_codes

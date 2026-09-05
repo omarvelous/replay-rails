@@ -1,0 +1,131 @@
+<% sections = @experience.config["sections"] || {} %>
+<% photos = @listing&.photos&.to_a || [] %>
+<% floor_plans = @listing&.floor_plans&.to_a || [] %>
+
+<div class="w-full h-screen relative overflow-hidden bg-black text-white"
+     data-controller="experience device-playback"
+     data-experience-idle-timeout-value="<%= @experience.config['idle_timeout'] || 30 %>"
+     data-experience-slide-count-value="<%= photos.size %>"
+     data-device-playback-api-host-value="<%= request.protocol %>api.<%= request.domain %><%= ":#{request.port}" unless request.port == 80 || request.port == 443 %>"
+     data-device-playback-player-token-value="<%= params[:token] %>">
+
+  <%# ── Photo Gallery (full-screen background) ── %>
+  <% if sections["photos"] != false && photos.any? %>
+    <div class="absolute inset-0" data-experience-target="gallery">
+      <% photos.each_with_index do |photo, i| %>
+        <div class="absolute inset-0 transition-opacity duration-700 <%= i == 0 ? 'opacity-100' : 'opacity-0' %>"
+             data-experience-target="slide">
+          <%= image_tag photo, class: "w-full h-full object-cover" %>
+        </div>
+      <% end %>
+
+      <%# Photo counter %>
+      <div class="absolute top-6 right-6 px-3 py-1.5 rounded-full text-xs font-semibold"
+           style="background: rgba(0,0,0,0.5); backdrop-filter: blur(8px);">
+        <span data-experience-target="counter">1</span> / <%= photos.size %>
+      </div>
+
+      <%# Navigation arrows (touch mode) %>
+      <button class="absolute left-4 top-1/2 -translate-y-1/2 w-12 h-12 rounded-full grid place-items-center opacity-0 transition-opacity"
+              style="background: rgba(0,0,0,0.4); backdrop-filter: blur(4px);"
+              data-experience-target="navControl"
+              data-action="click->experience#prev">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="w-5 h-5"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5"/></svg>
+      </button>
+      <button class="absolute right-4 top-1/2 -translate-y-1/2 w-12 h-12 rounded-full grid place-items-center opacity-0 transition-opacity"
+              style="background: rgba(0,0,0,0.4); backdrop-filter: blur(4px);"
+              data-experience-target="navControl"
+              data-action="click->experience#next">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="w-5 h-5"><path stroke-linecap="round" stroke-linejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5"/></svg>
+      </button>
+    </div>
+  <% else %>
+    <div class="absolute inset-0 bg-gray-900"></div>
+  <% end %>
+
+  <%# ── Bottom overlay gradient ── %>
+  <div class="absolute inset-x-0 bottom-0 h-2/3 pointer-events-none"
+       style="background: linear-gradient(to top, rgba(0,0,0,0.85), transparent);"></div>
+
+  <%# ── Content overlay ── %>
+  <div class="absolute inset-x-0 bottom-0 p-8 md:p-12 z-10">
+    <div class="max-w-4xl">
+      <%# Property details %>
+      <% if sections["details"] != false && @listing %>
+        <div class="mb-4">
+          <% if @listing.listing_type.present? %>
+            <span class="inline-block text-indigo-400 text-xs font-bold uppercase tracking-wider mb-2">
+              <%= @listing.listing_type.humanize %>
+            </span>
+          <% end %>
+          <p class="text-4xl md:text-5xl font-black tracking-tight">
+            <%= number_to_currency(@listing.price, precision: 0) %>
+          </p>
+          <p class="text-lg md:text-xl text-white/80 mt-1"><%= @listing.address %></p>
+          <div class="flex gap-6 mt-3 text-sm text-white/60">
+            <% if @listing.beds %><span><%= @listing.beds %> bd</span><% end %>
+            <% if @listing.baths %><span><%= @listing.baths %> ba</span><% end %>
+            <% if @listing.sqft %><span><%= number_with_delimiter(@listing.sqft) %> sqft</span><% end %>
+          </div>
+          <% if @listing.description.present? %>
+            <p class="text-sm text-white/50 mt-3 max-w-lg leading-relaxed line-clamp-3"><%= @listing.description %></p>
+          <% end %>
+        </div>
+      <% end %>
+
+      <%# Bottom bar: agent + QR %>
+      <div class="flex items-end justify-between mt-6">
+        <%# Agent card %>
+        <% if sections["agent_card"] != false && @agent %>
+          <div class="flex items-center gap-4">
+            <% if @agent.photo.attached? %>
+              <%= image_tag @agent.photo, class: "w-14 h-14 rounded-full object-cover ring-2 ring-white/20" %>
+            <% else %>
+              <div class="w-14 h-14 rounded-full bg-white/10 grid place-items-center text-lg font-bold">
+                <%= @agent.name.split.map(&:first).join.first(2).upcase %>
+              </div>
+            <% end %>
+            <div>
+              <p class="font-semibold text-sm"><%= @agent.name %></p>
+              <p class="text-xs text-white/50"><%= @agent.phone %></p>
+              <p class="text-xs text-white/50"><%= @agent.email %></p>
+            </div>
+          </div>
+        <% end %>
+
+        <%# QR handoff %>
+        <% if sections["qr_handoff"] != false && @listing&.qr_code %>
+          <div class="flex flex-col items-center gap-2">
+            <div class="w-24 h-24 bg-white rounded-lg p-2">
+              <%= qr_svg(@listing.qr_code) %>
+            </div>
+            <p class="text-[10px] text-white/40 text-center">Scan for details</p>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  </div>
+
+  <%# ── Floor plans tab (shown on tap) ── %>
+  <% if sections["floor_plans"] != false && floor_plans.any? %>
+    <div class="absolute inset-0 bg-black/95 z-20 hidden flex-col items-center justify-center"
+         data-experience-target="floorPlanOverlay">
+      <button class="absolute top-6 right-6 w-10 h-10 rounded-full grid place-items-center"
+              style="background: rgba(255,255,255,0.1);"
+              data-action="click->experience#hideFloorPlans">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="w-5 h-5"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+      </button>
+      <% floor_plans.each do |fp| %>
+        <%= image_tag fp, class: "max-w-full max-h-[80vh] object-contain" %>
+      <% end %>
+    </div>
+
+    <%# Floor plan trigger button %>
+    <button class="absolute top-6 left-6 z-10 px-3 py-1.5 rounded-full text-xs font-semibold flex items-center gap-1.5"
+            style="background: rgba(0,0,0,0.5); backdrop-filter: blur(8px);"
+            data-action="click->experience#showFloorPlans">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" class="w-4 h-4"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 3.75v4.5m0-4.5h4.5m-4.5 0L9 9M3.75 20.25v-4.5m0 4.5h4.5m-4.5 0L9 15M20.25 3.75h-4.5m4.5 0v4.5m0-4.5L15 9m5.25 11.25h-4.5m4.5 0v-4.5m0 4.5L15 15"/></svg>
+      Floor plan
+    </button>
+  <% end %>
+</div>

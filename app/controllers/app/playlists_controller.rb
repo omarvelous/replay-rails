@@ -12,7 +12,7 @@ module App
   def show
     authorize! @playlist
     @playlist_ads = @playlist.playlist_ads.includes(:ad).order(:position)
-    @screen_playlists = @playlist.screen_playlists.includes(screen: :site).where(active: true)
+    @screen_contents = @playlist.screen_contents.includes(screen: :site).where(active: true)
   end
 
   def new
