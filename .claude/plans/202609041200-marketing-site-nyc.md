@@ -397,3 +397,94 @@ to Phase 1. All subsequent work uses the chosen theme.
    main page and `/open-house` as a dedicated page for the agent
    product. Depends on whether one page can sell both motions
    without confusion.
+
+---
+
+## Inquiry Model (Demo Request Capture)
+
+The demo form needs a backend to capture submissions. Rather than
+reusing the tenant-scoped `Lead` model, introduce a general-purpose
+`Inquiry` model with no account/tenant dependency.
+
+### Model
+
+```ruby
+class Inquiry < ApplicationRecord
+  TYPES = %w[demo_request general].freeze
+
+  validates :name, presence: true
+  validates :email, presence: true
+  validates :inquiry_type, inclusion: { in: TYPES }
+end
+```
+
+### Columns
+
+- `name` (string, not null)
+- `email` (string, not null)
+- `phone` (string, nullable)
+- `company` (string, nullable — brokerage name)
+- `inquiry_type` (string, not null, default: "demo_request")
+- `message` (text, nullable)
+- `interest` (string, nullable — "window", "openhouse", "both", "other")
+- `responded_at` (datetime, nullable — tracks follow-up)
+
+### Controller
+
+Public endpoint on the marketing site:
+
+```ruby
+# POST /inquiries
+module Marketing
+  class InquiriesController < BaseController
+    def create
+      @inquiry = Inquiry.new(inquiry_params)
+      if @inquiry.save
+        InquiryMailer.notification(@inquiry).deliver_later
+        redirect_to demo_path, notice: "Thanks! We'll be in touch within 24 hours."
+      else
+        render "pages/demo", status: :unprocessable_content
+      end
+    end
+  end
+end
+```
+
+### Mailer
+
+`InquiryMailer#notification` — sends form data to internal email
+(e.g., hello@replaytv.co) so you get notified immediately.
+
+### Admin
+
+Add `Inquiry` to Administrate dashboard for viewing and tracking
+responses.
+
+### Routes
+
+```ruby
+# Marketing subdomain
+scope module: "marketing" do
+  resources :inquiries, only: :create
+end
+```
+
+### Rate limiting
+
+Protect the public endpoint with Rack::Attack (already configured
+in the app for other public endpoints):
+
+- Throttle `POST /inquiries` to 5 requests per IP per hour
+- Honeypot field on the form (hidden input, reject if filled)
+- Future: add reCAPTCHA or Turnstile if spam becomes an issue
+
+### Build order (TDD)
+
+1. RED: Inquiry model spec (validations)
+2. GREEN: Migration + model + factory
+3. RED: Request spec (create, validation errors, rate limiting)
+4. GREEN: Controller + route + Rack::Attack throttle
+5. Honeypot field on demo form
+6. Mailer + mailer spec
+7. Wire up demo form to POST /inquiries
+8. Admin dashboard (if Administrate is set up for it)
