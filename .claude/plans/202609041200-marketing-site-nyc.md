@@ -289,7 +289,7 @@ mailto or Calendly embed, no backend needed initially.
 
 ## Build Order
 
-### Phase 0: Theme prototyping (1 day)
+### Phase 0: Theme prototyping (1 day) — COMPLETE
 
 Build the home page once with full content (all sections from the
 home page plan above). Add a floating theme switcher that toggles
@@ -326,19 +326,19 @@ theme decision can be made in a real browser on desktop and mobile.
 **Decision gate:** Pick a direction (or hybrid) before proceeding
 to Phase 1. All subsequent work uses the chosen theme.
 
-### Phase 1: Home page polish (1-2 days)
+### Phase 1: Home page polish (1-2 days) — COMPLETE
 1. Lock in chosen theme, remove switcher
 2. Refine section spacing and responsive breakpoints
 3. Add placeholder product visuals (screenshots or mockups)
 4. Wire up "Book a demo" CTA (anchor to demo section or page)
 
-### Phase 2: Supporting pages (1-2 days)
+### Phase 2: Supporting pages (1-2 days) — COMPLETE
 5. Features page with screenshots
 6. Pricing page with comparison table + FAQ
 7. About page with trust content
 8. Demo request page (form or Calendly)
 
-### Phase 3: Layout + polish (1 day)
+### Phase 3: Layout + polish (1 day) — COMPLETE
 9. Nav update (Book a demo as primary CTA)
 10. Mobile nav (hamburger menu)
 11. Footer with columns
@@ -478,13 +478,15 @@ in the app for other public endpoints):
 - Honeypot field on the form (hidden input, reject if filled)
 - Future: add reCAPTCHA or Turnstile if spam becomes an issue
 
-### Build order (TDD)
+### Build order (TDD) — COMPLETE
 
-1. RED: Inquiry model spec (validations)
-2. GREEN: Migration + model + factory
-3. RED: Request spec (create, validation errors, rate limiting)
-4. GREEN: Controller + route + Rack::Attack throttle
-5. Honeypot field on demo form
-6. Mailer + mailer spec
-7. Wire up demo form to POST /inquiries
-8. Admin dashboard (if Administrate is set up for it)
+1. RED: Inquiry model spec (validations) ✓
+2. GREEN: Migration + model + factory ✓
+3. RED: Request spec (create, validation errors, honeypot) ✓
+4. GREEN: Controller + route + Rack::Attack throttle ✓
+5. Honeypot field on demo form ✓
+6. Mailer (InquiryMailer#notification) ✓
+7. Wire up demo form to POST /inquiries (scope: :inquiry) ✓
+8. Admin dashboard (Administrate) ✓
+9. Strip subdomain param from admin controllers ✓
+10. Flash notice inside demo form card ✓
