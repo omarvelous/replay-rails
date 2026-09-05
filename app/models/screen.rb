@@ -2,8 +2,7 @@ class Screen < ApplicationRecord
   has_paper_trail ignore: [ :updated_at ]
 
   belongs_to :site
-  has_many :screen_playlists, dependent: :destroy
-  has_many :playlists, through: :screen_playlists
+  has_many :screen_contents, dependent: :destroy
   has_many :screen_players, dependent: :destroy
   has_one  :active_player_assignment, -> { active }, class_name: "ScreenPlayer"
   has_one  :player, through: :active_player_assignment
@@ -12,8 +11,20 @@ class Screen < ApplicationRecord
   validates :orientation, inclusion: { in: %w[landscape portrait] }
 
   scope :search, ->(q) { where("screens.name ILIKE ?", "%#{sanitize_sql_like(q)}%") }
-  scope :live, -> { joins(:screen_playlists).where(screen_playlists: { active: true }).distinct }
+  scope :live, -> { joins(:screen_contents).where(screen_contents: { active: true }).distinct }
   scope :idle, -> { where.not(id: live) }
+
+  def active_screen_content
+    screen_contents.find_by(active: true)
+  end
+
+  def active_content
+    active_screen_content&.contentable
+  end
+
+  def content_type
+    active_screen_content&.contentable_type&.downcase&.to_sym || :none
+  end
 
   def paired?
     player.present?
