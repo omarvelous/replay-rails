@@ -115,6 +115,9 @@ Rails.application.routes.draw do
       resources :account_users
       resources :invites
 
+      # Inquiries
+      resources :inquiries
+
       # Audit
       namespace :paper_trail do
         resources :versions, only: :index
