@@ -25,6 +25,7 @@ module ReplayRails
     # config.eager_load_paths << Rails.root.join("extras")
 
     # Coming soon gate — serves static HTML before Rails routing
+    require_relative "../app/middleware/coming_soon_middleware"
     config.middleware.insert_before 0, ComingSoonMiddleware
 
     # Session cookies shared across subdomains
