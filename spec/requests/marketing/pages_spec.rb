@@ -42,4 +42,11 @@ RSpec.describe "Marketing::Pages" do
       expect(response).to be_successful
     end
   end
+
+  describe "GET /contact" do
+    it "returns a successful response" do
+      get "/contact"
+      expect(response).to be_successful
+    end
+  end
 end

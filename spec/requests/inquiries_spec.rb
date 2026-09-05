@@ -39,5 +39,18 @@ RSpec.describe "Inquiries" do
       expect(Inquiry.count).to eq(0)
       expect(response).to redirect_to(demo_path)
     end
+
+    context "with inquiry_type: general (contact form)" do
+      let(:contact_params) do
+        { inquiry: { name: "Bob Smith", email: "bob@example.com",
+                     inquiry_type: "general", message: "Hello" } }
+      end
+
+      it "redirects to contact page" do
+        post inquiries_path, params: contact_params
+        expect(response).to redirect_to(contact_path)
+        expect(flash[:notice]).to include("reaching out")
+      end
+    end
   end
 end
