@@ -1,6 +1,7 @@
 module QrHelper
   def qr_svg(qr_code, ad: nil, screen: nil)
-    url = qr_scan_url(token: qr_code.token)
+    base = ENV.fetch("QR_BASE_URL") { qr_scan_url(token: qr_code.token).sub(/\/s\/.*/, "") }
+    url = "#{base}/s/#{qr_code.token}"
     query = {}
     query[:a] = ad.id if ad
     query[:s] = screen.id if screen
