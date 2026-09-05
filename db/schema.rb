@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_09_05_141854) do
+ActiveRecord::Schema[8.1].define(version: 2026_09_05_142017) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -120,15 +120,14 @@ ActiveRecord::Schema[8.1].define(version: 2026_09_05_141854) do
 
   create_table "experiences", force: :cascade do |t|
     t.bigint "account_id", null: false
-    t.bigint "agent_id"
     t.jsonb "config", default: {}, null: false
     t.datetime "created_at", null: false
-    t.bigint "listing_id", null: false
-    t.string "name"
+    t.bigint "experienceable_id", null: false
+    t.string "experienceable_type", null: false
+    t.string "name", null: false
     t.datetime "updated_at", null: false
     t.index ["account_id"], name: "index_experiences_on_account_id"
-    t.index ["agent_id"], name: "index_experiences_on_agent_id"
-    t.index ["listing_id"], name: "index_experiences_on_listing_id"
+    t.index ["experienceable_type", "experienceable_id"], name: "index_experiences_on_experienceable_type_and_experienceable_id"
   end
 
   create_table "impressions", force: :cascade do |t|
@@ -239,6 +238,15 @@ ActiveRecord::Schema[8.1].define(version: 2026_09_05_141854) do
     t.index ["agent_id"], name: "index_listing_agents_on_agent_id"
     t.index ["listing_id", "agent_id"], name: "index_listing_agents_on_listing_id_and_agent_id", unique: true
     t.index ["listing_id"], name: "index_listing_agents_on_listing_id"
+  end
+
+  create_table "listing_experiences", force: :cascade do |t|
+    t.bigint "agent_id"
+    t.datetime "created_at", null: false
+    t.bigint "listing_id", null: false
+    t.datetime "updated_at", null: false
+    t.index ["agent_id"], name: "index_listing_experiences_on_agent_id"
+    t.index ["listing_id"], name: "index_listing_experiences_on_listing_id"
   end
 
   create_table "listings", force: :cascade do |t|
@@ -437,8 +445,6 @@ ActiveRecord::Schema[8.1].define(version: 2026_09_05_141854) do
   add_foreign_key "collection_ad_ads", "ads"
   add_foreign_key "collection_ad_ads", "collection_ads"
   add_foreign_key "experiences", "accounts"
-  add_foreign_key "experiences", "agents"
-  add_foreign_key "experiences", "listings"
   add_foreign_key "impressions", "accounts"
   add_foreign_key "impressions", "ads"
   add_foreign_key "impressions", "players"
@@ -455,6 +461,8 @@ ActiveRecord::Schema[8.1].define(version: 2026_09_05_141854) do
   add_foreign_key "listing_ads", "listings"
   add_foreign_key "listing_agents", "agents"
   add_foreign_key "listing_agents", "listings"
+  add_foreign_key "listing_experiences", "agents"
+  add_foreign_key "listing_experiences", "listings"
   add_foreign_key "listings", "accounts"
   add_foreign_key "metric_snapshots", "accounts"
   add_foreign_key "playlist_ads", "ads"
