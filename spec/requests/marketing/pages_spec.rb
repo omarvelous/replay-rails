@@ -11,7 +11,7 @@ RSpec.describe "Marketing::Pages" do
 
     it "includes the marketing headline" do
       get "/"
-      expect(response.body).to include("working 24/7")
+      expect(response.body).to include("always on")
     end
   end
 
@@ -32,6 +32,13 @@ RSpec.describe "Marketing::Pages" do
   describe "GET /about" do
     it "returns a successful response" do
       get "/about"
+      expect(response).to be_successful
+    end
+  end
+
+  describe "GET /demo" do
+    it "returns a successful response" do
+      get "/demo"
       expect(response).to be_successful
     end
   end
