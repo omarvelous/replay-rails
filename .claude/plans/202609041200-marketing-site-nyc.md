@@ -490,3 +490,46 @@ in the app for other public endpoints):
 8. Admin dashboard (Administrate) ✓
 9. Strip subdomain param from admin controllers ✓
 10. Flash notice inside demo form card ✓
+
+---
+
+## Contact Page
+
+Reuses the Inquiry model with `inquiry_type: "general"` for general
+contact submissions. Simpler form than the demo page — no interest
+dropdown, no brokerage field.
+
+### Route
+
+```ruby
+get "/contact", to: "pages#contact", as: :contact
+```
+
+### Page structure
+
+- Dark hero: "Get in touch" headline
+- Two-column layout:
+  - Left: contact form (name, email, message) → `POST /inquiries`
+    with `inquiry_type: "general"`
+  - Right: direct contact info (email, location), link to demo page
+    for those who want an in-person demo instead
+
+### Form fields
+
+- Name (required)
+- Email (required)
+- Message (required for contact, unlike demo where it's optional)
+- Hidden `inquiry_type: "general"`
+- Honeypot field (same as demo)
+
+### Footer / nav update
+
+- Add "Contact" to footer Company column
+- Nav stays as-is (Features, Pricing, About, Book a demo)
+
+### Build order
+
+1. Add route + controller action
+2. Build contact page view
+3. Add contact link to footer
+4. Update marketing pages spec
