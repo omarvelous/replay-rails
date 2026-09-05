@@ -163,38 +163,71 @@ ahoy.track("Photo swiped", { photo_index: 3 })
 - Dashboards or visualization (you build those)
 - Funnel analysis
 - Real-time event streams
-- API endpoints for non-browser clients (player devices)
 
-**Challenge for RePlay:** Ahoy is designed for web visitors with
-cookies. Player devices (kiosk screens) aren't traditional web
-visitors — they don't have cookies in the same way, they're
-shared devices, and they communicate via API. Ahoy's visit/visitor
-model may not map cleanly to "a person walked up to a kiosk."
+**Player devices are browsers too.** The RePlay player is a
+browser in fullscreen — Chrome on Fire Stick, Chromium on
+Raspberry Pi, Safari on iPad. It has cookies, localStorage,
+and full JS. This means Ahoy works across the entire product:
 
-Could use Ahoy for:
-- Marketing site analytics (page views, demo requests)
-- App usage tracking (which features are used)
-- Go page tracking (listing views, agent views)
+- **Marketing site** — page views, CTA clicks, UTM tracking
+- **App** — feature usage, user behavior
+- **Go pages** — listing/agent/experience views
+- **Player devices** — impressions, content changes
+- **Kiosk interactions** — touch sessions, swipes, engagement
 
-And use a custom solution for:
-- Player/screen events (impressions, interactions)
-- Kiosk session tracking
+**How the visit/session model maps to kiosk:**
+
+An Ahoy `Visit` represents a browser session. For player devices,
+a visit is a long-running session (days/weeks of uptime). Ahoy's
+default visit duration is 4 hours — configurable.
+
+For kiosk interaction sessions (someone walks up, touches,
+walks away), Ahoy's visit model isn't the right abstraction.
+Instead, use Ahoy events with a custom `session_id` property:
+
+```ruby
+# Kiosk idle timeout triggers session end
+ahoy.track "experience.session_end", {
+  session_id: "uuid",
+  experience_id: 123,
+  duration: 45
+}
+```
+
+The idle timeout in the experience Stimulus controller already
+defines when a session ends (no touch for N seconds). This aligns
+naturally with ending an interaction session — when idle resumes,
+fire a `session_end` event with the duration. No need to override
+Ahoy's visit model.
+
+**Summary of session mapping:**
+
+| Context | What defines a "session" | Ahoy mapping |
+|---------|-------------------------|--------------|
+| Marketing site | Browser visit | Ahoy Visit (default) |
+| App | Logged-in session | Ahoy Visit (default) |
+| Go pages | Page view | Ahoy Visit (default) |
+| Player device | Device uptime | Ahoy Visit (long-lived) |
+| Kiosk interaction | Touch → idle timeout | Custom `session_id` in event properties |
 
 **Pros:**
 - Battle-tested gem, widely used
-- Visit/session management built in
-- Client + server tracking
+- Works across ALL contexts (web, app, player, kiosk)
+- Visit/session management built in for web
+- Client + server tracking via ahoy.js
 - Integrates with existing Rails models
 - Privacy-friendly (first-party, no third-party scripts)
+- One tracking system for everything
 
 **Cons:**
-- Doesn't solve player/kiosk tracking well
 - Still need to build dashboards
-- May need two tracking systems (Ahoy + custom for devices)
-- Visit model assumes browser visitors, not shared kiosk screens
+- Kiosk interaction sessions are custom (events with session_id,
+  not Ahoy visits)
+- Player devices create long-lived visits that may need custom
+  visit duration config
 
-**Effort:** Low for web tracking, medium for player tracking
-(still custom)
+**Effort:** Low-medium for everything — Ahoy handles ingestion
+and storage, you build the display
 
 ### Option C: PostHog (Hosted Analytics)
 
@@ -257,63 +290,77 @@ listing's ads."
 **Effort:** Low for integration, zero for dashboards, but high
 for custom reporting that joins with your data
 
-### Option D: Hybrid — Ahoy for Web + Custom for Devices
+### Option D: Ahoy for Everything
 
-Use Ahoy for browser-based tracking (marketing site, app usage,
-go pages) and a homegrown events table for device/player tracking
-(impressions, kiosk interactions).
+Since player devices are browsers, Ahoy can serve as the single
+tracking system across the entire product. No hybrid needed.
 
-**Web (Ahoy):**
-- Marketing page views, CTA clicks
-- App feature usage (which pages, how often)
-- Go page views (listing/agent/experience views)
-- UTM tracking for marketing attribution
+**One gem handles:**
+- Marketing site: page views, CTA clicks, UTM params
+- App: feature usage, user journeys
+- Go pages: listing views, agent views, experience views
+- Player devices: ad impressions, content changes
+- Kiosk: interaction sessions (via custom session_id in events)
 
-**Devices (Custom Events):**
-- Ad impressions (replace current Impression model)
-- Experience interactions (sessions, swipes, etc.)
-- Screen lifecycle events
+**Kiosk session alignment with idle timeout:**
 
-This keeps the right tool for each context — Ahoy handles the
-web visitor model well, custom handles the device model well.
+The experience Stimulus controller already manages idle state.
+When idle timeout fires, it means the interaction session is
+over. This is the natural boundary for a kiosk session:
+
+```
+Touch breaks idle → ahoy.track("experience.session_start", { session_id })
+User swipes → ahoy.track("experience.photo_swipe", { session_id, photo_index })
+User opens floor plan → ahoy.track("experience.floor_plan_open", { session_id })
+Idle timeout fires → ahoy.track("experience.session_end", { session_id, duration })
+```
+
+The idle timeout value (configurable per experience) becomes the
+session timeout. No separate session management needed — the
+existing touch/idle logic defines sessions.
 
 **Pros:**
-- Best fit for each context
-- Ahoy handles the hard web stuff (sessions, visitors, UTMs)
-- Custom handles the unique device stuff
-- Data stays in your database
-- Can migrate existing Impressions into the custom events table
+- One system for everything
+- No hybrid complexity
+- Ahoy handles visitor tracking, cookies, user agent parsing
+- All events in one table (`ahoy_events`)
+- Can query across contexts (web + device)
+- Battle-tested, well-maintained
 
 **Cons:**
-- Two systems to maintain
-- Two different query patterns
-- Dashboard needs to pull from both
+- Still need to build dashboards
+- Long-lived player visits may need visit duration tuning
+- Kiosk sessions are a custom concept on top of Ahoy events
 
 ---
 
 ## Recommendation
 
-For where RePlay is right now (pre-launch, small scale), **Option
-A (homegrown) or D (hybrid)** makes the most sense:
+**Option D (Ahoy for everything)** is the strongest fit:
 
-- **If you want simplicity:** Option A — one `events` table for
-  everything. Fold Impressions in, add kiosk interactions, add
-  web tracking later. You control the schema and can build exactly
-  what you need.
+- Player devices are browsers — Ahoy's cookie/JS-based tracking
+  works across web, app, and player without a hybrid approach
+- One `ahoy_events` table replaces the need for a custom events
+  model, and existing Impressions can be migrated in
+- Kiosk interaction sessions align with the existing idle timeout
+  logic — no new session management to build
+- Ahoy is a well-maintained Rails gem with server + client SDKs
+- All data stays in your database, queryable alongside your models
+- Adding new events is just `ahoy.track("event_name", properties)`
 
-- **If you want web analytics soon:** Option D — add Ahoy for the
-  marketing site and app (takes an hour), build custom events for
-  devices. Gets you web analytics immediately without building
-  visit/session management.
+**PostHog (Option C)** is worth adding later for dashboards and
+funnel analysis once you have real traffic and know what questions
+you're asking. It complements Ahoy — Ahoy for ingestion and
+storage, PostHog for visualization. Or build dashboards in-app
+with Chartkick (already in the stack) querying `ahoy_events`.
 
-- **If you want dashboards without building them:** Option C
-  (PostHog) is worth revisiting once you have real traffic and
-  know what questions you're asking. Adding it later is easy.
+**What not to do:** Build a homegrown events table (Option A)
+when Ahoy provides the same thing with visit tracking, visitor
+identification, and client-side JS built in.
 
-The key insight: don't over-invest in analytics infrastructure
-before you have users generating data. The current Impression +
-QrScan models work. Add kiosk interactions when experiences ship
-to customers. Build dashboards when you know what metrics matter.
+The key insight: don't over-invest in analytics dashboards before
+you have users generating data. Get Ahoy tracking events first.
+Build views when you know what metrics matter to customers.
 
 ---
 
