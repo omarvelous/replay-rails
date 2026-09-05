@@ -1,0 +1,5 @@
+<%= render "app/shared/page_header", title: "Edit Experience", back_link: { label: "← #{@experience.name}", path: experience_path(@experience) } %>
+
+<div class="max-w-lg">
+  <%= render "form", experience: @experience %>
+</div>

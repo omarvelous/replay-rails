@@ -56,6 +56,9 @@ Rails.application.routes.draw do
         member { get :preview }
       end
 
+      # Experiences
+      resources :experiences
+
       # Playback
       resource :pair, only: %i[show create], controller: "pairings"
       resources :sites

@@ -8,7 +8,7 @@ module Experiences
     validates :listing, presence: true
 
     def default_agent
-      agent || listing.listing_agents.first&.agent
+      agent || listing&.listing_agents&.first&.agent
     end
   end
 end
