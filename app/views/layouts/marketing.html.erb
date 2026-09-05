@@ -3,6 +3,10 @@
   <head>
     <title><%= content_for?(:title) ? "#{content_for(:title)} — RePlay" : "RePlay — Digital Signage for Real Estate" %></title>
     <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="description" content="<%= content_for?(:description) ? content_for(:description) : "Dynamic window displays and interactive open house signage for NYC brokerages. Replace printed cards, capture leads, manage from your phone." %>">
+    <meta property="og:title" content="<%= content_for?(:title) ? "#{content_for(:title)} — RePlay" : "RePlay — Digital Signage for Real Estate" %>">
+    <meta property="og:description" content="Dynamic window displays and interactive open house signage for NYC brokerages.">
+    <meta property="og:type" content="website">
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
     <%= stylesheet_link_tag :app, "data-turbo-track": "reload" %>
@@ -10,7 +14,7 @@
   </head>
 
   <body class="min-h-screen" style="background: var(--m-bg);">
-    <nav style="border-bottom: 1px solid var(--m-surface-border);">
+    <nav style="border-bottom: 1px solid var(--m-surface-border);" data-controller="mobile-menu">
       <div class="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
         <a href="/" class="flex items-center gap-2">
           <span class="flex size-8 items-center justify-center rounded-lg bg-linear-to-br from-indigo-500 to-teal-400">
@@ -18,23 +22,93 @@
           </span>
           <span class="text-lg font-bold tracking-tight" style="color: var(--m-text);">Re<b style="color: var(--m-accent);">Play</b></span>
         </a>
+
+        <%# Desktop nav %>
         <div class="hidden md:flex items-center gap-6">
-          <%= link_to "Features", "/features", class: "text-sm font-medium hover:opacity-80", style: "color: var(--m-text-muted);" %>
-          <%= link_to "Pricing", "/pricing", class: "text-sm font-medium hover:opacity-80", style: "color: var(--m-text-muted);" %>
-          <%= link_to "About", "/about", class: "text-sm font-medium hover:opacity-80", style: "color: var(--m-text-muted);" %>
+          <%= link_to "Features", features_path, class: "text-sm font-medium hover:opacity-80", style: "color: var(--m-text-muted);" %>
+          <%= link_to "Pricing", pricing_path, class: "text-sm font-medium hover:opacity-80", style: "color: var(--m-text-muted);" %>
+          <%= link_to "About", about_path, class: "text-sm font-medium hover:opacity-80", style: "color: var(--m-text-muted);" %>
           <%= link_to "Log in", new_session_url(subdomain: "app"), class: "text-sm font-medium hover:opacity-80", style: "color: var(--m-text-muted);" %>
-          <a href="/demo" style="background: var(--m-cta-bg); color: var(--m-cta-text); border-radius: var(--m-radius);"
+          <a href="<%= demo_path %>" style="background: var(--m-cta-bg); color: var(--m-cta-text); border-radius: var(--m-radius);"
              class="px-3.5 py-2 text-sm font-semibold shadow-xs hover:opacity-90 transition-opacity">Book a demo</a>
+        </div>
+
+        <%# Mobile hamburger %>
+        <button type="button" class="md:hidden p-1" style="color: var(--m-text);"
+                data-action="click->mobile-menu#toggle">
+          <svg data-mobile-menu-target="openIcon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="w-6 h-6">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
+          </svg>
+          <svg data-mobile-menu-target="closeIcon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="w-6 h-6 hidden">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </button>
+      </div>
+
+      <%# Mobile menu %>
+      <div data-mobile-menu-target="menu" class="hidden md:hidden" style="border-top: 1px solid var(--m-surface-border);">
+        <div class="px-6 py-4 space-y-3">
+          <%= link_to "Features", features_path, class: "block text-sm font-medium py-1", style: "color: var(--m-text-muted);" %>
+          <%= link_to "Pricing", pricing_path, class: "block text-sm font-medium py-1", style: "color: var(--m-text-muted);" %>
+          <%= link_to "About", about_path, class: "block text-sm font-medium py-1", style: "color: var(--m-text-muted);" %>
+          <%= link_to "Log in", new_session_url(subdomain: "app"), class: "block text-sm font-medium py-1", style: "color: var(--m-text-muted);" %>
+          <a href="<%= demo_path %>" style="background: var(--m-cta-bg); color: var(--m-cta-text); border-radius: var(--m-radius);"
+             class="block text-center px-3.5 py-2.5 text-sm font-semibold shadow-xs hover:opacity-90 transition-opacity mt-2">Book a demo</a>
         </div>
       </div>
     </nav>
 
     <%= yield %>
 
-    <footer style="border-top: 1px solid var(--m-surface-border); background: var(--m-bg-alt);" class="mt-20">
+    <footer style="border-top: 1px solid var(--m-surface-border); background: var(--m-bg-alt);">
       <div class="max-w-6xl mx-auto px-6 py-12">
-        <div class="flex items-center justify-between">
-          <span class="text-lg font-bold tracking-tight" style="color: var(--m-text);">Re<b style="color: var(--m-accent);">Play</b></span>
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-8">
+          <%# Brand %>
+          <div class="col-span-2 sm:col-span-1">
+            <a href="/" class="flex items-center gap-2">
+              <span class="flex size-7 items-center justify-center rounded-lg bg-linear-to-br from-indigo-500 to-teal-400">
+                <svg viewBox="0 0 24 24" fill="none" class="size-3.5"><path d="M8 6.5v11l9-5.5-9-5.5z" fill="#fff"/></svg>
+              </span>
+              <span class="text-lg font-bold tracking-tight" style="color: var(--m-text);">Re<b style="color: var(--m-accent);">Play</b></span>
+            </a>
+            <p class="text-xs mt-3 leading-relaxed" style="color: var(--m-text-faint);">
+              Digital signage for real estate brokerages. Based in NYC.
+            </p>
+          </div>
+
+          <%# Product %>
+          <div>
+            <h4 class="text-xs font-semibold uppercase tracking-wider mb-3" style="color: var(--m-text-faint);">Product</h4>
+            <ul class="space-y-2">
+              <li><%= link_to "Window Displays", features_path, class: "text-sm hover:opacity-80", style: "color: var(--m-text-muted);" %></li>
+              <li><%= link_to "Open House Signage", features_path, class: "text-sm hover:opacity-80", style: "color: var(--m-text-muted);" %></li>
+              <li><%= link_to "Pricing", pricing_path, class: "text-sm hover:opacity-80", style: "color: var(--m-text-muted);" %></li>
+            </ul>
+          </div>
+
+          <%# Company %>
+          <div>
+            <h4 class="text-xs font-semibold uppercase tracking-wider mb-3" style="color: var(--m-text-faint);">Company</h4>
+            <ul class="space-y-2">
+              <li><%= link_to "About", about_path, class: "text-sm hover:opacity-80", style: "color: var(--m-text-muted);" %></li>
+              <li><%= link_to "Book a Demo", demo_path, class: "text-sm hover:opacity-80", style: "color: var(--m-text-muted);" %></li>
+              <li><a href="mailto:hello@replaytv.co" class="text-sm hover:opacity-80" style="color: var(--m-text-muted);">Contact</a></li>
+            </ul>
+          </div>
+
+          <%# CTA %>
+          <div>
+            <h4 class="text-xs font-semibold uppercase tracking-wider mb-3" style="color: var(--m-text-faint);">Get started</h4>
+            <a href="<%= demo_path %>" style="background: var(--m-cta-bg); color: var(--m-cta-text); border-radius: var(--m-radius);"
+               class="inline-block px-4 py-2 text-sm font-semibold shadow-xs hover:opacity-90 transition-opacity">Book a demo</a>
+            <p class="text-xs mt-3" style="color: var(--m-text-faint);">
+              <a href="mailto:hello@replaytv.co" class="hover:opacity-80" style="color: var(--m-text-muted);">hello@replaytv.co</a>
+            </p>
+          </div>
+        </div>
+
+        <%# Bottom bar %>
+        <div class="mt-10 pt-6 flex items-center justify-between" style="border-top: 1px solid var(--m-surface-border);">
           <p class="text-xs" style="color: var(--m-text-faint);">&copy; <%= Date.current.year %> RePlay. All rights reserved.</p>
         </div>
       </div>
