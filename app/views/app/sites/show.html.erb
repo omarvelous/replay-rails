@@ -29,7 +29,7 @@
 </div>
 
 <%# Screens at this site %>
-<%= render "app/sites/screens_list", site: @site, screens: @site.screens.includes(screen_contents: :contentable).order(:name) %>
+<%= render "app/sites/screens_list", site: @site, screens: @site.screens.includes(:screen_contents).order(:name) %>
 
 <%# Danger zone %>
 <div class="mt-8 pt-4 border-t border-gray-200">

@@ -5,7 +5,7 @@ module App
     def new
       authorize! ScreenContent
       @playlists = Current.account.playlists.where(status: "published").order(:name)
-      @experiences = Current.account.experiences.includes(experienceable: :listing).order(:name)
+      @experiences = Current.account.experiences.order(:name)
     end
 
     def create

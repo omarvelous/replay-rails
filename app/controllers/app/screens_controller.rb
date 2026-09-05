@@ -3,7 +3,7 @@ module App
   before_action :set_screen, only: %i[ show edit update destroy ]
 
   def index
-    base = authorized_scope(Screen.all).includes(:site, screen_contents: :contentable, active_player_assignment: :player)
+    base = authorized_scope(Screen.all).includes(:site, :screen_contents, active_player_assignment: :player)
     base = base.where(site: current_site) if current_site
     base = base.search(params[:q]) if params[:q].present?
     base = base.live   if params[:status] == "live"
