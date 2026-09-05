@@ -224,7 +224,7 @@ Documentation is in progress.
 | App UX | `.claude/plans/202609040100-app-ux.md` | Complete |
 | Marketing site (NYC) | `.claude/plans/202609041200-marketing-site-nyc.md` | Complete |
 | Production deploy | `.claude/plans/202609050100-production-deploy.md` | Complete |
-| Experiences (kiosk) | `.claude/plans/drafts/plan-experiences-v2.md` | Draft — needs review |
+| Experiences (kiosk) | `.claude/plans/202609050300-experiences.md` | In progress |
 | NYC product gaps | `.claude/plans/drafts/plan-nyc-product-gaps.md` | Draft — needs review |
 | Day-parting / Scheduling | `.claude/plans/drafts/plan-day-parting-scheduling.md` | Draft — needs review |
 | Live Preview | `.claude/plans/drafts/plan-live-preview.md` | Draft — needs review |
