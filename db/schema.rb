@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_09_05_013921) do
+ActiveRecord::Schema[8.1].define(version: 2026_09_05_141854) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -116,6 +116,19 @@ ActiveRecord::Schema[8.1].define(version: 2026_09_05_013921) do
     t.string "collection_title", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+  end
+
+  create_table "experiences", force: :cascade do |t|
+    t.bigint "account_id", null: false
+    t.bigint "agent_id"
+    t.jsonb "config", default: {}, null: false
+    t.datetime "created_at", null: false
+    t.bigint "listing_id", null: false
+    t.string "name"
+    t.datetime "updated_at", null: false
+    t.index ["account_id"], name: "index_experiences_on_account_id"
+    t.index ["agent_id"], name: "index_experiences_on_agent_id"
+    t.index ["listing_id"], name: "index_experiences_on_listing_id"
   end
 
   create_table "impressions", force: :cascade do |t|
@@ -323,6 +336,18 @@ ActiveRecord::Schema[8.1].define(version: 2026_09_05_013921) do
     t.index ["screen_id"], name: "index_qr_scans_on_screen_id"
   end
 
+  create_table "screen_contents", force: :cascade do |t|
+    t.boolean "active", default: true, null: false
+    t.bigint "contentable_id", null: false
+    t.string "contentable_type", null: false
+    t.datetime "created_at", null: false
+    t.bigint "screen_id", null: false
+    t.datetime "updated_at", null: false
+    t.index ["contentable_type", "contentable_id"], name: "index_screen_contents_on_contentable_type_and_contentable_id"
+    t.index ["screen_id"], name: "idx_screen_contents_one_active_per_screen", unique: true, where: "(active = true)"
+    t.index ["screen_id"], name: "index_screen_contents_on_screen_id"
+  end
+
   create_table "screen_players", force: :cascade do |t|
     t.boolean "active", default: true, null: false
     t.datetime "created_at", null: false
@@ -411,6 +436,9 @@ ActiveRecord::Schema[8.1].define(version: 2026_09_05_013921) do
   add_foreign_key "agents", "users"
   add_foreign_key "collection_ad_ads", "ads"
   add_foreign_key "collection_ad_ads", "collection_ads"
+  add_foreign_key "experiences", "accounts"
+  add_foreign_key "experiences", "agents"
+  add_foreign_key "experiences", "listings"
   add_foreign_key "impressions", "accounts"
   add_foreign_key "impressions", "ads"
   add_foreign_key "impressions", "players"
@@ -437,6 +465,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_09_05_013921) do
   add_foreign_key "qr_scans", "ads"
   add_foreign_key "qr_scans", "qr_codes"
   add_foreign_key "qr_scans", "screens"
+  add_foreign_key "screen_contents", "screens"
   add_foreign_key "screen_players", "players"
   add_foreign_key "screen_players", "screens"
   add_foreign_key "screen_players", "users", column: "paired_by_id"
