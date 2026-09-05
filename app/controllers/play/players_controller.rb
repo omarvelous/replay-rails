@@ -14,10 +14,15 @@ module Play
         return render :unpaired
       end
 
-      @playlist = @screen.screen_playlists.find_by(active: true)&.playlist
-
-      if @playlist
+      case @screen.content_type
+      when :playlist
+        @playlist = @screen.active_content
         @playlist_ads = @playlist.playlist_ads.includes(:ad).order(:position)
+      when :experience
+        @experience = @screen.active_content
+        @listing = @experience.listing
+        @agent = @experience.default_agent
+        render :experience
       else
         render :idle
       end

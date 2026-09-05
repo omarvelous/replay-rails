@@ -1,0 +1,66 @@
+<%= render "app/shared/page_header", title: "Change Content", subtitle: "Choose content for #{@screen.name}", back_link: { label: "← Screen", path: screen_path(@screen) } %>
+
+<div class="max-w-lg space-y-5">
+  <%# Playlists %>
+  <div class="rounded-lg bg-white shadow-sm ring-1 ring-gray-900/5">
+    <div class="px-4 py-3 border-b border-gray-100">
+      <h3 class="text-sm font-semibold">Playlists</h3>
+    </div>
+    <% if @playlists.any? %>
+      <div class="divide-y divide-gray-100">
+        <% @playlists.each do |playlist| %>
+          <%= button_to screen_screen_content_path(@screen), method: :post,
+              params: { screen_content: { contentable_type: "Playlist", contentable_id: playlist.id } },
+              class: "w-full flex items-center justify-between px-4 py-3 hover:bg-gray-50 transition-colors text-left" do %>
+            <div>
+              <p class="text-sm font-semibold"><%= playlist.name %></p>
+              <p class="text-xs text-gray-400"><%= playlist.playlist_ads.size %> ads</p>
+            </div>
+            <svg viewBox="0 0 20 20" fill="currentColor" class="size-4 text-gray-400"><path fill-rule="evenodd" d="M8.22 5.22a.75.75 0 0 1 1.06 0l4.25 4.25a.75.75 0 0 1 0 1.06l-4.25 4.25a.75.75 0 0 1-1.06-1.06L11.94 10 8.22 6.28a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd"/></svg>
+          <% end %>
+        <% end %>
+      </div>
+    <% else %>
+      <div class="px-4 py-6 text-center text-sm text-gray-500">No published playlists.</div>
+    <% end %>
+  </div>
+
+  <%# Experiences %>
+  <div class="rounded-lg bg-white shadow-sm ring-1 ring-gray-900/5">
+    <div class="px-4 py-3 border-b border-gray-100 flex items-center justify-between">
+      <h3 class="text-sm font-semibold">Experiences</h3>
+      <%= link_to new_experience_path, class: "text-xs text-indigo-600 font-semibold hover:text-indigo-500" do %>
+        + New experience
+      <% end %>
+    </div>
+    <% if @experiences.any? %>
+      <div class="divide-y divide-gray-100">
+        <% @experiences.each do |experience| %>
+          <%= button_to screen_screen_content_path(@screen), method: :post,
+              params: { screen_content: { contentable_type: "Experience", contentable_id: experience.id } },
+              class: "w-full flex items-center justify-between px-4 py-3 hover:bg-gray-50 transition-colors text-left" do %>
+            <div>
+              <p class="text-sm font-semibold"><%= experience.name %></p>
+              <p class="text-xs text-gray-400"><%= experience.listing&.address %></p>
+            </div>
+            <svg viewBox="0 0 20 20" fill="currentColor" class="size-4 text-gray-400"><path fill-rule="evenodd" d="M8.22 5.22a.75.75 0 0 1 1.06 0l4.25 4.25a.75.75 0 0 1 0 1.06l-4.25 4.25a.75.75 0 0 1-1.06-1.06L11.94 10 8.22 6.28a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd"/></svg>
+          <% end %>
+        <% end %>
+      </div>
+    <% else %>
+      <div class="px-4 py-6 text-center text-sm text-gray-500">
+        No experiences yet.
+        <%= link_to "Create one", new_experience_path, class: "text-indigo-600 font-semibold" %>
+      </div>
+    <% end %>
+  </div>
+
+  <%# Remove content %>
+  <% if @screen.active_content %>
+    <div class="pt-2">
+      <%= button_to "Remove content", screen_screen_content_path(@screen), method: :delete,
+          class: "text-sm font-semibold text-red-600 hover:text-red-500",
+          data: { turbo_confirm: "Remove content from this screen?" } %>
+    </div>
+  <% end %>
+</div>

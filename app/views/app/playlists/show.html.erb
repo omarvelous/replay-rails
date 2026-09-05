@@ -19,7 +19,7 @@
       <div>
         <h2 class="text-lg font-bold tracking-tight"><%= @playlist.name %></h2>
         <p class="text-xs text-gray-400 mt-0.5">
-          Assigned to <%= @playlist.screen_playlists.count %> screens ·
+          Assigned to <%= @playlist.screen_contents.count %> screens ·
           <% if @playlist.status == "published" %>
             <span class="text-green-600">Published v1</span>
           <% else %>
@@ -66,9 +66,9 @@
     <div class="p-4 border-b border-gray-200">
       <h3 class="text-sm font-semibold">Assigned to screens</h3>
     </div>
-    <% if @screen_playlists.any? %>
+    <% if @screen_contents.any? %>
       <div class="divide-y divide-gray-100">
-        <% @screen_playlists.each do |sp| %>
+        <% @screen_contents.each do |sp| %>
           <div class="flex items-center gap-3 px-4 py-3">
             <div class="w-12 h-8 rounded bg-gray-900 flex-none flex items-center justify-center">
               <span class="text-white/20 text-[7px]">Preview</span>

@@ -60,7 +60,7 @@ Rails.application.routes.draw do
       resource :pair, only: %i[show create], controller: "pairings"
       resources :sites
       resources :screens do
-        resource :screen_playlist, only: %i[new create destroy]
+        resource :screen_content, only: %i[new create destroy]
         resource :screen_player, only: %i[new create destroy]
       end
       resources :playlists do
