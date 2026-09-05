@@ -114,8 +114,6 @@ projects:
             previews:
               plan: 0.5c-512mb
               generation: automatic
-              envVars:
-                - fromGroup: replay-preview-shared
 
           - type: worker
             name: replay-staging-worker
