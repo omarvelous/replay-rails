@@ -24,6 +24,10 @@ module ReplayRails
     # config.time_zone = "Central Time (US & Canada)"
     # config.eager_load_paths << Rails.root.join("extras")
 
+    # Coming soon gate — serves static HTML before Rails routing
+    require_relative "../app/middleware/coming_soon_middleware"
+    config.middleware.insert_before 0, ComingSoonMiddleware
+
     # Session cookies shared across subdomains
     config.session_store :cookie_store, key: "_replay_session", domain: :all
   end
