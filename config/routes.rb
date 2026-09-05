@@ -25,6 +25,7 @@ Rails.application.routes.draw do
     namespace :go do
       resources :listings, only: :show
       resources :agents, only: :show
+      resources :experiences, only: :show
       resources :leads, only: :create
     end
   end
