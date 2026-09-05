@@ -42,6 +42,7 @@ resource "cloudflare_dns_record" "rply_tv" {
   content = var.render_cname
   type    = "CNAME"
   proxied = true
+  ttl     = 1 # Auto (required by proxied CNAME)
 }
 
 resource "cloudflare_zone_setting" "rply_ssl" {
