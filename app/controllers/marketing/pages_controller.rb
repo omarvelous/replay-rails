@@ -11,5 +11,8 @@ module Marketing
 
     def about
     end
+
+    def demo
+    end
   end
 end

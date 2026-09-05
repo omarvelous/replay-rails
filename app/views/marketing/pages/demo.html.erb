@@ -1,0 +1,129 @@
+<% content_for(:title) { "Book a Demo" } %>
+
+<%# ── Hero ── %>
+<section style="background: var(--m-bg-hero); padding: var(--m-section-pad) 0;">
+  <div class="max-w-6xl mx-auto px-6">
+    <div class="max-w-2xl">
+      <h1 style="font-family: var(--m-heading-font); font-weight: var(--m-heading-weight); color: var(--m-hero-text);"
+          class="text-4xl sm:text-5xl tracking-tight">See RePlay in action</h1>
+      <p style="color: var(--m-hero-muted);" class="mt-4 text-lg">
+        We'll bring a screen to your office and show you everything.
+        15 minutes, no commitment, no sales pitch.
+      </p>
+    </div>
+  </div>
+</section>
+
+<%# ── Form + Details ── %>
+<section style="background: var(--m-bg); padding: var(--m-section-pad) 0;">
+  <div class="max-w-6xl mx-auto px-6">
+    <div class="grid grid-cols-1 lg:grid-cols-[1fr_380px] gap-12 items-start">
+      <%# Form %>
+      <div style="background: var(--m-surface); border: 1px solid var(--m-surface-border); border-radius: var(--m-radius); box-shadow: var(--m-shadow);"
+           class="p-6 sm:p-8">
+        <h2 style="font-family: var(--m-heading-font); font-weight: var(--m-heading-weight); color: var(--m-text);"
+            class="text-2xl tracking-tight">Book a demo</h2>
+        <p style="color: var(--m-text-muted);" class="mt-2 text-sm">
+          Fill out the form and we'll reach out to schedule a time.
+        </p>
+
+        <form action="mailto:hello@replaytv.co" method="get" class="mt-6 space-y-4">
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+              <label style="color: var(--m-text);" class="block text-sm font-medium mb-1">First name</label>
+              <input type="text" name="first_name" required
+                     style="border: 1px solid var(--m-surface-border); border-radius: var(--m-radius); color: var(--m-text);"
+                     class="block w-full px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-indigo-500">
+            </div>
+            <div>
+              <label style="color: var(--m-text);" class="block text-sm font-medium mb-1">Last name</label>
+              <input type="text" name="last_name" required
+                     style="border: 1px solid var(--m-surface-border); border-radius: var(--m-radius); color: var(--m-text);"
+                     class="block w-full px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-indigo-500">
+            </div>
+          </div>
+
+          <div>
+            <label style="color: var(--m-text);" class="block text-sm font-medium mb-1">Email</label>
+            <input type="email" name="email" required
+                   style="border: 1px solid var(--m-surface-border); border-radius: var(--m-radius); color: var(--m-text);"
+                   class="block w-full px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-indigo-500">
+          </div>
+
+          <div>
+            <label style="color: var(--m-text);" class="block text-sm font-medium mb-1">Phone</label>
+            <input type="tel" name="phone"
+                   style="border: 1px solid var(--m-surface-border); border-radius: var(--m-radius); color: var(--m-text);"
+                   class="block w-full px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-indigo-500">
+          </div>
+
+          <div>
+            <label style="color: var(--m-text);" class="block text-sm font-medium mb-1">Brokerage name</label>
+            <input type="text" name="brokerage"
+                   style="border: 1px solid var(--m-surface-border); border-radius: var(--m-radius); color: var(--m-text);"
+                   class="block w-full px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-indigo-500">
+          </div>
+
+          <div>
+            <label style="color: var(--m-text);" class="block text-sm font-medium mb-1">What are you interested in?</label>
+            <select name="interest"
+                    style="border: 1px solid var(--m-surface-border); border-radius: var(--m-radius); color: var(--m-text);"
+                    class="block w-full px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-indigo-500">
+              <option value="">Select an option</option>
+              <option value="window">Window displays</option>
+              <option value="openhouse">Open house signage</option>
+              <option value="both">Both</option>
+              <option value="other">Something else</option>
+            </select>
+          </div>
+
+          <div>
+            <label style="color: var(--m-text);" class="block text-sm font-medium mb-1">Message <span style="color: var(--m-text-faint);">(optional)</span></label>
+            <textarea name="message" rows="3"
+                      style="border: 1px solid var(--m-surface-border); border-radius: var(--m-radius); color: var(--m-text);"
+                      class="block w-full px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-indigo-500 resize-none"></textarea>
+          </div>
+
+          <button type="submit" style="background: var(--m-cta-bg); color: var(--m-cta-text); border-radius: var(--m-radius);"
+                  class="w-full px-6 py-3 text-sm font-semibold shadow-sm hover:opacity-90 transition-opacity cursor-pointer">
+            Request a demo
+          </button>
+        </form>
+      </div>
+
+      <%# Sidebar %>
+      <div class="space-y-6">
+        <div>
+          <h3 style="color: var(--m-text);" class="font-semibold">What to expect</h3>
+          <div class="mt-4 space-y-4">
+            <% [
+              { step: "1", text: "We'll reach out within 24 hours to schedule a time." },
+              { step: "2", text: "We bring a screen to your office for a live demo." },
+              { step: "3", text: "You see your listings on a real display in 15 minutes." }
+            ].each do |item| %>
+              <div class="flex gap-3">
+                <div class="w-7 h-7 rounded-full grid place-items-center shrink-0 text-xs font-bold" style="background: var(--m-accent); color: var(--m-cta-text);"><%= item[:step] %></div>
+                <p style="color: var(--m-text-muted);" class="text-sm mt-0.5"><%= item[:text] %></p>
+              </div>
+            <% end %>
+          </div>
+        </div>
+
+        <div style="border-top: 1px solid var(--m-surface-border);" class="pt-6">
+          <h3 style="color: var(--m-text);" class="font-semibold">Prefer to talk now?</h3>
+          <p style="color: var(--m-text-muted);" class="text-sm mt-2">
+            Email us directly at
+            <a href="mailto:hello@replaytv.co" style="color: var(--m-accent);" class="font-semibold hover:opacity-80">hello@replaytv.co</a>
+          </p>
+        </div>
+
+        <div style="border-top: 1px solid var(--m-surface-border);" class="pt-6">
+          <h3 style="color: var(--m-text);" class="font-semibold">NYC-based</h3>
+          <p style="color: var(--m-text-muted);" class="text-sm mt-2">
+            We're local. Demos are in person at your office — not a Zoom call.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
