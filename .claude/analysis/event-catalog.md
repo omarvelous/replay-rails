@@ -42,9 +42,28 @@ covers marketing, app, go pages, and experience views.
   (future: UTM params)
 - `source: null` — direct visit or unknown
 
-**Note:** The `/s/:token` redirect controller sets the source
-before redirecting to the go page. Ahoy picks up the page view
-on the destination. No separate scan event needed.
+**Note:** `page.viewed` fires on the destination after redirect.
+The redirect itself is tracked separately by `redirect.followed`.
+
+---
+
+### Redirect Events
+
+Tracked server-side when a redirect is followed. Captures the
+action before the destination page loads — if the user drops off
+before the page view fires, we still know the redirect happened.
+
+| Event | When | Properties |
+|-------|------|------------|
+| `redirect.followed` | A tracked redirect is followed (QR scan, short link, campaign URL) | `source` (`qr`, `short_link`, `campaign`), `token`, `destination_url` |
+
+**What this replaces:**
+- Current `QrScan` model — `redirect.followed` with `source: "qr"`
+
+**Funnel value:** Gives visibility into drop-off between scan and
+page view. `redirect.followed` count > `page.viewed` count means
+people are scanning but not loading the page (slow connection,
+changed their mind, etc.).
 
 ---
 
@@ -153,18 +172,19 @@ are system events, not user actions.
 | # | Event | Context | Trigger |
 |---|-------|---------|---------|
 | 1 | `page.viewed` | All | Page load (automatic) |
-| 2 | `content.impressed` | Player | Ad shown for full duration |
-| 3 | `content.loaded` | Player | Screen renders content |
-| 4 | `interaction.started` | Kiosk | Touch breaks idle |
-| 5 | `interaction.ended` | Kiosk | Idle timeout fires |
-| 6 | `interaction.navigated` | Kiosk | Photo swipe/tap |
-| 7 | `interaction.opened` | Kiosk | Overlay opened |
-| 8 | `interaction.closed` | Kiosk | Overlay closed |
-| 9 | `form.submitted` | Web | Form submitted |
-| 10 | `device.connected` | Player | Player boots |
-| 11 | `device.disconnected` | Server | Heartbeat missed |
+| 2 | `redirect.followed` | Server | Tracked redirect (QR, short link) |
+| 3 | `content.impressed` | Player | Ad shown for full duration |
+| 4 | `content.loaded` | Player | Screen renders content |
+| 5 | `interaction.started` | Kiosk | Touch breaks idle |
+| 6 | `interaction.ended` | Kiosk | Idle timeout fires |
+| 7 | `interaction.navigated` | Kiosk | Photo swipe/tap |
+| 8 | `interaction.opened` | Kiosk | Overlay opened |
+| 9 | `interaction.closed` | Kiosk | Overlay closed |
+| 10 | `form.submitted` | Web | Form submitted |
+| 11 | `device.connected` | Player | Player boots |
+| 12 | `device.disconnected` | Server | Heartbeat missed |
 
-11 events total. Covers everything in the analytics strategy
+12 events total. Covers everything in the analytics strategy
 analysis with zero redundancy.
 
 ---
@@ -173,7 +193,7 @@ analysis with zero redundancy.
 
 | Dropped event | Why | Covered by |
 |---------------|-----|------------|
-| `qr.scanned` | A scan is just a page view with source attribution | `page.viewed` with `source: "qr"` |
+| `qr.scanned` | A scan is a redirect followed + page view | `redirect.followed` with `source: "qr"` + `page.viewed` |
 | `listing.viewed` | A listing view is just a page view | `page.viewed` with `url: "/go/listings/:id"` |
 | `experience.viewed` | Same | `page.viewed` with `url: "/go/experiences/:id"` |
 | `lead.created` | A lead is a form submission | `form.submitted` with `form_type: "lead"` |
@@ -208,6 +228,8 @@ consistent naming:
 | `content_type` | string | content | `playlist` or `experience` |
 | `content_id` | integer | content | ID of playlist or experience |
 | `player_token` | string | device | Player identifier |
+| `token` | string | redirect | Redirect token (`/s/:token`) |
+| `destination_url` | string | redirect | Where the redirect goes |
 
 ---
 
@@ -217,7 +239,8 @@ With this event list, these funnels become queryable:
 
 **QR to Lead:**
 ```
-page.viewed (source: "qr", url: "/go/listings/123")
+redirect.followed (source: "qr", destination_url: "/go/listings/123")
+  → page.viewed (url: "/go/listings/123")
   → form.submitted (form_type: "lead", listing_id: 123)
 ```
 
@@ -226,7 +249,8 @@ page.viewed (source: "qr", url: "/go/listings/123")
 interaction.started (experience_id: 5)
   → interaction.navigated (photo swipes)
   → interaction.ended (duration: 45s)
-  → page.viewed (source: "qr", url: "/go/listings/123")
+  → redirect.followed (source: "qr", destination_url: "/go/listings/123")
+  → page.viewed (url: "/go/listings/123")
   → form.submitted (form_type: "lead", listing_id: 123)
 ```
 
@@ -241,5 +265,6 @@ page.viewed (url: "/")
 **Impression to Scan:**
 ```
 content.impressed (ad_id: 10, screen_id: 3)
-  → page.viewed (source: "qr", url: "/go/listings/123")
+  → redirect.followed (source: "qr", destination_url: "/go/listings/123")
+  → page.viewed (url: "/go/listings/123")
 ```
