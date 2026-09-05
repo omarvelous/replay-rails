@@ -1,0 +1,135 @@
+<% content_for(:title) { "Book a Demo" } %>
+
+<%# ── Hero ── %>
+<section style="background: var(--m-bg-hero); padding: var(--m-section-pad) 0;">
+  <div class="max-w-6xl mx-auto px-6">
+    <div class="max-w-2xl">
+      <h1 style="font-family: var(--m-heading-font); font-weight: var(--m-heading-weight); color: var(--m-hero-text);"
+          class="text-4xl sm:text-5xl tracking-tight">See RePlay in action</h1>
+      <p style="color: var(--m-hero-muted);" class="mt-4 text-lg">
+        We'll bring a screen to your office and show you everything.
+        15 minutes, no commitment, no sales pitch.
+      </p>
+    </div>
+  </div>
+</section>
+
+<%# ── Form + Details ── %>
+<section style="background: var(--m-bg); padding: var(--m-section-pad) 0;">
+  <div class="max-w-6xl mx-auto px-6">
+    <div class="grid grid-cols-1 lg:grid-cols-[1fr_380px] gap-12 items-start">
+      <%# Form %>
+      <div style="background: var(--m-surface); border: 1px solid var(--m-surface-border); border-radius: var(--m-radius); box-shadow: var(--m-shadow);"
+           class="p-6 sm:p-8">
+        <% if notice %>
+          <div style="background: #ecfdf5; border: 1px solid #a7f3d0; border-radius: var(--m-radius);" class="px-4 py-3 mb-5 flex items-center gap-3">
+            <svg viewBox="0 0 20 20" fill="currentColor" class="w-5 h-5 text-green-600 shrink-0">
+              <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.857-9.809a.75.75 0 00-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 10-1.06 1.06l2.5 2.5a.75.75 0 001.137-.089l4-5.5z" clip-rule="evenodd" />
+            </svg>
+            <p class="text-sm font-medium text-green-800"><%= notice %></p>
+          </div>
+        <% end %>
+
+        <h2 style="font-family: var(--m-heading-font); font-weight: var(--m-heading-weight); color: var(--m-text);"
+            class="text-2xl tracking-tight">Book a demo</h2>
+        <p style="color: var(--m-text-muted);" class="mt-2 text-sm">
+          Fill out the form and we'll reach out to schedule a time.
+        </p>
+
+        <%= form_with url: inquiries_path, method: :post, scope: :inquiry, class: "mt-6 space-y-4" do |f| %>
+          <%= f.hidden_field :inquiry_type, value: "demo_request" %>
+
+          <%# Honeypot — hidden from real users, bots fill it %>
+          <div class="hidden" aria-hidden="true">
+            <input type="text" name="website" tabindex="-1" autocomplete="off">
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+              <label style="color: var(--m-text);" class="block text-sm font-medium mb-1">Name</label>
+              <%= f.text_field :name, required: true,
+                  style: "border: 1px solid var(--m-surface-border); border-radius: var(--m-radius); color: var(--m-text);",
+                  class: "block w-full px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-indigo-500" %>
+            </div>
+            <div>
+              <label style="color: var(--m-text);" class="block text-sm font-medium mb-1">Email</label>
+              <%= f.email_field :email, required: true,
+                  style: "border: 1px solid var(--m-surface-border); border-radius: var(--m-radius); color: var(--m-text);",
+                  class: "block w-full px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-indigo-500" %>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+              <label style="color: var(--m-text);" class="block text-sm font-medium mb-1">Phone <span style="color: var(--m-text-faint);">(optional)</span></label>
+              <%= f.telephone_field :phone,
+                  style: "border: 1px solid var(--m-surface-border); border-radius: var(--m-radius); color: var(--m-text);",
+                  class: "block w-full px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-indigo-500" %>
+            </div>
+            <div>
+              <label style="color: var(--m-text);" class="block text-sm font-medium mb-1">Brokerage name <span style="color: var(--m-text-faint);">(optional)</span></label>
+              <%= f.text_field :company,
+                  style: "border: 1px solid var(--m-surface-border); border-radius: var(--m-radius); color: var(--m-text);",
+                  class: "block w-full px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-indigo-500" %>
+            </div>
+          </div>
+
+          <div>
+            <label style="color: var(--m-text);" class="block text-sm font-medium mb-1">What are you interested in?</label>
+            <%= f.select :interest,
+                [["Select an option", ""], ["Window displays", "window"], ["Open house signage", "openhouse"], ["Both", "both"], ["Something else", "other"]],
+                {},
+                style: "border: 1px solid var(--m-surface-border); border-radius: var(--m-radius); color: var(--m-text);",
+                class: "block w-full px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-indigo-500" %>
+          </div>
+
+          <div>
+            <label style="color: var(--m-text);" class="block text-sm font-medium mb-1">Message <span style="color: var(--m-text-faint);">(optional)</span></label>
+            <%= f.text_area :message, rows: 3,
+                style: "border: 1px solid var(--m-surface-border); border-radius: var(--m-radius); color: var(--m-text);",
+                class: "block w-full px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-indigo-500 resize-none" %>
+          </div>
+
+          <button type="submit" style="background: var(--m-cta-bg); color: var(--m-cta-text); border-radius: var(--m-radius);"
+                  class="w-full px-6 py-3 text-sm font-semibold shadow-sm hover:opacity-90 transition-opacity cursor-pointer">
+            Request a demo
+          </button>
+        <% end %>
+      </div>
+
+      <%# Sidebar %>
+      <div class="space-y-6">
+        <div>
+          <h3 style="color: var(--m-text);" class="font-semibold">What to expect</h3>
+          <div class="mt-4 space-y-4">
+            <% [
+              { step: "1", text: "We'll reach out within 24 hours to schedule a time." },
+              { step: "2", text: "We bring a screen to your office for a live demo." },
+              { step: "3", text: "You see your listings on a real display in 15 minutes." }
+            ].each do |item| %>
+              <div class="flex gap-3">
+                <div class="w-7 h-7 rounded-full grid place-items-center shrink-0 text-xs font-bold" style="background: var(--m-accent); color: var(--m-cta-text);"><%= item[:step] %></div>
+                <p style="color: var(--m-text-muted);" class="text-sm mt-0.5"><%= item[:text] %></p>
+              </div>
+            <% end %>
+          </div>
+        </div>
+
+        <div style="border-top: 1px solid var(--m-surface-border);" class="pt-6">
+          <h3 style="color: var(--m-text);" class="font-semibold">Prefer to talk now?</h3>
+          <p style="color: var(--m-text-muted);" class="text-sm mt-2">
+            Email us directly at
+            <a href="mailto:hello@replaytv.co" style="color: var(--m-accent);" class="font-semibold hover:opacity-80">hello@replaytv.co</a>
+          </p>
+        </div>
+
+        <div style="border-top: 1px solid var(--m-surface-border);" class="pt-6">
+          <h3 style="color: var(--m-text);" class="font-semibold">NYC-based</h3>
+          <p style="color: var(--m-text-muted);" class="text-sm mt-2">
+            We're local. Demos are in person at your office — not a Zoom call.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

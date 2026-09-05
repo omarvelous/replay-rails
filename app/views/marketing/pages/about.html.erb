@@ -1,4 +1,91 @@
-<div class="max-w-6xl mx-auto px-6 py-20">
-  <h1 class="text-4xl font-extrabold tracking-tight text-gray-900">About RePlay</h1>
-  <p class="text-lg text-gray-600 mt-4">We believe every brokerage window should work as hard as the agents inside.</p>
-</div>
+<% content_for(:title) { "About" } %>
+
+<%# ── Hero ── %>
+<section style="background: var(--m-bg-hero); padding: var(--m-section-pad) 0;">
+  <div class="max-w-6xl mx-auto px-6">
+    <div class="max-w-2xl">
+      <h1 style="font-family: var(--m-heading-font); font-weight: var(--m-heading-weight); color: var(--m-hero-text);"
+          class="text-4xl sm:text-5xl tracking-tight">We believe every brokerage window should work as hard as the agents inside</h1>
+    </div>
+  </div>
+</section>
+
+<%# ── Story ── %>
+<section style="background: var(--m-bg); padding: var(--m-section-pad) 0;">
+  <div class="max-w-3xl mx-auto px-6">
+    <h2 style="font-family: var(--m-heading-font); font-weight: var(--m-heading-weight); color: var(--m-text);"
+        class="text-2xl sm:text-3xl tracking-tight">Why we built RePlay</h2>
+    <div class="mt-6 space-y-4 text-sm sm:text-base leading-relaxed" style="color: var(--m-text-muted);">
+      <p>
+        Walk down any busy street in New York City and you'll see the same thing in every brokerage window:
+        printed property cards. Some are current. Many show listings that sold weeks ago. A few are sun-faded
+        and curling at the edges.
+      </p>
+      <p>
+        It's 2026. Every listing lives online. Every agent has a smartphone. But the brokerage window — the
+        single most visible marketing surface in real estate — is stuck in the 1990s.
+      </p>
+      <p>
+        RePlay replaces those printed cards with dynamic digital displays that update automatically. When you
+        sell a property, it disappears from the screen. When you list a new one, it appears. Walk-by traffic
+        scans a QR code and becomes a lead in your inbox. Your window works for you around the clock — no
+        printing, no staff time, no stale listings.
+      </p>
+      <p>
+        But we didn't stop at windows. We built interactive signage that agents can bring to open houses,
+        showings, and events. A touch screen where visitors browse photos, view floor plans, and submit their
+        contact info before they leave the building.
+      </p>
+      <p>
+        We're based in New York City and we're building RePlay for the brokerages and agents we see every day.
+        If you want to see it in action, we'll bring a screen to your office.
+      </p>
+    </div>
+  </div>
+</section>
+
+<%# ── Values ── %>
+<section style="background: var(--m-bg-alt); padding: var(--m-section-pad) 0;">
+  <div class="max-w-6xl mx-auto px-6">
+    <div class="grid grid-cols-1 sm:grid-cols-3 gap-6 sm:gap-8">
+      <% [
+        { title: "Simple by default",
+          desc: "Real estate professionals are busy. Every feature we build should take seconds to use, not hours to learn. If it's complicated, we haven't finished building it." },
+        { title: "Built for the street",
+          desc: "We design for storefront windows and open house floors, not conference rooms. Our product has to look great at 10 feet, work with a tap, and survive a New York summer." },
+        { title: "Your data, your leads",
+          desc: "Every scan, every impression, every lead belongs to you. No data sharing, no marketplace, no lead reselling. Your signage generates leads for your business." }
+      ].each do |value| %>
+        <div>
+          <h3 style="font-family: var(--m-heading-font); font-weight: var(--m-heading-weight); color: var(--m-text);"
+              class="text-xl tracking-tight"><%= value[:title] %></h3>
+          <p style="color: var(--m-text-muted);" class="mt-3 text-sm leading-relaxed"><%= value[:desc] %></p>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</section>
+
+<%# ── Contact ── %>
+<section style="background: var(--m-bg); padding: var(--m-section-pad) 0;">
+  <div class="max-w-3xl mx-auto px-6">
+    <h2 style="font-family: var(--m-heading-font); font-weight: var(--m-heading-weight); color: var(--m-text);"
+        class="text-2xl sm:text-3xl tracking-tight">Get in touch</h2>
+    <div class="mt-6 space-y-3 text-sm sm:text-base" style="color: var(--m-text-muted);">
+      <p>
+        <span style="color: var(--m-text);" class="font-semibold">Email:</span>
+        <a href="mailto:hello@replaytv.co" style="color: var(--m-accent);" class="hover:opacity-80">hello@replaytv.co</a>
+      </p>
+      <p>
+        <span style="color: var(--m-text);" class="font-semibold">Based in:</span>
+        New York City
+      </p>
+    </div>
+    <div class="mt-8">
+      <a href="/demo" style="background: var(--m-cta-bg); color: var(--m-cta-text); border-radius: var(--m-radius);"
+         class="inline-flex items-center px-6 py-3 text-sm font-semibold shadow-sm hover:opacity-90 transition-opacity">
+        Book a demo
+      </a>
+    </div>
+  </div>
+</section>

@@ -2,10 +2,15 @@ module Admin
   class ApplicationController < Administrate::ApplicationController
     include Authentication
     before_action :require_admin!
+    before_action :strip_subdomain_param
 
     around_action :without_tenant
 
     private
+
+      def strip_subdomain_param
+        params.delete(:subdomain)
+      end
 
       def require_admin!
         unless Current.user&.admin?

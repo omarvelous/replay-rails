@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_09_04_054659) do
+ActiveRecord::Schema[8.1].define(version: 2026_09_05_013921) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -141,6 +141,19 @@ ActiveRecord::Schema[8.1].define(version: 2026_09_04_054659) do
     t.index ["screen_id"], name: "index_impressions_on_screen_id"
     t.index ["site_id", "created_at"], name: "index_impressions_on_site_id_and_created_at"
     t.index ["site_id"], name: "index_impressions_on_site_id"
+  end
+
+  create_table "inquiries", force: :cascade do |t|
+    t.string "company"
+    t.datetime "created_at", null: false
+    t.string "email", null: false
+    t.string "inquiry_type", default: "demo_request", null: false
+    t.string "interest"
+    t.text "message"
+    t.string "name", null: false
+    t.string "phone"
+    t.datetime "responded_at"
+    t.datetime "updated_at", null: false
   end
 
   create_table "invites", force: :cascade do |t|

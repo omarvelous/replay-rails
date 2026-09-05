@@ -10,6 +10,9 @@ Rails.application.routes.draw do
       get "/features", to: "pages#features", as: :features
       get "/pricing",  to: "pages#pricing",  as: :pricing
       get "/about",    to: "pages#about",    as: :about
+      get "/demo",     to: "pages#demo",     as: :demo
+      get "/contact",  to: "pages#contact",  as: :contact
+      resources :inquiries, only: :create
     end
 
     # Documentation
@@ -112,6 +115,9 @@ Rails.application.routes.draw do
       resources :users
       resources :account_users
       resources :invites
+
+      # Inquiries
+      resources :inquiries
 
       # Audit
       namespace :paper_trail do

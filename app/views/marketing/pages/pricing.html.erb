@@ -1,4 +1,184 @@
-<div class="max-w-6xl mx-auto px-6 py-20">
-  <h1 class="text-4xl font-extrabold tracking-tight text-gray-900">Pricing</h1>
-  <p class="text-lg text-gray-600 mt-4">Simple pricing, priced for a single office.</p>
-</div>
+<% content_for(:title) { "Pricing" } %>
+
+<%# ── Hero ── %>
+<section style="background: var(--m-bg-hero); padding: var(--m-section-pad) 0;">
+  <div class="max-w-6xl mx-auto px-6 text-center">
+    <h1 style="font-family: var(--m-heading-font); font-weight: var(--m-heading-weight); color: var(--m-hero-text);"
+        class="text-4xl sm:text-5xl tracking-tight">Simple, transparent pricing</h1>
+    <p style="color: var(--m-hero-muted);" class="mt-4 text-lg max-w-xl mx-auto">
+      No hidden fees. No long-term contracts. Cancel anytime.
+    </p>
+  </div>
+</section>
+
+<%# ── Pricing Cards ── %>
+<section style="background: var(--m-bg); padding: var(--m-section-pad) 0;">
+  <div class="max-w-5xl mx-auto px-6">
+    <div class="grid grid-cols-1 sm:grid-cols-3 gap-5 sm:gap-6">
+      <%# Window Display %>
+      <div style="background: var(--m-surface); border: 1px solid var(--m-surface-border); border-radius: var(--m-radius); box-shadow: var(--m-shadow);"
+           class="p-6 sm:p-8 flex flex-col">
+        <h3 style="color: var(--m-text);" class="font-semibold text-lg">Window Display</h3>
+        <p style="color: var(--m-text-muted);" class="text-sm mt-1">For brokerage storefronts</p>
+        <div class="mt-5">
+          <span style="font-family: var(--m-heading-font); font-weight: var(--m-heading-weight); color: var(--m-text);"
+                class="text-4xl tracking-tight">$99</span>
+          <span style="color: var(--m-text-muted);" class="text-sm">/ mo per screen</span>
+        </div>
+        <ul class="mt-6 space-y-3 flex-1" style="color: var(--m-text-muted);">
+          <% ["1 screen", "Unlimited listings", "Listing ad builder", "QR lead capture", "Agent branding", "Analytics dashboard", "Phone management"].each do |item| %>
+            <li class="flex items-start gap-2 text-sm">
+              <svg viewBox="0 0 20 20" fill="currentColor" class="w-4 h-4 mt-0.5 shrink-0" style="color: var(--m-accent);"><path fill-rule="evenodd" d="M16.704 4.153a.75.75 0 01.143 1.052l-8 10.5a.75.75 0 01-1.127.075l-4.5-4.5a.75.75 0 011.06-1.06l3.894 3.893 7.48-9.817a.75.75 0 011.05-.143z" clip-rule="evenodd" /></svg>
+              <%= item %>
+            </li>
+          <% end %>
+        </ul>
+        <a href="<%= new_account_url(subdomain: 'app') %>" style="border: 1px solid var(--m-surface-border); border-radius: var(--m-radius); color: var(--m-text);"
+           class="block mt-8 px-4 py-2.5 text-sm font-semibold text-center hover:opacity-80 transition-opacity">
+          Start free trial
+        </a>
+      </div>
+
+      <%# Open House Kit — highlighted %>
+      <div style="border-radius: var(--m-radius); box-shadow: var(--m-shadow); background: var(--m-surface); border: 2px solid var(--m-accent);"
+           class="p-6 sm:p-8 flex flex-col relative">
+        <div class="absolute -top-3 left-1/2 -translate-x-1/2">
+          <span style="background: var(--m-cta-bg); color: var(--m-cta-text); border-radius: 9999px;"
+                class="px-3 py-0.5 text-xs font-semibold">Most popular</span>
+        </div>
+        <h3 style="color: var(--m-text);" class="font-semibold text-lg">Open House Kit</h3>
+        <p style="color: var(--m-text-muted);" class="text-sm mt-1">For individual agents</p>
+        <div class="mt-5">
+          <span style="font-family: var(--m-heading-font); font-weight: var(--m-heading-weight); color: var(--m-text);"
+                class="text-4xl tracking-tight">$49</span>
+          <span style="color: var(--m-text-muted);" class="text-sm">/ mo per agent</span>
+        </div>
+        <ul class="mt-6 space-y-3 flex-1" style="color: var(--m-text-muted);">
+          <% ["1 portable screen", "Unlimited listings", "Interactive touch mode", "On-screen lead capture", "Photo gallery + floor plans", "Agent branding", "QR handoff to phone"].each do |item| %>
+            <li class="flex items-start gap-2 text-sm">
+              <svg viewBox="0 0 20 20" fill="currentColor" class="w-4 h-4 mt-0.5 shrink-0" style="color: var(--m-accent);"><path fill-rule="evenodd" d="M16.704 4.153a.75.75 0 01.143 1.052l-8 10.5a.75.75 0 01-1.127.075l-4.5-4.5a.75.75 0 011.06-1.06l3.894 3.893 7.48-9.817a.75.75 0 011.05-.143z" clip-rule="evenodd" /></svg>
+              <%= item %>
+            </li>
+          <% end %>
+        </ul>
+        <a href="<%= new_account_url(subdomain: 'app') %>" style="background: var(--m-cta-bg); color: var(--m-cta-text); border-radius: var(--m-radius);"
+           class="block mt-8 px-4 py-2.5 text-sm font-semibold text-center hover:opacity-90 transition-opacity">
+          Start free trial
+        </a>
+      </div>
+
+      <%# Brokerage Bundle %>
+      <div style="background: var(--m-surface); border: 1px solid var(--m-surface-border); border-radius: var(--m-radius); box-shadow: var(--m-shadow);"
+           class="p-6 sm:p-8 flex flex-col">
+        <h3 style="color: var(--m-text);" class="font-semibold text-lg">Brokerage Bundle</h3>
+        <p style="color: var(--m-text-muted);" class="text-sm mt-1">For multi-screen offices</p>
+        <div class="mt-5">
+          <span style="font-family: var(--m-heading-font); font-weight: var(--m-heading-weight); color: var(--m-text);"
+                class="text-4xl tracking-tight">Custom</span>
+        </div>
+        <ul class="mt-6 space-y-3 flex-1" style="color: var(--m-text-muted);">
+          <% ["3+ screens", "Everything in both plans", "Window + lobby + open house", "Dedicated setup & install", "Priority support", "Team management & roles", "Custom branding"].each do |item| %>
+            <li class="flex items-start gap-2 text-sm">
+              <svg viewBox="0 0 20 20" fill="currentColor" class="w-4 h-4 mt-0.5 shrink-0" style="color: var(--m-accent);"><path fill-rule="evenodd" d="M16.704 4.153a.75.75 0 01.143 1.052l-8 10.5a.75.75 0 01-1.127.075l-4.5-4.5a.75.75 0 011.06-1.06l3.894 3.893 7.48-9.817a.75.75 0 011.05-.143z" clip-rule="evenodd" /></svg>
+              <%= item %>
+            </li>
+          <% end %>
+        </ul>
+        <a href="/demo" style="border: 1px solid var(--m-surface-border); border-radius: var(--m-radius); color: var(--m-text);"
+           class="block mt-8 px-4 py-2.5 text-sm font-semibold text-center hover:opacity-80 transition-opacity">
+          Book a demo
+        </a>
+      </div>
+    </div>
+
+    <%# Comparison table %>
+    <div class="mt-16" style="border-radius: var(--m-radius); border: 1px solid var(--m-surface-border); overflow: hidden;">
+      <table class="w-full text-sm">
+        <thead>
+          <tr style="background: var(--m-bg-alt);">
+            <th class="text-left p-4 font-semibold" style="color: var(--m-text);">Feature</th>
+            <th class="p-4 font-semibold text-center" style="color: var(--m-text);">Window Display</th>
+            <th class="p-4 font-semibold text-center" style="color: var(--m-text);">Open House Kit</th>
+            <th class="p-4 font-semibold text-center" style="color: var(--m-text);">Brokerage Bundle</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% [
+            ["Screens", "1", "1 portable", "3+"],
+            ["Listings", "Unlimited", "Unlimited", "Unlimited"],
+            ["QR lead capture", true, true, true],
+            ["Interactive touch", false, true, true],
+            ["Agent branding", true, true, true],
+            ["Analytics", true, true, true],
+            ["Team management", false, false, true],
+            ["Dedicated setup", false, false, true]
+          ].each do |row| %>
+            <tr style="border-top: 1px solid var(--m-surface-border);">
+              <td class="p-4" style="color: var(--m-text);"><%= row[0] %></td>
+              <% row[1..3].each do |val| %>
+                <td class="p-4 text-center" style="color: var(--m-text-muted);">
+                  <% if val == true %>
+                    <svg viewBox="0 0 20 20" fill="currentColor" class="w-5 h-5 mx-auto" style="color: var(--m-accent);"><path fill-rule="evenodd" d="M16.704 4.153a.75.75 0 01.143 1.052l-8 10.5a.75.75 0 01-1.127.075l-4.5-4.5a.75.75 0 011.06-1.06l3.894 3.893 7.48-9.817a.75.75 0 011.05-.143z" clip-rule="evenodd" /></svg>
+                  <% elsif val == false %>
+                    <span class="text-gray-300">&mdash;</span>
+                  <% else %>
+                    <%= val %>
+                  <% end %>
+                </td>
+              <% end %>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<%# ── FAQ ── %>
+<section style="background: var(--m-bg-alt); padding: var(--m-section-pad) 0;">
+  <div class="max-w-3xl mx-auto px-6">
+    <h2 style="font-family: var(--m-heading-font); font-weight: var(--m-heading-weight); color: var(--m-text);"
+        class="text-2xl sm:text-3xl tracking-tight text-center">Frequently asked questions</h2>
+
+    <div class="mt-10 space-y-6">
+      <% [
+        { q: "Do I need to buy a screen?",
+          a: "You can use any TV or monitor with an HDMI port. We recommend a commercial-grade display for storefronts. We can help you choose the right hardware for your space." },
+        { q: "How long does setup take?",
+          a: "Software setup takes about 10 minutes. Plug in a player device, pair it to your screen, and assign a playlist. For brokerage bundles, we handle the full installation." },
+        { q: "Can I cancel anytime?",
+          a: "Yes. All plans are month-to-month with no long-term contracts. Cancel anytime from your dashboard." },
+        { q: "Do you install the screen?",
+          a: "For Brokerage Bundle customers, we offer dedicated setup and installation in the NYC area. For individual plans, we provide guidance and support." },
+        { q: "What if I need help getting started?",
+          a: "Book a demo and we'll walk you through everything in person. We can set up your first playlist and show you how to manage it from your phone." }
+      ].each do |faq| %>
+        <div style="border-bottom: 1px solid var(--m-surface-border);" class="pb-6">
+          <h3 style="color: var(--m-text);" class="font-semibold"><%= faq[:q] %></h3>
+          <p style="color: var(--m-text-muted);" class="mt-2 text-sm leading-relaxed"><%= faq[:a] %></p>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</section>
+
+<%# ── CTA ── %>
+<section style="background: var(--m-bg-hero); padding: var(--m-section-pad) 0;">
+  <div class="max-w-6xl mx-auto px-6 text-center">
+    <h2 style="font-family: var(--m-heading-font); font-weight: var(--m-heading-weight); color: var(--m-hero-text);"
+        class="text-2xl sm:text-3xl tracking-tight">Ready to get started?</h2>
+    <p style="color: var(--m-hero-muted);" class="mt-3 max-w-md mx-auto">
+      Start a free trial today, or book a demo to see RePlay in your office.
+    </p>
+    <div class="flex flex-wrap items-center justify-center gap-4 mt-8">
+      <a href="/demo" style="background: var(--m-cta-bg); color: var(--m-cta-text); border-radius: var(--m-radius);"
+         class="inline-flex items-center px-6 py-3 text-sm font-semibold shadow-sm hover:opacity-90 transition-opacity">
+        Book a demo
+      </a>
+      <a href="<%= new_account_url(subdomain: 'app') %>" style="color: var(--m-accent);"
+         class="text-sm font-semibold hover:opacity-80">
+        or start a free trial &rarr;
+      </a>
+    </div>
+  </div>
+</section>

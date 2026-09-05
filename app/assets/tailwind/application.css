@@ -3,6 +3,30 @@
 @source "../../../app/views";
 @source "../../../app/javascript";
 
+/* ── Marketing theme — Bold ── */
+:root {
+  --m-bg: #ffffff;
+  --m-bg-alt: #f3f4f6;
+  --m-bg-hero: #030712;
+  --m-text: #111827;
+  --m-text-muted: #6b7280;
+  --m-text-faint: #9ca3af;
+  --m-accent: #6366f1;
+  --m-accent-hover: #818cf8;
+  --m-surface: #ffffff;
+  --m-surface-border: #e5e7eb;
+  --m-heading-font: ui-sans-serif, system-ui, sans-serif;
+  --m-heading-weight: 900;
+  --m-radius: 0.75rem;
+  --m-shadow: 0 4px 20px rgba(0,0,0,0.12);
+  --m-hero-text: #ffffff;
+  --m-hero-muted: rgba(255,255,255,0.7);
+  --m-cta-bg: linear-gradient(135deg, #6366f1, #14b8a6);
+  --m-cta-text: #ffffff;
+  --m-cta-hover: linear-gradient(135deg, #818cf8, #2dd4bf);
+  --m-section-pad: 6rem;
+}
+
 /* Ad canvas — dark theme as default + container-relative signage scale */
 .ad-canvas {
   container-type: inline-size;

@@ -20,6 +20,11 @@ class Rack::Attack
     req.ip if req.path == "/players" && req.post?
   end
 
+  # Inquiry/demo request: 5 per hour per IP
+  throttle("inquiries/ip", limit: 5, period: 1.hour) do |req|
+    req.ip if req.path == "/inquiries" && req.post?
+  end
+
   # Account signup: 5 per hour per IP
   throttle("signup/ip", limit: 5, period: 1.hour) do |req|
     req.ip if req.path == "/accounts" && req.post?

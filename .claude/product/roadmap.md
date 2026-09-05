@@ -5,10 +5,11 @@
 The core product loop is built: listings → ads → playlists → screens →
 QR scans → leads → agent inbox. Admin panel (Administrate), subdomain
 architecture (marketing, app, admin, play, api), and test infrastructure
-are in place. 725 specs, 95% line coverage.
+are in place. 801 specs, 96% line / 82% branch coverage.
 
-All Tier 1 launch blockers are shipped. The platform is functionally
-ready for a private beta.
+All Tier 1 launch blockers are shipped. App UX pass complete — fake
+data removed, missing functionality added, UI consistency fixed.
+The platform is functionally ready for a private beta.
 
 ---
 
@@ -30,6 +31,7 @@ ready for a private beta.
 | Player UX | `player-ux` #32, `player-ux-phase4` #33 | Unpair events, API resilience, device fingerprinting, QR pairing, countdown timer, visual fixes. |
 | Staging domain | `staging-domain` #35 | Migrated from staging.replaytv.co to replaytv.dev. Zero config drift. |
 | Credentials | `credentials` | Per-environment Rails credentials for R2 and Cloudflare secrets. |
+| App UX | `app-ux` #37 | Removed all fake/hardcoded data, added role management, invite resend, lead search, listing property_type/listing_type fields, dashboard improvements, mobile fixes, flash type support. 28 commits. |
 
 ---
 
@@ -45,6 +47,7 @@ Can ship without these but can't sustain a business.
 
 | Item | Why it's needed at launch | Status |
 |------|--------------------------|--------|
+| Marketing site | NYC-focused landing page with both product motions, pricing, demo CTA. | In progress |
 | Subscriptions | Can't charge without billing. Stripe Billing, plan tiers, feature gating. | Not started |
 | Notifications | Leads email agents, but nothing else alerts users. Player offline, milestone scans, new team member. | Not started |
 | Content scheduling | Brokerages want open house ads on weekends only. Day-parting and date ranges. | Plan exists |
@@ -216,5 +219,9 @@ Documentation is in progress.
 | Plan | Location | Status |
 |------|----------|--------|
 | Documentation | `.claude/plans/202608281530-documentation.md` | In progress |
+| App UX | `.claude/plans/202609040100-app-ux.md` | Complete |
+| Marketing site (NYC) | `.claude/plans/202609041200-marketing-site-nyc.md` | In progress |
+| Experiences (kiosk) | `.claude/plans/drafts/plan-experiences-v2.md` | Draft — needs review |
+| NYC product gaps | `.claude/plans/drafts/plan-nyc-product-gaps.md` | Draft — needs review |
 | Day-parting / Scheduling | `.claude/plans/drafts/plan-day-parting-scheduling.md` | Draft — needs review |
 | Live Preview | `.claude/plans/drafts/plan-live-preview.md` | Draft — needs review |
