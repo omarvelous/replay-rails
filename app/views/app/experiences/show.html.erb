@@ -1,4 +1,8 @@
 <% actions = capture do %>
+  <%= link_to go_experience_url(@experience, subdomain: ""), target: "_blank", class: "rounded-md bg-white px-2.5 py-1.5 text-sm font-semibold text-gray-900 shadow-xs ring-1 ring-gray-300 ring-inset hover:bg-gray-50 inline-flex items-center gap-1.5" do %>
+    <svg viewBox="0 0 20 20" fill="currentColor" class="size-4"><path d="M10 12.5a2.5 2.5 0 100-5 2.5 2.5 0 000 5z"/><path fill-rule="evenodd" d="M.664 10.59a1.651 1.651 0 010-1.186A10.004 10.004 0 0110 3c4.257 0 7.893 2.66 9.336 6.41.147.381.146.804 0 1.186A10.004 10.004 0 0110 17c-4.257 0-7.893-2.66-9.336-6.41zM14 10a4 4 0 11-8 0 4 4 0 018 0z" clip-rule="evenodd"/></svg>
+    Preview
+  <% end %>
   <%= link_to edit_experience_path(@experience), class: "rounded-md bg-white px-2.5 py-1.5 text-sm font-semibold text-gray-900 shadow-xs ring-1 ring-gray-300 ring-inset hover:bg-gray-50" do %>Edit<% end %>
 <% end %>
 <%= render "app/shared/page_header", title: @experience.name, subtitle: "Experience", actions: actions, back_link: { label: "← Experiences", path: experiences_path } %>

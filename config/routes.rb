@@ -108,6 +108,7 @@ Rails.application.routes.draw do
       resources :screens
       resources :players
       resources :playlists
+      resources :experiences
 
       # Engagement
       resources :qr_codes
