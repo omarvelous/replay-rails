@@ -21,11 +21,21 @@ RSpec.describe "Governed Events", type: :model do # rubocop:disable RSpec/Descri
     end
   end
 
-  describe Analytics::Events::RedirectFollowed do
+  describe Analytics::Events::QrScanned do
     it_behaves_like "validates required properties",
       described_class,
-      { source: "qr", destination_url: "/go/listings/1", status: 302 },
-      %i[source destination_url status]
+      { qr_code_id: 1, destination_url: "/go/listings/1" },
+      %i[qr_code_id destination_url]
+
+    it "does not require screen_content_id" do
+      event = described_class.new(qr_code_id: 1, destination_url: "/go/listings/1")
+      expect(event).to be_valid
+    end
+
+    it "accepts optional properties" do
+      event = described_class.new(qr_code_id: 1, destination_url: "/go/listings/1", screen_content_id: 5, ad_id: 3, screen_id: 2)
+      expect(event).to be_valid
+    end
   end
 
   describe Analytics::Events::ContentImpressed do

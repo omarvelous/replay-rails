@@ -15,10 +15,10 @@ module App
     authorize! @screen
     screen_events = Ahoy::Event.where("properties @> ?", { screen_id: @screen.id }.to_json)
     @impressions_count = screen_events.where(name: "content.impressed").count
-    @scans_count = screen_events.where(name: "redirect.followed").count
+    @scans_count = screen_events.where(name: "qr.scanned").count
     @chart_impressions = screen_events.where(name: "content.impressed")
                            .where("time > ?", 14.days.ago).group_by_day(:time).count
-    @chart_scans = screen_events.where(name: "redirect.followed")
+    @chart_scans = screen_events.where(name: "qr.scanned")
                      .where("time > ?", 14.days.ago).group_by_day(:time).count
   end
 

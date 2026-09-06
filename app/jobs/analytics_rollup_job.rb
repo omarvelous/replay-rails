@@ -9,7 +9,7 @@ class AnalyticsRollupJob < ApplicationJob
     Ahoy::Event.where(name: "interaction.started").group(:account_id)
       .rollup("Kiosk Sessions", interval: :day, column: :time)
 
-    Ahoy::Event.where(name: "redirect.followed").group(:account_id)
-      .rollup("Redirects", interval: :day, column: :time)
+    Ahoy::Event.where(name: "qr.scanned").group(:account_id)
+      .rollup("QR Scans", interval: :day, column: :time)
   end
 end

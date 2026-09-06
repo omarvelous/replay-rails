@@ -21,10 +21,12 @@ class ScansController < ApplicationController
       destination = app_root_path
     end
 
-    Ahoy::Tracker.new(request: request).track "redirect.followed",
-      source: "qr",
+    Ahoy::Tracker.new(request: request).track "qr.scanned",
+      qr_code_id: qr.id,
       destination_url: destination,
-      status: 302
+      screen_content_id: params[:sc].presence&.to_i,
+      ad_id: params[:a].presence&.to_i,
+      screen_id: params[:s].presence&.to_i
     redirect_to destination, allow_other_host: true
   end
 
