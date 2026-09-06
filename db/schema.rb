@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_09_06_172224) do
+ActiveRecord::Schema[8.1].define(version: 2026_09_06_184500) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -95,6 +95,12 @@ ActiveRecord::Schema[8.1].define(version: 2026_09_06_172224) do
     t.index ["user_id"], name: "index_agents_on_user_id"
   end
 
+  create_table "ahoy_clicks", force: :cascade do |t|
+    t.string "campaign"
+    t.string "token"
+    t.index ["campaign"], name: "index_ahoy_clicks_on_campaign"
+  end
+
   create_table "ahoy_events", force: :cascade do |t|
     t.bigint "account_id"
     t.string "name"
@@ -107,6 +113,19 @@ ActiveRecord::Schema[8.1].define(version: 2026_09_06_172224) do
     t.index ["properties"], name: "index_ahoy_events_on_properties", opclass: :jsonb_path_ops, using: :gin
     t.index ["user_id"], name: "index_ahoy_events_on_user_id"
     t.index ["visit_id"], name: "index_ahoy_events_on_visit_id"
+  end
+
+  create_table "ahoy_messages", force: :cascade do |t|
+    t.string "campaign"
+    t.string "mailer"
+    t.datetime "sent_at"
+    t.text "subject"
+    t.string "to"
+    t.bigint "user_id"
+    t.string "user_type"
+    t.index ["campaign"], name: "index_ahoy_messages_on_campaign"
+    t.index ["to"], name: "index_ahoy_messages_on_to"
+    t.index ["user_type", "user_id"], name: "index_ahoy_messages_on_user"
   end
 
   create_table "ahoy_visits", force: :cascade do |t|
