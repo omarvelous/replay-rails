@@ -1,5 +1,5 @@
 import { Controller } from "@hotwired/stimulus"
-import ahoy from "ahoy"
+import "ahoy"
 import Analytics from "analytics"
 
 export default class extends Controller {
@@ -79,7 +79,7 @@ export default class extends Controller {
   resetIdleTimer() {
     if (this.idle && this.hasTouch) {
       // Session starts — new Ahoy visit for kiosk session
-      ahoy.reset()
+      window.ahoy.reset()
       this.idle = false
       this.sessionStartTime = Date.now()
 

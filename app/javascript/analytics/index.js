@@ -1,4 +1,4 @@
-import ahoy from "ahoy"
+import "ahoy"
 import { EVENTS } from "analytics/catalog"
 
 class AnalyticsEvent {
@@ -24,7 +24,7 @@ class AnalyticsEvent {
       console.error("[Analytics]", ...this.errors)
       return false
     }
-    ahoy.track(this.name, this.properties)
+    window.ahoy.track(this.name, this.properties)
     return true
   }
 }

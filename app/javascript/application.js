@@ -3,5 +3,5 @@ import "@hotwired/turbo-rails"
 import "controllers"
 import "chartkick"
 import "Chart.bundle"
-import ahoy from "ahoy"
-ahoy.trackView()
+import "ahoy"
+window.ahoy.trackView()
