@@ -37,7 +37,8 @@ export default class extends Controller {
   async sendHeartbeat() {
     try {
       const res = await fetch(`${this.apiHostValue}/players/${this.playerTokenValue}/heartbeat`, {
-        method: "POST"
+        method: "POST",
+        credentials: "include"
       })
       if (res.status === 410) this.handleUnpaired()
     } catch {
@@ -49,6 +50,7 @@ export default class extends Controller {
     try {
       const res = await fetch(`${this.apiHostValue}/players/${this.playerTokenValue}/impressions`, {
         method: "POST",
+        credentials: "include",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           ad_id: adId,
