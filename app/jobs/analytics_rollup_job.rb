@@ -11,5 +11,9 @@ class AnalyticsRollupJob < ApplicationJob
 
     Ahoy::Event.where(name: "qr.scanned").group(:account_id)
       .rollup("QR Scans", interval: :day, column: :time)
+
+    # Non-event rollups
+    Lead.group(:account_id)
+      .rollup("Leads", interval: :day)
   end
 end
