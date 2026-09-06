@@ -8,6 +8,7 @@ RSpec.describe QrScan do
     it { is_expected.to belong_to(:account) }
     it { is_expected.to belong_to(:ad).optional }
     it { is_expected.to belong_to(:screen).optional }
+    it { is_expected.to belong_to(:ahoy_visit).class_name("Ahoy::Visit").optional }
   end
 
   describe "scopes" do

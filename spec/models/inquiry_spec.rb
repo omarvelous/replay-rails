@@ -1,6 +1,10 @@
 require "rails_helper"
 
 RSpec.describe Inquiry do
+  describe "associations" do
+    it { is_expected.to belong_to(:ahoy_visit).class_name("Ahoy::Visit").optional }
+  end
+
   describe "validations" do
     it { is_expected.to validate_presence_of(:name) }
     it { is_expected.to validate_presence_of(:email) }
