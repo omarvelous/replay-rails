@@ -139,7 +139,6 @@ Rails.application.routes.draw do
       resources :players, param: :token, only: %i[create show] do
         scope module: "players" do
           resource :heartbeat, only: :create
-          resources :impressions, only: :create
           resource :pairing_code, only: :create
         end
       end
