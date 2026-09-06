@@ -25,7 +25,7 @@ per-account dimensions.
 
 ## Governed Events
 
-### 10 Events
+### 9 Events
 
 | # | Event | Context | Emitted by |
 |---|-------|---------|------------|
@@ -38,7 +38,6 @@ per-account dimensions.
 | 7 | `interaction.opened` | Kiosk JS | `experience_controller.js` |
 | 8 | `interaction.closed` | Kiosk JS | `experience_controller.js` |
 | 9 | `device.connected` | Player JS | `device_playback_controller.js` |
-| 10 | `device.disconnected` | Server | Background job on heartbeat timeout |
 
 **Plus:** `ahoy.trackView()` for page views — handled by ahoy.js,
 no governed PORO needed.
@@ -46,6 +45,7 @@ no governed PORO needed.
 **Removed from earlier versions:**
 - `page.viewed` — use `ahoy.trackView()` instead
 - `form.submitted` — use `visitable` on Lead/Inquiry instead
+- `device.disconnected` — deferred, should be handled at player/device level with caching
 
 ### Event Properties
 
@@ -65,7 +65,6 @@ captures what was active when the event fired.
 | `interaction.opened` | `experience_id`, `screen_content_id`, `target` |
 | `interaction.closed` | `experience_id`, `screen_content_id`, `target`, `view_duration` |
 | `device.connected` | `screen_id`, `player_token` |
-| `device.disconnected` | `screen_id`, `player_token`, `last_seen_at` |
 
 ---
 
@@ -177,8 +176,7 @@ app/analytics/
     ├── interaction_navigated.rb
     ├── interaction_opened.rb
     ├── interaction_closed.rb
-    ├── device_connected.rb
-    └── device_disconnected.rb
+    └── device_connected.rb
 ```
 
 ---
@@ -550,7 +548,7 @@ Ahoy.geocode = false
 **1.4 Event definitions (TDD)**
 - RED: Spec for each event — validates required properties,
   rejects missing properties, rejects unknown properties
-- GREEN: All 10 event definition POROs
+- GREEN: All 9 event definition POROs
 - Commit: RED then GREEN
 
 ### Phase 2: JS Analytics
@@ -585,11 +583,6 @@ Ahoy.geocode = false
   Ahoy event with source and destination
 - GREEN: `ActiveSupport::Notifications` subscriber for
   `redirect_to.action_controller` with filter
-- Commit: RED then GREEN
-
-**4.2 Device disconnected (TDD)**
-- RED: Spec — missed heartbeat creates `device.disconnected` event
-- GREEN: Background job or heartbeat check emits event
 - Commit: RED then GREEN
 
 ### Phase 5: Instrument JS Events
@@ -658,13 +651,38 @@ Keep raw events forever for now. Revisit when volume warrants:
 
 ---
 
-## Open Questions
+## Resolved Questions
 
-1. **`device.disconnected` detection** — currently no background
-   job detects missed heartbeats. Need to build one, or defer
-   this event?
+1. **Ahoy visit duration** — 4 hours (inactivity timeout). Player
+   devices with continuous heartbeats maintain one long visit.
+   New visit only on 4+ hours of downtime. ✓
 
-2. **`screen_content_id` on player templates** — needs to be
-   passed as a data attribute. The player controller has access
-   to `@screen.active_screen_content&.id`. Wire through the
-   template to JS via `data-screen-content-id-value`.
+2. **Event volume / retention** — Keep raw events forever for now.
+   Revisit with 90-day retention + rollups, then dedicated data
+   store with partitioning when volume warrants. ✓
+
+3. **Testing governed events** — Code review only, no programmatic
+   enforcement for now. ✓
+
+4. **page.viewed** — Use `ahoy.trackView()`, no governed PORO. ✓
+
+5. **Impressions API removal** — Remove in same deploy. Player is
+   browser-based, loads fresh code on every page load. ✓
+
+6. **Kiosk sessions** — Use `ahoy.reset()` to create new Ahoy
+   visits. No custom session_id. ✓
+
+7. **form.submitted** — Removed. Use `visitable` on Lead/Inquiry
+   for visit attribution instead. ✓
+
+8. **device.disconnected** — Deferred. Should be handled at
+   player/device level with caching, not a polling job. ✓
+
+9. **screen_content_id** — Passed as data attribute from player
+   template to JS via `data-screen-content-id-value`. ✓
+
+10. **Rollups + account scoping** — Use `dimensions: { account_id: }`
+    on rollup calls. Per-account and global rollups in same job. ✓
+
+11. **Redirect tracking** — `ActiveSupport::Notifications` subscriber
+    on `redirect_to.action_controller`, filtered to public redirects. ✓
