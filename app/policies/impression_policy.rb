@@ -1,2 +1,0 @@
-class ImpressionPolicy < ApplicationPolicy
-end

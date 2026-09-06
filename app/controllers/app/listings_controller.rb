@@ -14,7 +14,12 @@ module App
   def show
     authorize! @listing
     ad_ids = @listing.ads.pluck(:id)
-    @impressions_count = ad_ids.any? ? Impression.where(ad_id: ad_ids).count : 0
+    @impressions_count = if ad_ids.any?
+      Ahoy::Event.where(name: "content.impressed")
+        .where("properties->>'ad_id' IN (?)", ad_ids.map(&:to_s)).count
+    else
+      0
+    end
     @scans_count = @listing.qr_code&.scans&.qualified&.count || 0
   end
 
