@@ -40,9 +40,9 @@ module Analytics
         tracker = if request
                     controller = request.env["action_controller.instance"]
                     controller&.ahoy || Ahoy::Tracker.new(request: request)
-                  else
+        else
                     Ahoy::Tracker.new
-                  end
+        end
 
         tracker.track(self.class.event_name, properties)
       end
