@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_09_06_165033) do
+ActiveRecord::Schema[8.1].define(version: 2026_09_06_172224) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -195,6 +195,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_09_06_165033) do
   end
 
   create_table "inquiries", force: :cascade do |t|
+    t.bigint "ahoy_visit_id"
     t.string "company"
     t.datetime "created_at", null: false
     t.string "email", null: false
@@ -205,6 +206,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_09_06_165033) do
     t.string "phone"
     t.datetime "responded_at"
     t.datetime "updated_at", null: false
+    t.index ["ahoy_visit_id"], name: "index_inquiries_on_ahoy_visit_id"
   end
 
   create_table "invites", force: :cascade do |t|
@@ -235,6 +237,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_09_06_165033) do
 
   create_table "leads", force: :cascade do |t|
     t.bigint "account_id", null: false
+    t.bigint "ahoy_visit_id"
     t.jsonb "context", default: {}
     t.datetime "created_at", null: false
     t.string "email"
@@ -249,6 +252,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_09_06_165033) do
     t.index ["account_id", "created_at"], name: "index_leads_on_account_id_and_created_at"
     t.index ["account_id", "status"], name: "index_leads_on_account_id_and_status"
     t.index ["account_id"], name: "index_leads_on_account_id"
+    t.index ["ahoy_visit_id"], name: "index_leads_on_ahoy_visit_id"
     t.index ["listing_id"], name: "index_leads_on_listing_id"
     t.index ["qr_scan_id"], name: "index_leads_on_qr_scan_id"
   end
@@ -369,6 +373,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_09_06_165033) do
   create_table "qr_scans", force: :cascade do |t|
     t.bigint "account_id", null: false
     t.bigint "ad_id"
+    t.bigint "ahoy_visit_id"
     t.jsonb "context", default: {}
     t.datetime "created_at", null: false
     t.string "ip_address"
@@ -378,6 +383,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_09_06_165033) do
     t.string "user_agent"
     t.index ["account_id"], name: "index_qr_scans_on_account_id"
     t.index ["ad_id"], name: "index_qr_scans_on_ad_id"
+    t.index ["ahoy_visit_id"], name: "index_qr_scans_on_ahoy_visit_id"
     t.index ["qr_code_id", "created_at"], name: "index_qr_scans_on_qr_code_id_and_created_at"
     t.index ["qr_code_id"], name: "index_qr_scans_on_qr_code_id"
     t.index ["screen_id"], name: "index_qr_scans_on_screen_id"
