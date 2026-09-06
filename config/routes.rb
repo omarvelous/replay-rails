@@ -110,6 +110,12 @@ Rails.application.routes.draw do
       resources :playlists
       resources :experiences
 
+      # Analytics
+      namespace :ahoy do
+        resources :visits, only: %i[index show]
+        resources :events, only: %i[index show]
+      end
+
       # Engagement
       resources :qr_codes
       resources :qr_scans
