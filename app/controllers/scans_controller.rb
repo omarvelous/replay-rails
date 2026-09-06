@@ -14,13 +14,18 @@ class ScansController < ApplicationController
     )
 
     if qr.destination_url.present?
-      redirect_to URI.parse(qr.destination_url).to_s, allow_other_host: true
+      destination = URI.parse(qr.destination_url).to_s
     elsif qr.destination_record.present?
-      redirect_to polymorphic_url([ :go, qr.destination_record ], subdomain: "", scan_id: scan.id),
-                  allow_other_host: true
+      destination = polymorphic_url([ :go, qr.destination_record ], subdomain: "", scan_id: scan.id)
     else
-      redirect_to app_root_path
+      destination = app_root_path
     end
+
+    Ahoy::Tracker.new(request: request).track "redirect.followed",
+      source: "qr",
+      destination_url: destination,
+      status: 302
+    redirect_to destination, allow_other_host: true
   end
 
   private
