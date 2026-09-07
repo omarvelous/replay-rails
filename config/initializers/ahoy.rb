@@ -7,7 +7,8 @@ class Ahoy::Store < Ahoy::DatabaseStore
 
   def track_event(data)
     return if exclude_request?
-    data[:account_id] = Current.account&.id || data.dig(:properties, :account_id)
+    props = data[:properties] || {}
+    data[:account_id] = Current.account&.id || props[:account_id] || props["account_id"]
     super(data)
   end
 
