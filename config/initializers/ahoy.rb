@@ -1,12 +1,18 @@
 class Ahoy::Store < Ahoy::DatabaseStore
   def track_visit(data)
+    return if exclude_request?
     data[:account_id] = Current.account&.id
     super(data)
   end
 
   def track_event(data)
+    return if exclude_request?
     data[:account_id] = Current.account&.id
     super(data)
+  end
+
+  def exclude_request?
+    request&.subdomain == "admin"
   end
 end
 
