@@ -5,3 +5,4 @@ import "chartkick"
 import "Chart.bundle"
 import "ahoy"
 window.ahoy.trackView()
+document.addEventListener("turbo:load", () => window.ahoy.trackView())
