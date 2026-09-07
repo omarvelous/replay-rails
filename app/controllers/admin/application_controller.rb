@@ -3,7 +3,6 @@ module Admin
     include Authentication
     before_action :require_admin!
     before_action :strip_subdomain_param
-    skip_before_action :track_ahoy_visit
 
     around_action :without_tenant
 

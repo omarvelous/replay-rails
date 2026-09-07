@@ -4,7 +4,6 @@ module Authentication
   included do
     before_action :resume_session
     before_action :require_authentication
-    after_action :associate_ahoy_visit
     helper_method :authenticated?
   end
 
@@ -44,18 +43,12 @@ module Authentication
       user.sessions.create!(user_agent: request.user_agent, ip_address: request.remote_ip).tap do |session|
         Current.session = session
         cookies.signed.permanent[:session_id] = { value: session.id, httponly: true, same_site: :lax, domain: :all }
+        ahoy.authenticate(user)
       end
     end
 
     def terminate_session
       Current.session.destroy
       cookies.delete(:session_id, domain: :all)
-    end
-
-    def associate_ahoy_visit
-      return unless Current.user && ahoy.visit
-
-      ahoy.authenticate(Current.user) if ahoy.visit.user_id.nil?
-      ahoy.visit.update(account_id: Current.account.id) if ahoy.visit.account_id.nil? && Current.account
     end
 end
