@@ -9,7 +9,8 @@ export default class extends Controller {
     slideCount: { type: Number, default: 0 },
     experienceId: Number,
     screenId: Number,
-    screenContentId: Number
+    screenContentId: Number,
+    accountId: Number
   }
 
   connect() {
@@ -86,7 +87,8 @@ export default class extends Controller {
       Analytics.create("interaction.started", {
         experience_id: this.experienceIdValue,
         screen_id: this.screenIdValue,
-        screen_content_id: this.screenContentIdValue
+        screen_content_id: this.screenContentIdValue,
+        account_id: this.accountIdValue
       })
 
       this.stopAutoplay()
@@ -105,7 +107,8 @@ export default class extends Controller {
         experience_id: this.experienceIdValue,
         screen_id: this.screenIdValue,
         screen_content_id: this.screenContentIdValue,
-        duration: duration
+        duration: duration,
+        account_id: this.accountIdValue
       })
     }
 
@@ -134,7 +137,8 @@ export default class extends Controller {
       Analytics.create("interaction.opened", {
         experience_id: this.experienceIdValue,
         screen_content_id: this.screenContentIdValue,
-        target: "floor_plan"
+        target: "floor_plan",
+        account_id: this.accountIdValue
       })
     }
   }
@@ -152,6 +156,7 @@ export default class extends Controller {
         experience_id: this.experienceIdValue,
         screen_content_id: this.screenContentIdValue,
         target: "floor_plan",
+        account_id: this.accountIdValue,
         view_duration: viewDuration
       })
 
@@ -167,6 +172,7 @@ export default class extends Controller {
       experience_id: this.experienceIdValue,
       screen_content_id: this.screenContentIdValue,
       direction: direction,
+      account_id: this.accountIdValue,
       photo_index: this.currentSlide
     })
   }

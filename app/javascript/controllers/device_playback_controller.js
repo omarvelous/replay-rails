@@ -8,7 +8,8 @@ export default class extends Controller {
     playerToken: String,
     playlistId: Number,
     screenId: Number,
-    screenContentId: Number
+    screenContentId: Number,
+    accountId: Number
   }
 
   connect() {
@@ -39,7 +40,8 @@ export default class extends Controller {
     if (this.hasScreenIdValue) {
       Analytics.create("device.connected", {
         screen_id: this.screenIdValue,
-        player_token: this.playerTokenValue
+        player_token: this.playerTokenValue,
+        account_id: this.accountIdValue
       })
     }
   }
@@ -68,7 +70,8 @@ export default class extends Controller {
       screen_content_id: this.screenContentIdValue,
       playlist_id: this.playlistIdValue,
       position: position,
-      duration: duration
+      duration: duration,
+      account_id: this.accountIdValue
     })
   }
 
