@@ -10,6 +10,9 @@ class Ahoy::Store < Ahoy::DatabaseStore
   end
 end
 
+# Rails 8 built-in auth uses Current.user, not current_user
+Ahoy.user_method = ->(controller) { Current.user }
+
 Ahoy.api = true
 Ahoy.visit_duration = 4.hours
 Ahoy.cookie_domain = :all
