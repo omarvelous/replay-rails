@@ -26,3 +26,10 @@ Ahoy.cookie_domain = :all
 Ahoy.mask_ips = true
 Ahoy.geocode = false
 Ahoy.server_side_visits = :when_needed
+
+# Ahoy::BaseController skips all callbacks from ApplicationController.
+# Re-add session resumption so Current.user and Current.account are
+# available when processing /ahoy/events and /ahoy/visits.
+Rails.application.config.after_initialize do
+  Ahoy::BaseController.before_action :resume_session
+end
