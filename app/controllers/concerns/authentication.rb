@@ -4,6 +4,7 @@ module Authentication
   included do
     before_action :resume_session
     before_action :require_authentication
+    after_action :associate_ahoy_visit
     helper_method :authenticated?
   end
 
@@ -49,5 +50,12 @@ module Authentication
     def terminate_session
       Current.session.destroy
       cookies.delete(:session_id, domain: :all)
+    end
+
+    def associate_ahoy_visit
+      return unless Current.user && ahoy.visit
+
+      ahoy.authenticate(Current.user) if ahoy.visit.user_id.nil?
+      ahoy.visit.update(account_id: Current.account.id) if ahoy.visit.account_id.nil? && Current.account
     end
 end
