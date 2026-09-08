@@ -13,7 +13,18 @@ module Authentication
     end
   end
 
+  def current_user
+    resume_session
+    Current.user
+  end
+
+  def current_account
+    resume_session
+    Current.account
+  end
+
   private
+
     def authenticated?
       resume_session
     end
@@ -45,16 +56,6 @@ module Authentication
         cookies.signed.permanent[:session_id] = { value: session.id, httponly: true, same_site: :lax, domain: :all }
         ahoy.authenticate(user)
       end
-    end
-
-    def current_user
-      resume_session
-      Current.user
-    end
-
-    def current_account
-      resume_session
-      Current.account
     end
 
     def terminate_session
