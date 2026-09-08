@@ -4,7 +4,7 @@ module Authentication
   included do
     before_action :resume_session
     before_action :require_authentication
-    helper_method :authenticated?
+    helper_method :authenticated?, :current_user, :current_account
   end
 
   class_methods do
@@ -45,6 +45,16 @@ module Authentication
         cookies.signed.permanent[:session_id] = { value: session.id, httponly: true, same_site: :lax, domain: :all }
         ahoy.authenticate(user)
       end
+    end
+
+    def current_user
+      resume_session
+      Current.user
+    end
+
+    def current_account
+      resume_session
+      Current.account
     end
 
     def terminate_session

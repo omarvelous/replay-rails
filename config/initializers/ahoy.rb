@@ -1,18 +1,18 @@
 class Ahoy::Store < Ahoy::DatabaseStore
   def track_visit(data)
-    data[:account_id] = Current.account&.id
+    data[:account_id] = controller&.try(:current_account)&.id
     super(data)
   end
 
   def track_event(data)
     props = (data[:properties] || {}).with_indifferent_access
-    data[:account_id] = Current.account&.id || props[:account_id]
+    data[:account_id] = controller&.try(:current_account)&.id || props[:account_id]
     super(data)
   end
 end
 
-# Rails 8 built-in auth uses Current.user, not Devise's current_user
-Ahoy.user_method = ->(controller) { Current.user }
+# Ahoy default calls controller.current_user — defined by Authentication concern
+# No custom user_method needed
 
 # Exclude admin subdomain from tracking
 Ahoy.exclude_method = ->(controller, request) { request&.subdomain == "admin" }
