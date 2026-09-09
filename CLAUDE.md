@@ -145,6 +145,16 @@ Screen → ScreenContent (delegated_type :contentable)
 - Player controller branches on `screen.content_type` to render slideshow or kiosk
 - ActionCable broadcasts `content_changed` on screen content updates
 
+### Player Devices
+
+Players are browser-based devices (Fire TV, Raspberry Pi, iPad, any browser) that render content on screens.
+
+- **Device enrichment** — `device_detector` gem parses user agent into structured fields (model, manufacturer, OS, browser). Parsed on registration and heartbeat (if UA changes).
+- **Client-reported info** — JS sends `screen_width`, `screen_height`, `touch_capable`, `app_version` at registration and resolution on heartbeat.
+- **Device types** — enum with fallback: `fire_tv`, `android_tv`, `raspberry_pi`, `browser_desktop`, `browser_mobile`, `browser_tablet`, `browser_tv`, `provisioned`, `unknown`.
+- **Provisioned vs browser** — presence of `app_version` distinguishes provisioned devices from browser players. Same registration endpoint (`POST /api/players`).
+- **`device_name`** — admin-only label for inventory management ("Lobby Fire Stick"). Customers identify devices by Screen, not Player.
+
 ## Frontend
 
 - **Tailwind CSS v4** with **DaisyUI v5** loaded via `@plugin "daisyui"` in `app/assets/tailwind/application.css`
