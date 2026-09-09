@@ -535,6 +535,7 @@ DEPENDENCIES
   chartkick
   database_cleaner-active_record
   debug
+  device_detector
   factory_bot_rails
   faker
   groupdate
