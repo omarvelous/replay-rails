@@ -55,7 +55,12 @@ export default class extends Controller {
     try {
       const res = await fetch(`${this.apiHostValue}/players/${this.playerTokenValue}/heartbeat`, {
         method: "POST",
-        credentials: "include"
+        credentials: "include",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          screen_width: screen.width,
+          screen_height: screen.height
+        })
       })
       if (res.status === 410) this.handleUnpaired()
     } catch {

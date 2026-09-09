@@ -32,7 +32,14 @@ export default class extends Controller {
   async registerNewPlayer() {
     const res = await fetch(`${this.apiHostValue}/players`, {
       method: "POST",
-      headers: { "Content-Type": "application/json" }
+      credentials: "include",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        screen_width: screen.width,
+        screen_height: screen.height,
+        touch_capable: navigator.maxTouchPoints > 0,
+        app_version: window.REPLAY_APP_VERSION || null
+      })
     })
     const data = await res.json()
 
