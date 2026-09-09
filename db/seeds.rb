@@ -146,7 +146,9 @@ if demo_account
       beds: 3,
       baths: 2,
       sqft: 2200,
-      status: "active"
+      status: "active",
+      property_type: "condo",
+      listing_type: "for_sale"
     )
     puts "Created demo listing: 350 Fifth Ave"
   end
@@ -161,7 +163,9 @@ if demo_account
       beds: 2,
       baths: 2,
       sqft: 1500,
-      status: "pending"
+      status: "pending",
+      property_type: "apartment",
+      listing_type: "for_sale"
     )
     puts "Created demo listing: 20 W 34th St"
   end
@@ -378,13 +382,33 @@ if demo_account
   evening_showcase = Playlist.find_by(account: demo_account, name: "Evening Showcase")
 
   if window_display && evening_showcase
-    unless ScreenPlaylist.exists?(screen: window_display, playlist: evening_showcase)
-      ScreenPlaylist.create!(screen: window_display, playlist: evening_showcase)
+    unless ScreenContent.exists?(screen: window_display, contentable: evening_showcase)
+      ScreenContent.create!(screen: window_display, contentable: evening_showcase, active: true)
       puts "Assigned Evening Showcase to Window Display"
     end
   end
 end
-puts "Seeded #{ScreenPlaylist.count} screen-playlist assignment(s)"
+puts "Seeded #{ScreenContent.count} screen content assignment(s)"
+
+# -----------------------------------------------------------------------
+# Experiences
+# -----------------------------------------------------------------------
+if demo_account
+  fifth_ave = Listing.find_by(account: demo_account, address: "350 Fifth Ave, New York, NY 10118")
+  jane = Agent.find_by(account: demo_account, email: "jane.broker@example.com")
+
+  if fifth_ave && !Experience.exists?(account: demo_account, name: "350 Fifth Ave Open House")
+    listing_exp = Experiences::ListingExperience.create!(listing: fifth_ave, agent: jane)
+    Experience.create!(
+      account: demo_account,
+      experienceable: listing_exp,
+      name: "350 Fifth Ave Open House",
+      config: { sections: { photos: true, details: true, agent_card: true, qr_handoff: true, floor_plans: true }, idle_timeout: 30, theme: "dark" }
+    )
+    puts "Created demo experience: 350 Fifth Ave Open House"
+  end
+end
+puts "Seeded #{Experience.count} experience(s)"
 
 # -----------------------------------------------------------------------
 # Leads
@@ -491,43 +515,50 @@ end
 puts "Seeded #{Invite.count} invite(s)"
 
 # -----------------------------------------------------------------------
-# Impressions (last 30 days of simulated data)
+# Ahoy Events: Impressions (last 30 days of simulated data)
 # -----------------------------------------------------------------------
-if demo_account && Impression.where(account: demo_account).empty?
+if demo_account && Ahoy::Event.where(account_id: demo_account.id, name: "content.impressed").empty?
   screen = Screen.joins(:site).find_by(sites: { account_id: demo_account.id })
-  player = screen&.player
-  site = screen&.site
+  screen_content = screen&.active_screen_content
   playlist = Playlist.find_by(account: demo_account, status: "published")
   ads = Ad.where(account: demo_account).limit(5).to_a
 
-  if screen && player && site && ads.any?
-    impressions = []
-    now = Time.current
+  if screen && ads.any?
+    # Create a seed visit for impression events
+    seed_visit = Ahoy::Visit.create!(
+      visit_token: SecureRandom.hex(16),
+      visitor_token: SecureRandom.hex(16),
+      account_id: demo_account.id,
+      started_at: 30.days.ago
+    )
 
+    events = []
     30.downto(1) do |days_ago|
       date = days_ago.days.ago.to_date
-      # Simulate 8 hours of display (8am-4pm), 5 ads at ~10s each
       daily_count = rand(200..400)
       daily_count.times do
         ad = ads.sample
         playlist_ad = playlist&.playlist_ads&.find_by(ad: ad)
-        impressions << {
-          ad_id: ad.id,
-          screen_id: screen.id,
-          player_id: player.id,
-          site_id: site.id,
-          playlist_id: playlist&.id,
+        events << {
+          visit_id: seed_visit.id,
           account_id: demo_account.id,
-          position: playlist_ad&.position || rand(1..5),
-          duration: playlist_ad&.duration || 10,
-          created_at: date + rand(8..16).hours + rand(0..59).minutes,
-          updated_at: now
+          name: "content.impressed",
+          properties: {
+            ad_id: ad.id,
+            screen_id: screen.id,
+            screen_content_id: screen_content&.id,
+            playlist_id: playlist&.id,
+            position: playlist_ad&.position || rand(1..5),
+            duration: playlist_ad&.duration || 10,
+            account_id: demo_account.id
+          }.to_json,
+          time: date + rand(8..16).hours + rand(0..59).minutes
         }
       end
     end
 
-    Impression.insert_all(impressions)
-    puts "Created #{impressions.size} demo impressions (30 days)"
+    Ahoy::Event.insert_all(events)
+    puts "Created #{events.size} demo impression events (30 days)"
   end
 end
 
@@ -568,11 +599,9 @@ if demo_account && QrScan.where(account: demo_account).empty?
 end
 
 # -----------------------------------------------------------------------
-# Metric Snapshots (rollup the demo data)
+# Rollups (aggregate the demo data)
 # -----------------------------------------------------------------------
-if demo_account && MetricSnapshot.where(account: demo_account).empty?
-  30.downto(1) do |days_ago|
-    MetricsRollupJob.new.perform(days_ago.days.ago.to_date)
-  end
-  puts "Rolled up #{MetricSnapshot.count} metric snapshots (30 days)"
+if Rollup.count.zero?
+  AnalyticsRollupJob.new.perform
+  puts "Created #{Rollup.count} rollup entries"
 end
