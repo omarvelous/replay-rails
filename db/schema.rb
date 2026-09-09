@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_09_06_184500) do
+ActiveRecord::Schema[8.1].define(version: 2026_09_09_132423) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -340,15 +340,28 @@ ActiveRecord::Schema[8.1].define(version: 2026_09_06_184500) do
   end
 
   create_table "players", force: :cascade do |t|
+    t.string "app_version"
+    t.string "browser_name"
+    t.string "browser_version"
     t.datetime "created_at", null: false
+    t.string "device_manufacturer"
+    t.string "device_model"
+    t.string "device_name"
+    t.string "device_type"
     t.string "firmware_version"
     t.string "ip_address"
     t.datetime "last_heartbeat_at"
+    t.string "os_name"
+    t.string "os_version"
     t.string "pairing_code"
     t.datetime "pairing_code_expires_at"
+    t.integer "screen_height"
+    t.integer "screen_width"
     t.string "token", null: false
+    t.boolean "touch_capable", default: false
     t.datetime "updated_at", null: false
     t.string "user_agent"
+    t.index ["device_type"], name: "index_players_on_device_type"
     t.index ["pairing_code"], name: "index_players_on_pairing_code", unique: true
     t.index ["token"], name: "index_players_on_token", unique: true
   end

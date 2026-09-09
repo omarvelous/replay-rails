@@ -94,4 +94,66 @@ RSpec.describe Player do
       expect(player.pairing_code_expires_at).to be_within(5.seconds).of(10.minutes.from_now)
     end
   end
+
+  describe "device_type" do
+    it "validates inclusion in DEVICE_TYPES" do
+      player = build(:player, device_type: "fire_tv")
+      expect(player).to be_valid
+    end
+
+    it "allows unknown as fallback" do
+      player = build(:player, device_type: "unknown")
+      expect(player).to be_valid
+    end
+
+    it "rejects invalid device types" do
+      player = build(:player, device_type: "toaster")
+      expect(player).not_to be_valid
+    end
+
+    it "allows nil" do
+      player = build(:player, device_type: nil)
+      expect(player).to be_valid
+    end
+  end
+
+  describe "#parse_user_agent!" do
+    it "parses a Chrome desktop user agent" do
+      player = create(:player, user_agent: "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36")
+      player.parse_user_agent!
+      expect(player.browser_name).to be_present
+      expect(player.os_name).to be_present
+      expect(player.device_type).to start_with("browser")
+    end
+
+    it "detects Fire TV from user agent" do
+      player = create(:player, user_agent: "Mozilla/5.0 (Linux; Android 11; AFTSSS Build/NS6294) AppleWebKit/537.36 (KHTML, like Gecko) Silk/120.0.0 like Chrome/120.0.0.0 Mobile Safari/537.36")
+      player.parse_user_agent!
+      expect(player.device_type).to eq("fire_tv")
+    end
+
+    it "sets device_type to provisioned when app_version present" do
+      player = create(:player, user_agent: "Mozilla/5.0", app_version: "1.0.0")
+      player.parse_user_agent!
+      expect(player.device_type).to start_with("provisioned")
+    end
+
+    it "does nothing when user_agent is blank" do
+      player = create(:player, user_agent: nil)
+      player.parse_user_agent!
+      expect(player.device_type).to be_nil
+    end
+  end
+
+  describe "#provisioned?" do
+    it "returns true when app_version is present" do
+      player = build(:player, app_version: "1.0.0")
+      expect(player).to be_provisioned
+    end
+
+    it "returns false when app_version is nil" do
+      player = build(:player, app_version: nil)
+      expect(player).not_to be_provisioned
+    end
+  end
 end

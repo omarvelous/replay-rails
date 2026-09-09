@@ -124,11 +124,16 @@ if demo_account
     if window_display
       player = Player.create!(
         ip_address: "192.168.1.100",
-        user_agent: "RePlayPlayer/1.0 (Chromium)"
+        user_agent: "Mozilla/5.0 (Linux; Android 11; AFTSSS Build/NS6294) AppleWebKit/537.36 (KHTML, like Gecko) Silk/120.0.6099.109 like Chrome/120.0.6099.109 Mobile Safari/537.36",
+        device_name: "Lobby Fire Stick",
+        screen_width: 1920,
+        screen_height: 1080,
+        touch_capable: false
       )
+      player.parse_user_agent!
       window_display.pair_player!(player)
       player.update!(last_heartbeat_at: Time.current)
-      puts "Created demo player and paired to Window Display"
+      puts "Created demo player (Fire TV) and paired to Window Display"
     end
   end
 end

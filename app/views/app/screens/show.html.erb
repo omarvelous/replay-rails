@@ -136,6 +136,30 @@
               <span><%= time_ago_in_words(@screen.player.last_heartbeat_at) %> ago</span>
             </div>
           <% end %>
+          <% if @screen.player.device_model.present? %>
+            <div class="flex justify-between py-2 text-sm">
+              <span class="text-gray-500">Device</span>
+              <span class="font-medium"><%= [@screen.player.device_manufacturer, @screen.player.device_model].compact.join(" ") %></span>
+            </div>
+          <% end %>
+          <% if @screen.player.os_name.present? %>
+            <div class="flex justify-between py-2 text-sm">
+              <span class="text-gray-500">OS</span>
+              <span><%= [@screen.player.os_name, @screen.player.os_version].compact.join(" ") %></span>
+            </div>
+          <% end %>
+          <% if @screen.player.browser_name.present? %>
+            <div class="flex justify-between py-2 text-sm">
+              <span class="text-gray-500">Browser</span>
+              <span><%= [@screen.player.browser_name, @screen.player.browser_version].compact.join(" ") %></span>
+            </div>
+          <% end %>
+          <% if @screen.player.screen_width.present? %>
+            <div class="flex justify-between py-2 text-sm">
+              <span class="text-gray-500">Resolution</span>
+              <span class="font-mono text-xs"><%= @screen.player.screen_width %> × <%= @screen.player.screen_height %></span>
+            </div>
+          <% end %>
           <% if @screen.player.ip_address %>
             <div class="flex justify-between py-2 text-sm">
               <span class="text-gray-500">IP</span>
@@ -145,10 +169,6 @@
           <div class="flex justify-between py-2 text-sm">
             <span class="text-gray-500">Orientation</span>
             <span><%= @screen.orientation.capitalize %></span>
-          </div>
-          <div class="flex justify-between py-2 text-sm">
-            <span class="text-gray-500">Resolution</span>
-            <span class="font-mono text-xs"><%= @screen.orientation == 'landscape' ? "1920 × 1080" : "1080 × 1920" %></span>
           </div>
         </div>
         <%= button_to "Unpair", screen_screen_player_path(@screen), method: :delete,

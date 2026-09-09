@@ -28,6 +28,9 @@ gem "ahoy_matey"
 gem "ahoy_email"
 gem "rollups"
 
+# ── Device Detection ──────────────────────────────────
+gem "device_detector"
+
 # ── Content & Media ───────────────────────────────────
 gem "chartkick"
 gem "groupdate"

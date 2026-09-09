@@ -11,8 +11,13 @@ module Api
     def create
       player = Player.create!(
         ip_address: request.remote_ip,
-        user_agent: request.user_agent
+        user_agent: request.user_agent,
+        app_version: params[:app_version],
+        screen_width: params[:screen_width],
+        screen_height: params[:screen_height],
+        touch_capable: params[:touch_capable]
       )
+      player.parse_user_agent!
 
       render json: {
         pairing_code: player.pairing_code,

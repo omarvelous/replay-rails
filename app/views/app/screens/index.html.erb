@@ -52,7 +52,12 @@
                   <span class="w-2 h-2 rounded-full shrink-0 <%= dot_color %><%= status == :live ? ' animate-pulse' : '' %>"></span>
                   <%= link_to screen.name, screen_path(screen), class: "font-semibold text-sm truncate hover:text-indigo-600 cursor-pointer" %>
                 </div>
-                <p class="text-xs text-gray-400 mt-0.5"><%= screen.site.name %> · <%= screen.orientation.capitalize %></p>
+                <p class="text-xs text-gray-400 mt-0.5">
+                  <%= screen.site.name %> · <%= screen.orientation.capitalize %>
+                  <% if screen.player&.device_model.present? %>
+                    · <%= screen.player.device_model %>
+                  <% end %>
+                </p>
 
                 <%# Content row %>
                 <div class="flex items-center gap-1.5 mt-2.5 text-xs text-gray-500">
