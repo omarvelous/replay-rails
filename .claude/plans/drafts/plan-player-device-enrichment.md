@@ -248,29 +248,30 @@ both, but `device_detector` covers most needs.
 ### Phase 4: App UI
 10. Screen show — device info in Player card
 11. Screen index — device type badge/column
-12. Device name editing (inline or via screen edit)
+### Phase 4: App UI
+10. Screen show — device info in Player card
+11. Screen index — device type badge/column
 
 ### Phase 5: Admin inventory
-13. Update Player Administrate dashboard with new fields
+12. Update Player Administrate dashboard with new fields
+13. Device name editing (admin only)
 14. Add filters (device_type, online/offline)
 
 ---
 
-## Open Questions
+## Resolved Questions
 
-1. **device_name editing** — who sets it? Admin only, or can
-   the customer name their own devices from the screen page?
-   Probably customer-facing since they know "which Fire Stick
-   is in the lobby."
+1. **device_name editing** — Admin only. Customers identify
+   devices by Screen, not Player. The Player is an internal/ops
+   concept. ✓
 
-2. **Device type constants** — should device_type be a strict
-   enum or a free string? Enum is safer for filtering but needs
-   updating when new device types appear.
+2. **Device type** — Enum with fallback. Validate against known
+   types, allow `unknown` as catch-all for new device types. ✓
 
-3. **Privacy** — screen resolution and touch capability are
-   low-risk. IP address is already stored. User agent is already
-   stored. No new PII concerns.
+3. **Registration** — Same `POST /api/players` endpoint with
+   optional extra fields. Presence of `app_version` distinguishes
+   provisioned devices from browser players. ✓
 
-4. **Provisioned device registration** — how does a Fire TV app
-   register? Same `/api/players` endpoint with extra fields, or
-   a separate provisioning flow?
+4. **Gem** — `device_detector` for user agent parsing. Better
+   hardware identification (brand, model, device type) than
+   `browser` gem. Recognizes Fire TV, smart TVs, etc. ✓
