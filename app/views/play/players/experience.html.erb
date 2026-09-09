@@ -2,7 +2,7 @@
 <% photos = @listing&.photos&.to_a || [] %>
 <% floor_plans = @listing&.floor_plans&.to_a || [] %>
 
-<div class="w-full h-screen relative overflow-hidden bg-black text-white"
+<div class="w-full h-dvh relative overflow-hidden bg-black text-white"
      data-controller="experience device-playback"
      data-experience-idle-timeout-value="<%= @experience.config['idle_timeout'] || 30 %>"
      data-experience-slide-count-value="<%= photos.size %>"
