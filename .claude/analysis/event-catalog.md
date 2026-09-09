@@ -1,4 +1,8 @@
-# Event Catalog: Governed Event List
+# Event Catalog: Governed Event List (Analysis)
+
+> **Note:** This is the original analysis document. The canonical
+> event catalog is at `docs/dev/event-catalog.md`. The source of
+> truth is the event POROs in `app/models/analytics/events/`.
 
 ## Principles
 
