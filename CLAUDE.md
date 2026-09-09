@@ -78,6 +78,15 @@ Uses Rails 8 built-in authentication with a many-to-many Account-User relationsh
 
 `Current.account_user` is set on login/session resume and provides both the account context and the user's role within that account. `Current.account` delegates through it.
 
+The `Authentication` concern exposes `current_user` and `current_account` as public on-demand methods. They call `resume_session` lazily and read from `Current`. This is important because Ahoy's controller skips before_actions — `current_user` works without callbacks having run (same pattern as Devise's `current_user`).
+
+```ruby
+current_user     # → calls resume_session, returns Current.user
+current_account  # → calls resume_session, returns Current.account
+```
+
+At sign-in, `ahoy.authenticate(user)` associates the Ahoy visit with the user.
+
 Tenant isolation is enforced at the model level via `acts_as_tenant :account`. When a tenant is set (authenticated controllers), all queries on scoped models are automatically filtered by account. No need to prefix with `Current.account.`:
 
 ```ruby
@@ -103,6 +112,38 @@ Authorization context provides `user` (via `Current.user`) and `account` (via `C
 - PostgreSQL with `t.timestamps` placed first in all `create_table` blocks
 - Migrations follow the timestamps-first convention (see `.claude/standards/database/migrations.md`)
 - Seeds use FactoryBot factories and are always idempotent (see `.claude/standards/database/seeds.md`)
+
+### Analytics (Ahoy)
+
+Unified event tracking via Ahoy with governed event definitions.
+
+- **Ahoy** — visits, events, page views across all subdomains. `ahoy_visits` and `ahoy_events` tables with custom `account_id` column.
+- **Governed events** — ActiveModel POROs in `app/models/analytics/events/`. Each event has typed attributes and validations. Create with `Analytics::Events::ContentImpressed.create(...)`.
+- **JS analytics wrapper** — `app/javascript/analytics/` mirrors Ruby POROs. `Analytics.create("event.name", { ... })` validates before calling `ahoy.track()`.
+- **ahoy-email** — `has_history` + `track_clicks` on mailers for open/click tracking.
+- **rollups** — `AnalyticsRollupJob` aggregates daily metrics per account. Scheduled via Solid Queue.
+- **Page views** — `ahoy.trackView()` fires on initial load and `turbo:load` events.
+- **Exclusions** — Admin subdomain excluded via `Ahoy.exclude_method`.
+- **Account on events** — Set via `Ahoy::Store` from `current_account` (app) or event properties (player).
+- **Visitable** — `Lead`, `Inquiry`, `QrScan` use `visitable :ahoy_visit` for visit attribution.
+
+See `docs/dev/event-catalog.md` for the governed event catalog.
+
+### Content Pipeline
+
+Screens display content via a polymorphic `ScreenContent` model:
+
+```
+Screen → ScreenContent (delegated_type :contentable)
+  ├── Playlist   → passive ad slideshow
+  └── Experience → interactive kiosk (delegated_type :experienceable)
+        └── Experiences::ListingExperience → single listing presentation
+```
+
+- `ScreenContent` replaces the old `ScreenPlaylist` join model
+- `Experience` uses `delegated_type :experienceable` (mirrors the `Ad` → `adable` pattern)
+- Player controller branches on `screen.content_type` to render slideshow or kiosk
+- ActionCable broadcasts `content_changed` on screen content updates
 
 ## Frontend
 

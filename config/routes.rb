@@ -110,6 +110,12 @@ Rails.application.routes.draw do
       resources :playlists
       resources :experiences
 
+      # Analytics
+      namespace :ahoy do
+        resources :visits, only: %i[index show]
+        resources :events, only: %i[index show]
+      end
+
       # Engagement
       resources :qr_codes
       resources :qr_scans
@@ -139,7 +145,6 @@ Rails.application.routes.draw do
       resources :players, param: :token, only: %i[create show] do
         scope module: "players" do
           resource :heartbeat, only: :create
-          resources :impressions, only: :create
           resource :pairing_code, only: :create
         end
       end

@@ -14,13 +14,22 @@ class ScansController < ApplicationController
     )
 
     if qr.destination_url.present?
-      redirect_to URI.parse(qr.destination_url).to_s, allow_other_host: true
+      destination = URI.parse(qr.destination_url).to_s
     elsif qr.destination_record.present?
-      redirect_to polymorphic_url([ :go, qr.destination_record ], subdomain: "", scan_id: scan.id),
-                  allow_other_host: true
+      destination = polymorphic_url([ :go, qr.destination_record ], subdomain: "", scan_id: scan.id)
     else
-      redirect_to app_root_path
+      destination = app_root_path
     end
+
+    Analytics::Events::QrScanned.create(
+      qr_code_id: qr.id,
+      destination_url: destination,
+      screen_content_id: params[:sc].presence&.to_i,
+      ad_id: params[:a].presence&.to_i,
+      screen_id: params[:s].presence&.to_i,
+      request: request
+    )
+    redirect_to destination, allow_other_host: true
   end
 
   private

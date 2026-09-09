@@ -1,5 +1,6 @@
 class QrScan < ApplicationRecord
   acts_as_tenant :account
+  visitable :ahoy_visit
 
   store_accessor :context, :playlist_id, :slide_position
 

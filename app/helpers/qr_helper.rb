@@ -1,10 +1,11 @@
 module QrHelper
-  def qr_scan_full_url(qr_code, ad: nil, screen: nil)
+  def qr_scan_full_url(qr_code, ad: nil, screen: nil, screen_content: nil)
     base = ENV.fetch("QR_BASE_URL") { qr_scan_url(token: qr_code.token).sub(/\/s\/.*/, "") }
     url = "#{base}/s/#{qr_code.token}"
     query = {}
     query[:a] = ad.id if ad
     query[:s] = screen.id if screen
+    query[:sc] = screen_content.id if screen_content
     url += "?#{query.to_query}" if query.any?
     url
   end

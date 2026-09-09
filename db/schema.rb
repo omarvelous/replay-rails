@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_09_05_143648) do
+ActiveRecord::Schema[8.1].define(version: 2026_09_06_184500) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -95,6 +95,64 @@ ActiveRecord::Schema[8.1].define(version: 2026_09_05_143648) do
     t.index ["user_id"], name: "index_agents_on_user_id"
   end
 
+  create_table "ahoy_clicks", force: :cascade do |t|
+    t.string "campaign"
+    t.string "token"
+    t.index ["campaign"], name: "index_ahoy_clicks_on_campaign"
+  end
+
+  create_table "ahoy_events", force: :cascade do |t|
+    t.bigint "account_id"
+    t.string "name"
+    t.jsonb "properties"
+    t.datetime "time"
+    t.bigint "user_id"
+    t.bigint "visit_id"
+    t.index ["account_id"], name: "index_ahoy_events_on_account_id"
+    t.index ["name", "time"], name: "index_ahoy_events_on_name_and_time"
+    t.index ["properties"], name: "index_ahoy_events_on_properties", opclass: :jsonb_path_ops, using: :gin
+    t.index ["user_id"], name: "index_ahoy_events_on_user_id"
+    t.index ["visit_id"], name: "index_ahoy_events_on_visit_id"
+  end
+
+  create_table "ahoy_messages", force: :cascade do |t|
+    t.string "campaign"
+    t.string "mailer"
+    t.datetime "sent_at"
+    t.text "subject"
+    t.string "to"
+    t.bigint "user_id"
+    t.string "user_type"
+    t.index ["campaign"], name: "index_ahoy_messages_on_campaign"
+    t.index ["to"], name: "index_ahoy_messages_on_to"
+    t.index ["user_type", "user_id"], name: "index_ahoy_messages_on_user"
+  end
+
+  create_table "ahoy_visits", force: :cascade do |t|
+    t.bigint "account_id"
+    t.string "browser"
+    t.string "device_type"
+    t.string "ip"
+    t.text "landing_page"
+    t.string "os"
+    t.text "referrer"
+    t.string "referring_domain"
+    t.datetime "started_at"
+    t.text "user_agent"
+    t.bigint "user_id"
+    t.string "utm_campaign"
+    t.string "utm_content"
+    t.string "utm_medium"
+    t.string "utm_source"
+    t.string "utm_term"
+    t.string "visit_token"
+    t.string "visitor_token"
+    t.index ["account_id"], name: "index_ahoy_visits_on_account_id"
+    t.index ["user_id"], name: "index_ahoy_visits_on_user_id"
+    t.index ["visit_token"], name: "index_ahoy_visits_on_visit_token", unique: true
+    t.index ["visitor_token", "started_at"], name: "index_ahoy_visits_on_visitor_token_and_started_at"
+  end
+
   create_table "brand_ads", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
@@ -156,6 +214,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_09_05_143648) do
   end
 
   create_table "inquiries", force: :cascade do |t|
+    t.bigint "ahoy_visit_id"
     t.string "company"
     t.datetime "created_at", null: false
     t.string "email", null: false
@@ -166,6 +225,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_09_05_143648) do
     t.string "phone"
     t.datetime "responded_at"
     t.datetime "updated_at", null: false
+    t.index ["ahoy_visit_id"], name: "index_inquiries_on_ahoy_visit_id"
   end
 
   create_table "invites", force: :cascade do |t|
@@ -196,6 +256,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_09_05_143648) do
 
   create_table "leads", force: :cascade do |t|
     t.bigint "account_id", null: false
+    t.bigint "ahoy_visit_id"
     t.jsonb "context", default: {}
     t.datetime "created_at", null: false
     t.string "email"
@@ -210,6 +271,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_09_05_143648) do
     t.index ["account_id", "created_at"], name: "index_leads_on_account_id_and_created_at"
     t.index ["account_id", "status"], name: "index_leads_on_account_id_and_status"
     t.index ["account_id"], name: "index_leads_on_account_id"
+    t.index ["ahoy_visit_id"], name: "index_leads_on_ahoy_visit_id"
     t.index ["listing_id"], name: "index_leads_on_listing_id"
     t.index ["qr_scan_id"], name: "index_leads_on_qr_scan_id"
   end
@@ -330,6 +392,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_09_05_143648) do
   create_table "qr_scans", force: :cascade do |t|
     t.bigint "account_id", null: false
     t.bigint "ad_id"
+    t.bigint "ahoy_visit_id"
     t.jsonb "context", default: {}
     t.datetime "created_at", null: false
     t.string "ip_address"
@@ -339,9 +402,19 @@ ActiveRecord::Schema[8.1].define(version: 2026_09_05_143648) do
     t.string "user_agent"
     t.index ["account_id"], name: "index_qr_scans_on_account_id"
     t.index ["ad_id"], name: "index_qr_scans_on_ad_id"
+    t.index ["ahoy_visit_id"], name: "index_qr_scans_on_ahoy_visit_id"
     t.index ["qr_code_id", "created_at"], name: "index_qr_scans_on_qr_code_id_and_created_at"
     t.index ["qr_code_id"], name: "index_qr_scans_on_qr_code_id"
     t.index ["screen_id"], name: "index_qr_scans_on_screen_id"
+  end
+
+  create_table "rollups", force: :cascade do |t|
+    t.jsonb "dimensions", default: {}, null: false
+    t.string "interval", null: false
+    t.string "name", null: false
+    t.datetime "time", null: false
+    t.float "value"
+    t.index ["name", "interval", "time", "dimensions"], name: "index_rollups_on_name_and_interval_and_time_and_dimensions", unique: true
   end
 
   create_table "screen_contents", force: :cascade do |t|

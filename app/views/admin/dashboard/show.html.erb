@@ -58,7 +58,7 @@
   <div style="background: #fff; border: 1px solid #e8e8e8; border-radius: 6px; padding: 20px; margin-bottom: 32px;">
     <div style="font-size: 14px; font-weight: 600; color: #333; margin-bottom: 12px;">Platform activity (30 days)</div>
     <%= line_chart [
-      { name: "Impressions", data: Impression.where("created_at > ?", 30.days.ago).group_by_day(:created_at).count },
+      { name: "Impressions", data: ::Ahoy::Event.where(name: "content.impressed").where("time > ?", 30.days.ago).group_by_day(:time).count },
       { name: "Scans", data: QrScan.qualified.where("created_at > ?", 30.days.ago).group_by_day(:created_at).count },
       { name: "Leads", data: Lead.where("created_at > ?", 30.days.ago).group_by_day(:created_at).count }
     ], library: { scales: { y: { beginAtZero: true } } } %>

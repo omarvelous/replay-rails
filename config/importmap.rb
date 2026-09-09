@@ -10,3 +10,5 @@ pin_all_from "app/javascript/channels", under: "channels"
 pin "chartkick", to: "chartkick.js"
 pin "Chart.bundle", to: "Chart.bundle.js"
 pin "qr-creator" # @1.0.0
+pin "ahoy", to: "ahoy.js"
+pin_all_from "app/javascript/analytics", under: "analytics"

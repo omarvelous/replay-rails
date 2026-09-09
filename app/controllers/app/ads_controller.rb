@@ -13,7 +13,8 @@ module App
     authorize! @ad
     @playlists = @ad.playlists.distinct
     @scan_count = QrScan.qualified.where(ad: @ad).count
-    @impressions_count = Impression.where(ad: @ad).count
+    @impressions_count = Ahoy::Event.where(name: "content.impressed")
+                           .where("properties @> ?", { ad_id: @ad.id }.to_json).count
   end
 
   def new

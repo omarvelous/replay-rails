@@ -8,8 +8,9 @@ module Admin
       @total_screens = Screen.count
 
       # Funnel
-      @total_impressions = Impression.count
-      @impressions_today = Impression.where("created_at > ?", Date.current.beginning_of_day).count
+      @total_impressions = ::Ahoy::Event.where(name: "content.impressed").count
+      @impressions_today = ::Ahoy::Event.where(name: "content.impressed")
+                             .where("time > ?", Date.current.beginning_of_day).count
       @total_scans = QrScan.qualified.count
       @scans_today = QrScan.qualified.where("created_at > ?", Date.current.beginning_of_day).count
       @total_leads = Lead.count

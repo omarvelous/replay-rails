@@ -1,6 +1,7 @@
 class Lead < ApplicationRecord
   has_paper_trail ignore: [ :updated_at ]
   acts_as_tenant :account
+  visitable :ahoy_visit
 
   TYPES = %w[
     buyer_inquiry

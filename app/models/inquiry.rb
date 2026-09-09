@@ -1,4 +1,6 @@
 class Inquiry < ApplicationRecord
+  visitable :ahoy_visit
+
   TYPES = %w[demo_request general].freeze
 
   validates :name, presence: true

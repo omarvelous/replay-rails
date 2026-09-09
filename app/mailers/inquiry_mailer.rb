@@ -1,4 +1,6 @@
 class InquiryMailer < ApplicationMailer
+  has_history
+  track_clicks campaign: "inquiry"
   def notification(inquiry)
     @inquiry = inquiry
     mail(

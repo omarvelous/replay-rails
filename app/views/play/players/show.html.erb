@@ -2,7 +2,10 @@
      data-controller="slideshow device-playback"
      data-device-playback-api-host-value="<%= request.protocol %>api.<%= request.domain %><%= ":#{request.port}" unless request.port == 80 || request.port == 443 %>"
      data-device-playback-player-token-value="<%= params[:token] %>"
-     data-device-playback-playlist-id-value="<%= @playlist&.id %>">
+     data-device-playback-playlist-id-value="<%= @playlist&.id %>"
+     data-device-playback-screen-id-value="<%= @screen&.id %>"
+     data-device-playback-screen-content-id-value="<%= @screen&.active_screen_content&.id %>"
+     data-device-playback-account-id-value="<%= @screen&.site&.account_id %>">
   <% if @playlist_ads.any? %>
     <% @playlist_ads.each_with_index do |pa, index| %>
       <div class="slide absolute inset-0 transition-opacity duration-700 <%= index == 0 ? 'opacity-100' : 'opacity-0' %>"

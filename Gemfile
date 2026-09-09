@@ -23,6 +23,11 @@ gem "acts_as_tenant"
 gem "bcrypt", "~> 3.1"
 gem "rack-attack"
 
+# ── Analytics ─────────────────────────────────────────
+gem "ahoy_matey"
+gem "ahoy_email"
+gem "rollups"
+
 # ── Content & Media ───────────────────────────────────
 gem "chartkick"
 gem "groupdate"

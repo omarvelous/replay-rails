@@ -35,6 +35,7 @@ The platform is functionally ready for a private beta.
 | Marketing site | `marketing-site-nyc` #39 | NYC-focused landing page, features, pricing, about, demo, contact pages. Inquiry model for lead capture. Bold theme. |
 | Production deploy | `production-deploy` #40 | DNS via OpenTofu (replaytv.co + subdomains + rply.tv), R2 bucket, QR short URLs. |
 | Experiences | `experiences` | ScreenContent with delegated_type (Playlist/Experience), Experience with delegated_type (ListingExperience), kiosk player rendering, floor_plans attachment. |
+| Analytics | `analytics` | Ahoy unified tracking, 9 governed event POROs, ahoy-email, rollups, visitable associations, JS analytics wrapper. |
 
 ---
 
@@ -226,6 +227,7 @@ Documentation is in progress.
 | Marketing site (NYC) | `.claude/plans/202609041200-marketing-site-nyc.md` | Complete |
 | Production deploy | `.claude/plans/202609050100-production-deploy.md` | Complete |
 | Experiences (kiosk) | `.claude/plans/202609050300-experiences.md` | Complete |
+| Analytics (Ahoy) | `.claude/plans/202609060100-analytics.md` | Complete |
 | NYC product gaps | `.claude/plans/drafts/plan-nyc-product-gaps.md` | Draft — needs review |
 | Day-parting / Scheduling | `.claude/plans/drafts/plan-day-parting-scheduling.md` | Draft — needs review |
 | Live Preview | `.claude/plans/drafts/plan-live-preview.md` | Draft — needs review |

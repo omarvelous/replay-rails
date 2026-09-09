@@ -1,8 +1,16 @@
 import { Controller } from "@hotwired/stimulus"
 import consumer from "channels/consumer"
+import Analytics from "analytics"
 
 export default class extends Controller {
-  static values = { apiHost: String, playerToken: String, playlistId: Number }
+  static values = {
+    apiHost: String,
+    playerToken: String,
+    playlistId: Number,
+    screenId: Number,
+    screenContentId: Number,
+    accountId: Number
+  }
 
   connect() {
     const token = this.playerTokenValue
@@ -27,6 +35,15 @@ export default class extends Controller {
     this.element.addEventListener("slideshow:impression", (e) => {
       this.recordImpression(e.detail)
     })
+
+    // Track device connected
+    if (this.hasScreenIdValue) {
+      Analytics.create("device.connected", {
+        screen_id: this.screenIdValue,
+        player_token: this.playerTokenValue,
+        account_id: this.accountIdValue
+      })
+    }
   }
 
   disconnect() {
@@ -37,7 +54,8 @@ export default class extends Controller {
   async sendHeartbeat() {
     try {
       const res = await fetch(`${this.apiHostValue}/players/${this.playerTokenValue}/heartbeat`, {
-        method: "POST"
+        method: "POST",
+        credentials: "include"
       })
       if (res.status === 410) this.handleUnpaired()
     } catch {
@@ -45,30 +63,21 @@ export default class extends Controller {
     }
   }
 
-  async recordImpression({ adId, position, duration }) {
-    try {
-      const res = await fetch(`${this.apiHostValue}/players/${this.playerTokenValue}/impressions`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          ad_id: adId,
-          playlist_id: this.playlistIdValue,
-          position: position,
-          duration: duration
-        })
-      })
-      if (res.status === 410) this.handleUnpaired()
-    } catch {
-      // Network error — impression lost, acceptable
-    }
+  recordImpression({ adId, position, duration }) {
+    Analytics.create("content.impressed", {
+      ad_id: adId,
+      screen_id: this.screenIdValue,
+      screen_content_id: this.screenContentIdValue,
+      playlist_id: this.playlistIdValue,
+      position: position,
+      duration: duration,
+      account_id: this.accountIdValue
+    })
   }
 
   handleUnpaired() {
     clearInterval(this.heartbeat)
     this.subscription?.unsubscribe()
-    // Keep player_token in localStorage — same device, just needs a new pairing code.
-    // Only clear token when the Player record itself is deleted (handled by redirect to /players/new
-    // which falls back to registerNewPlayer if the token is invalid).
     window.location.href = "/players/new"
   }
 }
