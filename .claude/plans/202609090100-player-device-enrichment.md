@@ -248,9 +248,6 @@ both, but `device_detector` covers most needs.
 ### Phase 4: App UI
 10. Screen show — device info in Player card
 11. Screen index — device type badge/column
-### Phase 4: App UI
-10. Screen show — device info in Player card
-11. Screen index — device type badge/column
 
 ### Phase 5: Admin inventory
 12. Update Player Administrate dashboard with new fields
