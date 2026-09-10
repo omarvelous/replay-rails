@@ -86,6 +86,40 @@ RSpec.describe "Api::Players::Manifests" do
       end
     end
 
+    context "ETag change detection" do
+      let(:listing) { create(:listing, account: account) }
+      let(:ad) { create(:ad, account: account, headline: "ETag Test") }
+
+      before do
+        create(:playlist_ad, playlist: playlist, ad: ad, position: 1, duration: 10)
+        create(:screen_content, screen: screen, contentable: playlist, active: true)
+      end
+
+      it "produces different ETag when a photo is attached" do
+        get "/players/#{player.token}/manifest"
+        etag_before = response.headers["ETag"]
+
+        listing_ad = ad.adable
+        listing_ad.listing.photos.attach(
+          io: StringIO.new("fake"), filename: "photo.jpg", content_type: "image/jpeg"
+        )
+
+        get "/players/#{player.token}/manifest"
+        expect(response.headers["ETag"]).not_to eq(etag_before)
+      end
+
+      it "produces different ETag when playlist_ad is added" do
+        get "/players/#{player.token}/manifest"
+        etag_before = response.headers["ETag"]
+
+        new_ad = create(:ad, account: account, headline: "New Ad")
+        create(:playlist_ad, playlist: playlist, ad: new_ad, position: 2, duration: 10)
+
+        get "/players/#{player.token}/manifest"
+        expect(response.headers["ETag"]).not_to eq(etag_before)
+      end
+    end
+
     it "returns 401 for invalid token" do
       get "/players/invalid/manifest"
       expect(response).to have_http_status(:unauthorized)
