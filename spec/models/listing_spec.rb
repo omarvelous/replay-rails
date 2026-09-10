@@ -17,6 +17,12 @@ RSpec.describe Listing do
 
   describe "associations" do
     it { is_expected.to belong_to(:account) }
+    it { is_expected.to have_many(:listing_agents).dependent(:destroy) }
+    it { is_expected.to have_many(:agents).through(:listing_agents) }
+    it { is_expected.to have_many(:listing_ads) }
+    it { is_expected.to have_many(:ads).through(:listing_ads) }
+    it { is_expected.to have_many(:leads).dependent(:nullify) }
+    it { is_expected.to have_one(:qr_code) }
 
     it "has many attached photos" do
       expect(described_class.new.photos).to be_empty
@@ -24,6 +30,20 @@ RSpec.describe Listing do
 
     it "has many attached floor_plans" do
       expect(described_class.new.floor_plans).to be_empty
+    end
+  end
+
+  describe "#ensure_qr_code!" do
+    it "creates a QR code for the listing" do
+      listing = create(:listing)
+      expect { listing.ensure_qr_code! }.to change(QrCode, :count).by(1)
+      expect(listing.qr_code).to be_present
+    end
+
+    it "does not create a duplicate QR code" do
+      listing = create(:listing)
+      listing.ensure_qr_code!
+      expect { listing.ensure_qr_code! }.not_to change(QrCode, :count)
     end
   end
 
