@@ -230,7 +230,7 @@ Documentation is in progress.
 | Experiences (kiosk) | `.claude/plans/202609050300-experiences.md` | Complete |
 | Analytics (Ahoy) | `.claude/plans/202609060100-analytics.md` | Complete |
 | Player device enrichment | `.claude/plans/202609090100-player-device-enrichment.md` | Complete |
-| Player content sync | `.claude/plans/202609090200-player-content-sync.md` | In progress |
+| Player content sync | `.claude/plans/202609090200-player-content-sync.md` | Complete |
 | NYC product gaps | `.claude/plans/drafts/plan-nyc-product-gaps.md` | Draft — needs review |
 | Day-parting / Scheduling | `.claude/plans/drafts/plan-day-parting-scheduling.md` | Draft — needs review |
 | Live Preview | `.claude/plans/drafts/plan-live-preview.md` | Draft — needs review |
