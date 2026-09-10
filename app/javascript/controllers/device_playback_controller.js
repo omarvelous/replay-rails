@@ -20,7 +20,8 @@ export default class extends Controller {
       { channel: "ScreenChannel", token },
       {
         received: ({ event }) => {
-          if (event === "content_changed" || event === "content_nudge") {
+          if (event === "content_changed") window.location.reload()
+          if (event === "content_nudge") {
             clearTimeout(this.nudgeTimeout)
             this.nudgeTimeout = setTimeout(() => this.checkManifest(), 2000)
           }
@@ -72,11 +73,13 @@ export default class extends Controller {
 
       if (res.status === 200) {
         const newETag = res.headers.get("ETag")
-        if (this.manifestETag && newETag !== this.manifestETag) {
+        if (!this.manifestETag) {
+          // First poll — seed the ETag
+          this.manifestETag = newETag
+        } else if (newETag !== this.manifestETag) {
           // Content changed — reload
           window.location.reload()
         }
-        this.manifestETag = newETag
       }
       // 304 = unchanged, do nothing
     } catch {
