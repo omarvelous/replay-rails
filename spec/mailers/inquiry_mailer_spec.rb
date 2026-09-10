@@ -6,7 +6,7 @@ RSpec.describe InquiryMailer do
 
     it "sends to hello@replaytv.co" do
       mail = described_class.notification(inquiry)
-      expect(mail.to).to eq(["hello@replaytv.co"])
+      expect(mail.to).to eq([ "hello@replaytv.co" ])
     end
 
     it "includes inquiry type and name in subject" do

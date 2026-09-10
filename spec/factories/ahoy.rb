@@ -6,7 +6,7 @@ FactoryBot.define do
   end
 
   factory :ahoy_event, class: "Ahoy::Event" do
-    association :visit, factory: :ahoy_visit
+    visit factory: %i[ahoy_visit]
     name { "test.event" }
     properties { {} }
     time { Time.current }

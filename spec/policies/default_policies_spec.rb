@@ -1,6 +1,6 @@
 require "rails_helper"
 
-RSpec.describe "Policies inheriting ApplicationPolicy defaults" do
+RSpec.describe "Policies inheriting ApplicationPolicy defaults", type: :model do # rubocop:disable RSpec/DescribeClass
   describe AdPolicy do
     it_behaves_like "default policy", described_class
   end

@@ -6,7 +6,7 @@ RSpec.describe PasswordsMailer do
 
     it "sends to the user's email" do
       mail = described_class.reset(user)
-      expect(mail.to).to eq(["user@example.com"])
+      expect(mail.to).to eq([ "user@example.com" ])
     end
 
     it "has reset subject" do

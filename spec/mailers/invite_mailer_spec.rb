@@ -8,7 +8,7 @@ RSpec.describe InviteMailer do
 
     it "sends to the invite email" do
       mail = described_class.invite(invite)
-      expect(mail.to).to eq(["newagent@example.com"])
+      expect(mail.to).to eq([ "newagent@example.com" ])
     end
 
     it "has the correct subject" do

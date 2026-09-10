@@ -14,6 +14,27 @@ RSpec.describe "Api::Players" do
       expect(response.parsed_body["pairing_code"]).to match(/\A[A-Z0-9]{6}\z/)
       expect(response.parsed_body["expires_in"]).to eq(600)
     end
+
+    it "accepts device info params" do
+      post "/players",
+        params: { screen_width: 1920, screen_height: 1080, touch_capable: true, app_version: "1.0.0" },
+        as: :json
+
+      player = Player.last
+      expect(player.screen_width).to eq(1920)
+      expect(player.screen_height).to eq(1080)
+      expect(player.touch_capable).to be true
+      expect(player.app_version).to eq("1.0.0")
+    end
+
+    it "parses user agent into device fields" do
+      post "/players",
+        headers: { "User-Agent" => "Mozilla/5.0 (Linux; Android 11; AFTSSS Build/NS6294) AppleWebKit/537.36" },
+        as: :json
+
+      player = Player.last
+      expect(player.device_type).to be_present
+    end
   end
 
   describe "GET /players/:token" do
