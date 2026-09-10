@@ -74,11 +74,15 @@ RSpec.describe "Api::Players::Manifests" do
         create(:screen_content, screen: screen, contentable: experience, active: true)
       end
 
-      it "returns the manifest with experience dependency tree" do
+      it "returns the manifest with experience dependency tree including listing" do
         get "/players/#{player.token}/manifest"
         json = parsed_json
         expect(json["contentable"]["type"]).to eq("Experience")
-        expect(json["contentable"]["experienceable"]).to be_present
+        experienceable = json["contentable"]["experienceable"]
+        expect(experienceable).to be_present
+        expect(experienceable["type"]).to eq("Experiences::ListingExperience")
+        expect(experienceable["listing"]).to be_present
+        expect(experienceable["listing"]["id"]).to be_present
       end
     end
 

@@ -6,14 +6,6 @@ json.experienceable do
   json.type experience.experienceable_type
   json.id experience.experienceable_id
   json.updated_at experience.experienceable.updated_at.to_i
-
-  listing = experience.listing
-  if listing
-    json.partial! "api/players/manifests/listing", listing: listing
-  end
-
-  agent = experience.default_agent
-  if agent
-    json.partial! "api/players/manifests/agent", agent: agent
-  end
+  json.partial! "api/players/manifests/#{experience.experienceable_type.underscore}",
+    experience.experienceable_type.demodulize.underscore.to_sym => experience.experienceable
 end

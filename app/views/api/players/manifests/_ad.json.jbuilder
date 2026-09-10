@@ -3,7 +3,7 @@ json.updated_at ad.updated_at.to_i
 json.layout ad.layout
 json.theme ad.theme
 
-json.images ad.image.attached? ? [ad.image_attachment] : [] do |attachment|
+json.images ad.image.attached? ? [ ad.image_attachment ] : [] do |attachment|
   json.id attachment.id
   json.created_at attachment.created_at.to_i
 end
