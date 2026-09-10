@@ -60,6 +60,49 @@ Returns the player's current state. Auth: token in URL.
 }
 ```
 
+### Content Manifest
+
+```
+GET /players/:token/manifest
+```
+
+Returns a JSON dependency tree of everything the player renders.
+The player polls this every 30 seconds with `If-None-Match` to
+detect content changes.
+
+**Response** `200 OK` (content available):
+```json
+{
+  "deploy": "a3f8c2",
+  "screen_content": { "id": 1, "updated_at": 1725840000 },
+  "contentable": {
+    "type": "Playlist",
+    "id": 5,
+    "playlist_ads": [
+      {
+        "id": 10,
+        "ad": { "id": 20, "updated_at": 1725837000, "adable": { "type": "Ads::ListingAd", "listing": { ... } } }
+      }
+    ]
+  }
+}
+```
+
+**Response** `304 Not Modified` — ETag matches, nothing changed.
+
+**Response** `200 OK` (no content):
+```json
+{ "content": null }
+```
+
+The manifest includes `updated_at` for every model and attachment
+arrays from `active_storage_attachments`. Any change — model
+update, photo upload, deploy — produces a different JSON body
+and therefore a different ETag.
+
+Jbuilder templates resolve partials dynamically by contentable
+and adable type. See `app/views/api/players/manifests/`.
+
 ### Heartbeat
 
 ```

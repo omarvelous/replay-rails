@@ -154,6 +154,7 @@ Players are browser-based devices (Fire TV, Raspberry Pi, iPad, any browser) tha
 - **Device types** — enum with fallback: `fire_tv`, `android_tv`, `raspberry_pi`, `browser_desktop`, `browser_mobile`, `browser_tablet`, `browser_tv`, `provisioned`, `unknown`.
 - **Provisioned vs browser** — presence of `app_version` distinguishes provisioned devices from browser players. Same registration endpoint (`POST /api/players`).
 - **`device_name`** — admin-only label for inventory management ("Lobby Fire Stick"). Customers identify devices by Screen, not Player.
+- **Content sync** — players poll `GET /api/players/:token/manifest` every 30 seconds. The manifest is a Jbuilder JSON dependency tree of all models and attachments. `Rack::ETag` auto-generates an ETag from the response body. `304` when unchanged, `200` when any dependency changed. ActionCable `content_changed` events trigger an immediate manifest check (with 2s debounce) instead of blind reloads. Deploy changes detected via `ENV["REVISION"]` in the manifest.
 
 ## Frontend
 
