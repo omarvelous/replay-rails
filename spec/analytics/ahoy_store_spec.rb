@@ -1,6 +1,6 @@
 require "rails_helper"
 
-RSpec.describe "Ahoy Store configuration" do
+RSpec.describe "Ahoy Store configuration", type: :model do # rubocop:disable RSpec/DescribeClass
   describe "admin exclusion" do
     it "excludes admin subdomain" do
       exclude = Ahoy.exclude_method

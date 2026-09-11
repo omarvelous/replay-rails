@@ -86,7 +86,7 @@ RSpec.describe "Api::Players::Manifests" do
       end
     end
 
-    context "ETag change detection" do
+    context "with content changes affecting ETag" do
       let(:listing) { create(:listing, account: account) }
       let(:ad) { create(:ad, account: account, headline: "ETag Test") }
 
