@@ -11,5 +11,10 @@ RSpec.describe Account do
     it { is_expected.to have_many(:agents) }
     it { is_expected.to have_many(:ads) }
     it { is_expected.to have_many(:playlists) }
+    it { is_expected.to have_many(:experiences) }
+    it { is_expected.to have_many(:leads) }
+    it { is_expected.to have_many(:qr_codes) }
+    it { is_expected.to have_many(:invites) }
+    it { is_expected.to have_many(:screens).through(:sites) }
   end
 end

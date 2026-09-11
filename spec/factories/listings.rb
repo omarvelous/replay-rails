@@ -6,8 +6,28 @@ FactoryBot.define do
     beds { Faker::Number.between(from: 1, to: 6) }
     baths { Faker::Number.between(from: 1, to: 4) }
     sqft { Faker::Number.between(from: 500, to: 5_000) }
-    status { %w[active pending sold].sample }
-    property_type { Listing::PROPERTY_TYPES.sample }
-    listing_type { Listing::LISTING_TYPES.sample }
+    status { "active" }
+    property_type { "house" }
+    listing_type { "for_sale" }
+
+    trait :pending do
+      status { "pending" }
+    end
+
+    trait :sold do
+      status { "sold" }
+    end
+
+    trait :condo do
+      property_type { "condo" }
+    end
+
+    trait :for_rent do
+      listing_type { "for_rent" }
+    end
+
+    trait :for_lease do
+      listing_type { "for_lease" }
+    end
   end
 end

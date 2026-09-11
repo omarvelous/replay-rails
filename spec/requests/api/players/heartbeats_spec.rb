@@ -32,5 +32,19 @@ RSpec.describe "Api::Players::Heartbeats" do
       expect(response).to have_http_status(:gone)
       expect(response.parsed_body["error"]).to eq("unpaired")
     end
+
+    it "updates user_agent" do
+      post "/players/#{player.token}/heartbeat", headers: { "User-Agent" => "NewBrowser/1.0" }
+      expect(player.reload.user_agent).to eq("NewBrowser/1.0")
+    end
+
+    it "updates screen resolution from params" do
+      post "/players/#{player.token}/heartbeat",
+        params: { screen_width: 3840, screen_height: 2160 }.to_json,
+        headers: { "Content-Type" => "application/json" }
+      player.reload
+      expect(player.screen_width).to eq(3840)
+      expect(player.screen_height).to eq(2160)
+    end
   end
 end
