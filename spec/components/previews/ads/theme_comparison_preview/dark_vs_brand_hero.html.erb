@@ -1,14 +1,14 @@
 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; max-width: 1920px; margin: 0 auto; padding: 2rem;">
   <div>
     <p style="color: #999; font-size: 0.875rem; margin-bottom: 0.5rem;">Dark</p>
-    <div class="ad-canvas" style="aspect-ratio: 16/9;">
+    <%= render "shared/scaled_canvas" do %>
       <%= render "app/ads/layouts/#{dark_ad.layout}", ad: dark_ad %>
-    </div>
+    <% end %>
   </div>
   <div>
     <p style="color: #999; font-size: 0.875rem; margin-bottom: 0.5rem;">Brand</p>
-    <div class="ad-canvas" style="aspect-ratio: 16/9;">
+    <%= render "shared/scaled_canvas" do %>
       <%= render "app/ads/layouts/#{light_ad.layout}", ad: light_ad %>
-    </div>
+    <% end %>
   </div>
 </div>
