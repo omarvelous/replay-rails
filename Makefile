@@ -1,4 +1,4 @@
-.PHONY: setup test test-file lint lint-fix scan migrate seed db-reset generate console routes up down build restart logs
+.PHONY: setup test test-file lint lint-fix scan migrate seed db-reset generate console routes up down build restart logs lookbook
 
 # Setup (create DBs, migrate, seed)
 setup:
@@ -45,6 +45,10 @@ console:
 
 routes:
 	docker compose exec web bin/rails routes
+
+# Lookbook (component previews)
+lookbook:
+	@echo "Lookbook available at http://localhost:3000/lookbook"
 
 # Docker
 up:

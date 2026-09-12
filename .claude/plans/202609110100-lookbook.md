@@ -54,7 +54,7 @@ Uses `spec/` (not `test/`) to match the project's RSpec convention.
 
 **New file:** `app/views/layouts/lookbook_preview.html.erb`
 
-Includes `stylesheet_link_tag "tailwind"` and `"application"` so `.ad-canvas` container queries, theme variables, and DaisyUI classes all work inside Lookbook's iframe.
+Includes `stylesheet_link_tag "tailwind"` and `"application"` so `.ad-canvas` container queries, theme variables, and Tailwind utilities all work inside Lookbook's iframe.
 
 ### Step 5 — Preview controller (skip auth + tenant)
 
@@ -62,23 +62,46 @@ Includes `stylesheet_link_tag "tailwind"` and `"application"` so `.ad-canvas` co
 
 Inherits from `ApplicationController`, skips `authenticate` and `set_current_tenant` so previews render without login. Sets `default_url_options` for route helpers.
 
-### Step 6 — Preview data helpers (no database)
+### Step 6 — Preview data via FactoryBot
 
-**New file:** `spec/components/previews/preview_helpers.rb`
+Use `FactoryBot.build` (no database) to create real model
+instances for previews. Real objects with correct methods —
+no OpenStruct duck-typing that can silently break when models
+change.
 
-Module with `stub_ad`, `stub_listing`, `stub_agent` methods that return OpenStruct objects duck-typing the interfaces the partials expect (`ad.adable`, `ad.theme`, `ad.image.attached?`, `listing.price`, etc.). No FactoryBot, no database — previews are fast and stateless.
+```ruby
+# In preview classes
+def hero_just_listed
+  listing = FactoryBot.build(:listing, address: "350 Fifth Ave", price: 2_500_000)
+  listing_ad = FactoryBot.build(:listing_ad, listing: listing, badge: "just_listed")
+  ad = FactoryBot.build(:ad, adable: listing_ad, headline: "Just Listed", layout: "hero", theme: "dark")
+  render_with_template(locals: { ad: ad })
+end
+```
 
 ### Step 7 — Ad layout preview classes
 
-Each preview class inherits `ViewComponent::Preview` and uses `render_with_template` to render the existing partials. One template file per scenario (each is a single `<%= render %>` line).
+Each preview class inherits `ViewComponent::Preview` and uses
+`render_with_template` to render the existing partials. One
+template file per scenario (each is a single `<%= render %>` line).
+
+**Ad types and layouts:**
+
+| Ad type | Layouts | Badges | Preview count |
+|---------|---------|--------|---------------|
+| ListingAd | hero, split, minimal, stat_grid | just_listed, open_house, just_sold, price_reduction, coming_soon | ~10 |
+| AgentAd | profile, split | — | ~4 |
+| BrandAd | hero, minimal | — | ~4 |
+| CollectionAd | grid | — | ~2 |
+
+Plus theme comparison preview (dark, light, brand side-by-side).
 
 **Directory structure:**
 
 ```
 spec/components/previews/
-├── preview_helpers.rb
 └── ads/
-    ├── listing_ad_preview.rb          # 7 scenarios (4 layouts × badges)
+    ├── listing_ad_preview.rb
     │   └── listing_ad_preview/
     │       ├── hero_just_listed.html.erb
     │       ├── hero_open_house.html.erb
@@ -87,15 +110,34 @@ spec/components/previews/
     │       ├── split.html.erb
     │       ├── minimal.html.erb
     │       └── stat_grid.html.erb
-    ├── brand_ad_preview.rb            # 2 layouts × 3 themes = 6 scenarios
-    ├── agent_ad_preview.rb            # 2 layouts × 3 themes = 6 scenarios
-    ├── collection_ad_preview.rb       # 1 layout × 3 themes = 3 scenarios
-    └── theme_comparison_preview.rb    # Side-by-side all themes for one ad
+    ├── agent_ad_preview.rb
+    ├── brand_ad_preview.rb
+    ├── collection_ad_preview.rb
+    └── theme_comparison_preview.rb
 ```
 
 **Preview scenario count:** ~22 ad previews total.
 
-### Step 8 — Shared partial previews (secondary)
+### Step 8 — Experience kiosk previews
+
+Preview the kiosk view sections:
+
+```
+spec/components/previews/
+└── experiences/
+    ├── kiosk_preview.rb
+    │   └── kiosk_preview/
+    │       ├── full.html.erb           # all sections enabled
+    │       ├── photos_only.html.erb    # just photo gallery
+    │       ├── with_agent.html.erb     # agent card visible
+    │       ├── with_floor_plans.html.erb
+    │       └── no_photos.html.erb      # empty state
+```
+
+Uses `FactoryBot.build` for Experience, ListingExperience,
+Listing, and Agent.
+
+### Step 9 — Shared partial previews (optional)
 
 ```
 spec/components/previews/
@@ -104,9 +146,9 @@ spec/components/previews/
     └── flash_preview.rb          # notice, alert, warning, info
 ```
 
-Simpler stubs — these use plain locals, not model instances.
+These use plain locals, not model instances.
 
-### Step 9 — Makefile + CLAUDE.md updates
+### Step 10 — Makefile + CLAUDE.md updates
 
 Add informational `make lookbook` target. Add Lookbook section to CLAUDE.md documenting where previews live and how to add new ones.
 
@@ -119,7 +161,8 @@ Add informational `make lookbook` target. Add Lookbook section to CLAUDE.md docu
 3. Visit `http://replay.localhost:3000/lookbook` — gallery loads
 4. Click through Listing Ad → Hero Just Listed — ad renders with dark theme, container-query sizing, correct badge
 5. Toggle between themes in the theme comparison preview — CSS variables swap correctly
-6. Verify DaisyUI classes render correctly (buttons, badges) in the preview iframe
+6. Click through Experience → Full kiosk — all sections render
+7. Verify Tailwind utilities render correctly in the preview iframe
 
 ---
 

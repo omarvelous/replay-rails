@@ -1,0 +1,48 @@
+<div class="w-full relative overflow-hidden bg-black text-white" style="aspect-ratio: 16/9; max-width: 960px; margin: 0 auto;">
+  <%# Placeholder background %>
+  <div class="absolute inset-0 bg-gradient-to-br from-gray-800 to-gray-900"></div>
+
+  <%# Bottom overlay gradient %>
+  <div class="absolute inset-x-0 bottom-0 h-2/3 pointer-events-none"
+       style="background: linear-gradient(to top, rgba(0,0,0,0.85), transparent);"></div>
+
+  <%# Content overlay %>
+  <div class="absolute inset-x-0 bottom-0 p-8 z-10">
+    <div class="max-w-4xl">
+      <% if listing %>
+        <div class="mb-4">
+          <% if listing.listing_type.present? %>
+            <span class="inline-block text-indigo-400 text-xs font-bold uppercase tracking-wider mb-2">
+              <%= listing.listing_type.humanize %>
+            </span>
+          <% end %>
+          <p class="text-4xl font-black tracking-tight">
+            <%= number_to_currency(listing.price, precision: 0) %>
+          </p>
+          <p class="text-lg text-white/80 mt-1"><%= listing.address %></p>
+          <div class="flex gap-6 mt-3 text-sm text-white/60">
+            <% if listing.beds %><span><%= listing.beds %> bd</span><% end %>
+            <% if listing.baths %><span><%= listing.baths %> ba</span><% end %>
+            <% if listing.sqft %><span><%= number_with_delimiter(listing.sqft) %> sqft</span><% end %>
+          </div>
+        </div>
+      <% end %>
+
+      <%# Agent card %>
+      <div class="flex items-end justify-between mt-6">
+        <% if agent %>
+          <div class="flex items-center gap-4">
+            <div class="w-14 h-14 rounded-full bg-white/10 grid place-items-center text-lg font-bold">
+              <%= agent.name.split.map(&:first).join.first(2).upcase %>
+            </div>
+            <div>
+              <p class="font-semibold text-sm"><%= agent.name %></p>
+              <p class="text-xs text-white/50"><%= agent.phone %></p>
+              <p class="text-xs text-white/50"><%= agent.email %></p>
+            </div>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>

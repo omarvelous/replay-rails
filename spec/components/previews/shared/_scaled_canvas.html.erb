@@ -1,0 +1,18 @@
+<%# Renders ad at native 1920×1080 then scales it down to fit the preview.
+    cqw units resolve against the 1920px inner width, so proportions
+    match a real screen exactly. ResizeObserver keeps the scale factor
+    in sync if the Lookbook panel is resized. %>
+<div class="preview-scale-wrapper" style="width: 100%; max-width: 960px; margin: 0 auto; aspect-ratio: 16 / 9; overflow: hidden; position: relative;">
+  <div class="preview-scale-inner" style="width: 1920px; height: 1080px; transform-origin: top left;">
+    <%= yield %>
+  </div>
+</div>
+
+<script>
+  document.querySelectorAll('.preview-scale-wrapper').forEach(function(wrapper) {
+    var inner = wrapper.querySelector('.preview-scale-inner');
+    function rescale() { inner.style.transform = 'scale(' + (wrapper.offsetWidth / 1920) + ')'; }
+    rescale();
+    new ResizeObserver(rescale).observe(wrapper);
+  });
+</script>

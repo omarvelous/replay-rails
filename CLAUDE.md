@@ -36,6 +36,7 @@ All development commands go through the Makefile. Do not use raw `docker compose
 | `make build` | Build Docker images |
 | `make restart` | Restart Docker services |
 | `make logs` | Tail web service logs |
+| `make lookbook` | Show Lookbook URL (component previews) |
 
 ## Testing
 
@@ -163,6 +164,16 @@ Players are browser-based devices (Fire TV, Raspberry Pi, iPad, any browser) tha
 - Use raw Tailwind utilities for layout and spacing (`flex`, `grid`, `mt-4`, `p-6`)
 - Theme: `data-theme="light"` on the `<html>` tag
 - See `.claude/standards/frontend/daisyui-tailwind.md` for the full component class reference
+
+### Lookbook (Component Previews)
+
+Lookbook provides a visual component preview gallery at `/lookbook` (development only).
+
+- **Preview classes** live in `spec/components/previews/` using `ViewComponent::Preview`
+- **Templates** live alongside previews in subdirectories (e.g., `ads/listing_ad_preview/hero_just_listed.html.erb`)
+- **Layout** — previews use `layout "lookbook_preview"` which loads Tailwind and renders on a black background
+- **Data** — previews use `FactoryBot.build` (no database) with deterministic values
+- **Categories** — Ads (ListingAd, AgentAd, BrandAd, CollectionAd, ThemeComparison), Experiences (ListingExperience)
 
 ## Standards
 
