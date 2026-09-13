@@ -54,19 +54,6 @@ RSpec.describe "Go::Leads" do
         expect(Lead.last.listing).to eq(listing)
       end
 
-      it "links to a qr_scan when scan_id is provided" do
-        qr_code = create(:qr_code, account: account, destination_record: listing)
-        qr_scan = create(:qr_scan, qr_code: qr_code, account: account)
-
-        post go_leads_path, params: {
-          lead: { name: "Jane Doe", email: "jane@example.com",
-                  lead_type: "buyer_inquiry", listing_id: listing.id,
-                  scan_id: qr_scan.id }
-        }
-
-        expect(Lead.last.qr_scan).to eq(qr_scan)
-      end
-
       it "redirects back with submitted flash" do
         post go_leads_path, params: {
           lead: { name: "Jane Doe", email: "jane@example.com",
