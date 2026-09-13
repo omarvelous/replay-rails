@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_09_09_132423) do
+ActiveRecord::Schema[8.1].define(version: 2026_09_13_234010) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -265,7 +265,6 @@ ActiveRecord::Schema[8.1].define(version: 2026_09_09_132423) do
     t.text "message"
     t.string "name", null: false
     t.string "phone"
-    t.bigint "qr_scan_id"
     t.string "status", default: "new", null: false
     t.datetime "updated_at", null: false
     t.index ["account_id", "created_at"], name: "index_leads_on_account_id_and_created_at"
@@ -273,7 +272,6 @@ ActiveRecord::Schema[8.1].define(version: 2026_09_09_132423) do
     t.index ["account_id"], name: "index_leads_on_account_id"
     t.index ["ahoy_visit_id"], name: "index_leads_on_ahoy_visit_id"
     t.index ["listing_id"], name: "index_leads_on_listing_id"
-    t.index ["qr_scan_id"], name: "index_leads_on_qr_scan_id"
   end
 
   create_table "listing_ads", force: :cascade do |t|
@@ -402,25 +400,6 @@ ActiveRecord::Schema[8.1].define(version: 2026_09_09_132423) do
     t.index ["token"], name: "index_qr_codes_on_token", unique: true
   end
 
-  create_table "qr_scans", force: :cascade do |t|
-    t.bigint "account_id", null: false
-    t.bigint "ad_id"
-    t.bigint "ahoy_visit_id"
-    t.jsonb "context", default: {}
-    t.datetime "created_at", null: false
-    t.string "ip_address"
-    t.bigint "qr_code_id", null: false
-    t.bigint "screen_id"
-    t.datetime "updated_at", null: false
-    t.string "user_agent"
-    t.index ["account_id"], name: "index_qr_scans_on_account_id"
-    t.index ["ad_id"], name: "index_qr_scans_on_ad_id"
-    t.index ["ahoy_visit_id"], name: "index_qr_scans_on_ahoy_visit_id"
-    t.index ["qr_code_id", "created_at"], name: "index_qr_scans_on_qr_code_id_and_created_at"
-    t.index ["qr_code_id"], name: "index_qr_scans_on_qr_code_id"
-    t.index ["screen_id"], name: "index_qr_scans_on_screen_id"
-  end
-
   create_table "rollups", force: :cascade do |t|
     t.jsonb "dimensions", default: {}, null: false
     t.string "interval", null: false
@@ -532,7 +511,6 @@ ActiveRecord::Schema[8.1].define(version: 2026_09_09_132423) do
   add_foreign_key "lead_agents", "leads"
   add_foreign_key "leads", "accounts"
   add_foreign_key "leads", "listings"
-  add_foreign_key "leads", "qr_scans"
   add_foreign_key "listing_ads", "listings"
   add_foreign_key "listing_agents", "agents"
   add_foreign_key "listing_agents", "listings"
@@ -544,10 +522,6 @@ ActiveRecord::Schema[8.1].define(version: 2026_09_09_132423) do
   add_foreign_key "playlist_ads", "playlists"
   add_foreign_key "playlists", "accounts"
   add_foreign_key "qr_codes", "accounts"
-  add_foreign_key "qr_scans", "accounts"
-  add_foreign_key "qr_scans", "ads"
-  add_foreign_key "qr_scans", "qr_codes"
-  add_foreign_key "qr_scans", "screens"
   add_foreign_key "screen_contents", "screens"
   add_foreign_key "screen_players", "players"
   add_foreign_key "screen_players", "screens"
