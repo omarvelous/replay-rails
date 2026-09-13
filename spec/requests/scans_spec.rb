@@ -9,13 +9,20 @@ RSpec.describe "Scans" do
     let(:ad) { create(:ad, account: account) }
     let(:qr_code) { create(:qr_code, account: account, destination_record: listing) }
 
+    it "fires a qr.scanned governed event" do
+      expect(Analytics::Events::QrScanned).to receive(:create).with(
+        hash_including(qr_code_id: qr_code.id)
+      ).and_call_original
+      get qr_scan_path(token: qr_code.token)
+    end
+
     it "does not create a QrScan record" do
       expect {
         get qr_scan_path(token: qr_code.token)
       }.not_to change(QrScan, :count)
     end
 
-    it "redirects to the destination without scan_id" do
+    it "redirects to the destination" do
       get qr_scan_path(token: qr_code.token)
       expect(response).to redirect_to(go_listing_url(listing, subdomain: ""))
     end
