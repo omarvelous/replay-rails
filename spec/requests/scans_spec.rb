@@ -9,37 +9,32 @@ RSpec.describe "Scans" do
     let(:ad) { create(:ad, account: account) }
     let(:qr_code) { create(:qr_code, account: account, destination_record: listing) }
 
-    it "records a scan and redirects to the destination with scan_id" do
+    it "fires a qr.scanned Ahoy event and redirects to the destination" do
+      get qr_scan_path(token: qr_code.token)
+
+      event = Ahoy::Event.find_by(name: "qr.scanned")
+      expect(event).to be_present
+      expect(event.properties["qr_code_id"]).to eq(qr_code.id)
+      expect(response).to redirect_to(go_listing_url(listing, subdomain: ""))
+    end
+
+    it "does not create a QrScan record" do
       expect {
         get qr_scan_path(token: qr_code.token)
-      }.to change(QrScan, :count).by(1)
-      scan = QrScan.last
-      expect(response).to redirect_to(go_listing_url(listing, subdomain: "", scan_id: scan.id))
+      }.not_to change(QrScan, :count)
     end
 
-    it "records ad and screen from params" do
+    it "includes ad and screen in event properties" do
       get qr_scan_path(token: qr_code.token, a: ad.id, s: screen.id)
-      scan = QrScan.last
-      expect(scan.ad).to eq(ad)
-      expect(scan.screen).to eq(screen)
+      event = Ahoy::Event.find_by(name: "qr.scanned")
+      expect(event.properties["ad_id"]).to eq(ad.id)
+      expect(event.properties["screen_id"]).to eq(screen.id)
     end
 
-    it "records a qualified scan when both ad and screen present" do
-      get qr_scan_path(token: qr_code.token, a: ad.id, s: screen.id)
-      expect(QrScan.qualified.count).to eq(1)
-    end
-
-    it "records an unqualified scan when params are missing" do
-      get qr_scan_path(token: qr_code.token)
-      scan = QrScan.last
-      expect(scan.ad).to be_nil
-      expect(scan.screen).to be_nil
-      expect(QrScan.unqualified.count).to eq(1)
-    end
-
-    it "records ip address" do
-      get qr_scan_path(token: qr_code.token)
-      expect(QrScan.last.ip_address).to be_present
+    it "includes screen_content_id in event properties" do
+      get qr_scan_path(token: qr_code.token, sc: 42)
+      event = Ahoy::Event.find_by(name: "qr.scanned")
+      expect(event.properties["screen_content_id"]).to eq(42)
     end
 
     it "redirects to external URL when destination_url is set" do
