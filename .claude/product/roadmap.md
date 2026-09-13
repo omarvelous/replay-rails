@@ -232,7 +232,7 @@ Documentation is in progress.
 | Player device enrichment | `.claude/plans/202609090100-player-device-enrichment.md` | Complete |
 | Player content sync | `.claude/plans/202609090200-player-content-sync.md` | Complete |
 | Lookbook previews | `.claude/plans/202609110100-lookbook.md` | Complete |
-| QrScan → Ahoy migration | `.claude/plans/202609130100-qrscan-migration.md` | **In progress** |
+| QrScan → Ahoy migration | `.claude/plans/202609130100-qrscan-migration.md` | Complete |
 | NYC product gaps | `.claude/plans/drafts/plan-nyc-product-gaps.md` | Draft — needs review |
 | Day-parting / Scheduling | `.claude/plans/drafts/plan-day-parting-scheduling.md` | Draft — needs review |
 | Live Preview | `.claude/plans/drafts/plan-live-preview.md` | Draft — needs review |
