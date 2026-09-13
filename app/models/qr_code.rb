@@ -13,6 +13,18 @@ class QrCode < ApplicationRecord
     destination_url.present? || destination_record.present?
   end
 
+  def scan_events
+    Ahoy::Event.where(name: "qr.scanned").where("properties @> ?", { qr_code_id: id }.to_json)
+  end
+
+  def scan_count
+    scan_events.count
+  end
+
+  def qualified_scan_events
+    scan_events.where("properties ? 'ad_id' AND properties ? 'screen_id'")
+  end
+
   private
 
     def generate_token
