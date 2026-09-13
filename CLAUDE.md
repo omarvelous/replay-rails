@@ -125,7 +125,8 @@ Unified event tracking via Ahoy with governed event definitions.
 - **Page views** — `ahoy.trackView()` fires on initial load and `turbo:load` events.
 - **Exclusions** — Admin subdomain excluded via `Ahoy.exclude_method`.
 - **Account on events** — Set via `Ahoy::Store` from `current_account` (app) or event properties (player).
-- **Visitable** — `Lead`, `Inquiry`, `QrScan` use `visitable :ahoy_visit` for visit attribution.
+- **Visitable** — `Lead`, `Inquiry` use `visitable :ahoy_visit` for visit attribution.
+- **QR scans** — Tracked as `qr.scanned` Ahoy events (no separate model). `QrCode#scan_events` queries events by qr_code_id. Lead attribution flows through the visit's `qr.scanned` event.
 
 See `docs/dev/event-catalog.md` for the governed event catalog.
 

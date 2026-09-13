@@ -10,10 +10,11 @@ RSpec.describe "Scans" do
     let(:qr_code) { create(:qr_code, account: account, destination_record: listing) }
 
     it "fires a qr.scanned governed event" do
-      expect(Analytics::Events::QrScanned).to receive(:create).with(
-        hash_including(qr_code_id: qr_code.id)
-      ).and_call_original
+      allow(Analytics::Events::QrScanned).to receive(:create).and_call_original
       get qr_scan_path(token: qr_code.token)
+      expect(Analytics::Events::QrScanned).to have_received(:create).with(
+        hash_including(qr_code_id: qr_code.id)
+      )
     end
 
     it "redirects to the destination" do

@@ -145,5 +145,4 @@ RSpec.describe "Admin Resources" do
       expect(response).to be_successful
     end
   end
-
 end
