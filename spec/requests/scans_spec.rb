@@ -16,12 +16,6 @@ RSpec.describe "Scans" do
       get qr_scan_path(token: qr_code.token)
     end
 
-    it "does not create a QrScan record" do
-      expect {
-        get qr_scan_path(token: qr_code.token)
-      }.not_to change(QrScan, :count)
-    end
-
     it "redirects to the destination" do
       get qr_scan_path(token: qr_code.token)
       expect(response).to redirect_to(go_listing_url(listing, subdomain: ""))

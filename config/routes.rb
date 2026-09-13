@@ -118,7 +118,6 @@ Rails.application.routes.draw do
 
       # Engagement
       resources :qr_codes
-      resources :qr_scans
       resources :leads
       resources :lead_agents
 

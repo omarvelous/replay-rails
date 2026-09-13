@@ -6,7 +6,6 @@ RSpec.describe QrCode do
   describe "associations" do
     it { is_expected.to belong_to(:account) }
     it { is_expected.to belong_to(:destination_record).optional }
-    it { is_expected.to have_many(:scans).class_name("QrScan").dependent(:destroy) }
   end
 
   describe "validations" do

@@ -15,7 +15,6 @@ class Lead < ApplicationRecord
   STATUSES = %w[new contacted qualified closed].freeze
 
   belongs_to :listing, optional: true
-  belongs_to :qr_scan, optional: true
   has_many :lead_agents, dependent: :destroy
   has_many :agents, through: :lead_agents
 

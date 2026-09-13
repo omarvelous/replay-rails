@@ -5,7 +5,6 @@ class LeadDashboard < Administrate::BaseDashboard
     id: Field::Number,
     account: Field::BelongsTo,
     listing: Field::BelongsTo,
-    qr_scan: Field::BelongsTo,
     lead_agents: Field::HasMany,
     agents: Field::HasMany,
     lead_type: Field::String,
@@ -31,7 +30,6 @@ class LeadDashboard < Administrate::BaseDashboard
     id
     account
     listing
-    qr_scan
     lead_agents
     lead_type
     status
