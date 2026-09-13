@@ -12,7 +12,6 @@ RSpec.describe "QrCodes" do
       expect(response).to be_successful
     end
 
-
     it "lists QR codes for the current account" do
       listing = create(:listing, account: account, address: "350 Fifth Ave")
       qr = create(:qr_code, account: account, destination_record: listing, label: "Fifth Ave QR")
@@ -25,14 +24,16 @@ RSpec.describe "QrCodes" do
   end
 
   describe "GET /qr_codes/:id" do
-    it "shows the QR code with scan history" do
+    it "shows the QR code with scan count from Ahoy events" do
       listing = create(:listing, account: account)
       qr = create(:qr_code, account: account, destination_record: listing, label: "Test QR")
-      create(:qr_scan, qr_code: qr, account: account)
+      visit = create(:ahoy_visit)
+      Ahoy::Event.create!(visit: visit, name: "qr.scanned", time: Time.current, properties: { "qr_code_id" => qr.id })
 
       get qr_code_path(qr)
       expect(response).to be_successful
       expect(response.body).to include("Test QR")
+      expect(response.body).to include("1 scan")
     end
 
     it "returns 404 for another account's QR code" do

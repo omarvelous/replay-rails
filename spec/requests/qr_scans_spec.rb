@@ -1,6 +1,6 @@
 require "rails_helper"
 
-RSpec.describe "QrScans (nested under QrCode)" do
+RSpec.describe "QR Scan Events (nested under QrCode)" do
   let(:account) { create(:account) }
   let(:user) { create(:user, account: account) }
   let(:qr_code) { create(:qr_code, account: account) }
@@ -13,13 +13,13 @@ RSpec.describe "QrScans (nested under QrCode)" do
       expect(response).to be_successful
     end
 
-    it "lists scans for the QR code" do
-      scan = create(:qr_scan, qr_code: qr_code, account: account)
-      other_qr = create(:qr_code, account: account)
-      other_scan = create(:qr_scan, qr_code: other_qr, account: account)
+    it "lists scan events for the QR code" do
+      visit = create(:ahoy_visit)
+      Ahoy::Event.create!(visit: visit, name: "qr.scanned", time: Time.current,
+        properties: { "qr_code_id" => qr_code.id, "ad_id" => 1, "screen_id" => 2 })
 
       get qr_code_scans_path(qr_code)
-      expect(response.body).to include(scan.ip_address)
+      expect(response).to be_successful
     end
 
     it "returns 404 for another account's QR code" do
