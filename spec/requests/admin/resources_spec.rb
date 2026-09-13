@@ -145,18 +145,4 @@ RSpec.describe "Admin Resources" do
       expect(response).to be_successful
     end
   end
-
-  describe "QR Scans" do
-    it "GET /qr_scans" do
-      create(:qr_scan)
-      get admin_qr_scans_path
-      expect(response).to be_successful
-    end
-
-    it "GET /qr_scans/:id" do
-      scan = create(:qr_scan)
-      get admin_qr_scan_path(scan)
-      expect(response).to be_successful
-    end
-  end
 end

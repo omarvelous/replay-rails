@@ -17,9 +17,8 @@ module Go
         return
       end
 
-      @lead = Lead.new(lead_params.except(:agent_id, :scan_id, :website))
+      @lead = Lead.new(lead_params.except(:agent_id, :website))
       @lead.account = account
-      @lead.qr_scan = QrScan.find_by(id: lead_params[:scan_id])
       @lead.context = {
         source_url: request.referer,
         ip_address: request.remote_ip,
@@ -41,7 +40,7 @@ module Go
       def lead_params
         params.require(:lead).permit(
           :name, :email, :phone, :message, :lead_type,
-          :listing_id, :agent_id, :scan_id, :website
+          :listing_id, :agent_id, :website
         )
       end
   end

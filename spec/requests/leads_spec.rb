@@ -38,6 +38,19 @@ RSpec.describe "Leads" do
       expect(response).to be_successful
     end
 
+    it "shows QR scan attribution from Ahoy visit" do
+      qr = create(:qr_code, account: account, label: "Lobby QR")
+      ad = create(:ad, account: account, headline: "Featured Listing")
+      visit = create(:ahoy_visit)
+      Ahoy::Event.create!(visit: visit, name: "qr.scanned", time: Time.current,
+        properties: { "qr_code_id" => qr.id, "ad_id" => ad.id, "screen_id" => 1 })
+      lead = create(:lead, account: account, ahoy_visit: visit)
+
+      get lead_path(lead)
+      expect(response.body).to include("Lobby QR")
+      expect(response.body).to include("Featured Listing")
+    end
+
     it "returns 404 for another account's lead" do
       other_lead = create(:lead)
       get lead_path(other_lead)

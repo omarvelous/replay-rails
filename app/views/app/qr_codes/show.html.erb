@@ -1,4 +1,4 @@
-<%= render "app/shared/page_header", title: @qr_code.label || "QR Code", subtitle: "#{@scan_count} scans", back_link: { label: "← QR Codes", path: qr_codes_path } %>
+<%= render "app/shared/page_header", title: @qr_code.label || "QR Code", subtitle: "#{@scan_count} #{"scan".pluralize(@scan_count)}", back_link: { label: "← QR Codes", path: qr_codes_path } %>
 
 <div class="grid grid-cols-1 lg:grid-cols-[1fr_320px] gap-5 items-start">
   <%# Main column %>
@@ -13,20 +13,20 @@
       </div>
       <% if @scans.any? %>
         <div class="divide-y divide-gray-100">
-          <% @scans.each do |scan| %>
+          <% @scans.each do |event| %>
+            <% props = event.properties %>
             <div class="px-4 py-3 flex items-center gap-4">
               <div class="flex-1 min-w-0">
                 <div class="flex items-center gap-2">
-                  <% if scan.ad && scan.screen %>
+                  <% if props["ad_id"].present? && props["screen_id"].present? %>
                     <span class="inline-flex items-center rounded-md bg-green-50 px-1.5 py-0.5 text-[10.5px] font-medium text-green-700 ring-1 ring-green-600/20 ring-inset">Qualified</span>
-                    <span class="text-xs text-gray-400">Ad #<%= scan.ad_id %> &middot; Screen #<%= scan.screen_id %></span>
+                    <span class="text-xs text-gray-400">Ad #<%= props["ad_id"] %> &middot; Screen #<%= props["screen_id"] %></span>
                   <% else %>
                     <span class="inline-flex items-center rounded-md bg-gray-50 px-1.5 py-0.5 text-[10.5px] font-medium text-gray-500 ring-1 ring-gray-500/10 ring-inset">Unqualified</span>
                   <% end %>
-                  <span class="text-xs text-gray-400"><%= scan.ip_address %></span>
                 </div>
               </div>
-              <span class="text-xs text-gray-400 shrink-0"><%= time_ago_in_words(scan.created_at) %> ago</span>
+              <span class="text-xs text-gray-400 shrink-0"><%= time_ago_in_words(event.time) %> ago</span>
             </div>
           <% end %>
         </div>

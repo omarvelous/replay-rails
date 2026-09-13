@@ -6,7 +6,6 @@ RSpec.describe Lead do
   describe "associations" do
     it { is_expected.to belong_to(:account) }
     it { is_expected.to belong_to(:listing).optional }
-    it { is_expected.to belong_to(:qr_scan).optional }
     it { is_expected.to have_many(:lead_agents).dependent(:destroy) }
     it { is_expected.to have_many(:agents).through(:lead_agents) }
     it { is_expected.to belong_to(:ahoy_visit).class_name("Ahoy::Visit").optional }

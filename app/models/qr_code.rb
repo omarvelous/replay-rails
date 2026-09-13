@@ -2,8 +2,6 @@ class QrCode < ApplicationRecord
   acts_as_tenant :account
   belongs_to :destination_record, polymorphic: true, optional: true
 
-  has_many :scans, class_name: "QrScan", dependent: :destroy
-
   validates :token, uniqueness: true
   validates :destination_url, format: { with: /\Ahttps?:\/\/\S+\z/i, message: "must be a valid HTTP(S) URL" }, allow_blank: true
 
@@ -11,6 +9,18 @@ class QrCode < ApplicationRecord
 
   def destination?
     destination_url.present? || destination_record.present?
+  end
+
+  def scan_events
+    Ahoy::Event.where(name: "qr.scanned").where("properties @> ?", { qr_code_id: id }.to_json)
+  end
+
+  def scan_count
+    scan_events.count
+  end
+
+  def qualified_scan_events
+    scan_events.where("properties ? 'ad_id' AND properties ? 'screen_id'")
   end
 
   private

@@ -12,19 +12,18 @@
             <th class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900">When</th>
             <th class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Ad</th>
             <th class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Screen</th>
-            <th class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">IP</th>
             <th class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Qualified</th>
           </tr>
         </thead>
         <tbody class="divide-y divide-gray-200">
-          <% @scans.each do |scan| %>
+          <% @scans.each do |event| %>
+            <% props = event.properties %>
             <tr>
-              <td class="py-3 pl-4 pr-3 text-sm text-gray-900"><%= scan.created_at.strftime("%b %-d, %Y %-I:%M %p") %></td>
-              <td class="px-3 py-3 text-sm text-gray-500"><%= scan.ad&.headline || "—" %></td>
-              <td class="px-3 py-3 text-sm text-gray-500"><%= scan.screen&.name || "—" %></td>
-              <td class="px-3 py-3 text-sm text-gray-500 font-mono text-xs"><%= scan.ip_address %></td>
+              <td class="py-3 pl-4 pr-3 text-sm text-gray-900"><%= event.time.strftime("%b %-d, %Y %-I:%M %p") %></td>
+              <td class="px-3 py-3 text-sm text-gray-500"><%= props["ad_id"].present? ? "Ad ##{props["ad_id"]}" : "—" %></td>
+              <td class="px-3 py-3 text-sm text-gray-500"><%= props["screen_id"].present? ? "Screen ##{props["screen_id"]}" : "—" %></td>
               <td class="px-3 py-3 text-sm">
-                <% if scan.ad.present? && scan.screen.present? %>
+                <% if props["ad_id"].present? && props["screen_id"].present? %>
                   <span class="inline-flex items-center rounded-full bg-green-50 px-2 py-0.5 text-xs font-medium text-green-700">Yes</span>
                 <% else %>
                   <span class="inline-flex items-center rounded-full bg-gray-50 px-2 py-0.5 text-xs font-medium text-gray-500">No</span>

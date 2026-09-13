@@ -568,16 +568,20 @@ if demo_account && Ahoy::Event.where(account_id: demo_account.id, name: "content
 end
 
 # -----------------------------------------------------------------------
-# QR Scans (last 30 days — ~1% of impressions convert to scans)
+# QR Scan Events (last 30 days — ~1% of impressions convert to scans)
 # -----------------------------------------------------------------------
-if demo_account && QrScan.where(account: demo_account).empty?
+if demo_account && Ahoy::Event.where(name: "qr.scanned", account_id: demo_account.id).empty?
   screen = Screen.joins(:site).find_by(sites: { account_id: demo_account.id })
   ads = Ad.where(account: demo_account).limit(5).to_a
   qr_codes = QrCode.where(account: demo_account).to_a
+  demo_visit = Ahoy::Visit.find_or_create_by!(visit_token: "demo-scan-visit") do |v|
+    v.visitor_token = "demo-scan-visitor"
+    v.account_id = demo_account.id
+    v.started_at = 30.days.ago
+  end
 
   if screen && ads.any? && qr_codes.any?
-    scans = []
-    now = Time.current
+    events = []
 
     30.downto(1) do |days_ago|
       date = days_ago.days.ago.to_date
@@ -585,21 +589,18 @@ if demo_account && QrScan.where(account: demo_account).empty?
       daily_count.times do
         ad = ads.sample
         qr_code = qr_codes.sample
-        scans << {
-          qr_code_id: qr_code.id,
+        events << {
+          visit_id: demo_visit.id,
           account_id: demo_account.id,
-          ad_id: ad.id,
-          screen_id: screen.id,
-          ip_address: "192.168.1.#{rand(1..254)}",
-          user_agent: "Mozilla/5.0 (iPhone; CPU iPhone OS 17_0 like Mac OS X)",
-          created_at: date + rand(8..20).hours + rand(0..59).minutes,
-          updated_at: now
+          name: "qr.scanned",
+          properties: { qr_code_id: qr_code.id, ad_id: ad.id, screen_id: screen.id, destination_url: "/go/listings/1" }.to_json,
+          time: date + rand(8..20).hours + rand(0..59).minutes
         }
       end
     end
 
-    QrScan.insert_all(scans)
-    puts "Created #{scans.size} demo QR scans (30 days)"
+    Ahoy::Event.insert_all(events)
+    puts "Created #{events.size} demo qr.scanned events (30 days)"
   end
 end
 

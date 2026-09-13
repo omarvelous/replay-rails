@@ -9,37 +9,17 @@ RSpec.describe "Scans" do
     let(:ad) { create(:ad, account: account) }
     let(:qr_code) { create(:qr_code, account: account, destination_record: listing) }
 
-    it "records a scan and redirects to the destination with scan_id" do
-      expect {
-        get qr_scan_path(token: qr_code.token)
-      }.to change(QrScan, :count).by(1)
-      scan = QrScan.last
-      expect(response).to redirect_to(go_listing_url(listing, subdomain: "", scan_id: scan.id))
-    end
-
-    it "records ad and screen from params" do
-      get qr_scan_path(token: qr_code.token, a: ad.id, s: screen.id)
-      scan = QrScan.last
-      expect(scan.ad).to eq(ad)
-      expect(scan.screen).to eq(screen)
-    end
-
-    it "records a qualified scan when both ad and screen present" do
-      get qr_scan_path(token: qr_code.token, a: ad.id, s: screen.id)
-      expect(QrScan.qualified.count).to eq(1)
-    end
-
-    it "records an unqualified scan when params are missing" do
+    it "fires a qr.scanned governed event" do
+      allow(Analytics::Events::QrScanned).to receive(:create).and_call_original
       get qr_scan_path(token: qr_code.token)
-      scan = QrScan.last
-      expect(scan.ad).to be_nil
-      expect(scan.screen).to be_nil
-      expect(QrScan.unqualified.count).to eq(1)
+      expect(Analytics::Events::QrScanned).to have_received(:create).with(
+        hash_including(qr_code_id: qr_code.id)
+      )
     end
 
-    it "records ip address" do
+    it "redirects to the destination" do
       get qr_scan_path(token: qr_code.token)
-      expect(QrScan.last.ip_address).to be_present
+      expect(response).to redirect_to(go_listing_url(listing, subdomain: ""))
     end
 
     it "redirects to external URL when destination_url is set" do
