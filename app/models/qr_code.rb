@@ -1,4 +1,6 @@
 class QrCode < ApplicationRecord
+  include PublicIdentifiable
+
   acts_as_tenant :account
   belongs_to :destination_record, polymorphic: true, optional: true
 

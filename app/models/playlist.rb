@@ -1,4 +1,6 @@
 class Playlist < ApplicationRecord
+  include PublicIdentifiable
+
   has_paper_trail ignore: [ :updated_at ]
   acts_as_tenant :account
   has_many :playlist_ads, -> { order(:position) }, dependent: :destroy, inverse_of: :playlist
