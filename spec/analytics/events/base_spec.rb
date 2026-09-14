@@ -40,6 +40,34 @@ RSpec.describe Analytics::Events::Base do
     end
   end
 
+  describe ".events" do
+    it "returns Ahoy::Event scope filtered to the event name" do
+      visit = create(:ahoy_visit)
+      matching = Ahoy::Event.create!(visit: visit, name: "test.event", time: Time.current, properties: { "widget_id" => 1 })
+      Ahoy::Event.create!(visit: visit, name: "other.event", time: Time.current, properties: {})
+
+      expect(TestEvent.events).to eq([ matching ])
+    end
+  end
+
+  describe ".where_properties" do
+    it "filters events by jsonb property containment" do
+      visit = create(:ahoy_visit)
+      match = Ahoy::Event.create!(visit: visit, name: "test.event", time: Time.current, properties: { "widget_id" => 5 })
+      Ahoy::Event.create!(visit: visit, name: "test.event", time: Time.current, properties: { "widget_id" => 99 })
+
+      expect(TestEvent.where_properties(widget_id: 5)).to eq([ match ])
+    end
+
+    it "supports multiple property filters" do
+      visit = create(:ahoy_visit)
+      match = Ahoy::Event.create!(visit: visit, name: "test.event", time: Time.current, properties: { "widget_id" => 5, "action" => "clicked" })
+      Ahoy::Event.create!(visit: visit, name: "test.event", time: Time.current, properties: { "widget_id" => 5, "action" => "viewed" })
+
+      expect(TestEvent.where_properties(widget_id: 5, action: "clicked")).to eq([ match ])
+    end
+  end
+
   describe "#properties" do
     it "returns a hash of attribute values" do
       event = TestEvent.new(widget_id: 5, action: "viewed")
