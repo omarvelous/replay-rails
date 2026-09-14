@@ -4,7 +4,7 @@ module Go
     layout "public"
 
     def show
-      @listing = Listing.find(params[:id])
+      @listing = Listing.find_by_param!(params[:id])
       @agents = @listing.agents
     end
   end

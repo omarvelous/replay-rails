@@ -4,7 +4,7 @@ module Go
     layout "player"
 
     def show
-      @experience = Experience.find(params[:id])
+      @experience = Experience.find_by_param!(params[:id])
       @listing = @experience.listing
       @agent = @experience.default_agent
       render "play/players/experience"
