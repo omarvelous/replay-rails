@@ -6,10 +6,10 @@ export default class extends Controller {
   static values = {
     apiHost: String,
     playerToken: String,
-    playlistId: Number,
-    screenId: Number,
-    screenContentId: Number,
-    accountId: Number
+    playlistPid: String,
+    screenPid: String,
+    screenContentPid: String,
+    accountPid: String
   }
 
   connect() {
@@ -45,11 +45,11 @@ export default class extends Controller {
     })
 
     // Track device connected
-    if (this.hasScreenIdValue) {
+    if (this.hasScreenPidValue) {
       Analytics.create("device.connected", {
-        screen_id: this.screenIdValue,
+        screen_pid: this.screenPidValue,
         player_token: this.playerTokenValue,
-        account_id: this.accountIdValue
+        account_pid: this.accountPidValue
       })
     }
   }
@@ -103,15 +103,15 @@ export default class extends Controller {
     }
   }
 
-  recordImpression({ adId, position, duration }) {
+  recordImpression({ adPid, position, duration }) {
     Analytics.create("content.impressed", {
-      ad_id: adId,
-      screen_id: this.screenIdValue,
-      screen_content_id: this.screenContentIdValue,
-      playlist_id: this.playlistIdValue,
+      ad_pid: adPid,
+      screen_pid: this.screenPidValue,
+      screen_content_pid: this.screenContentPidValue,
+      playlist_pid: this.playlistPidValue,
       position: position,
       duration: duration,
-      account_id: this.accountIdValue
+      account_pid: this.accountPidValue
     })
   }
 

@@ -13,11 +13,11 @@ class ScansController < ApplicationController
     end
 
     Analytics::Events::QrScanned.create(
-      qr_code_id: qr.id,
+      qr_code_pid: qr.public_id,
       destination_url: destination,
-      screen_content_id: params[:sc].presence&.to_i,
-      ad_id: params[:a].presence&.to_i,
-      screen_id: params[:s].presence&.to_i,
+      screen_content_pid: params[:sc].presence,
+      ad_pid: params[:a].presence,
+      screen_pid: params[:s].presence,
       request: request
     )
     redirect_to destination, allow_other_host: true

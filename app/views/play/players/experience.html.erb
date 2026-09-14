@@ -6,15 +6,15 @@
      data-controller="experience device-playback"
      data-experience-idle-timeout-value="<%= @experience.config['idle_timeout'] || 30 %>"
      data-experience-slide-count-value="<%= photos.size %>"
-     data-experience-experience-id-value="<%= @experience.id %>"
-     data-experience-screen-id-value="<%= @screen&.id %>"
-     data-experience-screen-content-id-value="<%= @screen&.active_screen_content&.id %>"
-     data-experience-account-id-value="<%= @screen&.site&.account_id %>"
+     data-experience-experience-pid-value="<%= @experience.public_id %>"
+     data-experience-screen-pid-value="<%= @screen&.public_id %>"
+     data-experience-screen-content-pid-value="<%= @screen&.active_screen_content&.public_id %>"
+     data-experience-account-pid-value="<%= @screen&.site&.account&.public_id %>"
      data-device-playback-api-host-value="<%= request.protocol %>api.<%= request.domain %><%= ":#{request.port}" unless request.port == 80 || request.port == 443 %>"
      data-device-playback-player-token-value="<%= params[:token] %>"
-     data-device-playback-screen-id-value="<%= @screen&.id %>"
-     data-device-playback-screen-content-id-value="<%= @screen&.active_screen_content&.id %>"
-     data-device-playback-account-id-value="<%= @screen&.site&.account_id %>">
+     data-device-playback-screen-pid-value="<%= @screen&.public_id %>"
+     data-device-playback-screen-content-pid-value="<%= @screen&.active_screen_content&.public_id %>"
+     data-device-playback-account-pid-value="<%= @screen&.site&.account&.public_id %>">
 
   <%# ── Photo Gallery (full-screen background) ── %>
   <% if sections["photos"] != false && photos.any? %>

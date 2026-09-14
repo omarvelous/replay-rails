@@ -7,10 +7,10 @@ export default class extends Controller {
   static values = {
     idleTimeout: { type: Number, default: 30 },
     slideCount: { type: Number, default: 0 },
-    experienceId: Number,
-    screenId: Number,
-    screenContentId: Number,
-    accountId: Number
+    experiencePid: String,
+    screenPid: String,
+    screenContentPid: String,
+    accountPid: String
   }
 
   connect() {
@@ -85,10 +85,10 @@ export default class extends Controller {
       this.sessionStartTime = Date.now()
 
       Analytics.create("interaction.started", {
-        experience_id: this.experienceIdValue,
-        screen_id: this.screenIdValue,
-        screen_content_id: this.screenContentIdValue,
-        account_id: this.accountIdValue
+        experience_pid: this.experiencePidValue,
+        screen_pid: this.screenPidValue,
+        screen_content_pid: this.screenContentPidValue,
+        account_pid: this.accountPidValue
       })
 
       this.stopAutoplay()
@@ -104,11 +104,11 @@ export default class extends Controller {
       const duration = Math.round((Date.now() - this.sessionStartTime) / 1000)
 
       Analytics.create("interaction.ended", {
-        experience_id: this.experienceIdValue,
-        screen_id: this.screenIdValue,
-        screen_content_id: this.screenContentIdValue,
+        experience_pid: this.experiencePidValue,
+        screen_pid: this.screenPidValue,
+        screen_content_pid: this.screenContentPidValue,
         duration: duration,
-        account_id: this.accountIdValue
+        account_pid: this.accountPidValue
       })
     }
 
@@ -135,10 +135,10 @@ export default class extends Controller {
       this.floorPlanOpenTime = Date.now()
 
       Analytics.create("interaction.opened", {
-        experience_id: this.experienceIdValue,
-        screen_content_id: this.screenContentIdValue,
+        experience_pid: this.experiencePidValue,
+        screen_content_pid: this.screenContentPidValue,
         target: "floor_plan",
-        account_id: this.accountIdValue
+        account_pid: this.accountPidValue
       })
     }
   }
@@ -153,10 +153,10 @@ export default class extends Controller {
         : 0
 
       Analytics.create("interaction.closed", {
-        experience_id: this.experienceIdValue,
-        screen_content_id: this.screenContentIdValue,
+        experience_pid: this.experiencePidValue,
+        screen_content_pid: this.screenContentPidValue,
         target: "floor_plan",
-        account_id: this.accountIdValue,
+        account_pid: this.accountPidValue,
         view_duration: viewDuration
       })
 
@@ -169,10 +169,10 @@ export default class extends Controller {
     if (this.idle) return // Don't track autoplay navigation
 
     Analytics.create("interaction.navigated", {
-      experience_id: this.experienceIdValue,
-      screen_content_id: this.screenContentIdValue,
+      experience_pid: this.experiencePidValue,
+      screen_content_pid: this.screenContentPidValue,
       direction: direction,
-      account_id: this.accountIdValue,
+      account_pid: this.accountPidValue,
       photo_index: this.currentSlide
     })
   }
