@@ -12,8 +12,10 @@ module Analytics
 
       validates :qr_code_id, :destination_url, presence: true
 
+      QUALIFIED_SQL = "properties ? 'ad_id' AND properties ? 'screen_id'"
+
       def self.qualified
-        events.where("properties ? 'ad_id' AND properties ? 'screen_id'")
+        events.where(QUALIFIED_SQL)
       end
     end
   end
