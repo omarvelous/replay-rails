@@ -37,11 +37,11 @@ module App
     private
 
       def set_user
-        @user = authorized_scope(User.all).find(params[:user_id])
+        @user = authorized_scope(User.all).find_by_param!(params[:user_id])
       end
 
       def set_account_user
-        @account_user = @user.account_users.where(account: Current.account).find(params[:id])
+        @account_user = @user.account_users.where(account: Current.account).find_by_param!(params[:id])
       end
   end
 end

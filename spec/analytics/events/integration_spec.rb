@@ -8,13 +8,13 @@ RSpec.describe "Analytics event integration", type: :model do # rubocop:disable 
       allow(tracker).to receive(:track)
 
       Analytics::Events::QrScanned.create(
-        qr_code_id: 1,
-        destination_url: "/go/listings/1"
+        qr_code_pid: "a1b2c3d4",
+        destination_url: "/go/listings/abc"
       )
 
       expect(tracker).to have_received(:track).with(
         "qr.scanned",
-        hash_including(qr_code_id: 1, destination_url: "/go/listings/1")
+        hash_including(qr_code_pid: "a1b2c3d4", destination_url: "/go/listings/abc")
       )
     end
 
@@ -24,13 +24,13 @@ RSpec.describe "Analytics event integration", type: :model do # rubocop:disable 
       allow(tracker).to receive(:track)
 
       Analytics::Events::ContentImpressed.create(
-        ad_id: 1, screen_id: 2, screen_content_id: 3,
-        playlist_id: 4, position: 1, duration: 10
+        ad_pid: "a1", screen_pid: "b2", screen_content_pid: "c3",
+        playlist_pid: "d4", position: 1, duration: 10
       )
 
       expect(tracker).to have_received(:track).with(
         "content.impressed",
-        hash_including(ad_id: 1, screen_id: 2, duration: 10)
+        hash_including(ad_pid: "a1", screen_pid: "b2", duration: 10)
       )
     end
 
@@ -40,7 +40,7 @@ RSpec.describe "Analytics event integration", type: :model do # rubocop:disable 
       allow(tracker).to receive(:track)
 
       event = Analytics::Events::QrScanned.create(
-        qr_code_id: nil, destination_url: nil
+        qr_code_pid: nil, destination_url: nil
       )
 
       expect(event.errors).to be_present

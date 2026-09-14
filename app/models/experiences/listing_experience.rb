@@ -1,5 +1,7 @@
 module Experiences
   class ListingExperience < ApplicationRecord
+    include PublicIdentifiable
+
     belongs_to :listing
     belongs_to :agent, optional: true
 

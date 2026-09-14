@@ -1,4 +1,4 @@
-json.id playlist.id
+json.pid playlist.public_id
 json.updated_at playlist.updated_at.to_i
 json.status playlist.status
 

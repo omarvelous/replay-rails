@@ -61,7 +61,7 @@ module App
   private
 
     def set_playlist
-      @playlist = Current.account.playlists.find(params[:id])
+      @playlist = Current.account.playlists.find_by_param!(params[:id])
     end
 
     def playlist_params

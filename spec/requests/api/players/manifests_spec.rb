@@ -33,7 +33,7 @@ RSpec.describe "Api::Players::Manifests" do
         expect(response).to be_successful
         json = parsed_json
         expect(json["deploy"]).to be_present
-        expect(json["screen_content"]["id"]).to be_present
+        expect(json["screen_content"]["pid"]).to be_present
         expect(json["contentable"]["type"]).to eq("Playlist")
         expect(json["contentable"]["playlist_ads"]).to be_an(Array)
       end
@@ -82,7 +82,7 @@ RSpec.describe "Api::Players::Manifests" do
         expect(experienceable).to be_present
         expect(experienceable["type"]).to eq("Experiences::ListingExperience")
         expect(experienceable["listing"]).to be_present
-        expect(experienceable["listing"]["id"]).to be_present
+        expect(experienceable["listing"]["pid"]).to be_present
       end
     end
 

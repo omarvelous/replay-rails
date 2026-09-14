@@ -1,4 +1,6 @@
 class Ad < ApplicationRecord
+  include PublicIdentifiable
+
   has_paper_trail ignore: [ :updated_at ]
   acts_as_tenant :account
   delegated_type :adable, types: %w[Ads::ListingAd Ads::CollectionAd Ads::AgentAd Ads::BrandAd], dependent: :destroy

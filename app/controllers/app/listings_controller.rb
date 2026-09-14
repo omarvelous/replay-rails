@@ -61,7 +61,7 @@ module App
   private
 
     def set_listing
-      @listing = Current.account.listings.find(params[:id])
+      @listing = Current.account.listings.find_by_param!(params[:id])
     end
 
     def listing_params

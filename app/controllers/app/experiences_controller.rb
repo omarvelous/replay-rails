@@ -55,7 +55,7 @@ module App
     private
 
       def set_experience
-        @experience = Current.account.experiences.find(params[:id])
+        @experience = Current.account.experiences.find_by_param!(params[:id])
       end
 
       def experience_params

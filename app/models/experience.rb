@@ -1,4 +1,6 @@
 class Experience < ApplicationRecord
+  include PublicIdentifiable
+
   acts_as_tenant :account
   has_paper_trail
 

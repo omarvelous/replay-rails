@@ -1,4 +1,6 @@
 class Screen < ApplicationRecord
+  include PublicIdentifiable
+
   has_paper_trail ignore: [ :updated_at ]
 
   belongs_to :site

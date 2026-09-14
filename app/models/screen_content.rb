@@ -1,4 +1,6 @@
 class ScreenContent < ApplicationRecord
+  include PublicIdentifiable
+
   has_paper_trail
 
   belongs_to :screen

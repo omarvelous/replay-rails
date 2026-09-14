@@ -1,4 +1,6 @@
 class Lead < ApplicationRecord
+  include PublicIdentifiable
+
   has_paper_trail ignore: [ :updated_at ]
   acts_as_tenant :account
   visitable :ahoy_visit

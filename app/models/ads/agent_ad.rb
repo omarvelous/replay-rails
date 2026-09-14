@@ -1,5 +1,7 @@
 module Ads
 class AgentAd < ApplicationRecord
+  include PublicIdentifiable
+
   LAYOUTS = %w[profile split].freeze
 
   belongs_to :agent

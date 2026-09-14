@@ -10,7 +10,7 @@ module App
     end
 
     def show
-      @user = authorized_scope(User.all).find(params[:id])
+      @user = authorized_scope(User.all).find_by_param!(params[:id])
       authorize! @user
       @roles = @user.account_users.where(account: Current.account)
       @agent_profile = @user.agent_profile

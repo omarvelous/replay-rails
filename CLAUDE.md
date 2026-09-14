@@ -113,6 +113,45 @@ Authorization context provides `user` (via `Current.user`) and `account` (via `C
 - Migrations follow the timestamps-first convention (see `.claude/standards/database/migrations.md`)
 - Seeds use FactoryBot factories and are always idempotent (see `.claude/standards/database/seeds.md`)
 
+### Public IDs
+
+All tenant-scoped models include `PublicIdentifiable`, which adds a UUID `public_id` column used in URLs, API responses, and analytics instead of autoincrementing integer IDs. Integer PKs remain for internal joins and indexes.
+
+**Naming convention:**
+- `_id` — Integer FK, internal only (DB joins, model associations)
+- `_pid` — Public ID (UUID string), used in analytics events, JS data attributes, API params
+- `_sid` — Signed ID (tamper-proof), used in lead form hidden fields
+
+**Controller lookup pattern:**
+```ruby
+# App controllers (tenant-scoped)
+@listing = Current.account.listings.find_by_param!(params[:id])
+
+# Go controllers (public, no tenant)
+@listing = Listing.find_by_param!(params[:id])
+```
+
+`find_by_param!` is provided by the concern and resolves by `public_id`. `to_param` returns `public_id`, so all Rails URL helpers automatically generate UUID-based URLs.
+
+**Lead form fields** use Rails signed IDs (`_sid`) to prevent tampering:
+```ruby
+# View
+f.hidden_field :listing_sid, value: listing.signed_id(purpose: :lead_form)
+# Controller
+listing = Listing.find_signed(params[:listing_sid], purpose: :lead_form)
+```
+
+**Analytics events** use `_pid` suffix for all resource references:
+```ruby
+attribute :ad_pid,     :string   # NOT :ad_id
+attribute :screen_pid, :string   # NOT :screen_id
+```
+
+**Manifest API** serves `pid` (not `id`) in JSON responses:
+```json
+{ "pid": "a1b2c3d4-...", "updated_at": 1726329600 }
+```
+
 ### Analytics (Ahoy)
 
 Unified event tracking via Ahoy with governed event definitions.

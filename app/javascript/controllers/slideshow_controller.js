@@ -79,12 +79,12 @@ export default class extends Controller {
 
   dispatchImpression() {
     const slide = this.slideTargets[this.currentIndex]
-    if (!slide.dataset.adId) return
+    if (!slide.dataset.adPid) return
 
     this.element.dispatchEvent(
       new CustomEvent("slideshow:impression", {
         detail: {
-          adId: slide.dataset.adId,
+          adPid: slide.dataset.adPid,
           position: slide.dataset.position,
           duration: slide.dataset.duration
         },

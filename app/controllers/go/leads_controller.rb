@@ -8,8 +8,8 @@ module Go
         return
       end
 
-      listing = Listing.find_by(id: lead_params[:listing_id])
-      agent = Agent.find_by(id: lead_params[:agent_id]) || listing&.primary_agent
+      listing = Listing.find_signed(lead_params[:listing_sid], purpose: :lead_form)
+      agent = Agent.find_signed(lead_params[:agent_sid], purpose: :lead_form) || listing&.primary_agent
       account = listing&.account || agent&.account
 
       if account.nil?
@@ -17,7 +17,8 @@ module Go
         return
       end
 
-      @lead = Lead.new(lead_params.except(:agent_id, :website))
+      @lead = Lead.new(lead_params.except(:listing_sid, :agent_sid, :website))
+      @lead.listing = listing
       @lead.account = account
       @lead.context = {
         source_url: request.referer,
@@ -40,7 +41,7 @@ module Go
       def lead_params
         params.require(:lead).permit(
           :name, :email, :phone, :message, :lead_type,
-          :listing_id, :agent_id, :website
+          :listing_sid, :agent_sid, :website
         )
       end
   end

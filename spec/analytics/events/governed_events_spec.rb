@@ -24,28 +24,29 @@ RSpec.describe "Governed Events", type: :model do # rubocop:disable RSpec/Descri
   describe Analytics::Events::QrScanned do
     it_behaves_like "validates required properties",
       described_class,
-      { qr_code_id: 1, destination_url: "/go/listings/1" },
-      %i[qr_code_id destination_url]
+      { qr_code_pid: "a1b2c3d4", destination_url: "/go/listings/abc" },
+      %i[qr_code_pid destination_url]
 
-    it "does not require screen_content_id" do
-      event = described_class.new(qr_code_id: 1, destination_url: "/go/listings/1")
+    it "does not require screen_content_pid" do
+      event = described_class.new(qr_code_pid: "a1b2c3d4", destination_url: "/go/listings/abc")
       expect(event).to be_valid
     end
 
     it "accepts optional properties" do
-      event = described_class.new(qr_code_id: 1, destination_url: "/go/listings/1", screen_content_id: 5, ad_id: 3, screen_id: 2)
+      event = described_class.new(qr_code_pid: "a1b2c3d4", destination_url: "/go/listings/abc",
+                                  screen_content_pid: "e5f6", ad_pid: "g7h8", screen_pid: "i9j0")
       expect(event).to be_valid
     end
 
     describe ".qualified" do
-      it "returns events with both ad_id and screen_id" do
+      it "returns events with both ad_pid and screen_pid" do
         visit = create(:ahoy_visit)
         qualified = Ahoy::Event.create!(visit: visit, name: "qr.scanned", time: Time.current,
-          properties: { "qr_code_id" => 1, "ad_id" => 1, "screen_id" => 2 })
+          properties: { "qr_code_pid" => "abc", "ad_pid" => "def", "screen_pid" => "ghi" })
         Ahoy::Event.create!(visit: visit, name: "qr.scanned", time: Time.current,
-          properties: { "qr_code_id" => 1, "ad_id" => 1 })
+          properties: { "qr_code_pid" => "abc", "ad_pid" => "def" })
         Ahoy::Event.create!(visit: visit, name: "qr.scanned", time: Time.current,
-          properties: { "qr_code_id" => 1 })
+          properties: { "qr_code_pid" => "abc" })
 
         expect(described_class.events.qualified).to eq([ qualified ])
       end
@@ -53,11 +54,11 @@ RSpec.describe "Governed Events", type: :model do # rubocop:disable RSpec/Descri
       it "chains with where_properties" do
         visit = create(:ahoy_visit)
         match = Ahoy::Event.create!(visit: visit, name: "qr.scanned", time: Time.current,
-          properties: { "qr_code_id" => 7, "ad_id" => 1, "screen_id" => 2 })
+          properties: { "qr_code_pid" => "target", "ad_pid" => "def", "screen_pid" => "ghi" })
         Ahoy::Event.create!(visit: visit, name: "qr.scanned", time: Time.current,
-          properties: { "qr_code_id" => 99, "ad_id" => 1, "screen_id" => 2 })
+          properties: { "qr_code_pid" => "other", "ad_pid" => "def", "screen_pid" => "ghi" })
 
-        expect(described_class.where_properties(qr_code_id: 7).qualified).to eq([ match ])
+        expect(described_class.where_properties(qr_code_pid: "target").qualified).to eq([ match ])
       end
     end
   end
@@ -65,56 +66,56 @@ RSpec.describe "Governed Events", type: :model do # rubocop:disable RSpec/Descri
   describe Analytics::Events::ContentImpressed do
     it_behaves_like "validates required properties",
       described_class,
-      { ad_id: 1, screen_id: 2, screen_content_id: 3, playlist_id: 4, position: 1, duration: 10 },
-      %i[ad_id screen_id screen_content_id playlist_id position duration]
+      { ad_pid: "a1", screen_pid: "b2", screen_content_pid: "c3", playlist_pid: "d4", position: 1, duration: 10 },
+      %i[ad_pid screen_pid screen_content_pid playlist_pid position duration]
   end
 
   describe Analytics::Events::ContentLoaded do
     it_behaves_like "validates required properties",
       described_class,
-      { screen_id: 1, screen_content_id: 2, content_type: "playlist", content_id: 3 },
-      %i[screen_id screen_content_id content_type content_id]
+      { screen_pid: "a1", screen_content_pid: "b2", content_type: "playlist", content_pid: "c3" },
+      %i[screen_pid screen_content_pid content_type content_pid]
   end
 
   describe Analytics::Events::InteractionStarted do
     it_behaves_like "validates required properties",
       described_class,
-      { experience_id: 1, screen_id: 2, screen_content_id: 3 },
-      %i[experience_id screen_id screen_content_id]
+      { experience_pid: "a1", screen_pid: "b2", screen_content_pid: "c3" },
+      %i[experience_pid screen_pid screen_content_pid]
   end
 
   describe Analytics::Events::InteractionEnded do
     it_behaves_like "validates required properties",
       described_class,
-      { experience_id: 1, screen_id: 2, screen_content_id: 3, duration: 45 },
-      %i[experience_id screen_id screen_content_id duration]
+      { experience_pid: "a1", screen_pid: "b2", screen_content_pid: "c3", duration: 45 },
+      %i[experience_pid screen_pid screen_content_pid duration]
   end
 
   describe Analytics::Events::InteractionNavigated do
     it_behaves_like "validates required properties",
       described_class,
-      { experience_id: 1, screen_content_id: 2, direction: "next", photo_index: 3 },
-      %i[experience_id screen_content_id direction photo_index]
+      { experience_pid: "a1", screen_content_pid: "b2", direction: "next", photo_index: 3 },
+      %i[experience_pid screen_content_pid direction photo_index]
   end
 
   describe Analytics::Events::InteractionOpened do
     it_behaves_like "validates required properties",
       described_class,
-      { experience_id: 1, screen_content_id: 2, target: "floor_plan" },
-      %i[experience_id screen_content_id target]
+      { experience_pid: "a1", screen_content_pid: "b2", target: "floor_plan" },
+      %i[experience_pid screen_content_pid target]
   end
 
   describe Analytics::Events::InteractionClosed do
     it_behaves_like "validates required properties",
       described_class,
-      { experience_id: 1, screen_content_id: 2, target: "floor_plan", view_duration: 16 },
-      %i[experience_id screen_content_id target view_duration]
+      { experience_pid: "a1", screen_content_pid: "b2", target: "floor_plan", view_duration: 16 },
+      %i[experience_pid screen_content_pid target view_duration]
   end
 
   describe Analytics::Events::DeviceConnected do
     it_behaves_like "validates required properties",
       described_class,
-      { screen_id: 1, player_token: "abc123" },
-      %i[screen_id player_token]
+      { screen_pid: "a1", player_token: "abc123" },
+      %i[screen_pid player_token]
   end
 end

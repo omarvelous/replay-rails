@@ -1,4 +1,4 @@
-json.id listing.id
+json.pid listing.public_id
 json.updated_at listing.updated_at.to_i
 
 json.photos listing.photos_attachments do |attachment|

@@ -4,11 +4,11 @@ module Analytics
       self.event_name = "interaction.opened"
       self.event_context = :kiosk
 
-      attribute :experience_id, :integer
-      attribute :screen_content_id, :integer
-      attribute :target, :string
+      attribute :experience_pid,     :string
+      attribute :screen_content_pid, :string
+      attribute :target,             :string
 
-      validates :experience_id, :screen_content_id, :target,
+      validates :experience_pid, :screen_content_pid, :target,
                 presence: true
     end
   end

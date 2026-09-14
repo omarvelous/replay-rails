@@ -48,7 +48,7 @@ module App
   private
 
     def set_site
-      @site = Current.account.sites.find(params[:id])
+      @site = Current.account.sites.find_by_param!(params[:id])
     end
 
     def site_params

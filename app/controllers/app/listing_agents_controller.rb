@@ -41,11 +41,11 @@ module App
   private
 
     def set_listing
-      @listing = Current.account.listings.find(params[:listing_id])
+      @listing = Current.account.listings.find_by_param!(params[:listing_id])
     end
 
     def set_listing_agent
-      @listing_agent = @listing.listing_agents.find(params[:id])
+      @listing_agent = @listing.listing_agents.find_by_param!(params[:id])
     end
 
     def listing_agent_params

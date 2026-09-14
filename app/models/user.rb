@@ -1,4 +1,5 @@
 class User < ApplicationRecord
+  include PublicIdentifiable
   include Authorizable
 
   has_paper_trail ignore: [ :updated_at ]

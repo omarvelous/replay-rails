@@ -1,4 +1,6 @@
 class ListingAgent < ApplicationRecord
+  include PublicIdentifiable
+
   has_paper_trail
   belongs_to :listing
   belongs_to :agent

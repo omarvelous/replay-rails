@@ -1,5 +1,7 @@
 module Ads
 class BrandAd < ApplicationRecord
+  include PublicIdentifiable
+
   LAYOUTS = %w[hero minimal].freeze
 
   has_one :ad, as: :adable, dependent: :destroy, touch: true

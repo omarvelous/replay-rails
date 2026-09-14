@@ -8,6 +8,15 @@ module Admin
 
     private
 
+      def find_resource(param)
+        resource_class = resource_resolver.resource_class
+        if resource_class.respond_to?(:find_by_param!)
+          scoped_resource.find_by_param!(param)
+        else
+          scoped_resource.find(param)
+        end
+      end
+
       def strip_subdomain_param
         params.delete(:subdomain)
       end

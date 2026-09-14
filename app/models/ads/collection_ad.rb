@@ -1,5 +1,7 @@
 module Ads
 class CollectionAd < ApplicationRecord
+  include PublicIdentifiable
+
   LAYOUTS = %w[grid].freeze
   MAX_ITEMS = 8
 

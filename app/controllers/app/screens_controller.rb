@@ -28,7 +28,7 @@ module App
   end
 
   def create
-    @site = Current.account.sites.find(params[:screen][:site_id])
+    @site = Current.account.sites.find_by_param!(params[:screen][:site_id])
     @screen = @site.screens.build(screen_params)
     authorize! @screen
 
@@ -64,7 +64,7 @@ module App
     def set_screen
       @screen = Current.account.screens
         .includes(screen_contents: :contentable)
-        .find(params[:id])
+        .find_by_param!(params[:id])
       @site = @screen.site
     end
 
@@ -73,7 +73,7 @@ module App
     end
 
     def current_site
-      @current_site ||= Current.account.sites.find(params[:site_id]) if params[:site_id]
+      @current_site ||= Current.account.sites.find_by_param!(params[:site_id]) if params[:site_id]
     end
     helper_method :current_site
 

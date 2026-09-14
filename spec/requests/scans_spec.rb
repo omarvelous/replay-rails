@@ -13,7 +13,7 @@ RSpec.describe "Scans" do
       allow(Analytics::Events::QrScanned).to receive(:create).and_call_original
       get qr_scan_path(token: qr_code.token)
       expect(Analytics::Events::QrScanned).to have_received(:create).with(
-        hash_including(qr_code_id: qr_code.id)
+        hash_including(qr_code_pid: qr_code.public_id)
       )
     end
 
