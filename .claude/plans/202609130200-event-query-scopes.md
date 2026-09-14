@@ -119,6 +119,32 @@ end
 - `make lint`, `make test`
 - Push, create PR
 
+## Implementation Notes
+
+### Ahoy already provides `where_properties`
+
+`Ahoy::QueryMethods` (included in `Ahoy::Event`) provides `where_properties`, `where_props`, `where_event`, and `group_prop` — all database-adapter-aware and chainable on relations. Our `Base.where_properties` delegates to Ahoy's implementation rather than reimplementing the jsonb query.
+
+### Extending for chainable scopes
+
+Event-specific scopes (e.g., `QrScanned::Scopes#qualified`) are mixed into the relation via `ActiveRecord::Relation#extending`. `Base.events` checks for a `Scopes` constant on the subclass and extends the relation automatically:
+
+```ruby
+def self.events
+  scope = Ahoy::Event.where(name: event_name)
+  scope = scope.extending(self::Scopes) if const_defined?(:Scopes)
+  scope
+end
+```
+
+This makes scopes fully chainable on any relation returned by `events` or `where_properties`:
+
+```ruby
+QrScanned.events.qualified
+QrScanned.where_properties(qr_code_id: 5).qualified
+qr.scan_events.qualified  # scan_events delegates through where_properties
+```
+
 ## Out of Scope
 
 - Adding query scopes to event POROs that aren't currently queried (ContentLoaded, DeviceConnected, interaction events besides InteractionStarted)
