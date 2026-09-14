@@ -10,6 +10,12 @@ class TestEvent < Analytics::Events::Base
 
   validates :widget_id, presence: true
   validates :action, presence: true
+
+  module Scopes
+    def clicked
+      where("properties @> ?", { action: "clicked" }.to_json)
+    end
+  end
 end
 
 RSpec.describe Analytics::Events::Base do
@@ -47,6 +53,23 @@ RSpec.describe Analytics::Events::Base do
       Ahoy::Event.create!(visit: visit, name: "other.event", time: Time.current, properties: {})
 
       expect(TestEvent.events).to eq([ matching ])
+    end
+
+    it "extends the relation with Scopes when defined" do
+      visit = create(:ahoy_visit)
+      match = Ahoy::Event.create!(visit: visit, name: "test.event", time: Time.current, properties: { "widget_id" => 1, "action" => "clicked" })
+      Ahoy::Event.create!(visit: visit, name: "test.event", time: Time.current, properties: { "widget_id" => 2, "action" => "viewed" })
+
+      expect(TestEvent.events.clicked).to eq([ match ])
+    end
+
+    it "preserves scopes when chaining with where_properties" do
+      visit = create(:ahoy_visit)
+      match = Ahoy::Event.create!(visit: visit, name: "test.event", time: Time.current, properties: { "widget_id" => 1, "action" => "clicked" })
+      Ahoy::Event.create!(visit: visit, name: "test.event", time: Time.current, properties: { "widget_id" => 1, "action" => "viewed" })
+      Ahoy::Event.create!(visit: visit, name: "test.event", time: Time.current, properties: { "widget_id" => 2, "action" => "clicked" })
+
+      expect(TestEvent.where_properties(widget_id: 1).clicked).to eq([ match ])
     end
   end
 
