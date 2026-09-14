@@ -1,0 +1,20 @@
+<% agent = ad.listing&.primary_agent %>
+<% if agent %>
+  <div class="flex items-center" style="gap: var(--s-gap); margin-top: var(--s-gap);">
+    <div class="rounded-full flex-none overflow-hidden grid place-items-center"
+         style="width: var(--s-3xl); height: var(--s-3xl); background: var(--ad-surface);">
+      <% if agent.photo.attached? %>
+        <%= image_tag agent.photo, class: "w-full h-full object-cover" %>
+      <% else %>
+        <span class="font-bold" style="font-size: var(--s-sm); color: var(--ad-text-faint);"><%= agent.name.split.map(&:first).join.first(2).upcase %></span>
+      <% end %>
+    </div>
+    <div class="flex items-center" style="gap: var(--s-gap); font-size: var(--s-xl); color: var(--ad-text-muted);">
+      <span class="font-semibold" style="color: var(--ad-text);"><%= agent.name %></span>
+      <% if agent.phone.present? %>
+        <span>&middot;</span>
+        <span><%= agent.phone %></span>
+      <% end %>
+    </div>
+  </div>
+<% end %>

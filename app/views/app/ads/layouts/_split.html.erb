@@ -16,5 +16,6 @@
   <%# Right: content %>
   <div class="w-1/2 flex flex-col justify-center" style="padding: var(--s-pad-lg);">
     <%= render "app/ads/#{ad.adable_partial_path}/content", ad: ad %>
+    <%= render "app/ads/layouts/agent_strip", ad: ad %>
   </div>
 </div>

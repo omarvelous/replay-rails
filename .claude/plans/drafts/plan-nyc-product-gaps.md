@@ -14,12 +14,12 @@ missing, and what needs to be built.
 | # | Feature | Exists? | Size | Priority |
 |---|---------|---------|------|----------|
 | 1 | Agent branding on listing ads | Partial | Small | Must-have |
-| 2 | Touch/interactive player mode | No | Large | Must-have |
-| 3 | On-screen lead capture (touch) | No | Medium | Must-have |
-| 4 | StreetEasy listing import | No | Large | Should-have |
+| 2 | Touch/interactive player mode | **Shipped** (Experiences) | — | — |
+| 3 | Lead capture channels | Partial (QR only) | Medium | Must-have |
+| 4 | StreetEasy listing import | No | Large | Deferred |
 | 5 | Mobile UX polish | Partial | Small-Med | Should-have |
 | 6 | Go page enhancements | Partial | Small | Should-have |
-| 7 | Neighborhood content | No | Large | Nice-to-have |
+| 7 | Neighborhood content | No | Large | Deferred |
 
 ---
 
@@ -40,45 +40,49 @@ photo, name, or phone.
 
 **Complexity:** Small. Data and associations exist. Template changes only.
 
-### 2. Touch/interactive player mode
+### 2. Touch/interactive player mode — SHIPPED
 
-**Current state:** The `play` subdomain renders a passive slideshow via
-a Stimulus controller. Auto-advancing slides, no user interaction. No
-touch event handlers, no swipe, no navigation controls.
+Delivered as the Experiences feature. `ListingExperience` with kiosk
+player rendering, photo gallery navigation, floor plans, agent card,
+QR handoff, idle/attract mode, and touch detection. See
+`.claude/plans/202609050300-experiences.md`.
 
-**What to build:**
-- New player mode: `passive` (current) vs `interactive`
-- Interactive mode adds:
-  - Swipe/tap navigation between slides
-  - Photo gallery browsing (swipe through listing photos)
-  - Pinch-to-zoom on photos/floor plans
-  - Navigation UI (dots, arrows, back button)
-  - Idle timeout: return to auto-play after N seconds of no touch
-- Mode flag on Screen or Playlist to toggle behavior
-- New Stimulus controller or mode branch in existing one
-- Responsive layout for both landscape (window) and portrait (stand)
+### 3. Lead capture channels
 
-**Complexity:** Large. New interaction paradigm, touch gesture handling,
-different UX from passive signage. Core to the open house product.
+**Current state:** QR scan → Go page → lead form works end-to-end.
+But QR is the only capture channel. Not everyone wants to scan a code.
 
-### 3. On-screen lead capture form (touch mode)
+**Design principle:** The kiosk should stay browse-only. All lead
+capture should move the visitor to their own device — never block the
+shared screen with a form and keyboard.
 
-**Current state:** QR scan → `/go/listings/:id` → lead form works
-end-to-end. But there's no on-screen form for visitors standing at
-the screen itself. The existing QR flow requires a phone.
+**Channels (in priority order):**
 
-**What to build:**
-- Touch-to-submit lead form rendered on the player screen
-- "Enter your email to get the floor plan" gated content pattern
-- Minimal fields: name, email, phone (optional)
-- Lead created with `lead_type: "open_house_rsvp"` and linked to listing
-- Confirmation screen: "Thanks! Check your email."
-- Optional: email triggers a follow-up with listing details/floor plan
-- Privacy: clear screen after submission, idle timeout
+| Channel | How it works | Status | Needs |
+|---------|-------------|--------|-------|
+| **QR code** | Scan → Go page → lead form on phone | **Working** | Go page enhancements (gap #6) |
+| **SMS keyword** | "Text LISTING to 55555" → auto-reply with Go page link | **Needs plan** | Twilio, inbound number, keyword routing |
+| **NFC tap** | Tap phone on tag → opens Go page | **Needs plan** | NFC tags per screen ($0.50/tag), provisioning |
+| **On-screen form** | Full form on kiosk touch screen | **Deferred** | Last resort — blocks the kiosk for other visitors |
 
-**Complexity:** Medium. Lead model and create endpoint exist. Need a
-form in the player context with touch-friendly input and on-screen
-keyboard considerations.
+**SMS — what to build:**
+- Twilio account with an inbound number
+- SMS keyword routing: text a listing-specific code, get back a link
+- Lead captured from the phone number (opt-in for follow-up)
+- Auto-reply: "View this listing: [Go page URL]. Reply STOP to opt out."
+- Display on the kiosk: "Text OPEN to (212) 555-1234"
+
+**NFC — what to build:**
+- NFC tags provisioned per screen or per listing
+- Tag stores the Go page URL (same as QR destination)
+- Tap → phone opens Go page → lead form
+- Inventory angle: tag ID can tie to screen location for admin/maintenance
+
+**On-screen form — deferred:**
+Documented as a last-resort option. Not planned for build. Only makes
+sense for dedicated tablets at a staffed check-in desk, not shared
+storefront displays. If built later, would be a single email field
+("Email me this listing") rather than a full form.
 
 ---
 
@@ -179,17 +183,18 @@ These features exist and support the NYC launch as-is:
 
 ## Suggested Build Order
 
-### Sprint 1: Demo-ready (1-2 weeks)
-1. Agent branding on listing ads (small)
-2. Go page polish (small)
+### Sprint 1: Demo-ready
+1. Agent branding on listing ads (small — template changes)
+2. Go page enhancements (small — photo gallery, agent branding, directions)
 
-### Sprint 2: Interactive mode (2-3 weeks)
-3. Touch/interactive player mode (large)
-4. On-screen lead capture form (medium)
+### Sprint 2: Capture channels
+3. SMS keyword lead capture (medium — Twilio integration)
+4. NFC tap-to-view (small-medium — tag provisioning, URL scheme)
 
-### Sprint 3: Convenience (1-2 weeks)
-5. Mobile UX polish (small-medium)
-6. StreetEasy import (large — consider deferring)
+### Sprint 3: Polish
+5. Mobile UX audit (small-medium — QA key flows on phone)
 
-### Sprint 4: Depth (as needed)
-7. Neighborhood content (large — defer until customer demand)
+### Deferred
+- StreetEasy import — no public API, scraping is fragile
+- Neighborhood content — wait for customer demand
+- On-screen lead form — last resort, not planned

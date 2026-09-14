@@ -106,6 +106,18 @@ RSpec.describe "Ads" do
       expect(response).to be_successful
     end
 
+    it "renders the agent strip when listing has a primary agent" do
+      listing = create(:listing, account: account)
+      agent = create(:agent, account: account, name: "Jane Broker", phone: "+12125550001")
+      create(:listing_agent, listing: listing, agent: agent, primary_at: Time.current)
+      listing_ad = create(:listing_ad, listing: listing)
+      ad = create(:ad, account: account, adable: listing_ad, headline: "Test")
+
+      get preview_ad_path(ad)
+      expect(response.body).to include("Jane Broker")
+      expect(response.body).to include("+12125550001")
+    end
+
     it "returns 404 for another account's ad" do
       other_ad = create(:ad)
       get preview_ad_path(other_ad)
