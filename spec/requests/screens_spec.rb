@@ -27,7 +27,7 @@ RSpec.describe "Screens" do
       other_site = create(:site, account: account)
       create(:screen, site: other_site, name: "Other Display")
 
-      get screens_path(site_id: site.id)
+      get screens_path(site_id: site.to_param)
       expect(response.body).to include("Lobby Display")
       expect(response.body).not_to include("Other Display")
     end
@@ -35,13 +35,13 @@ RSpec.describe "Screens" do
 
   describe "GET /screens/new" do
     it "returns a successful response" do
-      get new_screen_path(site_id: site.id)
+      get new_screen_path(site_id: site.to_param)
       expect(response).to be_successful
     end
   end
 
   describe "POST /screens" do
-    let(:valid_params) { { screen: { site_id: site.id, name: "Window Display", orientation: "landscape" } } }
+    let(:valid_params) { { screen: { site_id: site.to_param, name: "Window Display", orientation: "landscape" } } }
 
     context "with valid params" do
       it "creates a screen scoped to the site" do
@@ -59,12 +59,12 @@ RSpec.describe "Screens" do
     context "with invalid params" do
       it "does not create a screen" do
         expect {
-          post screens_path, params: { screen: { site_id: site.id, name: "" } }
+          post screens_path, params: { screen: { site_id: site.to_param, name: "" } }
         }.not_to change(Screen, :count)
       end
 
       it "returns 422" do
-        post screens_path, params: { screen: { site_id: site.id, name: "" } }
+        post screens_path, params: { screen: { site_id: site.to_param, name: "" } }
         expect(response).to have_http_status(:unprocessable_content)
       end
     end

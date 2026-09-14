@@ -16,7 +16,7 @@ RSpec.describe "Go::Leads" do
         expect {
           post go_leads_path, params: {
             lead: { name: "Jane Doe", email: "jane@example.com",
-                    lead_type: "buyer_inquiry", listing_id: listing.id }
+                    lead_type: "buyer_inquiry", listing_sid: listing.signed_id(purpose: :lead_form) }
           }
         }.to change(Lead, :count).by(1)
 
@@ -29,7 +29,7 @@ RSpec.describe "Go::Leads" do
       it "enqueues a notification email" do
         post go_leads_path, params: {
           lead: { name: "Jane Doe", email: "jane@example.com",
-                  lead_type: "buyer_inquiry", listing_id: listing.id }
+                  lead_type: "buyer_inquiry", listing_sid: listing.signed_id(purpose: :lead_form) }
         }
 
         expect(ActionMailer::MailDeliveryJob).to have_been_enqueued
@@ -38,7 +38,7 @@ RSpec.describe "Go::Leads" do
       it "assigns the listing's primary agent via LeadAgent" do
         post go_leads_path, params: {
           lead: { name: "Jane Doe", email: "jane@example.com",
-                  lead_type: "buyer_inquiry", listing_id: listing.id }
+                  lead_type: "buyer_inquiry", listing_sid: listing.signed_id(purpose: :lead_form) }
         }
 
         lead = Lead.last
@@ -48,7 +48,7 @@ RSpec.describe "Go::Leads" do
       it "sets listing_id on the lead" do
         post go_leads_path, params: {
           lead: { name: "Jane Doe", email: "jane@example.com",
-                  lead_type: "buyer_inquiry", listing_id: listing.id }
+                  lead_type: "buyer_inquiry", listing_sid: listing.signed_id(purpose: :lead_form) }
         }
 
         expect(Lead.last.listing).to eq(listing)
@@ -57,7 +57,7 @@ RSpec.describe "Go::Leads" do
       it "redirects back with submitted flash" do
         post go_leads_path, params: {
           lead: { name: "Jane Doe", email: "jane@example.com",
-                  lead_type: "buyer_inquiry", listing_id: listing.id }
+                  lead_type: "buyer_inquiry", listing_sid: listing.signed_id(purpose: :lead_form) }
         }, headers: { "HTTP_REFERER" => go_listing_url(listing, subdomain: "") }
 
         expect(response).to redirect_to(go_listing_url(listing, subdomain: ""))
@@ -70,7 +70,7 @@ RSpec.describe "Go::Leads" do
         expect {
           post go_leads_path, params: {
             lead: { name: "Tom Smith", phone: "555-1234",
-                    lead_type: "general_inquiry", agent_id: agent.id }
+                    lead_type: "general_inquiry", agent_sid: agent.signed_id(purpose: :lead_form) }
           }
         }.to change(Lead, :count).by(1)
 
@@ -97,7 +97,7 @@ RSpec.describe "Go::Leads" do
           post go_leads_path, params: {
             lead: { name: "Bot", email: "bot@spam.com",
                     lead_type: "general_inquiry",
-                    listing_id: listing.id, website: "https://spam.com" }
+                    listing_sid: listing.signed_id(purpose: :lead_form), website: "https://spam.com" }
           }
         }.not_to change(Lead, :count)
         expect(response).to have_http_status(:ok)
@@ -108,7 +108,7 @@ RSpec.describe "Go::Leads" do
       it "redirects back with alert when name is blank" do
         post go_leads_path, params: {
           lead: { name: "", email: "jane@example.com",
-                  lead_type: "buyer_inquiry", listing_id: listing.id }
+                  lead_type: "buyer_inquiry", listing_sid: listing.signed_id(purpose: :lead_form) }
         }, headers: { "HTTP_REFERER" => go_listing_url(listing, subdomain: "") }
 
         expect(response).to redirect_to(go_listing_url(listing, subdomain: ""))

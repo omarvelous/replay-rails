@@ -41,7 +41,7 @@ module App
   private
 
     def set_screen
-      @screen = Current.account.screens.find(params[:screen_id])
+      @screen = Current.account.screens.find_by_param!(params[:screen_id])
     end
   end
 end

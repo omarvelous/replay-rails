@@ -17,7 +17,7 @@ module App
     private
 
       def set_lead
-        @lead = Current.account.leads.find(params[:lead_id])
+        @lead = Current.account.leads.find_by_param!(params[:lead_id])
       end
 
       def lead_agent_params
