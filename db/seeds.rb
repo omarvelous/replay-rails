@@ -196,7 +196,8 @@ if demo_account
       user: demo_user,
       name: "Jane Broker",
       email: "jane.broker@example.com",
-      phone: "+12125550002"
+      phone: "+12125550002",
+      bio: "Top-producing broker with 15 years of experience in Manhattan luxury real estate. Specializing in co-ops and condos from Tribeca to the Upper West Side."
     )
     puts "Created demo agent: Jane Broker (linked to demo user)"
   end
@@ -206,7 +207,8 @@ if demo_account
       account: demo_account,
       name: "Tom Realtor",
       email: "tom.realtor@example.com",
-      phone: "+12125550003"
+      phone: "+12125550003",
+      bio: "NYC native and licensed agent focused on helping first-time buyers navigate the city's competitive market."
     )
     puts "Created demo agent: Tom Realtor"
   end

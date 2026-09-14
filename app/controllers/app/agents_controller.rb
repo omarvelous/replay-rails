@@ -52,7 +52,7 @@ module App
     end
 
     def agent_params
-      params.require(:agent).permit(:name, :email, :phone, :user_id)
+      params.require(:agent).permit(:name, :email, :phone, :bio, :user_id)
     end
   end
 end

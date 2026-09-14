@@ -10,7 +10,6 @@
   <%= form_with url: go_leads_path, scope: :lead, method: :post, class: "space-y-3" do |f| %>
     <%= f.hidden_field :listing_id, value: local_assigns[:listing]&.id %>
     <%= f.hidden_field :agent_id, value: local_assigns[:agent]&.id %>
-    <%= f.hidden_field :scan_id, value: local_assigns[:scan_id] %>
 
     <%# Honeypot — bots fill this, humans don't see it %>
     <div aria-hidden="true" style="position: absolute; left: -9999px; top: -9999px;">
