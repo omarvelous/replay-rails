@@ -51,18 +51,6 @@ RSpec.describe QrCode do
     end
   end
 
-  describe "#qualified_scan_events" do
-    it "returns scan events with both ad_id and screen_id" do
-      qr = create(:qr_code)
-      visit = create(:ahoy_visit)
-      qualified = Ahoy::Event.create!(visit: visit, name: "qr.scanned", time: Time.current, properties: { "qr_code_id" => qr.id, "ad_id" => 1, "screen_id" => 2 })
-      Ahoy::Event.create!(visit: visit, name: "qr.scanned", time: Time.current, properties: { "qr_code_id" => qr.id, "ad_id" => 1 })
-      Ahoy::Event.create!(visit: visit, name: "qr.scanned", time: Time.current, properties: { "qr_code_id" => qr.id })
-
-      expect(qr.qualified_scan_events).to eq([ qualified ])
-    end
-  end
-
   describe "#destination?" do
     it "returns true when destination_record is present" do
       qr = build(:qr_code, destination_record: build(:listing))

@@ -22,6 +22,16 @@ module Analytics
         true
       end
 
+      def self.events
+        scope = Ahoy::Event.where(name: event_name)
+        scope = scope.extending(self::Scopes) if const_defined?(:Scopes)
+        scope
+      end
+
+      def self.where_properties(**props)
+        events.where_properties(props)
+      end
+
       def self.create(attributes = {})
         event = new(attributes)
         event.create

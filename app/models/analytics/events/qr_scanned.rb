@@ -11,6 +11,12 @@ module Analytics
       attribute :screen_id, :integer
 
       validates :qr_code_id, :destination_url, presence: true
+
+      module Scopes
+        def qualified
+          where("properties ? 'ad_id' AND properties ? 'screen_id'")
+        end
+      end
     end
   end
 end

@@ -36,6 +36,30 @@ RSpec.describe "Governed Events", type: :model do # rubocop:disable RSpec/Descri
       event = described_class.new(qr_code_id: 1, destination_url: "/go/listings/1", screen_content_id: 5, ad_id: 3, screen_id: 2)
       expect(event).to be_valid
     end
+
+    describe ".qualified" do
+      it "returns events with both ad_id and screen_id" do
+        visit = create(:ahoy_visit)
+        qualified = Ahoy::Event.create!(visit: visit, name: "qr.scanned", time: Time.current,
+          properties: { "qr_code_id" => 1, "ad_id" => 1, "screen_id" => 2 })
+        Ahoy::Event.create!(visit: visit, name: "qr.scanned", time: Time.current,
+          properties: { "qr_code_id" => 1, "ad_id" => 1 })
+        Ahoy::Event.create!(visit: visit, name: "qr.scanned", time: Time.current,
+          properties: { "qr_code_id" => 1 })
+
+        expect(described_class.events.qualified).to eq([ qualified ])
+      end
+
+      it "chains with where_properties" do
+        visit = create(:ahoy_visit)
+        match = Ahoy::Event.create!(visit: visit, name: "qr.scanned", time: Time.current,
+          properties: { "qr_code_id" => 7, "ad_id" => 1, "screen_id" => 2 })
+        Ahoy::Event.create!(visit: visit, name: "qr.scanned", time: Time.current,
+          properties: { "qr_code_id" => 99, "ad_id" => 1, "screen_id" => 2 })
+
+        expect(described_class.where_properties(qr_code_id: 7).qualified).to eq([ match ])
+      end
+    end
   end
 
   describe Analytics::Events::ContentImpressed do

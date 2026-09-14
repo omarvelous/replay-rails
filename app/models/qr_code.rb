@@ -12,15 +12,11 @@ class QrCode < ApplicationRecord
   end
 
   def scan_events
-    Ahoy::Event.where(name: "qr.scanned").where("properties @> ?", { qr_code_id: id }.to_json)
+    Analytics::Events::QrScanned.where_properties(qr_code_id: id)
   end
 
   def scan_count
     scan_events.count
-  end
-
-  def qualified_scan_events
-    scan_events.where("properties ? 'ad_id' AND properties ? 'screen_id'")
   end
 
   private
