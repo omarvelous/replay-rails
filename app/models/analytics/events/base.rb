@@ -23,11 +23,13 @@ module Analytics
       end
 
       def self.events
-        Ahoy::Event.where(name: event_name)
+        scope = Ahoy::Event.where(name: event_name)
+        scope = scope.extending(self::Scopes) if const_defined?(:Scopes)
+        scope
       end
 
       def self.where_properties(**props)
-        events.where("properties @> ?", props.to_json)
+        events.where_properties(props)
       end
 
       def self.create(attributes = {})

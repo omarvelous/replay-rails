@@ -47,7 +47,17 @@ RSpec.describe "Governed Events", type: :model do # rubocop:disable RSpec/Descri
         Ahoy::Event.create!(visit: visit, name: "qr.scanned", time: Time.current,
           properties: { "qr_code_id" => 1 })
 
-        expect(described_class.qualified).to eq([ qualified ])
+        expect(described_class.events.qualified).to eq([ qualified ])
+      end
+
+      it "chains with where_properties" do
+        visit = create(:ahoy_visit)
+        match = Ahoy::Event.create!(visit: visit, name: "qr.scanned", time: Time.current,
+          properties: { "qr_code_id" => 7, "ad_id" => 1, "screen_id" => 2 })
+        Ahoy::Event.create!(visit: visit, name: "qr.scanned", time: Time.current,
+          properties: { "qr_code_id" => 99, "ad_id" => 1, "screen_id" => 2 })
+
+        expect(described_class.where_properties(qr_code_id: 7).qualified).to eq([ match ])
       end
     end
   end

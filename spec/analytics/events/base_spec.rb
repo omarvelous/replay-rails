@@ -66,6 +66,14 @@ RSpec.describe Analytics::Events::Base do
 
       expect(TestEvent.where_properties(widget_id: 5, action: "clicked")).to eq([ match ])
     end
+
+    it "is chainable with where_properties on the relation" do
+      visit = create(:ahoy_visit)
+      match = Ahoy::Event.create!(visit: visit, name: "test.event", time: Time.current, properties: { "widget_id" => 5, "action" => "clicked" })
+      Ahoy::Event.create!(visit: visit, name: "test.event", time: Time.current, properties: { "widget_id" => 5, "action" => "viewed" })
+
+      expect(TestEvent.where_properties(widget_id: 5).where_properties(action: "clicked")).to eq([ match ])
+    end
   end
 
   describe "#properties" do

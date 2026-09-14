@@ -20,7 +20,7 @@ module App
     else
       0
     end
-    @scans_count = @listing.qr_code&.scan_events&.merge(Analytics::Events::QrScanned.qualified)&.count || 0
+    @scans_count = @listing.qr_code&.scan_events&.qualified&.count || 0
   end
 
   def new
