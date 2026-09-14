@@ -31,21 +31,22 @@ context and usage guidance.
 
 ## Event Properties
 
-All player and experience events include `account_id` and
-`screen_content_id` to correlate events with the exact content
-assignment and account.
+All player and experience events use the `_pid` suffix for
+resource references (UUID public IDs, not integer foreign keys)
+and include `account_pid` and `screen_content_pid` to correlate
+events with the exact content assignment and account.
 
 | Event | Properties |
 |-------|------------|
-| `qr.scanned` | `qr_code_id` (required), `destination_url` (required), `screen_content_id`, `ad_id`, `screen_id` |
-| `content.impressed` | `ad_id`, `screen_id`, `screen_content_id`, `playlist_id`, `position`, `duration`, `account_id` — all required |
-| `content.loaded` | `screen_id`, `screen_content_id`, `content_type`, `content_id` — all required |
-| `interaction.started` | `experience_id`, `screen_id`, `screen_content_id` — all required. Also includes `account_id`. |
+| `qr.scanned` | `qr_code_pid` (required), `destination_url` (required), `screen_content_pid`, `ad_pid`, `screen_pid` |
+| `content.impressed` | `ad_pid`, `screen_pid`, `screen_content_pid`, `playlist_pid`, `position`, `duration`, `account_pid` — all required |
+| `content.loaded` | `screen_pid`, `screen_content_pid`, `content_type`, `content_pid` — all required |
+| `interaction.started` | `experience_pid`, `screen_pid`, `screen_content_pid` — all required. Also includes `account_pid`. |
 | `interaction.ended` | Same as started + `duration` (required) |
-| `interaction.navigated` | `experience_id`, `screen_content_id`, `direction`, `photo_index` — all required. Also includes `account_id`. |
-| `interaction.opened` | `experience_id`, `screen_content_id`, `target` — all required. Also includes `account_id`. |
-| `interaction.closed` | Same as opened + `view_duration` (required). Also includes `account_id`. |
-| `device.connected` | `screen_id`, `player_token` — all required. Also includes `account_id`. |
+| `interaction.navigated` | `experience_pid`, `screen_content_pid`, `direction`, `photo_index` — all required. Also includes `account_pid`. |
+| `interaction.opened` | `experience_pid`, `screen_content_pid`, `target` — all required. Also includes `account_pid`. |
+| `interaction.closed` | Same as opened + `view_duration` (required). Also includes `account_pid`. |
+| `device.connected` | `screen_pid`, `player_token` — all required. Also includes `account_pid`. |
 
 ## Creating Events
 
@@ -53,9 +54,9 @@ assignment and account.
 
 ```ruby
 Analytics::Events::QrScanned.create(
-  qr_code_id: qr.id,
+  qr_code_pid: qr.public_id,
   destination_url: destination,
-  screen_content_id: params[:sc]&.to_i,
+  screen_content_pid: params[:sc].presence,
   request: request
 )
 ```
@@ -70,13 +71,13 @@ available on the event object.
 import Analytics from "analytics"
 
 Analytics.create("content.impressed", {
-  ad_id: 1,
-  screen_id: 2,
-  screen_content_id: 3,
-  playlist_id: 4,
+  ad_pid: "a1b2c3d4-...",
+  screen_pid: "e5f6g7h8-...",
+  screen_content_pid: "i9j0k1l2-...",
+  playlist_pid: "m3n4o5p6-...",
   position: 1,
   duration: 10,
-  account_id: 5
+  account_pid: "q7r8s9t0-..."
 })
 ```
 
@@ -98,7 +99,7 @@ custom session_id — Ahoy visits ARE the sessions.
 - **App subdomain** — `current_account` resolves account from
   session cookie via `resume_session`. Set on visits and events
   by `Ahoy::Store`.
-- **Player subdomain** — No authenticated session. `account_id`
+- **Player subdomain** — No authenticated session. `account_pid`
   passed as event property from the template, promoted to the
   column by the Store.
 - **Admin subdomain** — Excluded from tracking via
