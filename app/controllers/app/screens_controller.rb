@@ -64,7 +64,7 @@ module App
     def set_screen
       @screen = Current.account.screens
         .includes(screen_contents: :contentable)
-        .find(params[:id])
+        .find_by_param!(params[:id])
       @site = @screen.site
     end
 

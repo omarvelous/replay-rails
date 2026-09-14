@@ -48,7 +48,7 @@ module App
   private
 
     def set_agent
-      @agent = Current.account.agents.find(params[:id])
+      @agent = Current.account.agents.find_by_param!(params[:id])
     end
 
     def agent_params
