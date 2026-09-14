@@ -1,4 +1,4 @@
-json.id listing_ad.id
+json.pid listing_ad.public_id
 json.updated_at listing_ad.updated_at.to_i
 
 json.listing do

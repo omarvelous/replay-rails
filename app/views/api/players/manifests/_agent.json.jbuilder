@@ -1,4 +1,4 @@
-json.id agent.id
+json.pid agent.public_id
 json.updated_at agent.updated_at.to_i
 
 json.photos agent.photo.attached? ? [ agent.photo_attachment ] : [] do |attachment|

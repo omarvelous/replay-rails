@@ -1,4 +1,4 @@
-json.id ad.id
+json.pid ad.public_id
 json.updated_at ad.updated_at.to_i
 json.layout ad.layout
 json.theme ad.theme

@@ -1,4 +1,4 @@
-json.id listing_experience.id
+json.pid listing_experience.public_id
 json.updated_at listing_experience.updated_at.to_i
 
 json.listing do

@@ -1,4 +1,6 @@
 class ScreenPlayer < ApplicationRecord
+  include PublicIdentifiable
+
   has_paper_trail
   belongs_to :screen
   belongs_to :player
