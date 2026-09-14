@@ -22,6 +22,14 @@ module Analytics
         true
       end
 
+      def self.events
+        Ahoy::Event.where(name: event_name)
+      end
+
+      def self.where_properties(**props)
+        events.where("properties @> ?", props.to_json)
+      end
+
       def self.create(attributes = {})
         event = new(attributes)
         event.create
