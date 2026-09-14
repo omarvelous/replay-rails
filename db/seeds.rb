@@ -570,7 +570,7 @@ end
 # -----------------------------------------------------------------------
 # QR Scan Events (last 30 days — ~1% of impressions convert to scans)
 # -----------------------------------------------------------------------
-if demo_account && Ahoy::Event.where(name: "qr.scanned", account_id: demo_account.id).empty?
+if demo_account && Analytics::Events::QrScanned.events.where(account_id: demo_account.id).empty?
   screen = Screen.joins(:site).find_by(sites: { account_id: demo_account.id })
   ads = Ad.where(account: demo_account).limit(5).to_a
   qr_codes = QrCode.where(account: demo_account).to_a
