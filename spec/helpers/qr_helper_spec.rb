@@ -15,8 +15,8 @@ RSpec.describe QrHelper do
       screen = create(:screen, site: site)
 
       url = helper.qr_scan_full_url(qr_code, ad: ad, screen: screen)
-      expect(url).to include("a=#{ad.id}")
-      expect(url).to include("s=#{screen.id}")
+      expect(url).to include("a=#{ad.public_id}")
+      expect(url).to include("s=#{screen.public_id}")
     end
 
     context "when QR_BASE_URL is set" do
