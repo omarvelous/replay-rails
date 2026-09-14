@@ -46,8 +46,7 @@
   <h2 class="text-sm font-semibold text-gray-500 uppercase tracking-wider mb-4">Interested in this property?</h2>
   <%= render "go/leads/form",
       listing: @listing,
-      agent: @listing.primary_agent,
-      scan_id: params[:scan_id] %>
+      agent: @listing.primary_agent %>
 </div>
 
 <% if @agents.any? %>
