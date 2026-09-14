@@ -1,4 +1,6 @@
 class Inquiry < ApplicationRecord
+  include PublicIdentifiable
+
   visitable :ahoy_visit
 
   TYPES = %w[demo_request general].freeze

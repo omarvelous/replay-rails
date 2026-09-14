@@ -1,4 +1,6 @@
 class AccountUser < ApplicationRecord
+  include PublicIdentifiable
+
   has_paper_trail
 
   ROLES = %w[owner manager agent].freeze

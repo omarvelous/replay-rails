@@ -45,7 +45,7 @@ module App
     end
 
     def set_listing_agent
-      @listing_agent = @listing.listing_agents.find(params[:id])
+      @listing_agent = @listing.listing_agents.find_by_param!(params[:id])
     end
 
     def listing_agent_params

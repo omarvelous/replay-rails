@@ -45,7 +45,7 @@ module App
     end
 
     def set_playlist_ad
-      @playlist_ad = @playlist.playlist_ads.find(params[:id])
+      @playlist_ad = @playlist.playlist_ads.find_by_param!(params[:id])
     end
 
     def playlist_ad_params

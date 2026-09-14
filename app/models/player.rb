@@ -1,4 +1,6 @@
 class Player < ApplicationRecord
+  include PublicIdentifiable
+
   has_paper_trail ignore: [ :last_heartbeat_at, :ip_address, :user_agent, :pairing_code, :pairing_code_expires_at, :updated_at ]
 
   DEVICE_TYPES = %w[

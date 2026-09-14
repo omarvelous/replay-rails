@@ -41,7 +41,7 @@ module App
       end
 
       def set_account_user
-        @account_user = @user.account_users.where(account: Current.account).find(params[:id])
+        @account_user = @user.account_users.where(account: Current.account).find_by_param!(params[:id])
       end
   end
 end
