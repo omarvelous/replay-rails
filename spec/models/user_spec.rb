@@ -9,6 +9,12 @@ RSpec.describe User do
     it { is_expected.to validate_presence_of(:email_address) }
     it { is_expected.to have_secure_password }
 
+    it "rejects invalid email format" do
+      user.email_address = "not-an-email"
+      expect(user).not_to be_valid
+      expect(user.errors[:email_address]).to be_present
+    end
+
     it "validates uniqueness of email_address case-insensitively" do
       create(:user, email_address: "test@example.com")
       duplicate = build(:user, email_address: "TEST@EXAMPLE.COM")

@@ -6,6 +6,19 @@ RSpec.describe Agent do
   describe "validations" do
     it { is_expected.to validate_presence_of(:name) }
     it { is_expected.to validate_presence_of(:email) }
+
+    it "validates email uniqueness within account" do
+      existing = create(:agent)
+      duplicate = build(:agent, account: existing.account, email: existing.email)
+      expect(duplicate).not_to be_valid
+      expect(duplicate.errors[:email]).to be_present
+    end
+
+    it "allows same email across different accounts" do
+      agent1 = create(:agent, email: "shared@example.com")
+      agent2 = build(:agent, email: "shared@example.com")
+      expect(agent2).to be_valid
+    end
   end
 
   describe "associations" do
