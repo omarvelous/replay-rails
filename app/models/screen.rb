@@ -36,6 +36,8 @@ class Screen < ApplicationRecord
     player&.online?
   end
 
+  # Convenience method for seeds, specs, and non-controller contexts.
+  # Controllers should use PairPlayerToScreen service instead.
   def pair_player!(player, paired_by: nil)
     with_lock do
       reload_active_player_assignment&.unpair!
