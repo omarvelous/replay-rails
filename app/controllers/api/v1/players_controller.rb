@@ -6,7 +6,7 @@ module Api
 
       # GET /v1/players/:token — player status
       def show
-        render json: { paired: @player.paired?, screen_id: @player.screen&.id }
+        render_data(paired: @player.paired?)
       end
 
       # POST /v1/players — register a new device
@@ -21,11 +21,11 @@ module Api
         )
         player.parse_user_agent!
 
-        render json: {
+        render_data({
           pairing_code: player.pairing_code,
           token: player.token,
           expires_in: 600
-        }, status: :created
+        }, status: :created)
       end
     end
   end

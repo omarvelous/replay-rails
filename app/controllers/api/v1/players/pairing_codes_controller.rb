@@ -13,10 +13,10 @@ module Api
             expires_in = 600
           end
 
-          render json: {
+          render_data({
             pairing_code: @player.pairing_code,
             expires_in: expires_in
-          }, status: :created
+          }, status: :created)
         end
       end
     end

@@ -10,7 +10,7 @@ module Api
           if @screen_content
             render :show, formats: [ :json ]
           else
-            render json: { content: nil }
+            render_data(content: nil)
           end
         end
       end

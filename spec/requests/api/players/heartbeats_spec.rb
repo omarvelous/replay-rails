@@ -12,7 +12,7 @@ RSpec.describe "Api::Players::Heartbeats" do
   describe "POST /players/:token/heartbeat" do
     it "updates last_heartbeat_at" do
       post "/v1/players/#{player.token}/heartbeat"
-      expect(response).to be_successful
+      expect(response).to have_http_status(:no_content)
 
       player.reload
       expect(player.last_heartbeat_at).to be_within(5.seconds).of(Time.current)
@@ -30,7 +30,7 @@ RSpec.describe "Api::Players::Heartbeats" do
       post "/v1/players/#{player.token}/heartbeat"
 
       expect(response).to have_http_status(:gone)
-      expect(response.parsed_body["error"]).to eq("unpaired")
+      expect(response.parsed_body["error"]["message"]).to eq("unpaired")
     end
 
     it "updates user_agent" do

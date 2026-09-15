@@ -17,7 +17,7 @@ RSpec.describe "Api::Players::Manifests" do
       it "returns null content" do
         get "/v1/players/#{player.token}/manifest"
         expect(response).to be_successful
-        expect(parsed_json["content"]).to be_nil
+        expect(parsed_json["data"]["content"]).to be_nil
       end
     end
 

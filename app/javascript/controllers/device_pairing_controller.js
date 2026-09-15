@@ -41,7 +41,7 @@ export default class extends Controller {
         app_version: window.REPLAY_APP_VERSION || null
       })
     })
-    const data = await res.json()
+    const { data } = await res.json()
 
     this.token = data.token
     this.pairingCode = data.pairing_code
@@ -54,7 +54,7 @@ export default class extends Controller {
     try {
       const res = await fetch(`${this.apiHostValue}/v1/players/${token}`)
       if (!res.ok) return false
-      const data = await res.json()
+      const { data } = await res.json()
       if (data.paired) {
         this.token = token
         window.location.replace(`/players/${token}`)
@@ -73,7 +73,7 @@ export default class extends Controller {
     })
 
     if (res.ok) {
-      const data = await res.json()
+      const { data } = await res.json()
       this.token = token
       this.pairingCode = data.pairing_code
       this.expiresIn = data.expires_in
@@ -155,7 +155,7 @@ export default class extends Controller {
         this.backoff()
         return
       }
-      const data = await res.json()
+      const { data } = await res.json()
       if (data.paired) return this.onPaired()
       this.pollDelay = 3000 // reset on success
     } catch {

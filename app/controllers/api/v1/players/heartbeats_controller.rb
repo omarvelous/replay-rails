@@ -6,7 +6,7 @@ module Api
 
         # POST /v1/players/:token/heartbeat
         def create
-          return render json: { error: "unpaired" }, status: :gone unless @player.screen
+          return render_error("unpaired", status: :gone) unless @player.screen
 
           ua_changed = @player.user_agent != request.user_agent
 
@@ -19,7 +19,7 @@ module Api
           )
 
           @player.parse_user_agent! if ua_changed
-          render json: { ok: true }
+          head :no_content
         end
       end
     end
