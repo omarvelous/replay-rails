@@ -11,7 +11,7 @@ module App
       @lead_agent = @lead.lead_agents.build(lead_agent_params)
       authorize! @lead_agent
       @lead_agent.save!
-      redirect_to @lead, notice: "Agent assigned."
+      redirect_to @lead, notice: t(".success")
     end
 
     private

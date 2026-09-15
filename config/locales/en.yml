@@ -1,72 +1,130 @@
 en:
-  sites:
-    create:
-      success: "Site was successfully created."
-    update:
-      success: "Site was successfully updated."
-    destroy:
-      success: "Site was successfully deleted."
-
-  screens:
-    create:
-      success: "Screen was successfully created."
-    update:
-      success: "Screen was successfully updated."
-    destroy:
-      success: "Screen was successfully deleted."
-    playlist:
+  app:
+    sites:
       create:
-        success: "Playlist assigned to screen."
+        success: "Site created."
+      update:
+        success: "Site updated."
       destroy:
-        success: "Playlist removed from screen."
+        success: "Site deleted."
 
-  listings:
-    create:
-      success: "Listing was successfully created."
-    update:
-      success: "Listing was successfully updated."
-    destroy:
-      success: "Listing was successfully deleted."
+    screens:
+      create:
+        success: "Screen created."
+      update:
+        success: "Screen updated."
+      destroy:
+        success: "Screen deleted."
 
-  agents:
-    create:
-      success: "Agent was successfully created."
-    update:
-      success: "Agent was successfully updated."
-    destroy:
-      success: "Agent was successfully deleted."
+    screen_contents:
+      create:
+        success: "Content updated."
+      destroy:
+        success: "Content removed."
 
-  ads:
-    create:
-      success: "Ad was successfully created."
-    update:
-      success: "Ad was successfully updated."
-    destroy:
-      success: "Ad was successfully deleted."
+    screen_players:
+      create:
+        success: "Player paired successfully."
+      destroy:
+        success: "Player unpaired."
 
-  playlists:
-    create:
-      success: "Playlist was successfully created."
-    update:
-      success: "Playlist was successfully updated."
-    destroy:
-      success: "Playlist was successfully deleted."
+    pairings:
+      create:
+        success: "Player paired successfully."
 
-  listing_agents:
-    create:
-      success: "Agent and listing linked."
-    update:
-      success: "Listing agent was updated."
-    destroy:
-      success: "Agent and listing unlinked."
+    listings:
+      create:
+        success: "Listing created."
+      update:
+        success: "Listing updated."
+      destroy:
+        success: "Listing deleted."
 
-  playlist_ads:
-    create:
-      success: "Ad and playlist linked."
-    update:
-      success: "Playlist ad was updated."
-    destroy:
-      success: "Ad and playlist unlinked."
+    listing_agents:
+      create:
+        success: "Agent linked to listing."
+      update:
+        success: "Listing agent updated."
+      destroy:
+        success: "Agent unlinked from listing."
+
+    agents:
+      create:
+        success: "Agent created."
+      update:
+        success: "Agent updated."
+      destroy:
+        success: "Agent deleted."
+
+    ads:
+      update:
+        success: "Ad updated."
+      destroy:
+        success: "Ad deleted."
+      listing_ads:
+        create:
+          success: "Listing ad created."
+        update:
+          success: "Listing ad updated."
+      collection_ads:
+        create:
+          success: "Collection ad created."
+        update:
+          success: "Collection ad updated."
+      agent_ads:
+        create:
+          success: "Agent ad created."
+        update:
+          success: "Agent ad updated."
+      brand_ads:
+        create:
+          success: "Brand ad created."
+        update:
+          success: "Brand ad updated."
+
+    experiences:
+      create:
+        success: "Experience created."
+      update:
+        success: "Experience updated."
+      destroy:
+        success: "Experience deleted."
+
+    playlists:
+      create:
+        success: "Playlist created."
+      update:
+        success: "Playlist updated."
+      destroy:
+        success: "Playlist deleted."
+
+    playlist_ads:
+      create:
+        success: "Ad added to playlist."
+      update:
+        success: "Playlist ad updated."
+      destroy:
+        success: "Ad removed from playlist."
+
+    leads:
+      update:
+        success: "Lead updated."
+
+    lead_agents:
+      create:
+        success: "Agent assigned."
+
+    account_users:
+      create:
+        success: "Role added."
+      destroy:
+        success: "Role removed."
+
+    invites:
+      create:
+        success: "Invite sent."
+      destroy:
+        success: "Invite revoked."
 
   passwords:
     create:

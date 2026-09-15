@@ -27,7 +27,7 @@ module App
       authorize! @experience
 
       if @experience.save
-        redirect_to @experience, notice: "Experience created."
+        redirect_to @experience, notice: t(".success")
       else
         render :new, status: :unprocessable_content
       end
@@ -40,7 +40,7 @@ module App
     def update
       authorize! @experience
       if @experience.update(experience_params)
-        redirect_to @experience, notice: "Experience updated."
+        redirect_to @experience, notice: t(".success")
       else
         render :edit, status: :unprocessable_content
       end
@@ -49,7 +49,7 @@ module App
     def destroy
       authorize! @experience
       @experience.destroy
-      redirect_to experiences_path, notice: "Experience deleted."
+      redirect_to experiences_path, notice: t(".success")
     end
 
     private

@@ -17,7 +17,7 @@ module App
       authorize! @account_user
 
       if @account_user.save
-        redirect_to user_account_users_path(@user), notice: "Role added."
+        redirect_to user_account_users_path(@user), notice: t(".success")
       else
         @account_users = @user.account_users.where(account: Current.account)
         @available_roles = AccountUser::ROLES - @account_users.pluck(:role)
@@ -28,7 +28,7 @@ module App
     def destroy
       authorize! @account_user
       if @account_user.destroy
-        redirect_to user_account_users_path(@user), notice: "Role removed."
+        redirect_to user_account_users_path(@user), notice: t(".success")
       else
         redirect_to user_account_users_path(@user), alert: @account_user.errors.full_messages.to_sentence
       end
