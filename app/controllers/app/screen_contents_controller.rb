@@ -20,14 +20,13 @@ module App
       contentable = scope.find_by_param!(screen_content_params[:contentable_id])
       authorize! contentable, to: :show?
 
-      @screen.screen_contents.destroy_all
-      @screen.screen_contents.create!(contentable: contentable, active: true)
+      AssignScreenContent.new(screen: @screen, contentable: contentable).call
       redirect_to @screen, notice: "Content updated."
     end
 
     def destroy
       authorize! ScreenContent
-      @screen.screen_contents.destroy_all
+      @screen.screen_contents.where(active: true).update_all(active: false)
       redirect_to @screen, notice: "Content removed."
     end
 

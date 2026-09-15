@@ -52,11 +52,10 @@ RSpec.describe "Screen Content" do
   end
 
   describe "DELETE /screens/:screen_id/screen_content" do
-    it "removes the content from the screen" do
-      create(:screen_content, screen: screen, contentable: playlist)
-      expect {
-        delete screen_screen_content_path(screen)
-      }.to change(screen.screen_contents, :count).by(-1)
+    it "deactivates the content on the screen" do
+      content = create(:screen_content, screen: screen, contentable: playlist, active: true)
+      delete screen_screen_content_path(screen)
+      expect(content.reload.active).to be false
     end
 
     it "redirects to the screen" do
