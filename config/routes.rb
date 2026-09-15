@@ -141,11 +141,13 @@ Rails.application.routes.draw do
   # ---------------------------------------------------------------
   constraints subdomain: "api" do
     scope module: "api" do
-      resources :players, param: :token, only: %i[create show] do
-        scope module: "players" do
-          resource :heartbeat, only: :create
-          resource :manifest, only: :show
-          resource :pairing_code, only: :create
+      namespace :v1 do
+        resources :players, param: :token, only: %i[create show] do
+          scope module: "players" do
+            resource :heartbeat, only: :create
+            resource :manifest, only: :show
+            resource :pairing_code, only: :create
+          end
         end
       end
     end

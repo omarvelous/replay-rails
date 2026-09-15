@@ -30,7 +30,7 @@ export default class extends Controller {
   }
 
   async registerNewPlayer() {
-    const res = await fetch(`${this.apiHostValue}/players`, {
+    const res = await fetch(`${this.apiHostValue}/v1/players`, {
       method: "POST",
       credentials: "include",
       headers: { "Content-Type": "application/json" },
@@ -52,7 +52,7 @@ export default class extends Controller {
 
   async checkIfPaired(token) {
     try {
-      const res = await fetch(`${this.apiHostValue}/players/${token}`)
+      const res = await fetch(`${this.apiHostValue}/v1/players/${token}`)
       if (!res.ok) return false
       const data = await res.json()
       if (data.paired) {
@@ -67,7 +67,7 @@ export default class extends Controller {
   }
 
   async refreshPairingCode(token) {
-    const res = await fetch(`${this.apiHostValue}/players/${token}/pairing_code`, {
+    const res = await fetch(`${this.apiHostValue}/v1/players/${token}/pairing_code`, {
       method: "POST",
       headers: { "Content-Type": "application/json" }
     })
@@ -150,7 +150,7 @@ export default class extends Controller {
 
   async checkStatus() {
     try {
-      const res = await fetch(`${this.apiHostValue}/players/${this.token}`)
+      const res = await fetch(`${this.apiHostValue}/v1/players/${this.token}`)
       if (!res.ok) {
         this.backoff()
         return

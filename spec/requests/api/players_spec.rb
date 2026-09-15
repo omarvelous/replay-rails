@@ -6,7 +6,7 @@ RSpec.describe "Api::Players" do
   describe "POST /players" do
     it "registers a player and returns JSON" do
       expect {
-        post "/players", as: :json
+        post "/v1/players", as: :json
       }.to change(Player, :count).by(1)
 
       expect(response).to have_http_status(:created)
@@ -16,7 +16,7 @@ RSpec.describe "Api::Players" do
     end
 
     it "accepts device info params" do
-      post "/players",
+      post "/v1/players",
         params: { screen_width: 1920, screen_height: 1080, touch_capable: true, app_version: "1.0.0" },
         as: :json
 
@@ -28,7 +28,7 @@ RSpec.describe "Api::Players" do
     end
 
     it "parses user agent into device fields" do
-      post "/players",
+      post "/v1/players",
         headers: { "User-Agent" => "Mozilla/5.0 (Linux; Android 11; AFTSSS Build/NS6294) AppleWebKit/537.36" },
         as: :json
 
@@ -41,7 +41,7 @@ RSpec.describe "Api::Players" do
     let(:player) { create(:player) }
 
     it "returns paired: false when not paired" do
-      get "/players/#{player.token}"
+      get "/v1/players/#{player.token}"
       expect(response).to be_successful
       expect(response.parsed_body["paired"]).to be false
       expect(response.parsed_body["screen_id"]).to be_nil
@@ -51,14 +51,14 @@ RSpec.describe "Api::Players" do
       screen = create(:screen)
       screen.pair_player!(player)
 
-      get "/players/#{player.token}"
+      get "/v1/players/#{player.token}"
       expect(response).to be_successful
       expect(response.parsed_body["paired"]).to be true
       expect(response.parsed_body["screen_id"]).to eq(screen.id)
     end
 
     it "returns 401 for invalid token" do
-      get "/players/invalid"
+      get "/v1/players/invalid"
       expect(response).to have_http_status(:unauthorized)
       expect(response.parsed_body["error"]).to be_present
     end
@@ -72,7 +72,7 @@ RSpec.describe "Api::Players" do
 
       # Manifest endpoint will raise RecordNotFound if content doesn't exist
       # but the base controller should handle it
-      get "/players/nonexistent-token"
+      get "/v1/players/nonexistent-token"
       expect(response).to have_http_status(:unauthorized)
       expect(response.content_type).to include("application/json")
     end
@@ -84,7 +84,7 @@ RSpec.describe "Api::Players" do
     it "returns the existing code if still valid" do
       existing_code = player.pairing_code
 
-      post "/players/#{player.token}/pairing_code", as: :json
+      post "/v1/players/#{player.token}/pairing_code", as: :json
 
       expect(response).to have_http_status(:created)
       expect(response.parsed_body["pairing_code"]).to eq(existing_code)
@@ -95,7 +95,7 @@ RSpec.describe "Api::Players" do
       player.update!(pairing_code_expires_at: 1.minute.ago)
       old_code = player.pairing_code
 
-      post "/players/#{player.token}/pairing_code", as: :json
+      post "/v1/players/#{player.token}/pairing_code", as: :json
 
       expect(response).to have_http_status(:created)
       expect(response.parsed_body["pairing_code"]).to match(/\A[A-Z0-9]{6}\z/)
@@ -107,12 +107,12 @@ RSpec.describe "Api::Players" do
       player # ensure created
 
       expect {
-        post "/players/#{player.token}/pairing_code", as: :json
+        post "/v1/players/#{player.token}/pairing_code", as: :json
       }.not_to change(Player, :count)
     end
 
     it "returns 401 for invalid token" do
-      post "/players/invalid/pairing_code", as: :json
+      post "/v1/players/invalid/pairing_code", as: :json
       expect(response).to have_http_status(:unauthorized)
     end
   end

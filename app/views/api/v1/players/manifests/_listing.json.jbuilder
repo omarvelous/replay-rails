@@ -12,5 +12,5 @@ json.floor_plans listing.floor_plans_attachments do |attachment|
 end
 
 if listing.qr_code
-  json.partial! "api/players/manifests/qr_code", qr_code: listing.qr_code
+  json.partial! "api/v1/players/manifests/qr_code", qr_code: listing.qr_code
 end

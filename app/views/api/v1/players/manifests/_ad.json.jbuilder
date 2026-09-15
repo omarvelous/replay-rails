@@ -10,6 +10,6 @@ end
 
 json.adable do
   json.type ad.adable_type
-  json.partial! "api/players/manifests/#{ad.adable_type.underscore}",
+  json.partial! "api/v1/players/manifests/#{ad.adable_type.underscore}",
     ad.adable_type.demodulize.underscore.to_sym => ad.adable
 end
