@@ -2,11 +2,6 @@ module App
   class ScreenContentsController < BaseController
     before_action :set_screen
 
-    CONTENT_SCOPES = {
-      "Playlist" => -> (account) { account.playlists },
-      "Experience" => -> (account) { account.experiences }
-    }.freeze
-
     def new
       authorize! ScreenContent
       @playlists = Current.account.playlists.where(status: "published").order(:name)
@@ -16,10 +11,11 @@ module App
     def create
       authorize! ScreenContent
 
-      scope = CONTENT_SCOPES[screen_content_params[:contentable_type]]
-      raise ActiveRecord::RecordNotFound unless scope
-
-      contentable = scope.call(Current.account).find_by_param!(screen_content_params[:contentable_id])
+      contentable = ScreenContent.find_contentable(
+        type: screen_content_params[:contentable_type],
+        public_id: screen_content_params[:contentable_id],
+        account: Current.account
+      )
       authorize! contentable, to: :show?
 
       AssignScreenContent.new(screen: @screen, contentable: contentable).call
