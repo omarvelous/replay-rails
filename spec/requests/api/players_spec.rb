@@ -50,7 +50,7 @@ RSpec.describe "Api::Players" do
 
     it "returns paired: true when paired" do
       screen = create(:screen)
-      screen.pair_player!(player)
+      pair_player!(screen, player)
 
       get "/v1/players/#{player.token}"
       expect(response).to be_successful

@@ -52,7 +52,7 @@ RSpec.describe "ScreenPlayers" do
   describe "DELETE /screens/:screen_id/screen_player" do
     it "unpairs the player" do
       player = create(:player)
-      screen.pair_player!(player)
+      pair_player!(screen, player)
 
       delete screen_screen_player_path(screen)
       expect(screen.reload).not_to be_paired
@@ -60,7 +60,7 @@ RSpec.describe "ScreenPlayers" do
 
     it "redirects to the screen" do
       player = create(:player)
-      screen.pair_player!(player)
+      pair_player!(screen, player)
 
       delete screen_screen_player_path(screen)
       expect(response).to redirect_to(screen_path(screen))

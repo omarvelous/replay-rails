@@ -4,7 +4,7 @@ RSpec.describe ScreenChannel do
   it "subscribes with a valid paired player token" do
     player = create(:player)
     screen = create(:screen)
-    screen.pair_player!(player)
+    pair_player!(screen, player)
 
     subscribe(token: player.token)
     expect(subscription).to be_confirmed

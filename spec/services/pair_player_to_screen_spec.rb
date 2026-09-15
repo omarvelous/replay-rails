@@ -31,7 +31,7 @@ RSpec.describe PairPlayerToScreen do
 
     it "unpairs the previous player from the screen" do
       old_player = create(:player)
-      screen.pair_player!(old_player, paired_by: user)
+      pair_player!(screen, old_player, paired_by: user)
 
       described_class.new(screen: screen, code: player.pairing_code, paired_by: user).call
 
@@ -41,7 +41,7 @@ RSpec.describe PairPlayerToScreen do
 
     it "unpairs the player from any other screen" do
       other_screen = create(:screen, site: site)
-      other_screen.pair_player!(player, paired_by: user)
+      pair_player!(other_screen, player, paired_by: user)
       player.refresh_pairing_code!
 
       described_class.new(screen: screen, code: player.pairing_code, paired_by: user).call

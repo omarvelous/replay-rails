@@ -6,7 +6,7 @@ RSpec.describe "Api::Players::Heartbeats" do
 
   before do
     host! "api.replay.localhost"
-    screen.pair_player!(player)
+    pair_player!(screen, player)
   end
 
   describe "POST /players/:token/heartbeat" do

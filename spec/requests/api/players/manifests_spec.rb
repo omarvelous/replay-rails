@@ -9,7 +9,7 @@ RSpec.describe "Api::Players::Manifests" do
 
   before do
     host! "api.replay.localhost"
-    screen.pair_player!(player)
+    pair_player!(screen, player)
   end
 
   describe "GET /players/:token/manifest" do
