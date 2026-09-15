@@ -2,7 +2,10 @@ module App
   class ScreenContentsController < BaseController
     before_action :set_screen
 
-    ALLOWED_CONTENT_TYPES = %w[Playlist Experience].freeze
+    CONTENT_SCOPES = {
+      "Playlist" => -> (account) { account.playlists },
+      "Experience" => -> (account) { account.experiences }
+    }.freeze
 
     def new
       authorize! ScreenContent
@@ -13,11 +16,10 @@ module App
     def create
       authorize! ScreenContent
 
-      type = screen_content_params[:contentable_type]
-      raise ActionController::BadRequest, "Invalid content type" unless type.in?(ALLOWED_CONTENT_TYPES)
+      scope = CONTENT_SCOPES[screen_content_params[:contentable_type]]
+      raise ActiveRecord::RecordNotFound unless scope
 
-      scope = type == "Playlist" ? Current.account.playlists : Current.account.experiences
-      contentable = scope.find_by_param!(screen_content_params[:contentable_id])
+      contentable = scope.call(Current.account).find_by_param!(screen_content_params[:contentable_id])
       authorize! contentable, to: :show?
 
       AssignScreenContent.new(screen: @screen, contentable: contentable).call

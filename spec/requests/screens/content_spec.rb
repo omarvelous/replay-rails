@@ -37,9 +37,9 @@ RSpec.describe "Screen Content" do
       expect(screen.screen_contents.find_by(active: true).contentable).to eq(playlist)
     end
 
-    it "rejects invalid contentable_type" do
+    it "returns 404 for invalid contentable_type" do
       post screen_screen_content_path(screen), params: { screen_content: { contentable_type: "User", contentable_id: user.to_param } }
-      expect(response).to have_http_status(:bad_request)
+      expect(response).to have_http_status(:not_found)
     end
 
     it "assigns an experience to the screen" do
