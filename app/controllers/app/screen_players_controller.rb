@@ -16,7 +16,7 @@ module App
     ).call
 
     if result.success?
-      redirect_to @screen, notice: "Player paired successfully."
+      redirect_to @screen, notice: t(".success")
     else
       flash[:alert] = result.error
       redirect_to new_screen_screen_player_path(@screen)
@@ -26,7 +26,7 @@ module App
   def destroy
     authorize! ScreenPlayer
     @screen.unpair_player!
-    redirect_to @screen, notice: "Player unpaired."
+    redirect_to @screen, notice: t(".success")
   end
 
   private

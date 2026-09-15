@@ -21,7 +21,7 @@ module App
       ).call
 
       if result.success?
-        redirect_to screen_path(screen), notice: "Player paired successfully."
+        redirect_to screen_path(screen), notice: t(".success")
       else
         flash.now[:alert] = result.error
         render :show, status: :unprocessable_content

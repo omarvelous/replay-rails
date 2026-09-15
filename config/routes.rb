@@ -38,8 +38,8 @@ Rails.application.routes.draw do
       root "dashboard#show", as: :app_root
 
       # Auth
-      resource :session
-      resources :passwords, param: :token
+      resource :session, only: %i[new create destroy]
+      resources :passwords, param: :token, only: %i[new create edit update]
       resources :accounts, only: %i[new create]
 
       # Content

@@ -16,7 +16,7 @@ module App
         end
 
         def load_form_data
-          @available_ads = Current.account.ads.where.not(adable_type: "Ads::CollectionAd").order(:headline)
+          @available_ads = Current.account.ads.includes(:adable).where.not(adable_type: "Ads::CollectionAd").order(:headline)
         end
     end
   end

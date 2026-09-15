@@ -14,13 +14,13 @@ module App
       authorize! @screen_content
 
       AssignScreenContent.new(screen_content: @screen_content).call
-      redirect_to @screen, notice: "Content updated."
+      redirect_to @screen, notice: t(".success")
     end
 
     def destroy
       authorize! ScreenContent
       @screen.screen_contents.where(active: true).update_all(active: false)
-      redirect_to @screen, notice: "Content removed."
+      redirect_to @screen, notice: t(".success")
     end
 
     private

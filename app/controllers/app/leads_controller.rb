@@ -18,7 +18,7 @@ module App
       @lead = Current.account.leads.find_by_param!(params[:id])
       authorize! @lead
       if @lead.update(lead_params)
-        redirect_to @lead, notice: "Lead updated."
+        redirect_to @lead, notice: t(".success")
       else
         render :show, status: :unprocessable_content
       end
