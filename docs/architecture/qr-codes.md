@@ -1,71 +1,60 @@
 # QR Codes
 
-QR codes connect physical signage to digital interactions. Each listing and agent gets a QR code that, when scanned, records attribution data and redirects to a landing page.
+QR codes connect physical signage to digital interactions. Each listing and agent gets a QR code that, when scanned, fires an analytics event and redirects to a landing page.
 
-## Models
+## Model
 
 ### QrCode
 
 ```ruby
 belongs_to :account
 belongs_to :destination_record, polymorphic: true, optional: true
-has_many :scans, class_name: "QrScan"
 ```
 
 - `token` — auto-generated unique identifier, used in the scan URL
+- `public_id` — UUID via `PublicIdentifiable`, used in analytics events
 - `destination_record` — polymorphic link to a Listing or Agent
 - `destination_url` — optional external URL override
 - `active` — boolean, inactive codes return 404
 
-### QrScan
+## Scan tracking
+
+Scans are tracked as `qr.scanned` Ahoy events via the `Analytics::Events::QrScanned` governed event PORO. Event properties carry full attribution context:
 
 ```ruby
-belongs_to :qr_code
-belongs_to :account
-belongs_to :ad, optional: true
-belongs_to :screen, optional: true
-has_many :leads
+Analytics::Events::QrScanned.create(
+  qr_code_pid: qr.public_id,
+  destination_url: destination,
+  ad_pid: params[:a].presence,
+  screen_pid: params[:s].presence,
+  screen_content_pid: params[:sc].presence,
+  request: request
+)
 ```
 
-- `ad_id`, `screen_id` — attribution from URL params
-- `context` — jsonb store for `playlist_id`, `slide_position`
-- `ip_address`, `user_agent` — scanner's browser info
+### Querying scans
+
+`QrCode` provides convenience methods that delegate to the governed event PORO:
+
+```ruby
+qr.scan_events           # Ahoy::Event relation for this QR code
+qr.scan_count             # count
+qr.scan_events.qualified  # events with both ad_pid and screen_pid
+```
+
+The `qualified` scope is defined in `QrScanned::Scopes` and mixed into the relation via `extending`, so it chains naturally with `where_properties`.
 
 ## Scan URL format
 
 ```
-/s/:token?a=<ad_id>&s=<screen_id>&p=<playlist_id>
+/s/:token?a=<ad_pid>&s=<screen_pid>&sc=<screen_content_pid>
 ```
 
-The `/s/:token` route is public (any subdomain, no auth). The player embeds the attribution params when rendering QR codes in ad slides.
-
-## Scan flow
-
-1. `ScansController#show` finds the QR code by token
-2. Creates a `QrScan` record with all attribution data
-3. Redirects to the destination:
-   - `destination_url` → external redirect
-   - `destination_record` → `Go::` landing page with `scan_id` appended
-   - Neither → app root fallback
-
-## Qualified scans
-
-The `QrScan.qualified` scope filters to scans where both `ad_id` AND `screen_id` are present:
-
-```ruby
-scope :qualified, -> { where.not(ad_id: nil).where.not(screen_id: nil) }
-```
-
-This distinguishes scans from active signage (someone scanned a QR code on a real screen) from direct URL shares, test scans, or bookmarked links.
-
-Qualified scans are used for:
-- Dashboard funnel metrics
-- Conversion rate calculations (scans → leads)
-- Per-screen and per-ad performance
+The `/s/:token` route is public (any subdomain, no auth). The player embeds attribution params when rendering QR codes in ad slides via the `qr_scan_full_url` helper.
 
 ## QR code rendering
 
-QR codes are rendered as inline SVGs in ad layout partials via the `_qr_badge` shared partial. The `rqrcode` gem generates the SVG matrix. The scan URL is embedded with the current ad, screen, and playlist context.
+QR codes are rendered as inline SVGs in ad layout partials via the `_qr_badge` shared partial. The `rqrcode` gem generates the SVG matrix. The scan URL includes the current ad, screen, and screen content context.
 
 ## Rate limiting
 
