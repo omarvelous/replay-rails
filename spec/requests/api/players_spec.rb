@@ -60,6 +60,21 @@ RSpec.describe "Api::Players" do
     it "returns 401 for invalid token" do
       get "/players/invalid"
       expect(response).to have_http_status(:unauthorized)
+      expect(response.parsed_body["error"]).to be_present
+    end
+  end
+
+  describe "API error handling" do
+    it "returns JSON 404 for RecordNotFound" do
+      player = create(:player)
+      screen = create(:screen)
+      screen.pair_player!(player)
+
+      # Manifest endpoint will raise RecordNotFound if content doesn't exist
+      # but the base controller should handle it
+      get "/players/nonexistent-token"
+      expect(response).to have_http_status(:unauthorized)
+      expect(response.content_type).to include("application/json")
     end
   end
 

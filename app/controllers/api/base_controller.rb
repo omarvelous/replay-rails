@@ -2,6 +2,18 @@ module Api
   class BaseController < ActionController::Base
     protect_from_forgery with: :null_session
 
+    rescue_from ActiveRecord::RecordNotFound do
+      render json: { error: "Not found" }, status: :not_found
+    end
+
+    rescue_from ActiveRecord::RecordInvalid do |e|
+      render json: { error: e.record.errors.full_messages.to_sentence }, status: :unprocessable_entity
+    end
+
+    rescue_from ActionController::ParameterMissing do |e|
+      render json: { error: e.message }, status: :bad_request
+    end
+
     private
 
     def authenticate_player!
