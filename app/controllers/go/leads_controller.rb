@@ -1,13 +1,12 @@
 module Go
   class LeadsController < ApplicationController
+    include HoneypotProtection
+
     skip_before_action :require_authentication
     rate_limit to: 10, within: 1.hour, only: :create, by: -> { request.remote_ip }
 
     def create
-      if lead_params[:website].present?
-        head :ok
-        return
-      end
+      return head(:ok) if honeypot_triggered?
 
       result = CaptureLead.new(
         params: lead_params.except(:website),

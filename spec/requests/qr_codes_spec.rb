@@ -6,6 +6,9 @@ RSpec.describe "QrCodes" do
 
   before { sign_in(user) }
 
+  it_behaves_like "tenant isolated resource", :qr_code, :qr_code_path
+
+
   describe "GET /qr_codes" do
     it "returns a successful response" do
       get qr_codes_path

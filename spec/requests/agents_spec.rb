@@ -6,6 +6,9 @@ RSpec.describe "Agents" do
 
   before { sign_in(user) }
 
+  it_behaves_like "tenant isolated resource", :agent, :agent_path
+
+
   describe "GET /agents" do
     it "returns a successful response" do
       get agents_path

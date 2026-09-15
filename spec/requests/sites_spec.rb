@@ -6,6 +6,9 @@ RSpec.describe "Sites" do
 
   before { sign_in(user) }
 
+  it_behaves_like "tenant isolated resource", :site, :site_path
+
+
   describe "GET /sites" do
     it "returns a successful response" do
       get sites_path

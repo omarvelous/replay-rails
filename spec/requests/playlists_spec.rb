@@ -6,6 +6,9 @@ RSpec.describe "Playlists" do
 
   before { sign_in(user) }
 
+  it_behaves_like "tenant isolated resource", :playlist, :playlist_path
+
+
   describe "GET /playlists" do
     it "returns a successful response" do
       get playlists_path

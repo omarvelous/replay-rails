@@ -53,10 +53,11 @@ RSpec.describe PairPlayerToScreen do
     it "broadcasts the pairing event" do
       code = player.pairing_code
 
-      expect(ActionCable.server).to receive(:broadcast).with("pairing_#{code}", hash_including(paired: true))
-      allow(ActionCable.server).to receive(:broadcast).with(/^screen_/, anything)
+      allow(ActionCable.server).to receive(:broadcast)
 
       described_class.new(screen: screen, code: code, paired_by: user).call
+
+      expect(ActionCable.server).to have_received(:broadcast).with("pairing_#{code}", hash_including(paired: true))
     end
 
     context "with invalid code" do

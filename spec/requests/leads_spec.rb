@@ -6,6 +6,9 @@ RSpec.describe "Leads" do
 
   before { sign_in(user) }
 
+  it_behaves_like "tenant isolated resource", :lead, :lead_path
+
+
   describe "GET /leads" do
     it "returns a successful response" do
       get leads_path
