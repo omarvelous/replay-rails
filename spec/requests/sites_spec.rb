@@ -4,6 +4,8 @@ RSpec.describe "Sites" do
   let(:account) { create(:account) }
   let(:user) { create(:user, account: account) }
 
+  it_behaves_like "tenant isolated resource", :site, :site_path
+
   before { sign_in(user) }
 
   describe "GET /sites" do

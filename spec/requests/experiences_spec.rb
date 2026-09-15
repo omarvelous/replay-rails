@@ -5,6 +5,8 @@ RSpec.describe "Experiences" do
   let(:user) { create(:user, account: account) }
   let(:listing) { create(:listing, account: account) }
 
+  it_behaves_like "tenant isolated resource", :experience, :experience_path
+
   before { sign_in(user) }
 
   describe "GET /experiences" do

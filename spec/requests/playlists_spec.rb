@@ -4,6 +4,8 @@ RSpec.describe "Playlists" do
   let(:account) { create(:account) }
   let(:user) { create(:user, account: account) }
 
+  it_behaves_like "tenant isolated resource", :playlist, :playlist_path
+
   before { sign_in(user) }
 
   describe "GET /playlists" do

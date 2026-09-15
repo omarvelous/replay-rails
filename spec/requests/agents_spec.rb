@@ -4,6 +4,8 @@ RSpec.describe "Agents" do
   let(:account) { create(:account) }
   let(:user) { create(:user, account: account) }
 
+  it_behaves_like "tenant isolated resource", :agent, :agent_path
+
   before { sign_in(user) }
 
   describe "GET /agents" do
