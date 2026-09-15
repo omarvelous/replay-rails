@@ -10,11 +10,11 @@ erDiagram
     Account ||--o{ Agent : "has many"
     Account ||--o{ Ad : "has many"
     Account ||--o{ Playlist : "has many"
+    Account ||--o{ Experience : "has many"
     Account ||--o{ QrCode : "has many"
     Account ||--o{ Lead : "has many"
     Account ||--o{ Invite : "has many"
-    Account ||--o{ Impression : "has many"
-    Account ||--o{ MetricSnapshot : "has many"
+    Account ||--o{ Inquiry : "has many"
 
     User ||--o{ AccountUser : "has many"
     User ||--o{ Session : "has many"
@@ -25,17 +25,19 @@ erDiagram
 
     Site ||--o{ Screen : "has many"
     Screen ||--o{ ScreenPlayer : "has many"
-    Screen ||--o{ ScreenPlaylist : "has many"
+    Screen ||--o{ ScreenContent : "has many"
 
     Player ||--o{ ScreenPlayer : "has many"
+
+    ScreenContent }o--|| Screen : "belongs to"
+    ScreenContent }o--|| Contentable : "delegated type"
 
     Playlist ||--o{ PlaylistAd : "has many"
     Ad ||--o{ PlaylistAd : "has many"
 
-    ScreenPlaylist }o--|| Screen : "belongs to"
-    ScreenPlaylist }o--|| Playlist : "belongs to"
-
     Ad ||--|| Adable : "delegated type"
+
+    Experience ||--|| Experienceable : "delegated type"
 
     Listing ||--o{ ListingAgent : "has many"
     Agent ||--o{ ListingAgent : "has many"
@@ -44,12 +46,9 @@ erDiagram
     Lead ||--o{ LeadAgent : "has many"
     Agent ||--o{ LeadAgent : "has many"
 
-    QrCode ||--o{ QrScan : "has many"
-    QrScan ||--o{ Lead : "has many"
-
-    Impression }o--|| Ad : "belongs to"
-    Impression }o--|| Screen : "belongs to"
-    Impression }o--|| Player : "belongs to"
+    Ahoy_Visit ||--o{ Ahoy_Event : "has many"
+    Ahoy_Visit |o--o{ Lead : "visitable"
+    Ahoy_Visit |o--o{ Inquiry : "visitable"
 ```
 
 ## Model reference
@@ -59,7 +58,7 @@ erDiagram
 | Model | Table | Key fields | Tenant-scoped | paper_trail |
 |-------|-------|------------|:---:|:---:|
 | Account | `accounts` | name | — | — |
-| User | `users` | email_address, password_digest | — | Yes |
+| User | `users` | email_address, password_digest, first_name, last_name | — | Yes |
 | AccountUser | `account_users` | account_id, user_id, role | Yes | Yes |
 | Session | `sessions` | user_id, ip_address, user_agent | — | — |
 | Invite | `invites` | account_id, email, role, token, accepted_at | Yes | Yes |
@@ -70,43 +69,48 @@ erDiagram
 
 | Model | Table | Key fields | Tenant-scoped | paper_trail |
 |-------|-------|------------|:---:|:---:|
-| Listing | `listings` | account_id, address, price, bedrooms, bathrooms, sqft, status | Yes | Yes |
-| Agent | `agents` | account_id, user_id, name, email, phone, title | Yes | Yes |
-| ListingAgent | `listing_agents` | listing_id, agent_id, role, primary_at | Yes | Yes |
-| Ad | `ads` | account_id, adable_type, adable_id, layout, theme, title | Yes | Yes |
-| Ads::ListingAd | `listing_ads` | listing_id, badge, event_date, event_time | — | — |
-| Ads::CollectionAd | `collection_ads` | (max 8 member ads) | — | — |
+| Listing | `listings` | address, price, beds, baths, sqft, status, property_type, listing_type, description | Yes | Yes |
+| Agent | `agents` | user_id, name, email, phone, bio | Yes | Yes |
+| ListingAgent | `listing_agents` | listing_id, agent_id, role, primary_at | — | Yes |
+| Ad | `ads` | adable_type, adable_id, headline, body, layout, theme | Yes | Yes |
+| Ads::ListingAd | `listing_ads` | listing_id, badge, event_date, event_start_time, event_end_time, original_price, sold_price | — | — |
+| Ads::CollectionAd | `collection_ads` | (max 8 member ads via CollectionAdAd) | — | — |
 | Ads::AgentAd | `agent_ads` | agent_id | — | — |
-| Ads::BrandAd | `brand_ads` | headline, body | — | — |
+| Ads::BrandAd | `brand_ads` | (no extra fields — uses Ad headline/body/image) | — | — |
 | Ads::CollectionAdAd | `collection_ad_ads` | collection_ad_id, ad_id | — | — |
 
 ### Playback
 
 | Model | Table | Key fields | Tenant-scoped | paper_trail |
 |-------|-------|------------|:---:|:---:|
-| Site | `sites` | account_id, name, address | Yes | Yes |
+| Site | `sites` | name, address | Yes | Yes |
 | Screen | `screens` | site_id, name | Yes | Yes |
-| Player | `players` | token, pairing_code, last_heartbeat_at | — | Yes |
+| Player | `players` | token, pairing_code, last_heartbeat_at, device_type, device_name | — | Yes |
 | ScreenPlayer | `screen_players` | screen_id, player_id, active, paired_by_id | — | Yes |
-| ScreenPlaylist | `screen_playlists` | screen_id, playlist_id | — | Yes |
-| Playlist | `playlists` | account_id, name | Yes | Yes |
+| ScreenContent | `screen_contents` | screen_id, contentable_type, contentable_id | — | Yes |
+| Playlist | `playlists` | name | Yes | Yes |
 | PlaylistAd | `playlist_ads` | playlist_id, ad_id, position, duration | — | Yes |
+| Experience | `experiences` | name, config, experienceable_type, experienceable_id | Yes | Yes |
+| Experiences::ListingExperience | `listing_experiences` | listing_id, agent_id | — | — |
 
 ### Engagement
 
 | Model | Table | Key fields | Tenant-scoped | paper_trail |
 |-------|-------|------------|:---:|:---:|
-| QrCode | `qr_codes` | account_id, token, destination_record (polymorphic) | Yes | — |
-| QrScan | `qr_scans` | qr_code_id, account_id, ad_id, screen_id, ip_address | Yes | — |
-| Lead | `leads` | account_id, listing_id, qr_scan_id, name, email, phone, status, lead_type | Yes | Yes |
+| QrCode | `qr_codes` | token, public_id, destination_record (polymorphic), destination_url, active | Yes | — |
+| Lead | `leads` | listing_id, ahoy_visit_id, name, email, phone, status, lead_type, message | Yes | Yes |
 | LeadAgent | `lead_agents` | lead_id, agent_id | — | Yes |
+| Inquiry | `inquiries` | name, email, phone, message, ahoy_visit_id | — | — |
 
 ### Analytics
 
 | Model | Table | Key fields | Tenant-scoped | paper_trail |
 |-------|-------|------------|:---:|:---:|
-| Impression | `impressions` | ad_id, screen_id, player_id, site_id, account_id, playlist_id, position, duration | Yes | — |
-| MetricSnapshot | `metric_snapshots` | account_id, metric_name, value, starts_at, ends_at | Yes | — |
+| Ahoy::Visit | `ahoy_visits` | visit_token, visitor_token, user_id, account_id, started_at | — | — |
+| Ahoy::Event | `ahoy_events` | visit_id, account_id, name, properties (jsonb), time | — | — |
+| Rollup | `rollups` | name, interval, time, dimensions (jsonb), value | — | — |
+
+Governed event POROs (`Analytics::Events::*`) validate and fire Ahoy events. They also provide query scopes via `Base.events` and `Base.where_properties`. See `docs/dev/event-catalog.md`.
 
 ## Join models
 
@@ -117,10 +121,12 @@ erDiagram
 | LeadAgent | Lead ↔ Agent | created_at (assignment history) |
 | PlaylistAd | Playlist ↔ Ad | position, duration |
 | ScreenPlayer | Screen ↔ Player | active, paired_by, paired_at, unpaired_at |
-| ScreenPlaylist | Screen ↔ Playlist | — |
+| ScreenContent | Screen ↔ Contentable | delegated type |
 | CollectionAdAd | CollectionAd ↔ Ad | — |
 
 ## Delegated types
+
+### Ad → Adable
 
 `Ad` uses `delegated_type :adable` with 4 variants:
 
@@ -131,4 +137,19 @@ erDiagram
 | Agent ad | `Ads::AgentAd` | `agent_ads` | profile, split |
 | Brand ad | `Ads::BrandAd` | `brand_ads` | hero, minimal |
 
-Each variant has its own validations, associations, and content partial. The `Ad` parent record holds the shared fields (layout, theme, image, title) and delegates type-specific behavior to the adable.
+### ScreenContent → Contentable
+
+`ScreenContent` uses `delegated_type :contentable` with 2 variants:
+
+| Type | Class | Description |
+|------|-------|-------------|
+| Playlist | `Playlist` | Passive ad slideshow |
+| Experience | `Experience` | Interactive kiosk |
+
+### Experience → Experienceable
+
+`Experience` uses `delegated_type :experienceable`:
+
+| Type | Class | Description |
+|------|-------|-------------|
+| Listing experience | `Experiences::ListingExperience` | Single listing presentation with photo gallery, agent card, QR handoff |

@@ -236,6 +236,7 @@ Documentation is in progress.
 | Event query scopes | `.claude/plans/202609130200-event-query-scopes.md` | Complete |
 | Agent branding | `.claude/plans/202609140100-agent-branding.md` | Complete |
 | Go page enhancements | `.claude/plans/202609140200-go-page-enhancements.md` | Complete |
+| Docs audit update | `.claude/plans/202609150100-docs-audit-update.md` | Complete |
 | NYC product gaps | `.claude/plans/drafts/plan-nyc-product-gaps.md` | Draft — needs review |
 | Day-parting / Scheduling | `.claude/plans/drafts/plan-day-parting-scheduling.md` | Draft — needs review |
 | Live Preview | `.claude/plans/drafts/plan-live-preview.md` | Draft — needs review |

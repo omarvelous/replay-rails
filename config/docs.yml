@@ -26,7 +26,11 @@ categories:
       - title: Managing Screens
         slug: screens
         template: screens
-        description: Set up screens and assign playlists
+        description: Set up screens and assign content
+      - title: Experiences
+        slug: experiences
+        template: experiences
+        description: Interactive kiosk presentations for open houses
       - title: Pairing a Player
         slug: player-pairing
         template: player_pairing

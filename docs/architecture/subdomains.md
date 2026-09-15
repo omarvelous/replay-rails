@@ -28,6 +28,7 @@ constraints subdomain: "" do
   namespace :go do
     resources :listings, only: :show
     resources :agents, only: :show
+    resources :experiences, only: :show
     resources :leads, only: :create
   end
 end
@@ -52,9 +53,10 @@ end
 # API — JSON responses
 constraints subdomain: "api" do
   scope module: "api" do
-    resources :players, param: :token do
+    resources :players, param: :token, only: [:create, :show] do
       resource :heartbeat, only: :create
-      resources :impressions, only: :create
+      resource :manifest, only: :show
+      resource :pairing_code, only: :create
     end
   end
 end
@@ -107,5 +109,6 @@ ApplicationController (Authentication concern, Pagy)
 ├── Play::PlayersController (skip auth)
 └── Api::PlayersController (token auth)
     ├── Api::Players::HeartbeatsController
-    └── Api::Players::ImpressionsController
+    ├── Api::Players::ManifestsController
+    └── Api::Players::PairingCodesController
 ```
