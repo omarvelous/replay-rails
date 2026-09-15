@@ -48,7 +48,7 @@ module App
   private
 
     def set_ad
-      @ad = Current.account.ads.find_by_param!(params[:id])
+      @ad = Current.account.ads.includes(:adable, :image_attachment).find_by_param!(params[:id])
     end
 
     def ad_params

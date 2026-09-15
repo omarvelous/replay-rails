@@ -2,6 +2,6 @@ json.pid playlist.public_id
 json.updated_at playlist.updated_at.to_i
 json.status playlist.status
 
-json.playlist_ads playlist.playlist_ads.includes(ad: :adable) do |pa|
+json.playlist_ads playlist.playlist_ads.includes(ad: [ :adable, :image_attachment ]) do |pa|
   json.partial! "api/v1/players/manifests/playlist_ad", playlist_ad: pa
 end

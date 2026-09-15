@@ -58,5 +58,26 @@ Rails.application.configure do
   # Disable Rack::Attack by default in tests — enable explicitly in rate limiting specs
   config.after_initialize do
     Rack::Attack.enabled = false
+
+    Bullet.enable = true
+    Bullet.raise = true
+
+    # Intentional eager loads not always triggered in every test path
+    Bullet.add_safelist type: :unused_eager_loading, class_name: "Lead", association: :lead_agents
+    Bullet.add_safelist type: :unused_eager_loading, class_name: "Lead", association: :agents
+    Bullet.add_safelist type: :unused_eager_loading, class_name: "AccountUser", association: :user
+    Bullet.add_safelist type: :unused_eager_loading, class_name: "Ad", association: :adable
+    Bullet.add_safelist type: :unused_eager_loading, class_name: "Ad", association: :image_attachment
+
+    # Polymorphic delegated types can't be deeply eager loaded
+    Bullet.add_safelist type: :n_plus_one_query, class_name: "Ads::ListingAd", association: :listing
+
+    # Administrate manages its own includes — counter cache suggestions are low priority
+    Bullet.add_safelist type: :counter_cache, class_name: "Account", association: :sites
+    Bullet.add_safelist type: :counter_cache, class_name: "Account", association: :listings
+    Bullet.add_safelist type: :counter_cache, class_name: "Account", association: :ads
+
+    # Ad#valid? accesses adable for layout validation — not a real N+1 on built objects
+    Bullet.add_safelist type: :n_plus_one_query, class_name: "Ad", association: :adable
   end
 end

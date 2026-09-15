@@ -11,7 +11,7 @@ module App
 
   def show
     authorize! @playlist
-    @playlist_ads = @playlist.playlist_ads.includes(:ad).order(:position)
+    @playlist_ads = @playlist.playlist_ads.includes(ad: [ :adable, :image_attachment ]).order(:position)
     @screen_contents = @playlist.screen_contents.includes(screen: :site).where(active: true)
   end
 
@@ -33,7 +33,7 @@ module App
 
   def edit
     authorize! @playlist
-    @playlist_ads = @playlist.playlist_ads.includes(:ad).order(:position)
+    @playlist_ads = @playlist.playlist_ads.includes(ad: [ :adable, :image_attachment ]).order(:position)
   end
 
   def update
@@ -41,7 +41,7 @@ module App
     if @playlist.update(playlist_params)
       redirect_to @playlist, notice: t(".success")
     else
-      @playlist_ads = @playlist.playlist_ads.includes(:ad).order(:position)
+      @playlist_ads = @playlist.playlist_ads.includes(ad: [ :adable, :image_attachment ]).order(:position)
       render :edit, status: :unprocessable_entity
     end
   end
@@ -54,7 +54,7 @@ module App
 
   def preview
     authorize! @playlist, to: :show?
-    @playlist_ads = @playlist.playlist_ads.includes(:ad)
+    @playlist_ads = @playlist.playlist_ads.includes(ad: [ :adable, :image_attachment ])
     render layout: "preview"
   end
 
