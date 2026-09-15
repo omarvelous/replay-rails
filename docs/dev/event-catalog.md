@@ -107,7 +107,7 @@ custom session_id — Ahoy visits ARE the sessions.
 
 ## Visit Attribution
 
-`Lead`, `Inquiry`, and `QrScan` use `visitable :ahoy_visit`.
+`Lead` and `Inquiry` use `visitable :ahoy_visit`.
 Ahoy auto-sets `ahoy_visit_id` on create, linking the record
 to the visit that created it. No separate `form.submitted`
 event needed.
