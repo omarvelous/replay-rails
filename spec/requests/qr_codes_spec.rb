@@ -4,9 +4,10 @@ RSpec.describe "QrCodes" do
   let(:account) { create(:account) }
   let(:user) { create(:user, account: account) }
 
+  before { sign_in(user) }
+
   it_behaves_like "tenant isolated resource", :qr_code, :qr_code_path
 
-  before { sign_in(user) }
 
   describe "GET /qr_codes" do
     it "returns a successful response" do

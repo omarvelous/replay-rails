@@ -4,9 +4,10 @@ RSpec.describe "Leads" do
   let(:account) { create(:account) }
   let(:user) { create(:user, account: account) }
 
+  before { sign_in(user) }
+
   it_behaves_like "tenant isolated resource", :lead, :lead_path
 
-  before { sign_in(user) }
 
   describe "GET /leads" do
     it "returns a successful response" do
