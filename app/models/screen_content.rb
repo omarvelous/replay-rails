@@ -11,11 +11,6 @@ class ScreenContent < ApplicationRecord
 
   after_commit :notify_player, on: %i[create update destroy]
 
-  def self.find_contentable(type:, public_id:, account:)
-    raise ActiveRecord::RecordNotFound unless type.in?(contentable_types)
-    type.constantize.where(account: account).find_by_param!(public_id)
-  end
-
   private
 
     def notify_player

@@ -9,16 +9,11 @@ module App
     end
 
     def create
-      authorize! ScreenContent
+      contentable = find_contentable
+      @screen_content = @screen.screen_contents.build(contentable: contentable, active: true)
+      authorize! @screen_content
 
-      contentable = ScreenContent.find_contentable(
-        type: screen_content_params[:contentable_type],
-        public_id: screen_content_params[:contentable_id],
-        account: Current.account
-      )
-      authorize! contentable, to: :show?
-
-      AssignScreenContent.new(screen: @screen, contentable: contentable).call
+      AssignScreenContent.new(screen_content: @screen_content).call
       redirect_to @screen, notice: "Content updated."
     end
 
@@ -36,6 +31,12 @@ module App
 
       def screen_content_params
         params.require(:screen_content).permit(:contentable_type, :contentable_id)
+      end
+
+      def find_contentable
+        type = screen_content_params[:contentable_type]
+        raise ActiveRecord::RecordNotFound unless type.in?(ScreenContent.contentable_types)
+        type.constantize.where(account: Current.account).find_by_param!(screen_content_params[:contentable_id])
       end
   end
 end
