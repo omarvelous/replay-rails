@@ -45,6 +45,11 @@ standards:
       file: code-organization/file-structure.md
       summary: "Canonical ordering for models, controllers, routes, policies, specs, factories, and Gemfile"
 
+  controllers:
+    - id: controllers/conventions
+      file: controllers/conventions.md
+      summary: "Inheritance, authorization, strong params, service objects, API envelope, tenant scoping, testing"
+
   error-handling:
     - id: error-handling/conventions
       file: error-handling/conventions.md

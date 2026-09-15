@@ -220,6 +220,7 @@ This project follows documented standards in `.claude/standards/`. See `.claude/
 | Code Organization | `.claude/standards/code-organization/patterns.md` | Thin controllers, concerns, service objects, naming, tenant scoping |
 | File Structure | `.claude/standards/code-organization/file-structure.md` | Canonical ordering for models, controllers, routes, policies, specs, factories, Gemfile |
 | Error Handling | `.claude/standards/error-handling/conventions.md` | Flash messages, rescue_from, form validation, logging, error pages |
+| Controllers | `.claude/standards/controllers/conventions.md` | Inheritance, authorization, strong params, service objects, API envelope, tenant scoping |
 | Work Lifecycle | `.claude/standards/git/work-lifecycle.md` | Promote plan, update roadmap/docs before and after every feature |
 
 ## Coding Conventions
