@@ -1,6 +1,7 @@
 module Api
   class BaseController < ActionController::Base
     protect_from_forgery with: :null_session
+    rate_limit to: 60, within: 1.minute, by: -> { request.remote_ip }
 
     rescue_from ActiveRecord::RecordNotFound do
       render json: { error: "Not found" }, status: :not_found

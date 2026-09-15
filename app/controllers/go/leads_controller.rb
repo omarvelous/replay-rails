@@ -1,6 +1,7 @@
 module Go
   class LeadsController < ApplicationController
     skip_before_action :require_authentication
+    rate_limit to: 10, within: 1.hour, only: :create, by: -> { request.remote_ip }
 
     def create
       if lead_params[:website].present?
