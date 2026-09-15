@@ -7,6 +7,9 @@ RSpec.describe "Experiences" do
 
   before { sign_in(user) }
 
+  it_behaves_like "tenant isolated resource", :experience, :experience_path
+
+
   describe "GET /experiences" do
     it "returns a successful response" do
       get experiences_path

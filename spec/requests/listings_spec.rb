@@ -6,6 +6,9 @@ RSpec.describe "Listings" do
 
   before { sign_in(user) }
 
+  it_behaves_like "tenant isolated resource", :listing, :listing_path
+
+
   describe "GET /listings" do
     it "returns a successful response" do
       get listings_path

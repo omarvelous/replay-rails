@@ -30,7 +30,7 @@ export default class extends Controller {
   }
 
   async registerNewPlayer() {
-    const res = await fetch(`${this.apiHostValue}/players`, {
+    const res = await fetch(`${this.apiHostValue}/v1/players`, {
       method: "POST",
       credentials: "include",
       headers: { "Content-Type": "application/json" },
@@ -41,7 +41,7 @@ export default class extends Controller {
         app_version: window.REPLAY_APP_VERSION || null
       })
     })
-    const data = await res.json()
+    const { data } = await res.json()
 
     this.token = data.token
     this.pairingCode = data.pairing_code
@@ -52,9 +52,9 @@ export default class extends Controller {
 
   async checkIfPaired(token) {
     try {
-      const res = await fetch(`${this.apiHostValue}/players/${token}`)
+      const res = await fetch(`${this.apiHostValue}/v1/players/${token}`)
       if (!res.ok) return false
-      const data = await res.json()
+      const { data } = await res.json()
       if (data.paired) {
         this.token = token
         window.location.replace(`/players/${token}`)
@@ -67,13 +67,13 @@ export default class extends Controller {
   }
 
   async refreshPairingCode(token) {
-    const res = await fetch(`${this.apiHostValue}/players/${token}/pairing_code`, {
+    const res = await fetch(`${this.apiHostValue}/v1/players/${token}/pairing_code`, {
       method: "POST",
       headers: { "Content-Type": "application/json" }
     })
 
     if (res.ok) {
-      const data = await res.json()
+      const { data } = await res.json()
       this.token = token
       this.pairingCode = data.pairing_code
       this.expiresIn = data.expires_in
@@ -150,12 +150,12 @@ export default class extends Controller {
 
   async checkStatus() {
     try {
-      const res = await fetch(`${this.apiHostValue}/players/${this.token}`)
+      const res = await fetch(`${this.apiHostValue}/v1/players/${this.token}`)
       if (!res.ok) {
         this.backoff()
         return
       }
-      const data = await res.json()
+      const { data } = await res.json()
       if (data.paired) return this.onPaired()
       this.pollDelay = 3000 // reset on success
     } catch {

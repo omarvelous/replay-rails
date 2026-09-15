@@ -98,7 +98,7 @@ RSpec.describe PaperTrail::Version do
     it "tracks ScreenPlayer" do
       screen = create(:screen)
       player = create(:player)
-      screen.pair_player!(player)
+      pair_player!(screen, player)
       sp = ScreenPlayer.last
       expect(sp.versions.count).to eq(1)
     end

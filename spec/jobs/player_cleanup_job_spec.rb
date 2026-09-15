@@ -15,7 +15,7 @@ RSpec.describe PlayerCleanupJob do
     it "does not delete players that have been paired" do
       paired = create(:player, created_at: 25.hours.ago)
       screen = create(:screen)
-      screen.pair_player!(paired)
+      pair_player!(screen, paired)
       screen.unpair_player!
 
       described_class.new.perform

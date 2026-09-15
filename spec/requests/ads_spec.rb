@@ -6,6 +6,9 @@ RSpec.describe "Ads" do
 
   before { sign_in(user) }
 
+  it_behaves_like "tenant isolated resource", :ad, :ad_path
+
+
   describe "GET /ads" do
     it "returns a successful response" do
       get ads_path

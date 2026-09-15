@@ -17,7 +17,7 @@ RSpec.describe "Play::Players" do
     let(:screen) { create(:screen, site: site) }
     let(:player) { create(:player) }
 
-    before { screen.pair_player!(player) }
+    before { pair_player!(screen, player) }
 
     it "renders the playlist when one is assigned" do
       playlist = create(:playlist, account: account, status: "published")

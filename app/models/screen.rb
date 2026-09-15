@@ -36,20 +36,6 @@ class Screen < ApplicationRecord
     player&.online?
   end
 
-  def pair_player!(player, paired_by: nil)
-    with_lock do
-      reload_active_player_assignment&.unpair!
-      player.reload_active_assignment&.unpair!
-
-      screen_players.create!(
-        player: player,
-        paired_by: paired_by
-      )
-
-      player.update!(pairing_code: nil, pairing_code_expires_at: nil)
-    end
-  end
-
   def unpair_player!
     reload_active_player_assignment&.unpair!
   end

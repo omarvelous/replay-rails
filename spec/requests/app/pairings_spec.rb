@@ -35,23 +35,23 @@ RSpec.describe "App::Pairings" do
     let(:player) { create(:player) }
 
     it "pairs the player to the selected screen" do
-      post pair_path, params: { screen_id: screen.id, code: player.pairing_code }
+      post pair_path, params: { screen_id: screen.to_param, code: player.pairing_code }
       expect(screen.reload.player).to eq(player)
     end
 
     it "redirects to the screen page on success" do
-      post pair_path, params: { screen_id: screen.id, code: player.pairing_code }
+      post pair_path, params: { screen_id: screen.to_param, code: player.pairing_code }
       expect(response).to redirect_to(screen_path(screen))
     end
 
     it "shows an error for an invalid code" do
-      post pair_path, params: { screen_id: screen.id, code: "INVALID" }
-      expect(response.body).to include("Invalid")
+      post pair_path, params: { screen_id: screen.to_param, code: "INVALID" }
+      expect(response.body).to include("not found")
     end
 
     it "shows an error for an expired code" do
       player.update!(pairing_code_expires_at: 1.hour.ago)
-      post pair_path, params: { screen_id: screen.id, code: player.pairing_code }
+      post pair_path, params: { screen_id: screen.to_param, code: player.pairing_code }
       expect(response.body).to include("expired")
     end
   end

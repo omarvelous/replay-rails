@@ -1,61 +1,13 @@
 module App
-module Ads
-  class AgentAdsController < App::BaseController
-    before_action :set_ad, only: %i[ edit update ]
+  module Ads
+    class AgentAdsController < App::Ads::BaseController
+      private
 
-    def new
-      @agent_ad = ::Ads::AgentAd.new
-      @ad = @agent_ad.build_ad(account: Current.account)
-      @ad.apply_defaults
-      authorize! @ad
+        def adable_class = ::Ads::AgentAd
+
+        def adable_params
+          params.require(:agent_ad).permit(:agent_id)
+        end
     end
-
-    def create
-      @agent_ad = ::Ads::AgentAd.new(agent_ad_params)
-      @ad = @agent_ad.build_ad(ad_params.merge(account: Current.account))
-      authorize! @ad
-
-      if @ad.valid? & @agent_ad.valid?
-        @agent_ad.save!
-        redirect_to @ad, notice: t(".success")
-      else
-        render :new, status: :unprocessable_entity
-      end
-    end
-
-    def edit
-      authorize! @ad
-      @agent_ad = @ad.adable
-    end
-
-    def update
-      authorize! @ad
-      @agent_ad = @ad.adable
-      @agent_ad.assign_attributes(agent_ad_params)
-      @ad.assign_attributes(ad_params)
-
-      if @ad.valid? & @agent_ad.valid?
-        @agent_ad.save!
-        @ad.save!
-        redirect_to @ad, notice: t(".success")
-      else
-        render :edit, status: :unprocessable_entity
-      end
-    end
-
-    private
-
-      def set_ad
-        @ad = Current.account.ads.find_by_param!(params[:id])
-      end
-
-      def ad_params
-        params.require(:ad).permit(:headline, :body, :layout, :theme, :image)
-      end
-
-      def agent_ad_params
-        params.require(:agent_ad).permit(:agent_id)
-      end
   end
-end
 end

@@ -8,6 +8,6 @@ end
 json.contentable do
   json.type @screen_content.contentable_type
   json.pid @screen_content.contentable.public_id
-  json.partial! "api/players/manifests/#{@screen_content.contentable_type.underscore}",
+  json.partial! "api/v1/players/manifests/#{@screen_content.contentable_type.underscore}",
     @screen_content.contentable_type.underscore.to_sym => @screen_content.contentable
 end

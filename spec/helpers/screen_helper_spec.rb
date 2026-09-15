@@ -12,19 +12,19 @@ RSpec.describe ScreenHelper do
 
     it "returns :offline when player is not online" do
       player = create(:player, last_heartbeat_at: 10.minutes.ago)
-      screen.pair_player!(player)
+      pair_player!(screen, player)
       expect(helper.screen_status(screen)).to eq(:offline)
     end
 
     it "returns :online when player is online but no playlist" do
       player = create(:player, last_heartbeat_at: 30.seconds.ago)
-      screen.pair_player!(player)
+      pair_player!(screen, player)
       expect(helper.screen_status(screen)).to eq(:online)
     end
 
     it "returns :live when player is online and playlist is active" do
       player = create(:player, last_heartbeat_at: 30.seconds.ago)
-      screen.pair_player!(player)
+      pair_player!(screen, player)
       playlist = create(:playlist, account: account)
       expect(helper.screen_status(screen, active_playlist: playlist)).to eq(:live)
     end
@@ -46,25 +46,25 @@ RSpec.describe ScreenHelper do
 
     it "returns 'Never connected' for :offline with no heartbeat" do
       player = create(:player, last_heartbeat_at: nil)
-      screen.pair_player!(player)
+      pair_player!(screen, player)
       expect(helper.screen_heartbeat_text(screen, :offline)).to eq("Never connected")
     end
 
     it "returns 'Last seen ...' for :offline with heartbeat" do
       player = create(:player, last_heartbeat_at: 10.minutes.ago)
-      screen.pair_player!(player)
+      pair_player!(screen, player)
       expect(helper.screen_heartbeat_text(screen, :offline)).to include("Last seen")
     end
 
     it "returns 'Heartbeat ...' for :online" do
       player = create(:player, last_heartbeat_at: 30.seconds.ago)
-      screen.pair_player!(player)
+      pair_player!(screen, player)
       expect(helper.screen_heartbeat_text(screen, :online)).to include("Heartbeat")
     end
 
     it "returns 'Heartbeat ...' for :live" do
       player = create(:player, last_heartbeat_at: 30.seconds.ago)
-      screen.pair_player!(player)
+      pair_player!(screen, player)
       expect(helper.screen_heartbeat_text(screen, :live)).to include("Heartbeat")
     end
   end

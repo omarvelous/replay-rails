@@ -1,8 +1,9 @@
 module Marketing
   class InquiriesController < BaseController
+    include HoneypotProtection
+
     def create
-      # Honeypot — reject if filled but pretend success
-      if params[:website].present?
+      if honeypot_triggered?
         redirect_to redirect_path, notice: thanks_message
         return
       end

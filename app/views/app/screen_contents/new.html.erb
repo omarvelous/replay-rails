@@ -10,7 +10,7 @@
       <div class="divide-y divide-gray-100">
         <% @playlists.each do |playlist| %>
           <%= button_to screen_screen_content_path(@screen), method: :post,
-              params: { screen_content: { contentable_type: "Playlist", contentable_id: playlist.id } },
+              params: { screen_content: { contentable_type: "Playlist", contentable_id: playlist.to_param } },
               class: "w-full flex items-center justify-between px-4 py-3 hover:bg-gray-50 transition-colors text-left" do %>
             <div>
               <p class="text-sm font-semibold"><%= playlist.name %></p>
@@ -34,7 +34,7 @@
       <div class="divide-y divide-gray-100">
         <% @experiences.each do |experience| %>
           <%= button_to screen_screen_content_path(@screen), method: :post,
-              params: { screen_content: { contentable_type: "Experience", contentable_id: experience.id } },
+              params: { screen_content: { contentable_type: "Experience", contentable_id: experience.to_param } },
               class: "w-full flex items-center justify-between px-4 py-3 hover:bg-gray-50 transition-colors text-left" do %>
             <div>
               <p class="text-sm font-semibold"><%= experience.name %></p>

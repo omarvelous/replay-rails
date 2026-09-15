@@ -131,7 +131,8 @@ if demo_account
         touch_capable: false
       )
       player.parse_user_agent!
-      window_display.pair_player!(player)
+      window_display.screen_players.create!(player: player)
+      player.update!(pairing_code: nil, pairing_code_expires_at: nil)
       player.update!(last_heartbeat_at: Time.current)
       puts "Created demo player (Fire TV) and paired to Window Display"
     end

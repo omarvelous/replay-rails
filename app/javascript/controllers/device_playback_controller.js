@@ -37,7 +37,7 @@ export default class extends Controller {
 
     // Manifest polling for content change detection
     this.manifestETag = null
-    this.manifestUrl = `${this.apiHostValue}/players/${this.playerTokenValue}/manifest`
+    this.manifestUrl = `${this.apiHostValue}/v1/players/${this.playerTokenValue}/manifest`
     this.manifestInterval = setInterval(() => this.checkManifest(), 30_000)
 
     this.element.addEventListener("slideshow:impression", (e) => {
@@ -88,7 +88,7 @@ export default class extends Controller {
 
   async sendHeartbeat() {
     try {
-      const res = await fetch(`${this.apiHostValue}/players/${this.playerTokenValue}/heartbeat`, {
+      const res = await fetch(`${this.apiHostValue}/v1/players/${this.playerTokenValue}/heartbeat`, {
         method: "POST",
         credentials: "include",
         headers: { "Content-Type": "application/json" },
