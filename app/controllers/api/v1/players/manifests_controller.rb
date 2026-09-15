@@ -1,7 +1,7 @@
 module Api
   module V1
     module Players
-      class ManifestsController < Api::BaseController
+      class ManifestsController < Api::V1::BaseController
         before_action :authenticate_player!
 
         def show

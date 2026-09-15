@@ -1,7 +1,7 @@
 module Api
   module V1
     module Players
-      class PairingCodesController < Api::BaseController
+      class PairingCodesController < Api::V1::BaseController
         before_action :authenticate_player!
 
         # POST /v1/players/:token/pairing_code

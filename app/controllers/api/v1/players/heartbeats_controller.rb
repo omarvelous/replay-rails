@@ -1,7 +1,7 @@
 module Api
   module V1
     module Players
-      class HeartbeatsController < Api::BaseController
+      class HeartbeatsController < Api::V1::BaseController
         before_action :authenticate_player!
 
         # POST /v1/players/:token/heartbeat

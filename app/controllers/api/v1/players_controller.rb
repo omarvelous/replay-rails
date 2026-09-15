@@ -1,6 +1,6 @@
 module Api
   module V1
-    class PlayersController < Api::BaseController
+    class PlayersController < Api::V1::BaseController
       rate_limit to: 10, within: 1.minute, only: :create, by: -> { request.remote_ip }
       before_action :authenticate_player!, only: :show
 
