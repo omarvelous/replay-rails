@@ -73,6 +73,8 @@ end
 
 group :development do
   gem "letter_opener_web"
+  gem "lookbook", ">= 2.3"
+  gem "view_component"
   gem "web-console"
 end
 

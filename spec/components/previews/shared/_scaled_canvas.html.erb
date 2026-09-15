@@ -1,0 +1,6 @@
+<%# Renders ad at full width of the Lookbook preview panel.
+    Since ads use cqw units exclusively, they scale proportionally
+    at any container width — no zoom/transform needed. %>
+<div style="width: 100%; aspect-ratio: 16 / 9;">
+  <%= yield %>
+</div>
