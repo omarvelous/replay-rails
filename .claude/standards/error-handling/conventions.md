@@ -4,24 +4,12 @@
 
 Use Rails flash messages for user-facing feedback:
 
-- `flash[:notice]` — Success messages (green)
-- `flash[:alert]` — Error or warning messages (red)
+- `flash[:notice]` — Success (green, 4s auto-dismiss)
+- `flash[:alert]` — Error (red, 8s auto-dismiss)
+- `flash[:warning]` — Warning (amber, 6s auto-dismiss)
+- `flash[:info]` — Info (blue, 4s auto-dismiss)
 
-Display flash messages using DaisyUI alert components in the application layout:
-
-```erb
-<% if notice %>
-  <div class="alert alert-success mb-4">
-    <span><%= notice %></span>
-  </div>
-<% end %>
-
-<% if alert %>
-  <div class="alert alert-error mb-4">
-    <span><%= alert %></span>
-  </div>
-<% end %>
-```
+Flash messages are rendered via `app/views/app/shared/_flash.html.erb` using a Stimulus `dismissable` controller for auto-dismiss with manual close button.
 
 ## Controller Error Handling
 
@@ -52,14 +40,15 @@ Display validation errors inline on forms using `model.errors`:
 
 ```erb
 <% if @model.errors.any? %>
-  <div class="alert alert-error mb-4">
-    <div>
-      <h3 class="font-bold"><%= pluralize(@model.errors.count, "error") %> prevented saving:</h3>
-      <ul class="list-disc list-inside mt-2">
-        <% @model.errors.full_messages.each do |message| %>
-          <li><%= message %></li>
-        <% end %>
-      </ul>
+  <div class="rounded-md bg-red-50 p-4 mb-4">
+    <div class="flex">
+      <div class="ml-3">
+        <ul class="list-disc list-inside text-sm text-red-700">
+          <% @model.errors.full_messages.each do |message| %>
+            <li><%= message %></li>
+          <% end %>
+        </ul>
+      </div>
     </div>
   </div>
 <% end %>

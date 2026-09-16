@@ -19,8 +19,11 @@ All implementation work follows a strict red-green cycle:
 
 | Layer | Tool | Purpose |
 |-------|------|---------|
-| Model specs | RSpec + shoulda-matchers | Validations, associations, instance methods |
+| Model specs | RSpec + shoulda-matchers | Validations, associations, scopes, instance methods |
 | Request specs | RSpec request specs | HTTP request/response behavior, controller logic |
+| Service specs | RSpec | Service object behavior, Result struct |
+| Policy specs | RSpec + Action Policy matchers | Authorization rules (`permit`, `forbid`) |
+| Analytics specs | RSpec | Governed event validation, emission, query scopes |
 | System specs | RSpec + Capybara | End-to-end user journeys in a real browser |
 
 Use the narrowest layer that adequately covers the behavior. Prefer request specs over system specs for controller behavior. Use system specs for critical user journeys that require browser interaction (forms, navigation, JavaScript).
@@ -32,5 +35,11 @@ spec/
   factories/      # FactoryBot factories — one file per model
   models/         # Model specs
   requests/       # Request specs (controller/HTTP behavior)
+  services/       # Service object specs
+  policies/       # Authorization policy specs
+  analytics/      # Governed event and Ahoy specs
+  helpers/        # View helper specs
+  mailers/        # Mailer specs
+  jobs/           # Background job specs
   system/         # Capybara system specs
 ```
