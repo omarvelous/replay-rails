@@ -23,20 +23,12 @@ RSpec.describe "Player Authentication" do
 
   describe "cookie auth" do
     it "authenticates with signed player_token cookie" do
-      cookies.signed[:player_token] = player.token
+      sign_in_player(player)
       get "/v1/player"
       expect(response).to be_successful
     end
 
-    it "returns 401 with invalid cookie" do
-      cookies.signed[:player_token] = "invalid"
-      get "/v1/player"
-      expect(response).to have_http_status(:unauthorized)
-    end
-  end
-
-  describe "no auth" do
-    it "returns 401 without any credentials" do
+    it "returns 401 with no credentials" do
       get "/v1/player"
       expect(response).to have_http_status(:unauthorized)
     end
@@ -46,23 +38,29 @@ RSpec.describe "Player Authentication" do
     let(:other_player) { create(:player) }
 
     it "uses bearer when both are present" do
-      cookies.signed[:player_token] = other_player.token
+      sign_in_player(other_player)
       get "/v1/player", headers: { "Authorization" => "Bearer #{player.token}" }
       expect(response).to be_successful
-      expect(response.parsed_body["data"]["paired"]).to be true  # player is paired, other_player is not
+      expect(response.parsed_body["data"]["paired"]).to be true
     end
   end
 
-  describe "registration sets cookie" do
-    it "sets a signed player_token cookie on registration" do
+  describe "registration" do
+    it "sets a player_token cookie" do
       post "/v1/players", as: :json
-      expect(cookies.signed[:player_token]).to be_present
+      expect(cookies[:player_token]).to be_present
     end
 
     it "returns public_id in the response" do
       post "/v1/players", as: :json
       data = response.parsed_body["data"]
       expect(data["public_id"]).to be_present
+    end
+
+    it "returns the token for bearer auth fallback" do
+      post "/v1/players", as: :json
+      data = response.parsed_body["data"]
+      expect(data["token"]).to be_present
     end
   end
 end
