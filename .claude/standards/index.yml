@@ -23,9 +23,9 @@ standards:
       summary: "Promote plan, update roadmap/docs before and after every feature"
 
   frontend:
-    - id: frontend/daisyui-tailwind
-      file: frontend/daisyui-tailwind.md
-      summary: "Use DaisyUI v5 component classes for UI elements; installed via @plugin in Tailwind CSS"
+    - id: frontend/tailwind
+      file: frontend/tailwind.md
+      summary: "Raw Tailwind CSS v4 utilities + TailwindPlus Elements for interactive components"
 
   tooling:
     - id: tooling/makefile

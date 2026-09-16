@@ -58,18 +58,28 @@ constraints subdomain: "app" do
   scope module: "app" do
     root "dashboard#show", as: :app_root
 
+    # Auth
+    resource :session
+    resources :passwords, param: :token
+
     # Content
     resources :listings
     resources :agents
     resources :ads
+    resources :experiences
 
     # Playback
+    resources :sites
     resources :screens
     resources :playlists
 
     # Engagement
-    resources :leads
     resources :qr_codes
+    resources :leads
+
+    # Team
+    resources :users
+    resources :invites, param: :token
   end
 end
 ```
@@ -110,6 +120,17 @@ RSpec.describe Listing do
   # 6. describe "#instance_method"
 end
 ```
+
+**File locations:**
+- `spec/models/` — model specs
+- `spec/requests/` — controller/request specs
+- `spec/services/` — service object specs
+- `spec/policies/` — policy specs
+- `spec/analytics/` — governed event and Ahoy specs
+- `spec/helpers/` — helper specs
+- `spec/mailers/` — mailer specs
+- `spec/jobs/` — job specs
+- `spec/factories/` — FactoryBot factories
 
 **Rules:**
 - `let` declarations: subject → dependencies (account, user) → records

@@ -2,7 +2,7 @@
 
 ## Project Overview
 
-replay_rails is a Rails 8.1 application with PostgreSQL, Hotwire (Turbo + Stimulus), and Tailwind CSS v4 + DaisyUI v5. It uses a multi-tenant authentication pattern with Account, User, and AccountUser models (Rails 8 built-in authentication). Authorization is handled by Action Policy with policy classes per model. Background jobs, caching, and WebSockets are handled by Solid Queue, Solid Cache, and Solid Cable (all DB-backed, no Redis).
+replay_rails is a Rails 8.1 application with PostgreSQL, Hotwire (Turbo + Stimulus), and Tailwind CSS v4. It uses a multi-tenant authentication pattern with Account, User, and AccountUser models (Rails 8 built-in authentication). Authorization is handled by Action Policy with policy classes per model. Background jobs, caching, and WebSockets are handled by Solid Queue, Solid Cache, and Solid Cable (all DB-backed, no Redis).
 
 ## Development Setup
 
@@ -44,7 +44,7 @@ The test suite uses:
 - **FactoryBot** — Test data factories (`spec/factories/`)
 - **Faker** — Realistic random data generation
 - **shoulda-matchers** — One-liner tests for validations and associations
-- **pundit-matchers** — Policy spec matchers (`permit_action`, `forbid_action`)
+- **action_policy** — Policy spec matchers (`permit`, `forbid`)
 - **database_cleaner** — Clean database state between tests
 - **Capybara** — System/integration tests with browser simulation
 
@@ -198,11 +198,11 @@ Players are browser-based devices (Fire TV, Raspberry Pi, iPad, any browser) tha
 
 ## Frontend
 
-- **Tailwind CSS v4** with **DaisyUI v5** loaded via `@plugin "daisyui"` in `app/assets/tailwind/application.css`
-- Use DaisyUI semantic classes for UI components (`btn btn-primary`, `input input-bordered`, `card`, `alert`, etc.)
-- Use raw Tailwind utilities for layout and spacing (`flex`, `grid`, `mt-4`, `p-6`)
-- Theme: `data-theme="light"` on the `<html>` tag
-- See `.claude/standards/frontend/daisyui-tailwind.md` for the full component class reference
+- **Tailwind CSS v4** with `@tailwindcss/typography` plugin
+- **TailwindPlus Elements** (`@tailwindplus/elements@1`) via CDN for interactive components (`<el-dialog>`, `<el-dialog-panel>`)
+- Use raw Tailwind utility classes for all UI elements (buttons, inputs, cards, badges)
+- Custom CSS variables for marketing theme (`--m-*`) and ad canvas signage scale (`--s-*`, `--ad-*`)
+- See `.claude/standards/frontend/tailwind.md` for the full reference
 
 ## Standards
 
@@ -214,7 +214,7 @@ This project follows documented standards in `.claude/standards/`. See `.claude/
 | Seed Data | `.claude/standards/database/seeds.md` | Update seeds for every new model; use FactoryBot; always idempotent |
 | TDD | `.claude/standards/testing/tdd.md` | Write failing spec before implementing (red-green cycle) |
 | Commit Cadence | `.claude/standards/git/commit-cadence.md` | Commit after every significant step; RED and GREEN are separate commits |
-| DaisyUI + Tailwind | `.claude/standards/frontend/daisyui-tailwind.md` | Use DaisyUI v5 component classes; installed via @plugin in Tailwind CSS |
+| Tailwind CSS | `.claude/standards/frontend/tailwind.md` | Raw Tailwind utilities + TailwindPlus Elements for interactive components |
 | Makefile | `.claude/standards/tooling/makefile.md` | Use make targets instead of raw docker compose commands |
 | Security & Environment | `.claude/standards/security/environment.md` | CSP, parameter filtering, env vars, rate limiting, HTTPS |
 | Code Organization | `.claude/standards/code-organization/patterns.md` | Thin controllers, concerns, service objects, naming, tenant scoping |
@@ -232,5 +232,5 @@ This project follows documented standards in `.claude/standards/`. See `.claude/
 - **Service objects for complex logic** — POROs in `app/services/` with a single `call` method for operations spanning multiple models.
 - **Follow Rails omakase style** — RuboCop is configured with `rubocop-rails-omakase`, `rubocop-rspec`, `rubocop-rspec_rails`, `rubocop-factory_bot`, and `rubocop-capybara`. Run `make lint` before committing.
 - **Multi-tenant scoping** — Always scope queries through `Current.account` to prevent cross-tenant data access.
-- **Flash messages** — Use `flash[:notice]` for success, `flash[:alert]` for errors. Display with DaisyUI alert components.
+- **Flash messages** — Use `flash[:notice]` for success, `flash[:alert]` for errors. Rendered via `_flash.html.erb` with Stimulus `dismissable` controller.
 - **Form errors** — Re-render with `status: :unprocessable_content` for Turbo compatibility. Display errors inline with `model.errors`.

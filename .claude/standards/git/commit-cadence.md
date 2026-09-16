@@ -21,13 +21,13 @@ Each of the following is a commit boundary:
 Use a short imperative subject line that names the task and its state:
 
 ```
-Task 2 (RED): Building model spec + factory
+Step 2 (RED): Listing model spec + factory
 
-Task 3 (GREEN): Building model, migration, account association
+Step 2 (GREEN): Listing model, migration, account association
 
-Task 6 (RED): Buildings request spec
+Step 3 (RED): Listings request spec
 
-Task 8 (GREEN): Buildings controller, views, routes
+Step 3 (GREEN): Listings controller, views, routes
 ```
 
 Prefix RED commits with `(RED):` and GREEN commits with `(GREEN):` so the TDD rhythm is visible in git history.
