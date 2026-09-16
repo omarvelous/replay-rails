@@ -37,9 +37,6 @@ class Listing < ApplicationRecord
   end
 
   def qr_code_for(creative: nil, screen_content: nil)
-    qr_codes.find_or_create_by!(creative: creative, screen_content: screen_content) do |qr|
-      qr.account = account
-      qr.label = address.truncate(40)
-    end
+    QrCode.for(destination: self, creative: creative, screen_content: screen_content)
   end
 end

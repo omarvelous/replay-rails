@@ -20,7 +20,7 @@ module App
     else
       0
     end
-    @scans_count = @listing.qr_codes.contextual.sum(&:scan_count)
+    @scans_count = Analytics::Events::QrScanned.events.for_destination(@listing).count
   end
 
   def new

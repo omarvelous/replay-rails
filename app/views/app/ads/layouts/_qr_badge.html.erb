@@ -1,4 +1,4 @@
-<% qr = ad.listing&.qr_code_for(creative: ad, screen_content: defined?(@screen_content) ? @screen_content : nil) %>
+<% qr = ad.listing&.qr_code_for(creative: ad, screen_content: @screen_content) %>
 <div class="absolute bg-white flex items-center justify-center"
      style="right: var(--s-pad-lg); bottom: var(--s-pad-lg); width: var(--s-qr); aspect-ratio: 1; padding: var(--s-xs); border-radius: var(--s-xs);">
   <% if qr %>

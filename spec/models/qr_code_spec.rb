@@ -24,6 +24,33 @@ RSpec.describe QrCode do
     end
   end
 
+  describe ".for" do
+    it "creates a standalone QR code" do
+      listing = create(:listing)
+      qr = described_class.for(destination: listing)
+      expect(qr.destination_record).to eq(listing)
+      expect(qr.creative).to be_nil
+      expect(qr.account).to eq(listing.account)
+    end
+
+    it "creates a contextual QR code" do
+      listing = create(:listing)
+      ad = create(:ad, account: listing.account)
+      sc = create(:screen_content)
+      qr = described_class.for(destination: listing, creative: ad, screen_content: sc)
+      expect(qr.creative).to eq(ad)
+      expect(qr.screen_content).to eq(sc)
+    end
+
+    it "finds existing QR code for the same context" do
+      listing = create(:listing)
+      ad = create(:ad, account: listing.account)
+      qr1 = described_class.for(destination: listing, creative: ad)
+      qr2 = described_class.for(destination: listing, creative: ad)
+      expect(qr1).to eq(qr2)
+    end
+  end
+
   describe "validations" do
     it "validates token uniqueness" do
       create(:qr_code)

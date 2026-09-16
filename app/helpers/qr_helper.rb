@@ -1,7 +1,11 @@
 module QrHelper
   def qr_scan_full_url(qr_code)
-    base = ENV.fetch("QR_BASE_URL") { qr_scan_url(token: qr_code.token).sub(/\/s\/.*/, "") }
-    "#{base}/s/#{qr_code.token}"
+    if ENV["QR_BASE_HOST"].present?
+      uri = URI.parse(ENV["QR_BASE_HOST"])
+      qr_scan_url(token: qr_code.token, host: uri.host, protocol: uri.scheme)
+    else
+      qr_scan_url(token: qr_code.token, host: request.host, port: request.port, protocol: request.protocol)
+    end
   end
 
   def qr_svg(qr_code)

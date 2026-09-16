@@ -14,6 +14,17 @@ class QrCode < ApplicationRecord
 
   before_validation :generate_token, on: :create
 
+  def self.for(destination:, creative: nil, screen_content: nil)
+    find_or_create_by!(
+      destination_record: destination,
+      creative: creative,
+      screen_content: screen_content
+    ) do |qr|
+      qr.account = destination.account
+      qr.label = (destination.try(:address) || destination.try(:name))&.truncate(40)
+    end
+  end
+
   def destination?
     destination_url.present? || destination_record.present?
   end
