@@ -22,7 +22,7 @@ RSpec.describe Listing do
     it { is_expected.to have_many(:listing_ads) }
     it { is_expected.to have_many(:ads).through(:listing_ads) }
     it { is_expected.to have_many(:leads).dependent(:nullify) }
-    it { is_expected.to have_one(:qr_code) }
+    it { is_expected.to have_many(:qr_codes) }
 
     it "has many attached photos" do
       expect(described_class.new.photos).to be_empty
@@ -33,17 +33,54 @@ RSpec.describe Listing do
     end
   end
 
-  describe "#ensure_qr_code!" do
-    it "creates a QR code for the listing" do
+  describe "#qr_code_for" do
+    it "creates a standalone QR code" do
       listing = create(:listing)
-      expect { listing.ensure_qr_code! }.to change(QrCode, :count).by(1)
-      expect(listing.qr_code).to be_present
+      expect { listing.qr_code_for }.to change(QrCode, :count).by(1)
+      expect(listing.qr_code_for.destination_record).to eq(listing)
     end
 
-    it "does not create a duplicate QR code" do
+    it "returns the same standalone QR code on repeat calls" do
       listing = create(:listing)
-      listing.ensure_qr_code!
-      expect { listing.ensure_qr_code! }.not_to change(QrCode, :count)
+      qr = listing.qr_code_for
+      expect(listing.qr_code_for).to eq(qr)
+    end
+
+    it "creates a contextual QR code with a creative" do
+      listing = create(:listing)
+      ad = create(:ad, account: listing.account)
+      qr = listing.qr_code_for(creative: ad)
+
+      expect(qr.creative).to eq(ad)
+      expect(qr.destination_record).to eq(listing)
+    end
+
+    it "creates a contextual QR code with creative and screen_content" do
+      listing = create(:listing)
+      ad = create(:ad, account: listing.account)
+      sc = create(:screen_content)
+      qr = listing.qr_code_for(creative: ad, screen_content: sc)
+
+      expect(qr.creative).to eq(ad)
+      expect(qr.screen_content).to eq(sc)
+    end
+
+    it "returns the same QR code for the same context" do
+      listing = create(:listing)
+      ad = create(:ad, account: listing.account)
+      sc = create(:screen_content)
+
+      qr1 = listing.qr_code_for(creative: ad, screen_content: sc)
+      qr2 = listing.qr_code_for(creative: ad, screen_content: sc)
+      expect(qr1).to eq(qr2)
+    end
+
+    it "creates different QR codes for different creatives" do
+      listing = create(:listing)
+      ad1 = create(:ad, account: listing.account)
+      ad2 = create(:ad, account: listing.account)
+
+      expect(listing.qr_code_for(creative: ad1)).not_to eq(listing.qr_code_for(creative: ad2))
     end
   end
 
