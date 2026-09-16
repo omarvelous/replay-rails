@@ -117,34 +117,6 @@ RSpec.describe Player do
     end
   end
 
-  describe "#parse_user_agent!" do
-    it "parses a Chrome desktop user agent" do
-      player = create(:player, user_agent: "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36")
-      player.parse_user_agent!
-      expect(player.browser_name).to be_present
-      expect(player.os_name).to be_present
-      expect(player.device_type).to start_with("browser")
-    end
-
-    it "detects Fire TV from user agent" do
-      player = create(:player, user_agent: "Mozilla/5.0 (Linux; Android 11; AFTSSS Build/NS6294) AppleWebKit/537.36 (KHTML, like Gecko) Silk/120.0.0 like Chrome/120.0.0.0 Mobile Safari/537.36")
-      player.parse_user_agent!
-      expect(player.device_type).to eq("fire_tv")
-    end
-
-    it "sets device_type to provisioned when app_version present" do
-      player = create(:player, user_agent: "Mozilla/5.0", app_version: "1.0.0")
-      player.parse_user_agent!
-      expect(player.device_type).to start_with("provisioned")
-    end
-
-    it "does nothing when user_agent is blank" do
-      player = create(:player, user_agent: nil)
-      player.parse_user_agent!
-      expect(player.device_type).to be_nil
-    end
-  end
-
   describe "#provisioned?" do
     it "returns true when app_version is present" do
       player = build(:player, app_version: "1.0.0")

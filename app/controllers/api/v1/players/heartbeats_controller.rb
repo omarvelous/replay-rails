@@ -18,7 +18,7 @@ module Api
             screen_height: params[:screen_height] || @player.screen_height
           )
 
-          @player.parse_user_agent! if ua_changed
+          ParseDeviceInfo.new(player: @player).call if ua_changed
           head :no_content
         end
       end
