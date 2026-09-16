@@ -1,10 +1,9 @@
 module QrHelper
   def qr_scan_full_url(qr_code)
-    if ENV["QR_BASE_HOST"].present?
-      uri = URI.parse(ENV["QR_BASE_HOST"])
-      qr_scan_url(token: qr_code.token, host: uri.host, protocol: uri.scheme)
+    if ENV["QR_SHORT_DOMAIN"].present?
+      qr_scan_url(token: qr_code.token, host: ENV["QR_SHORT_DOMAIN"], port: nil, protocol: "https")
     else
-      qr_scan_url(token: qr_code.token, host: request.host, port: request.port, protocol: request.protocol)
+      qr_scan_url(token: qr_code.token)
     end
   end
 

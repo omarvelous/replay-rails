@@ -14,26 +14,26 @@ RSpec.describe QrHelper do
       expect(url).not_to include("?")
     end
 
-    context "when QR_BASE_HOST is set" do
+    context "when QR_SHORT_DOMAIN is set" do
       around do |example|
-        original = ENV["QR_BASE_HOST"]
-        ENV["QR_BASE_HOST"] = "https://rply.tv"
+        original = ENV["QR_SHORT_DOMAIN"]
+        ENV["QR_SHORT_DOMAIN"] = "rply.tv"
         example.run
       ensure
-        ENV["QR_BASE_HOST"] = original
+        ENV["QR_SHORT_DOMAIN"] = original
       end
 
-      it "uses the custom host" do
+      it "uses the short domain with https and no port" do
         url = helper.qr_scan_full_url(qr_code)
-        expect(url).to start_with("https://rply.tv/s/")
+        expect(url).to eq("https://rply.tv/s/#{qr_code.token}")
       end
     end
 
-    context "when QR_BASE_HOST is not set" do
+    context "when QR_SHORT_DOMAIN is not set" do
       it "falls back to the request host" do
         url = helper.qr_scan_full_url(qr_code)
         expect(url).to include("/s/#{qr_code.token}")
-        expect(url).not_to start_with("https://rply.tv")
+        expect(url).not_to include("rply.tv")
       end
     end
   end
