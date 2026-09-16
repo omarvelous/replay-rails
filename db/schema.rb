@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_09_15_200200) do
+ActiveRecord::Schema[8.1].define(version: 2026_09_16_135415) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -433,16 +433,22 @@ ActiveRecord::Schema[8.1].define(version: 2026_09_15_200200) do
     t.bigint "account_id", null: false
     t.boolean "active", default: true, null: false
     t.datetime "created_at", null: false
+    t.bigint "creative_id"
+    t.string "creative_type"
     t.bigint "destination_record_id"
     t.string "destination_record_type"
     t.string "destination_url"
     t.string "label"
     t.uuid "public_id", default: -> { "gen_random_uuid()" }, null: false
+    t.bigint "screen_content_id"
     t.string "token", null: false
     t.datetime "updated_at", null: false
     t.index ["account_id"], name: "index_qr_codes_on_account_id"
+    t.index ["creative_type", "creative_id"], name: "index_qr_codes_on_creative"
+    t.index ["destination_record_type", "destination_record_id", "creative_type", "creative_id", "screen_content_id"], name: "idx_qr_codes_on_destination_creative_screen_content", unique: true
     t.index ["destination_record_type", "destination_record_id"], name: "idx_on_destination_record_type_destination_record_i_017f34d69d"
     t.index ["public_id"], name: "index_qr_codes_on_public_id", unique: true
+    t.index ["screen_content_id"], name: "index_qr_codes_on_screen_content_id"
     t.index ["token"], name: "index_qr_codes_on_token", unique: true
   end
 
@@ -580,6 +586,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_09_15_200200) do
   add_foreign_key "playlist_ads", "playlists"
   add_foreign_key "playlists", "accounts"
   add_foreign_key "qr_codes", "accounts"
+  add_foreign_key "qr_codes", "screen_contents"
   add_foreign_key "screen_contents", "screens"
   add_foreign_key "screen_players", "players"
   add_foreign_key "screen_players", "screens"
