@@ -13,6 +13,7 @@ class User < ApplicationRecord
   normalizes :email_address, with: ->(e) { e.strip.downcase }
 
   validates :first_name, :last_name, presence: true
-  validates :email_address, presence: true, uniqueness: { case_sensitive: false }
+  validates :email_address, presence: true, uniqueness: { case_sensitive: false },
+                           format: { with: URI::MailTo::EMAIL_REGEXP }
   validates :phone, format: { with: /\A[\d\s\-\+\(\)]+\z/, message: "is not a valid phone number" }, allow_blank: true
 end

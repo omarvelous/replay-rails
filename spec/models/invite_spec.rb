@@ -95,42 +95,4 @@ RSpec.describe Invite do
       expect(create(:invite)).not_to be_accepted
     end
   end
-
-  describe "#accept!" do
-    let(:account) { create(:account) }
-    let(:invite) { create(:invite, account: account, role: "agent") }
-    let(:user) { create(:user) }
-
-    it "marks the invite as accepted" do
-      invite.accept!(user)
-      expect(invite.reload).to be_accepted
-    end
-
-    it "creates an AccountUser with the invited role" do
-      invite.accept!(user)
-
-      au = AccountUser.find_by(account: account, user: user, role: "agent")
-      expect(au).to be_present
-    end
-
-    it "links agent profile when role is agent and Agent record exists" do
-      agent = create(:agent, account: account, email: invite.email)
-
-      invite.accept!(user)
-      expect(agent.reload.user).to eq(user)
-    end
-
-    it "does not link agent profile when no matching Agent exists" do
-      invite.accept!(user)
-      expect(user.agent_profile).to be_nil
-    end
-
-    it "does not overwrite an already-linked agent profile" do
-      existing_user = create(:user)
-      agent = create(:agent, account: account, email: invite.email, user: existing_user)
-
-      invite.accept!(user)
-      expect(agent.reload.user).to eq(existing_user)
-    end
-  end
 end

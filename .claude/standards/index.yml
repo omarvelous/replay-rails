@@ -45,6 +45,11 @@ standards:
       file: code-organization/file-structure.md
       summary: "Canonical ordering for models, controllers, routes, policies, specs, factories, and Gemfile"
 
+  models:
+    - id: models/conventions
+      file: models/conventions.md
+      summary: "Validations match schema, associations with dependent, scopes, callbacks, tenant scoping, service extraction"
+
   controllers:
     - id: controllers/conventions
       file: controllers/conventions.md

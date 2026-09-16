@@ -24,7 +24,7 @@ module App
       end
 
       if Current.user
-        @invite.accept!(Current.user)
+        AcceptInvite.new(invite: @invite, user: Current.user).call
         redirect_to app_root_path, notice: "You've joined the team."
         return
       end
@@ -66,7 +66,7 @@ module App
       @user.email_address = @invite.email
 
       if @user.save
-        @invite.accept!(@user)
+        AcceptInvite.new(invite: @invite, user: @user).call
         start_new_session_for(@user)
         redirect_to app_root_path, notice: "Welcome! You've joined the team."
       else

@@ -10,7 +10,7 @@ class Player < ApplicationRecord
   ].freeze
 
   has_many :screen_players, dependent: :destroy
-  has_one  :active_assignment, -> { active }, class_name: "ScreenPlayer"
+  has_one  :active_assignment, -> { active }, class_name: "ScreenPlayer", inverse_of: :player
   has_one  :screen, through: :active_assignment
 
   validates :token, uniqueness: true
@@ -42,20 +42,6 @@ class Player < ApplicationRecord
     )
   end
 
-  def parse_user_agent!
-    return unless user_agent.present?
-
-    client = DeviceDetector.new(user_agent)
-    self.device_model = client.device_name.presence
-    self.device_manufacturer = client.device_brand.presence
-    self.os_name = client.os_name.presence
-    self.os_version = client.os_full_version.presence
-    self.browser_name = client.name.presence
-    self.browser_version = client.full_version.presence
-    self.device_type = infer_device_type(client)
-    save!
-  end
-
   private
 
     def generate_token
@@ -65,20 +51,5 @@ class Player < ApplicationRecord
     def generate_pairing_code
       self.pairing_code ||= SecureRandom.alphanumeric(6).upcase
       self.pairing_code_expires_at ||= 10.minutes.from_now
-    end
-
-    def infer_device_type(client)
-      return "fire_tv" if user_agent.include?("AFT")
-      return "android_tv" if user_agent.include?("Android TV")
-      return "raspberry_pi" if user_agent.include?("Raspbian") || user_agent.include?("raspberry")
-      return "provisioned" if app_version.present?
-
-      case client.device_type
-      when "desktop" then "browser_desktop"
-      when "smartphone" then "browser_mobile"
-      when "tablet" then "browser_tablet"
-      when "tv" then "browser_tv"
-      else "unknown"
-      end
     end
 end

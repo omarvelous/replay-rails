@@ -19,7 +19,7 @@ module Api
           screen_height: params[:screen_height],
           touch_capable: params[:touch_capable]
         )
-        player.parse_user_agent!
+        ParseDeviceInfo.new(player: player).call
 
         render_data({
           pairing_code: player.pairing_code,

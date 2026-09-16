@@ -6,7 +6,7 @@ class Screen < ApplicationRecord
   belongs_to :site
   has_many :screen_contents, dependent: :destroy
   has_many :screen_players, dependent: :destroy
-  has_one  :active_player_assignment, -> { active }, class_name: "ScreenPlayer"
+  has_one  :active_player_assignment, -> { active }, class_name: "ScreenPlayer", inverse_of: :screen
   has_one  :player, through: :active_player_assignment
 
   validates :name, presence: true
