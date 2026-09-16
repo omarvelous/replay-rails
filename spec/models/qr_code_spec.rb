@@ -6,6 +6,22 @@ RSpec.describe QrCode do
   describe "associations" do
     it { is_expected.to belong_to(:account) }
     it { is_expected.to belong_to(:destination_record).optional }
+    it { is_expected.to belong_to(:creative).optional }
+    it { is_expected.to belong_to(:screen_content).optional }
+  end
+
+  describe "scopes" do
+    it ".contextual returns QR codes with a creative" do
+      contextual = create(:qr_code, creative: create(:ad))
+      create(:qr_code) # standalone
+      expect(described_class.contextual).to eq([ contextual ])
+    end
+
+    it ".standalone returns QR codes without a creative" do
+      create(:qr_code, creative: create(:ad))
+      standalone = create(:qr_code)
+      expect(described_class.standalone).to eq([ standalone ])
+    end
   end
 
   describe "validations" do
