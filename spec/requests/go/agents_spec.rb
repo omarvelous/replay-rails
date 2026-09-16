@@ -25,8 +25,8 @@ RSpec.describe "Go::Agents" do
       create(:listing_agent, listing: sold, agent: agent)
 
       get go_agent_path(agent)
-      expect(response.body).to include(active.address)
-      expect(response.body).not_to include(sold.address)
+      expect(response.body).to include(ERB::Util.html_escape(active.address))
+      expect(response.body).not_to include(ERB::Util.html_escape(sold.address))
     end
 
     it "renders the lead form" do
