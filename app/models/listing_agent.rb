@@ -2,7 +2,7 @@ class ListingAgent < ApplicationRecord
   include PublicIdentifiable
 
   has_paper_trail
-  belongs_to :listing
+  belongs_to :listing, counter_cache: true
   belongs_to :agent
 
   ROLES = %w[listing_agent co_listing_agent].freeze
