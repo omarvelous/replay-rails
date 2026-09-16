@@ -9,36 +9,31 @@ RSpec.describe QrHelper do
       expect(url).to include("/s/#{qr_code.token}")
     end
 
-    it "appends ad and screen params" do
-      ad = create(:ad)
-      site = create(:site, account: qr_code.account)
-      screen = create(:screen, site: site)
-
-      url = helper.qr_scan_full_url(qr_code, ad: ad, screen: screen)
-      expect(url).to include("a=#{ad.public_id}")
-      expect(url).to include("s=#{screen.public_id}")
+    it "does not append query params" do
+      url = helper.qr_scan_full_url(qr_code)
+      expect(url).not_to include("?")
     end
 
-    context "when QR_BASE_URL is set" do
+    context "when QR_SHORT_DOMAIN is set" do
       around do |example|
-        original = ENV["QR_BASE_URL"]
-        ENV["QR_BASE_URL"] = "https://rply.tv"
+        original = ENV["QR_SHORT_DOMAIN"]
+        ENV["QR_SHORT_DOMAIN"] = "rply.tv"
         example.run
       ensure
-        ENV["QR_BASE_URL"] = original
+        ENV["QR_SHORT_DOMAIN"] = original
       end
 
-      it "uses the custom base URL" do
+      it "uses the short domain with https and no port" do
         url = helper.qr_scan_full_url(qr_code)
-        expect(url).to start_with("https://rply.tv/s/")
+        expect(url).to eq("https://rply.tv/s/#{qr_code.token}")
       end
     end
 
-    context "when QR_BASE_URL is not set" do
-      it "falls back to the default host" do
+    context "when QR_SHORT_DOMAIN is not set" do
+      it "falls back to the request host" do
         url = helper.qr_scan_full_url(qr_code)
         expect(url).to include("/s/#{qr_code.token}")
-        expect(url).not_to start_with("https://rply.tv")
+        expect(url).not_to include("rply.tv")
       end
     end
   end

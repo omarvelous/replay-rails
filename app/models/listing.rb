@@ -4,7 +4,7 @@ class Listing < ApplicationRecord
   has_paper_trail ignore: [ :updated_at ]
   acts_as_tenant :account
 
-  has_one :qr_code, as: :destination_record, dependent: :destroy
+  has_many :qr_codes, as: :destination_record, dependent: :destroy
   has_many :listing_agents, dependent: :destroy
   has_many :agents, through: :listing_agents
   has_many :listing_ads, class_name: "Ads::ListingAd", dependent: :destroy
@@ -36,7 +36,7 @@ class Listing < ApplicationRecord
     listing_agents.primary.first&.agent || agents.first
   end
 
-  def ensure_qr_code!
-    qr_code || create_qr_code!(account: account, label: address.truncate(40))
+  def qr_code_for(creative: nil, screen_content: nil)
+    QrCode.for(destination: self, creative: creative, screen_content: screen_content)
   end
 end

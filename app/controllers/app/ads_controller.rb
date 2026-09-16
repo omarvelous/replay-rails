@@ -12,7 +12,7 @@ module App
   def show
     authorize! @ad
     @playlists = @ad.playlists.distinct
-    @scan_count = Analytics::Events::QrScanned.where_properties(ad_id: @ad.id).qualified.count
+    @scan_count = Analytics::Events::QrScanned.events.for_creative(@ad).count
     @impressions_count = Analytics::Events::ContentImpressed.where_properties(ad_id: @ad.id).count
   end
 

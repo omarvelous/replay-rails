@@ -1,17 +1,14 @@
 module QrHelper
-  def qr_scan_full_url(qr_code, ad: nil, screen: nil, screen_content: nil)
-    base = ENV.fetch("QR_BASE_URL") { qr_scan_url(token: qr_code.token).sub(/\/s\/.*/, "") }
-    url = "#{base}/s/#{qr_code.token}"
-    query = {}
-    query[:a] = ad.public_id if ad
-    query[:s] = screen.public_id if screen
-    query[:sc] = screen_content.public_id if screen_content
-    url += "?#{query.to_query}" if query.any?
-    url
+  def qr_scan_full_url(qr_code)
+    if ENV["QR_SHORT_DOMAIN"].present?
+      qr_scan_url(token: qr_code.token, host: ENV["QR_SHORT_DOMAIN"], port: nil, protocol: "https")
+    else
+      qr_scan_url(token: qr_code.token)
+    end
   end
 
-  def qr_svg(qr_code, ad: nil, screen: nil)
-    url = qr_scan_full_url(qr_code, ad: ad, screen: screen)
+  def qr_svg(qr_code)
+    url = qr_scan_full_url(qr_code)
 
     qr = RQRCode::QRCode.new(url)
     svg = qr.as_svg(

@@ -27,39 +27,10 @@ RSpec.describe "Governed Events", type: :model do # rubocop:disable RSpec/Descri
       { qr_code_pid: "a1b2c3d4", destination_url: "/go/listings/abc" },
       %i[qr_code_pid destination_url]
 
-    it "does not require screen_content_pid" do
+    it "has only qr_code_pid and destination_url attributes" do
       event = described_class.new(qr_code_pid: "a1b2c3d4", destination_url: "/go/listings/abc")
       expect(event).to be_valid
-    end
-
-    it "accepts optional properties" do
-      event = described_class.new(qr_code_pid: "a1b2c3d4", destination_url: "/go/listings/abc",
-                                  screen_content_pid: "e5f6", ad_pid: "g7h8", screen_pid: "i9j0")
-      expect(event).to be_valid
-    end
-
-    describe ".qualified" do
-      it "returns events with both ad_pid and screen_pid" do
-        visit = create(:ahoy_visit)
-        qualified = Ahoy::Event.create!(visit: visit, name: "qr.scanned", time: Time.current,
-          properties: { "qr_code_pid" => "abc", "ad_pid" => "def", "screen_pid" => "ghi" })
-        Ahoy::Event.create!(visit: visit, name: "qr.scanned", time: Time.current,
-          properties: { "qr_code_pid" => "abc", "ad_pid" => "def" })
-        Ahoy::Event.create!(visit: visit, name: "qr.scanned", time: Time.current,
-          properties: { "qr_code_pid" => "abc" })
-
-        expect(described_class.events.qualified).to eq([ qualified ])
-      end
-
-      it "chains with where_properties" do
-        visit = create(:ahoy_visit)
-        match = Ahoy::Event.create!(visit: visit, name: "qr.scanned", time: Time.current,
-          properties: { "qr_code_pid" => "target", "ad_pid" => "def", "screen_pid" => "ghi" })
-        Ahoy::Event.create!(visit: visit, name: "qr.scanned", time: Time.current,
-          properties: { "qr_code_pid" => "other", "ad_pid" => "def", "screen_pid" => "ghi" })
-
-        expect(described_class.where_properties(qr_code_pid: "target").qualified).to eq([ match ])
-      end
+      expect(event.send(:properties)).to eq({ qr_code_pid: "a1b2c3d4", destination_url: "/go/listings/abc" })
     end
   end
 

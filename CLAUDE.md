@@ -165,7 +165,7 @@ Unified event tracking via Ahoy with governed event definitions.
 - **Exclusions** — Admin subdomain excluded via `Ahoy.exclude_method`.
 - **Account on events** — Set via `Ahoy::Store` from `current_account` (app) or event properties (player).
 - **Visitable** — `Lead`, `Inquiry` use `visitable :ahoy_visit` for visit attribution.
-- **QR scans** — Tracked as `qr.scanned` Ahoy events (no separate model). `QrCode#scan_events` queries events by qr_code_id. Lead attribution flows through the visit's `qr.scanned` event.
+- **QR scans** — Tracked as `qr.scanned` Ahoy events. `QrCode#scan_events` queries events by qr_code_id. Lead attribution flows through the visit's `qr.scanned` event. QR codes are contextual — each carries a `creative` (polymorphic: Ad, Experience) and optional `screen_content` for full attribution from the token alone. `listing.qr_code_for(creative: ad, screen_content: sc)` finds or creates the right QR code.
 
 See `docs/dev/event-catalog.md` for the governed event catalog.
 
