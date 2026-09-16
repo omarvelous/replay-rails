@@ -95,5 +95,4 @@ RSpec.describe Invite do
       expect(create(:invite)).not_to be_accepted
     end
   end
-
 end

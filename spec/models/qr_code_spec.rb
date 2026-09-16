@@ -13,7 +13,6 @@ RSpec.describe QrCode do
       create(:qr_code)
       expect(qr_code).to validate_uniqueness_of(:token)
     end
-
   end
 
   describe "token generation" do
