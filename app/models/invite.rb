@@ -31,14 +31,6 @@ class Invite < ApplicationRecord
     accepted_at.present?
   end
 
-  def accept!(user)
-    transaction do
-      update!(accepted_at: Time.current)
-      AccountUser.create!(account: account, user: user, role: role)
-      link_agent_profile(user) if role == "agent"
-    end
-  end
-
   private
 
   def generate_token
@@ -52,10 +44,5 @@ class Invite < ApplicationRecord
     if AccountUser.exists?(account: account, user: existing_user, role: role)
       errors.add(:email, "already has the #{role} role on this account")
     end
-  end
-
-  def link_agent_profile(user)
-    agent = Agent.find_by(account: account, email: email)
-    agent&.update!(user: user) if agent && agent.user_id.nil?
   end
 end

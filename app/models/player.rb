@@ -10,7 +10,7 @@ class Player < ApplicationRecord
   ].freeze
 
   has_many :screen_players, dependent: :destroy
-  has_one  :active_assignment, -> { active }, class_name: "ScreenPlayer"
+  has_one  :active_assignment, -> { active }, class_name: "ScreenPlayer", inverse_of: :player
   has_one  :screen, through: :active_assignment
 
   validates :token, uniqueness: true
