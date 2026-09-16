@@ -3,15 +3,16 @@ require "rails_helper"
 RSpec.describe "Api::Players::Heartbeats" do
   let(:player) { create(:player) }
   let(:screen) { create(:screen) }
+  let(:auth_headers) { { "Authorization" => "Bearer #{player.token}" } }
 
   before do
     host! "api.replay.localhost"
     pair_player!(screen, player)
   end
 
-  describe "POST /players/:token/heartbeat" do
+  describe "POST /v1/player/heartbeat" do
     it "updates last_heartbeat_at" do
-      post "/v1/players/#{player.token}/heartbeat"
+      post "/v1/player/heartbeat", headers: auth_headers
       expect(response).to have_http_status(:no_content)
 
       player.reload
@@ -20,28 +21,27 @@ RSpec.describe "Api::Players::Heartbeats" do
     end
 
     it "returns 401 for invalid token" do
-      post "/v1/players/invalid/heartbeat"
+      post "/v1/player/heartbeat", headers: { "Authorization" => "Bearer invalid" }
       expect(response).to have_http_status(:unauthorized)
     end
 
     it "returns 410 when player is unpaired" do
       screen.unpair_player!
 
-      post "/v1/players/#{player.token}/heartbeat"
-
+      post "/v1/player/heartbeat", headers: auth_headers
       expect(response).to have_http_status(:gone)
       expect(response.parsed_body["error"]["message"]).to eq("unpaired")
     end
 
     it "updates user_agent" do
-      post "/v1/players/#{player.token}/heartbeat", headers: { "User-Agent" => "NewBrowser/1.0" }
+      post "/v1/player/heartbeat", headers: auth_headers.merge("User-Agent" => "NewBrowser/1.0")
       expect(player.reload.user_agent).to eq("NewBrowser/1.0")
     end
 
     it "updates screen resolution from params" do
-      post "/v1/players/#{player.token}/heartbeat",
+      post "/v1/player/heartbeat",
         params: { screen_width: 3840, screen_height: 2160 }.to_json,
-        headers: { "Content-Type" => "application/json" }
+        headers: auth_headers.merge("Content-Type" => "application/json")
       player.reload
       expect(player.screen_width).to eq(3840)
       expect(player.screen_height).to eq(2160)
