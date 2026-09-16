@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_09_14_200000) do
+ActiveRecord::Schema[8.1].define(version: 2026_09_15_200200) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -101,6 +101,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_09_14_200000) do
     t.uuid "public_id", default: -> { "gen_random_uuid()" }, null: false
     t.datetime "updated_at", null: false
     t.bigint "user_id"
+    t.index ["account_id", "email"], name: "index_agents_on_account_id_and_email", unique: true
     t.index ["account_id"], name: "index_agents_on_account_id"
     t.index ["public_id"], name: "index_agents_on_public_id", unique: true
     t.index ["user_id"], name: "index_agents_on_user_id"
@@ -349,6 +350,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_09_14_200000) do
     t.integer "beds"
     t.datetime "created_at", null: false
     t.text "description"
+    t.integer "listing_agents_count", default: 0, null: false
     t.string "listing_type", default: "for_sale", null: false
     t.decimal "price", precision: 12, scale: 2, null: false
     t.string "property_type", default: "house", null: false
@@ -419,6 +421,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_09_14_200000) do
     t.bigint "account_id", null: false
     t.datetime "created_at", null: false
     t.string "name", null: false
+    t.integer "playlist_ads_count", default: 0, null: false
     t.uuid "public_id", default: -> { "gen_random_uuid()" }, null: false
     t.string "status", default: "draft", null: false
     t.datetime "updated_at", null: false
