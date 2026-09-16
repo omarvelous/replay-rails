@@ -179,7 +179,7 @@ if demo_account
   attach_seed_photos(w34th_listing, "house-2.jpg", "interior-2.jpg") if w34th_listing
   # QR codes for listings
   [ fifth_ave_listing, w34th_listing ].compact.each do |listing|
-    listing.ensure_qr_code!
+    listing.qr_code_for
   end
 end
 puts "Seeded #{Listing.count} listing(s)"

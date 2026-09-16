@@ -20,7 +20,7 @@ module App
     else
       0
     end
-    @scans_count = @listing.qr_code&.scan_events&.qualified&.count || 0
+    @scans_count = @listing.qr_codes.contextual.sum(&:scan_count)
   end
 
   def new

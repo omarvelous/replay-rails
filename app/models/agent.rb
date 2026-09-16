@@ -5,7 +5,7 @@ class Agent < ApplicationRecord
   acts_as_tenant :account
 
   belongs_to :user, optional: true
-  has_one :qr_code, as: :destination_record, dependent: :destroy
+  has_many :qr_codes, as: :destination_record, dependent: :destroy
   has_many :listing_agents, dependent: :destroy
   has_many :listings, through: :listing_agents
   has_many :lead_agents, dependent: :destroy

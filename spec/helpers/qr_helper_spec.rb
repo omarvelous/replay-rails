@@ -9,14 +9,9 @@ RSpec.describe QrHelper do
       expect(url).to include("/s/#{qr_code.token}")
     end
 
-    it "appends ad and screen params" do
-      ad = create(:ad)
-      site = create(:site, account: qr_code.account)
-      screen = create(:screen, site: site)
-
-      url = helper.qr_scan_full_url(qr_code, ad: ad, screen: screen)
-      expect(url).to include("a=#{ad.public_id}")
-      expect(url).to include("s=#{screen.public_id}")
+    it "does not append query params" do
+      url = helper.qr_scan_full_url(qr_code)
+      expect(url).not_to include("?")
     end
 
     context "when QR_BASE_URL is set" do

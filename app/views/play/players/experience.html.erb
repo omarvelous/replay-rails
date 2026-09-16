@@ -101,10 +101,11 @@
         <% end %>
 
         <%# QR handoff %>
-        <% if sections["qr_handoff"] != false && @listing&.qr_code %>
+        <% qr = @listing&.qr_code_for(creative: @experience, screen_content: @screen&.active_screen_content) %>
+        <% if sections["qr_handoff"] != false && qr %>
           <div class="flex flex-col items-center gap-2">
             <div class="w-24 h-24 bg-white rounded-lg p-2">
-              <%= qr_svg(@listing.qr_code) %>
+              <%= qr_svg(qr) %>
             </div>
             <p class="text-[10px] text-white/40 text-center">Scan for details</p>
           </div>
