@@ -1,0 +1,72 @@
+<div class="w-full relative overflow-hidden bg-black text-white" style="aspect-ratio: 16/9; max-width: 960px; margin: 0 auto;">
+  <%# Placeholder background %>
+  <div class="absolute inset-0 bg-gradient-to-br from-gray-800 to-gray-900"></div>
+
+  <%# Bottom overlay gradient %>
+  <div class="absolute inset-x-0 bottom-0 h-2/3 pointer-events-none"
+       style="background: linear-gradient(to top, rgba(0,0,0,0.85), transparent);"></div>
+
+  <%# Photo counter placeholder %>
+  <div class="absolute top-6 right-6 px-3 py-1.5 rounded-full text-xs font-semibold z-10"
+       style="background: rgba(0,0,0,0.5); backdrop-filter: blur(8px);">
+    1 / 5
+  </div>
+
+  <%# Floor plan trigger placeholder %>
+  <button class="absolute top-6 left-6 z-10 px-3 py-1.5 rounded-full text-xs font-semibold flex items-center gap-1.5"
+          style="background: rgba(0,0,0,0.5); backdrop-filter: blur(8px);">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" class="w-4 h-4"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 3.75v4.5m0-4.5h4.5m-4.5 0L9 9M3.75 20.25v-4.5m0 4.5h4.5m-4.5 0L9 15M20.25 3.75h-4.5m4.5 0v4.5m0-4.5L15 9m5.25 11.25h-4.5m4.5 0v-4.5m0 4.5L15 15"/></svg>
+    Floor plan
+  </button>
+
+  <%# Content overlay %>
+  <div class="absolute inset-x-0 bottom-0 p-8 z-10">
+    <div class="max-w-4xl">
+      <% if listing %>
+        <div class="mb-4">
+          <% if listing.listing_type.present? %>
+            <span class="inline-block text-indigo-400 text-xs font-bold uppercase tracking-wider mb-2">
+              <%= listing.listing_type.humanize %>
+            </span>
+          <% end %>
+          <p class="text-4xl font-black tracking-tight">
+            <%= number_to_currency(listing.price, precision: 0) %>
+          </p>
+          <p class="text-lg text-white/80 mt-1"><%= listing.address %></p>
+          <div class="flex gap-6 mt-3 text-sm text-white/60">
+            <% if listing.beds %><span><%= listing.beds %> bd</span><% end %>
+            <% if listing.baths %><span><%= listing.baths %> ba</span><% end %>
+            <% if listing.sqft %><span><%= number_with_delimiter(listing.sqft) %> sqft</span><% end %>
+          </div>
+          <% if listing.description.present? %>
+            <p class="text-sm text-white/50 mt-3 max-w-lg leading-relaxed line-clamp-3"><%= listing.description %></p>
+          <% end %>
+        </div>
+      <% end %>
+
+      <%# Agent + QR %>
+      <div class="flex items-end justify-between mt-6">
+        <% if agent %>
+          <div class="flex items-center gap-4">
+            <div class="w-14 h-14 rounded-full bg-white/10 grid place-items-center text-lg font-bold">
+              <%= agent.name.split.map(&:first).join.first(2).upcase %>
+            </div>
+            <div>
+              <p class="font-semibold text-sm"><%= agent.name %></p>
+              <p class="text-xs text-white/50"><%= agent.phone %></p>
+              <p class="text-xs text-white/50"><%= agent.email %></p>
+            </div>
+          </div>
+        <% end %>
+
+        <%# QR placeholder %>
+        <div class="flex flex-col items-center gap-2">
+          <div class="w-24 h-24 bg-white rounded-lg p-2 grid place-items-center">
+            <span class="text-gray-400 text-xs text-center">QR Code</span>
+          </div>
+          <p class="text-[10px] text-white/40 text-center">Scan for details</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

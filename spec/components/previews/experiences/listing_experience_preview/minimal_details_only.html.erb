@@ -1,0 +1,31 @@
+<div class="w-full relative overflow-hidden bg-black text-white" style="aspect-ratio: 16/9; max-width: 960px; margin: 0 auto;">
+  <%# No photo background — solid dark %>
+  <div class="absolute inset-0 bg-gray-900"></div>
+
+  <%# Content overlay %>
+  <div class="absolute inset-x-0 bottom-0 p-8 z-10">
+    <div class="max-w-4xl">
+      <% if listing %>
+        <div class="mb-4">
+          <% if listing.listing_type.present? %>
+            <span class="inline-block text-indigo-400 text-xs font-bold uppercase tracking-wider mb-2">
+              <%= listing.listing_type.humanize %>
+            </span>
+          <% end %>
+          <p class="text-4xl font-black tracking-tight">
+            <%= number_to_currency(listing.price, precision: 0) %>
+          </p>
+          <p class="text-lg text-white/80 mt-1"><%= listing.address %></p>
+          <div class="flex gap-6 mt-3 text-sm text-white/60">
+            <% if listing.beds %><span><%= listing.beds %> bd</span><% end %>
+            <% if listing.baths %><span><%= listing.baths %> ba</span><% end %>
+            <% if listing.sqft %><span><%= number_with_delimiter(listing.sqft) %> sqft</span><% end %>
+          </div>
+          <% if listing.description.present? %>
+            <p class="text-sm text-white/50 mt-3 max-w-lg leading-relaxed line-clamp-3"><%= listing.description %></p>
+          <% end %>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div>
