@@ -46,7 +46,7 @@ events with the exact content assignment and account.
 | `interaction.navigated` | `experience_pid`, `screen_content_pid`, `direction`, `photo_index` — all required. Also includes `account_pid`. |
 | `interaction.opened` | `experience_pid`, `screen_content_pid`, `target` — all required. Also includes `account_pid`. |
 | `interaction.closed` | Same as opened + `view_duration` (required). Also includes `account_pid`. |
-| `device.connected` | `screen_pid`, `player_token` — all required. Also includes `account_pid`. |
+| `device.connected` | `screen_pid`, `player_pid` — all required. Also includes `account_pid`. |
 
 ## Creating Events
 

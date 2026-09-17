@@ -1,8 +1,6 @@
 module Play
   class SessionsController < Play::BaseController
-    skip_forgery_protection only: :create
-
-    # POST /player/session — set player session cookie (same-origin from pairing JS)
+    # POST /player/session — set player session cookie after pairing
     def create
       player_session = PlayerSession.active.find_by(id: params[:session_id])
       if player_session

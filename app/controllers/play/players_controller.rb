@@ -1,6 +1,5 @@
 module Play
   class PlayersController < Play::BaseController
-    skip_forgery_protection only: :create
     rate_limit to: 10, within: 1.minute, only: :create, by: -> { request.remote_ip }
     before_action :authenticate_player!, only: :show
 

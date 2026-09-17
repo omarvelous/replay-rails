@@ -257,7 +257,7 @@ adb shell pm disable-user <package.name>
 adb shell pm enable <package.name>
 
 # Open a URL in Fully Kiosk remotely
-curl "http://<ip>:2323/?cmd=loadURL&url=https://play.replaytv.co/players/new&password=<your-password>"
+curl "http://<ip>:2323/?cmd=loadURL&url=https://play.replaytv.co&password=<your-password>"
 ```
 
 ## Fully Kiosk Remote Admin API
