@@ -3,10 +3,5 @@
 </div>
 
 <script>
-  const publicId = localStorage.getItem("player_public_id")
-  if (publicId) {
-    window.location.replace(`/players/${publicId}`)
-  } else {
-    window.location.replace("/players/new")
-  }
+  window.location.replace("/player")
 </script>

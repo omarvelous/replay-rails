@@ -3,15 +3,15 @@ require "rails_helper"
 RSpec.describe "Play::Players" do
   before { host! "play.replay.localhost" }
 
-  describe "GET /players/new (pairing screen)" do
+  describe "GET /player/new (pairing screen)" do
     it "returns a successful HTML response" do
-      get "/players/new"
+      get "/player/new"
       expect(response).to be_successful
       expect(response.body).to include("Pair this screen")
     end
   end
 
-  describe "GET /players/:id (playback)" do
+  describe "GET /player (playback)" do
     let(:account) { create(:account) }
     let(:site) { create(:site, account: account) }
     let(:screen) { create(:screen, site: site) }
@@ -26,13 +26,13 @@ RSpec.describe "Play::Players" do
       create(:playlist_ad, playlist: playlist, ad: ad, position: 1, duration: 10)
       create(:screen_content, screen: screen, contentable: playlist, active: true)
 
-      get "/players/#{player.public_id}"
+      get "/player"
       expect(response).to be_successful
     end
 
     it "renders idle when no playlist assigned" do
       sign_in_player(player)
-      get "/players/#{player.public_id}"
+      get "/player"
       expect(response).to be_successful
       expect(response.body).to include("No content assigned")
     end
@@ -40,35 +40,35 @@ RSpec.describe "Play::Players" do
     it "renders unpaired when player has no screen" do
       unpaired_player = create(:player)
       sign_in_player(unpaired_player)
-      get "/players/#{unpaired_player.public_id}"
+      get "/player"
       expect(response).to be_successful
       expect(response.body).to include("not paired")
     end
 
     it "redirects to pairing without cookie" do
-      get "/players/#{player.public_id}"
+      get "/player"
       expect(response).to redirect_to(new_player_path)
     end
   end
 
-  describe "POST /player_session" do
+  describe "POST /player/session" do
     it "sets the player session cookie with a valid session" do
       player = create(:player)
       player_session = player.player_sessions.create!(ip_address: "1.1.1.1")
-      post "/player_session", params: { session_id: player_session.id }, as: :json
+      post "/player/session", params: { session_id: player_session.id }, as: :json
       expect(response).to be_successful
       expect(cookies[:player_session_id]).to be_present
     end
 
     it "returns 401 with an invalid session" do
-      post "/player_session", params: { session_id: 0 }, as: :json
+      post "/player/session", params: { session_id: 0 }, as: :json
       expect(response).to have_http_status(:unauthorized)
     end
 
     it "returns 401 with a revoked session" do
       player = create(:player)
       player_session = player.player_sessions.create!(ip_address: "1.1.1.1", revoked_at: Time.current)
-      post "/player_session", params: { session_id: player_session.id }, as: :json
+      post "/player/session", params: { session_id: player_session.id }, as: :json
       expect(response).to have_http_status(:unauthorized)
     end
   end

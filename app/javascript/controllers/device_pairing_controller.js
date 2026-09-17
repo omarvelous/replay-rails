@@ -50,7 +50,7 @@ export default class extends Controller {
     localStorage.setItem("player_public_id", this.publicId)
 
     // Set cookie via same-origin Play endpoint (cross-origin API can't set SameSite=Lax cookies)
-    await fetch("/player_session", {
+    await fetch("/player/session", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ session_id: this.sessionId })
@@ -66,7 +66,7 @@ export default class extends Controller {
       const { data } = await res.json()
       if (data.paired) {
         this.publicId = localStorage.getItem("player_public_id")
-        window.location.replace(`/players/${this.publicId}`)
+        window.location.replace("/player")
         return true
       }
     } catch {
@@ -184,13 +184,13 @@ export default class extends Controller {
 
     // Set cookie with the new session (pairing revokes old sessions and creates a new one)
     if (sessionId) {
-      await fetch("/player_session", {
+      await fetch("/player/session", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ session_id: sessionId })
       })
     }
 
-    window.location.href = `/players/${this.publicId || localStorage.getItem("player_public_id")}`
+    window.location.href = "/player"
   }
 }

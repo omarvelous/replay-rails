@@ -115,6 +115,6 @@ export default class extends Controller {
   handleUnpaired() {
     clearInterval(this.heartbeat)
     this.subscription?.unsubscribe()
-    window.location.href = "/players/new"
+    window.location.href = "/player/new"
   }
 }
