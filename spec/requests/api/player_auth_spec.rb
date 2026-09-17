@@ -9,20 +9,8 @@ RSpec.describe "Player Authentication" do
     pair_player!(screen, player)
   end
 
-  describe "bearer token auth" do
-    it "authenticates with Authorization: Bearer header" do
-      get "/v1/player", headers: { "Authorization" => "Bearer #{player.token}" }
-      expect(response).to be_successful
-    end
-
-    it "returns 401 with invalid bearer token" do
-      get "/v1/player", headers: { "Authorization" => "Bearer invalid" }
-      expect(response).to have_http_status(:unauthorized)
-    end
-  end
-
   describe "cookie auth" do
-    it "authenticates with signed player_token cookie" do
+    it "authenticates with signed player_session_id cookie" do
       sign_in_player(player)
       get "/v1/player"
       expect(response).to be_successful
@@ -32,30 +20,27 @@ RSpec.describe "Player Authentication" do
       get "/v1/player"
       expect(response).to have_http_status(:unauthorized)
     end
-  end
 
-  describe "bearer takes precedence over cookie" do
-    let(:other_player) { create(:player) }
-
-    it "uses bearer when both are present" do
-      sign_in_player(other_player)
-      get "/v1/player", headers: { "Authorization" => "Bearer #{player.token}" }
-      expect(response).to be_successful
-      expect(response.parsed_body["data"]["paired"]).to be true
+    it "returns 401 with revoked session" do
+      sign_in_player(player)
+      PlayerSession.last.revoke!
+      get "/v1/player"
+      expect(response).to have_http_status(:unauthorized)
     end
   end
 
   describe "registration" do
-    it "returns public_id in the response" do
+    it "returns session_id and public_id" do
       post "/v1/players", as: :json
       data = response.parsed_body["data"]
+      expect(data["session_id"]).to be_present
       expect(data["public_id"]).to be_present
     end
 
-    it "returns the token for bearer auth fallback" do
-      post "/v1/players", as: :json
-      data = response.parsed_body["data"]
-      expect(data["token"]).to be_present
+    it "creates a PlayerSession" do
+      expect {
+        post "/v1/players", as: :json
+      }.to change(PlayerSession, :count).by(1)
     end
   end
 end

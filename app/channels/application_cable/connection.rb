@@ -5,7 +5,7 @@ module ApplicationCable
     def connect
       self.current_user = find_verified_user
       self.current_player = find_verified_player
-    rescue
+    rescue StandardError
       # Allow anonymous connections — PairingChannel authenticates
       # via its own params
     end
@@ -19,8 +19,8 @@ module ApplicationCable
       end
 
       def find_verified_player
-        if token = cookies.signed[:player_token]
-          Player.find_by(token: token)
+        if player_session = PlayerSession.active.find_by(id: cookies.signed[:player_session_id])
+          player_session.player
         end
       end
   end

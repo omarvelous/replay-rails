@@ -5,8 +5,8 @@ module Play
     private
 
     def authenticate_player!
-      token = cookies.signed[:player_token]
-      @player = Player.find_by(token: token)
+      @player_session = PlayerSession.active.find_by(id: cookies.signed[:player_session_id])
+      @player = @player_session&.player
       redirect_to new_player_path unless @player
     end
   end

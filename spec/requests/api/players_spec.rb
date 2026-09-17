@@ -4,14 +4,14 @@ RSpec.describe "Api::Players" do
   before { host! "api.replay.localhost" }
 
   describe "POST /v1/players" do
-    it "registers a player and returns JSON with token and public_id" do
+    it "registers a player and returns JSON with session_id and public_id" do
       expect {
         post "/v1/players", as: :json
       }.to change(Player, :count).by(1)
 
       expect(response).to have_http_status(:created)
       data = response.parsed_body["data"]
-      expect(data["token"]).to be_present
+      expect(data["session_id"]).to be_present
       expect(data["public_id"]).to be_present
       expect(data["pairing_code"]).to match(/\A[A-Z0-9]{6}\z/)
       expect(data["expires_in"]).to eq(600)
@@ -43,7 +43,8 @@ RSpec.describe "Api::Players" do
     let(:player) { create(:player) }
 
     it "returns paired: false when not paired" do
-      get "/v1/player", headers: { "Authorization" => "Bearer #{player.token}" }
+      sign_in_player(player)
+      get "/v1/player"
       expect(response).to be_successful
       data = response.parsed_body["data"]
       expect(data["paired"]).to be false
@@ -52,15 +53,16 @@ RSpec.describe "Api::Players" do
     it "returns paired: true when paired" do
       screen = create(:screen)
       pair_player!(screen, player)
+      sign_in_player(player)
 
-      get "/v1/player", headers: { "Authorization" => "Bearer #{player.token}" }
+      get "/v1/player"
       expect(response).to be_successful
       data = response.parsed_body["data"]
       expect(data["paired"]).to be true
     end
 
-    it "returns 401 for invalid token" do
-      get "/v1/player", headers: { "Authorization" => "Bearer invalid" }
+    it "returns 401 without session" do
+      get "/v1/player"
       expect(response).to have_http_status(:unauthorized)
     end
   end
@@ -68,12 +70,12 @@ RSpec.describe "Api::Players" do
   describe "POST /v1/player/pairing_code" do
     let(:player) { create(:player) }
 
+    before { sign_in_player(player) }
+
     it "returns the existing code if still valid" do
       existing_code = player.pairing_code
 
-      post "/v1/player/pairing_code",
-        headers: { "Authorization" => "Bearer #{player.token}" },
-        as: :json
+      post "/v1/player/pairing_code", as: :json
 
       expect(response).to have_http_status(:created)
       data = response.parsed_body["data"]
@@ -85,9 +87,7 @@ RSpec.describe "Api::Players" do
       player.update!(pairing_code_expires_at: 1.minute.ago)
       old_code = player.pairing_code
 
-      post "/v1/player/pairing_code",
-        headers: { "Authorization" => "Bearer #{player.token}" },
-        as: :json
+      post "/v1/player/pairing_code", as: :json
 
       expect(response).to have_http_status(:created)
       data = response.parsed_body["data"]
@@ -100,16 +100,13 @@ RSpec.describe "Api::Players" do
       player # ensure created
 
       expect {
-        post "/v1/player/pairing_code",
-          headers: { "Authorization" => "Bearer #{player.token}" },
-          as: :json
+        post "/v1/player/pairing_code", as: :json
       }.not_to change(Player, :count)
     end
 
-    it "returns 401 for invalid token" do
-      post "/v1/player/pairing_code",
-        headers: { "Authorization" => "Bearer invalid" },
-        as: :json
+    it "returns 401 with revoked session" do
+      PlayerSession.last.revoke!
+      post "/v1/player/pairing_code", as: :json
       expect(response).to have_http_status(:unauthorized)
     end
   end

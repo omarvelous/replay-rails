@@ -29,20 +29,21 @@ module Play
       end
     end
 
-    # POST /players/authenticate — set player cookie (same-origin from pairing JS)
+    # POST /players/authenticate — set player session cookie (same-origin from pairing JS)
     def authenticate
-      player = Player.find_by(token: params[:token])
-      if player
-        cookies.signed[:player_token] = {
-          value: player.token,
+      session = PlayerSession.active.find_by(id: params[:session_id])
+      if session
+        cookies.signed[:player_session_id] = {
+          value: session.id,
           httponly: true,
           secure: Rails.env.production?,
           same_site: :lax,
+          expires: 1.year.from_now,
           domain: :all
         }
         render json: { ok: true }
       else
-        render json: { error: "invalid token" }, status: :unauthorized
+        render json: { error: "invalid session" }, status: :unauthorized
       end
     end
 

@@ -44,6 +44,7 @@ export default class extends Controller {
     const { data } = await res.json()
 
     this.publicId = data.public_id
+    this.sessionId = data.session_id
     this.pairingCode = data.pairing_code
     this.expiresIn = data.expires_in
     localStorage.setItem("player_public_id", this.publicId)
@@ -52,7 +53,7 @@ export default class extends Controller {
     await fetch("/players/authenticate", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ token: data.token })
+      body: JSON.stringify({ session_id: this.sessionId })
     })
 
     this.displayCode(data.pairing_code)
@@ -97,7 +98,7 @@ export default class extends Controller {
     this.subscription?.unsubscribe()
     this.subscription = consumer.subscriptions.create(
       { channel: "PairingChannel", code: this.pairingCode },
-      { received: (msg) => { if (msg.paired) this.onPaired() } }
+      { received: (msg) => { if (msg.paired) this.onPaired(msg.session_id) } }
     )
   }
 
@@ -164,7 +165,7 @@ export default class extends Controller {
         return
       }
       const { data } = await res.json()
-      if (data.paired) return this.onPaired()
+      if (data.paired) return this.onPaired(this.sessionId)
       this.pollDelay = 3000 // reset on success
     } catch {
       this.backoff()
@@ -176,10 +177,20 @@ export default class extends Controller {
     this.pollDelay = Math.min(this.pollDelay * 2, 60000)
   }
 
-  onPaired() {
+  async onPaired(sessionId) {
     clearTimeout(this.pollTimeout)
     clearInterval(this.countdownInterval)
     this.subscription?.unsubscribe()
+
+    // Set cookie with the new session (pairing revokes old sessions and creates a new one)
+    if (sessionId) {
+      await fetch("/players/authenticate", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ session_id: sessionId })
+      })
+    }
+
     window.location.href = `/players/${this.publicId || localStorage.getItem("player_public_id")}`
   }
 }

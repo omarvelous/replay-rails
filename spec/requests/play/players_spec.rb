@@ -52,15 +52,23 @@ RSpec.describe "Play::Players" do
   end
 
   describe "POST /players/authenticate" do
-    it "sets the player cookie with a valid token" do
+    it "sets the player session cookie with a valid session" do
       player = create(:player)
-      post "/players/authenticate", params: { token: player.token }, as: :json
+      player_session = player.player_sessions.create!(ip_address: "1.1.1.1")
+      post "/players/authenticate", params: { session_id: player_session.id }, as: :json
       expect(response).to be_successful
-      expect(cookies[:player_token]).to be_present
+      expect(cookies[:player_session_id]).to be_present
     end
 
-    it "returns 401 with an invalid token" do
-      post "/players/authenticate", params: { token: "bad" }, as: :json
+    it "returns 401 with an invalid session" do
+      post "/players/authenticate", params: { session_id: 0 }, as: :json
+      expect(response).to have_http_status(:unauthorized)
+    end
+
+    it "returns 401 with a revoked session" do
+      player = create(:player)
+      player_session = player.player_sessions.create!(ip_address: "1.1.1.1", revoked_at: Time.current)
+      post "/players/authenticate", params: { session_id: player_session.id }, as: :json
       expect(response).to have_http_status(:unauthorized)
     end
   end

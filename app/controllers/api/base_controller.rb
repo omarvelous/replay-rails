@@ -18,10 +18,9 @@ module Api
     private
 
     def authenticate_player!
-      token = request.headers["Authorization"]&.delete_prefix("Bearer ") ||
-              cookies.signed[:player_token]
-      @player = Player.find_by(token: token)
-      render_error "Invalid player token", status: :unauthorized unless @player
+      @player_session = PlayerSession.active.find_by(id: cookies.signed[:player_session_id])
+      @player = @player_session&.player
+      render_error "Invalid session", status: :unauthorized unless @player
     end
 
     def render_data(data = nil, status: :ok, **kwargs)

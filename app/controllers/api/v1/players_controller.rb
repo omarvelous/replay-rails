@@ -4,7 +4,7 @@ module Api
       rate_limit to: 10, within: 1.minute, only: :create, by: -> { request.remote_ip }
       before_action :authenticate_player!, only: :show
 
-      # GET /v1/player — player status (singular, auth via bearer/cookie)
+      # GET /v1/player — player status (singular, auth via cookie)
       def show
         render_data(paired: @player.paired?)
       end
@@ -21,9 +21,14 @@ module Api
         )
         ParseDeviceInfo.new(player: player).call
 
+        player_session = player.player_sessions.create!(
+          ip_address: request.remote_ip,
+          user_agent: request.user_agent
+        )
+
         render_data({
           pairing_code: player.pairing_code,
-          token: player.token,
+          session_id: player_session.id,
           public_id: player.public_id,
           expires_in: 600
         }, status: :created)
