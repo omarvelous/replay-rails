@@ -240,6 +240,7 @@ Documentation is in progress.
 | Contextual QR codes | `.claude/plans/202609160100-contextual-qr-codes.md` | Complete |
 | Player auth (cookie + bearer) | `.claude/plans/202609160200-player-auth.md` | Complete |
 | Player sessions | `.claude/plans/202609170100-player-sessions.md` | Complete |
+| Play self-contained | `.claude/plans/202609170200-play-self-contained.md` | **In progress** |
 | NYC product gaps | `.claude/plans/drafts/plan-nyc-product-gaps.md` | Draft — needs review |
 | Day-parting / Scheduling | `.claude/plans/drafts/plan-day-parting-scheduling.md` | Draft — needs review |
 | Live Preview | `.claude/plans/drafts/plan-live-preview.md` | Draft — needs review |
