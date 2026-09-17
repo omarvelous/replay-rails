@@ -2,11 +2,11 @@ module Play
   class PlayersController < Play::BaseController
     before_action :authenticate_player!, only: :show
 
-    # GET / — check localStorage for public_id, redirect accordingly
+    # GET / — redirect to /player (auth handles the rest)
     def landing
     end
 
-    # GET /players/:id — playback content (auth via cookie)
+    # GET /player — playback content (auth via cookie)
     def show
       @player = current_player
       @screen = current_player.screen
@@ -29,7 +29,7 @@ module Play
       end
     end
 
-    # GET /players/new — pairing screen
+    # GET /player/new — pairing screen
     def new
     end
   end
