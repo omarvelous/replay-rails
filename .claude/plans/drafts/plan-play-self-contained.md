@@ -150,15 +150,6 @@ CORS. Everything is relative.
 - The `/player/session` endpoint (cookie set directly on registration)
 - Cross-origin cookie issues entirely
 
-## Todo items (from PR review, addressed here or in separate plan)
-
-| Item | Where | Action |
-|------|-------|--------|
-| Move IP/UA to session | heartbeat | IP + UA tracked on session, device fields on player |
-| Rename ParseDeviceInfo → UpdateDeviceInfo | service | Rename |
-| Return expires_at instead of expires_in | pairing code response | Let UI calculate countdown |
-| /player as default landing (remove landing.html.erb) | routes | Root points to show, auth redirects to new |
-
 ## Execution
 
 ### Step 1 — RegisterPlayer service (TDD)
@@ -189,23 +180,10 @@ CORS. Everything is relative.
 
 ### Step 7 — Remove /player/session endpoint
 - No longer needed — cookie set on registration
-- Keep it for re-auth on pairing? Or set cookie in the pairing
-  broadcast handler (PairPlayerToScreen creates new session,
-  Play controller can set cookie when showing content)
+- Keep for re-auth on pairing (PairPlayerToScreen creates new
+  session, JS re-auths before redirect)
 
-### Step 8 — Root points to /player
-- `root "players#show"` with auth redirect to `new`
-- Remove landing.html.erb
-
-### Step 9 — Address todo items
-- Move IP/UA to PlayerSession on heartbeat
-- Rename ParseDeviceInfo → UpdateDeviceInfo
-- Return expires_at instead of expires_in
-
-### Step 10 — Update Play controller comments
-- Remove stale comments
-
-### Step 11 — Clean up CORS
+### Step 8 — Clean up CORS
 - Remove Play-related CORS rules (no longer cross-origin)
 - Keep API CORS for native apps
 
