@@ -4,7 +4,6 @@ import Analytics from "analytics"
 
 export default class extends Controller {
   static values = {
-    apiHost: String,
     playerPid: String,
     playlistPid: String,
     screenPid: String,
@@ -34,7 +33,6 @@ export default class extends Controller {
 
     // Manifest polling for content change detection
     this.manifestETag = null
-    this.manifestUrl = `${this.apiHostValue}/v1/player/manifest`
     this.manifestInterval = setInterval(() => this.checkManifest(), 30_000)
 
     this.element.addEventListener("slideshow:impression", (e) => {
@@ -60,24 +58,21 @@ export default class extends Controller {
 
   async checkManifest() {
     try {
-      const options = { credentials: "include" }
+      const options = {}
       if (this.manifestETag) {
         options.headers = { "If-None-Match": this.manifestETag }
       }
 
-      const res = await fetch(this.manifestUrl, options)
+      const res = await fetch("/player/manifest", options)
 
       if (res.status === 200) {
         const newETag = res.headers.get("ETag")
         if (!this.manifestETag) {
-          // First poll — seed the ETag
           this.manifestETag = newETag
         } else if (newETag !== this.manifestETag) {
-          // Content changed — reload
           window.location.reload()
         }
       }
-      // 304 = unchanged, do nothing
     } catch {
       // Network error — will retry next interval
     }
@@ -85,9 +80,8 @@ export default class extends Controller {
 
   async sendHeartbeat() {
     try {
-      const res = await fetch(`${this.apiHostValue}/v1/player/heartbeat`, {
+      const res = await fetch("/player/heartbeat", {
         method: "POST",
-        credentials: "include",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           screen_width: screen.width,

@@ -3,7 +3,7 @@ import consumer from "channels/consumer"
 import QrCreator from "qr-creator"
 
 export default class extends Controller {
-  static values = { apiHost: String, pairHost: String }
+  static values = { pairHost: String }
 
   async connect() {
     const publicId = localStorage.getItem("player_public_id")
@@ -30,9 +30,8 @@ export default class extends Controller {
   }
 
   async registerNewPlayer() {
-    const res = await fetch(`${this.apiHostValue}/v1/players`, {
+    const res = await fetch("/player", {
       method: "POST",
-      credentials: "include",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         screen_width: screen.width,
@@ -41,31 +40,22 @@ export default class extends Controller {
         app_version: window.REPLAY_APP_VERSION || null
       })
     })
-    const { data } = await res.json()
+    const data = await res.json()
 
     this.publicId = data.public_id
-    this.sessionId = data.session_id
     this.pairingCode = data.pairing_code
-    this.expiresIn = data.expires_in
+    this.expiresIn = 600
     localStorage.setItem("player_public_id", this.publicId)
-
-    // Set cookie via same-origin Play endpoint (cross-origin API can't set SameSite=Lax cookies)
-    await fetch("/player/session", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ session_id: this.sessionId })
-    })
-
+    // Cookie set directly in the response — no session dance needed
     this.displayCode(data.pairing_code)
   }
 
   async checkIfPaired() {
     try {
-      const res = await fetch(`${this.apiHostValue}/v1/player`, { credentials: "include" })
+      const res = await fetch("/player", { headers: { "Accept": "application/json" } })
       if (!res.ok) return false
-      const { data } = await res.json()
+      const data = await res.json()
       if (data.paired) {
-        this.publicId = localStorage.getItem("player_public_id")
         window.location.replace("/player")
         return true
       }
@@ -76,14 +66,13 @@ export default class extends Controller {
   }
 
   async refreshPairingCode() {
-    const res = await fetch(`${this.apiHostValue}/v1/player/pairing_code`, {
+    const res = await fetch("/player/pairing_code", {
       method: "POST",
-      credentials: "include",
       headers: { "Content-Type": "application/json" }
     })
 
     if (res.ok) {
-      const { data } = await res.json()
+      const data = await res.json()
       this.publicId = localStorage.getItem("player_public_id")
       this.pairingCode = data.pairing_code
       this.expiresIn = data.expires_in
@@ -159,13 +148,13 @@ export default class extends Controller {
 
   async checkStatus() {
     try {
-      const res = await fetch(`${this.apiHostValue}/v1/player`, { credentials: "include" })
+      const res = await fetch("/player", { headers: { "Accept": "application/json" } })
       if (!res.ok) {
         this.backoff()
         return
       }
-      const { data } = await res.json()
-      if (data.paired) return this.onPaired(this.sessionId)
+      const data = await res.json()
+      if (data.paired) return this.onPaired()
       this.pollDelay = 3000 // reset on success
     } catch {
       this.backoff()
@@ -182,7 +171,7 @@ export default class extends Controller {
     clearInterval(this.countdownInterval)
     this.subscription?.unsubscribe()
 
-    // Set cookie with the new session (pairing revokes old sessions and creates a new one)
+    // Re-auth with new session from pairing (pairing revokes old sessions)
     if (sessionId) {
       await fetch("/player/session", {
         method: "POST",
