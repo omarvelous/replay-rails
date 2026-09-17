@@ -58,7 +58,7 @@ export const EVENTS = {
   "device.connected": {
     properties: {
       screen_pid:    { required: true },
-      player_token:  { required: true },
+      player_pid:    { required: true },
     }
   }
 }

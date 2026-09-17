@@ -6,13 +6,13 @@ export default class extends Controller {
   static values = { apiHost: String, pairHost: String }
 
   async connect() {
-    const existingToken = localStorage.getItem("player_token")
+    const publicId = localStorage.getItem("player_public_id")
 
-    if (existingToken) {
-      const alreadyPaired = await this.checkIfPaired(existingToken)
+    if (publicId) {
+      const alreadyPaired = await this.checkIfPaired()
       if (alreadyPaired) return
 
-      await this.refreshPairingCode(existingToken)
+      await this.refreshPairingCode()
     } else {
       await this.registerNewPlayer()
     }
@@ -43,21 +43,21 @@ export default class extends Controller {
     })
     const { data } = await res.json()
 
-    this.token = data.token
+    this.publicId = data.public_id
     this.pairingCode = data.pairing_code
     this.expiresIn = data.expires_in
-    localStorage.setItem("player_token", this.token)
+    localStorage.setItem("player_public_id", this.publicId)
     this.displayCode(data.pairing_code)
   }
 
-  async checkIfPaired(token) {
+  async checkIfPaired() {
     try {
-      const res = await fetch(`${this.apiHostValue}/v1/players/${token}`)
+      const res = await fetch(`${this.apiHostValue}/v1/player`, { credentials: "include" })
       if (!res.ok) return false
       const { data } = await res.json()
       if (data.paired) {
-        this.token = token
-        window.location.replace(`/players/${token}`)
+        this.publicId = localStorage.getItem("player_public_id")
+        window.location.replace(`/players/${this.publicId}`)
         return true
       }
     } catch {
@@ -66,20 +66,21 @@ export default class extends Controller {
     return false
   }
 
-  async refreshPairingCode(token) {
-    const res = await fetch(`${this.apiHostValue}/v1/players/${token}/pairing_code`, {
+  async refreshPairingCode() {
+    const res = await fetch(`${this.apiHostValue}/v1/player/pairing_code`, {
       method: "POST",
+      credentials: "include",
       headers: { "Content-Type": "application/json" }
     })
 
     if (res.ok) {
       const { data } = await res.json()
-      this.token = token
+      this.publicId = localStorage.getItem("player_public_id")
       this.pairingCode = data.pairing_code
       this.expiresIn = data.expires_in
       this.displayCode(data.pairing_code)
     } else {
-      localStorage.removeItem("player_token")
+      localStorage.removeItem("player_public_id")
       await this.registerNewPlayer()
     }
   }
@@ -138,8 +139,7 @@ export default class extends Controller {
   async onCodeExpired() {
     clearInterval(this.countdownInterval)
 
-    // Refresh the code using the existing token
-    await this.refreshPairingCode(this.token)
+    await this.refreshPairingCode()
     this.subscribeToPairing()
     this.startCountdown()
   }
@@ -150,7 +150,7 @@ export default class extends Controller {
 
   async checkStatus() {
     try {
-      const res = await fetch(`${this.apiHostValue}/v1/players/${this.token}`)
+      const res = await fetch(`${this.apiHostValue}/v1/player`, { credentials: "include" })
       if (!res.ok) {
         this.backoff()
         return
@@ -172,7 +172,6 @@ export default class extends Controller {
     clearTimeout(this.pollTimeout)
     clearInterval(this.countdownInterval)
     this.subscription?.unsubscribe()
-    localStorage.setItem("player_token", this.token)
-    window.location.href = `/players/${this.token}`
+    window.location.href = `/players/${this.publicId || localStorage.getItem("player_public_id")}`
   }
 }

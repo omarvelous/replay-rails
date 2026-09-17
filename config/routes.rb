@@ -160,7 +160,7 @@ Rails.application.routes.draw do
   constraints subdomain: "play" do
     scope module: "play" do
       root "players#landing", as: :play_root
-      resources :players, param: :token, only: %i[new show]
+      resources :players, only: %i[new show]
     end
   end
 

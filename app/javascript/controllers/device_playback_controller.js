@@ -5,7 +5,7 @@ import Analytics from "analytics"
 export default class extends Controller {
   static values = {
     apiHost: String,
-    playerToken: String,
+    playerPid: String,
     playlistPid: String,
     screenPid: String,
     screenContentPid: String,
@@ -13,11 +13,8 @@ export default class extends Controller {
   }
 
   connect() {
-    const token = this.playerTokenValue
-    if (!token) return
-
     this.subscription = consumer.subscriptions.create(
-      { channel: "ScreenChannel", token },
+      { channel: "ScreenChannel" },
       {
         received: ({ event }) => {
           if (event === "content_changed" || event === "content_nudge") {
@@ -37,7 +34,7 @@ export default class extends Controller {
 
     // Manifest polling for content change detection
     this.manifestETag = null
-    this.manifestUrl = `${this.apiHostValue}/v1/players/${this.playerTokenValue}/manifest`
+    this.manifestUrl = `${this.apiHostValue}/v1/player/manifest`
     this.manifestInterval = setInterval(() => this.checkManifest(), 30_000)
 
     this.element.addEventListener("slideshow:impression", (e) => {
@@ -48,7 +45,7 @@ export default class extends Controller {
     if (this.hasScreenPidValue) {
       Analytics.create("device.connected", {
         screen_pid: this.screenPidValue,
-        player_token: this.playerTokenValue,
+        player_pid: this.playerPidValue,
         account_pid: this.accountPidValue
       })
     }
@@ -88,7 +85,7 @@ export default class extends Controller {
 
   async sendHeartbeat() {
     try {
-      const res = await fetch(`${this.apiHostValue}/v1/players/${this.playerTokenValue}/heartbeat`, {
+      const res = await fetch(`${this.apiHostValue}/v1/player/heartbeat`, {
         method: "POST",
         credentials: "include",
         headers: { "Content-Type": "application/json" },

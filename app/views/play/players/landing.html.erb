@@ -3,9 +3,9 @@
 </div>
 
 <script>
-  const token = localStorage.getItem("player_token")
-  if (token) {
-    window.location.replace(`/players/${token}`)
+  const publicId = localStorage.getItem("player_public_id")
+  if (publicId) {
+    window.location.replace(`/players/${publicId}`)
   } else {
     window.location.replace("/players/new")
   }

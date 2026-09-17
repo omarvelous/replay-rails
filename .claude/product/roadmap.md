@@ -238,7 +238,7 @@ Documentation is in progress.
 | Go page enhancements | `.claude/plans/202609140200-go-page-enhancements.md` | Complete |
 | Docs audit update | `.claude/plans/202609150100-docs-audit-update.md` | Complete |
 | Contextual QR codes | `.claude/plans/202609160100-contextual-qr-codes.md` | Complete |
-| Player auth (cookie + bearer) | `.claude/plans/202609160200-player-auth.md` | **In progress** |
+| Player auth (cookie + bearer) | `.claude/plans/202609160200-player-auth.md` | Complete |
 | NYC product gaps | `.claude/plans/drafts/plan-nyc-product-gaps.md` | Draft — needs review |
 | Day-parting / Scheduling | `.claude/plans/drafts/plan-day-parting-scheduling.md` | Draft — needs review |
 | Live Preview | `.claude/plans/drafts/plan-live-preview.md` | Draft — needs review |

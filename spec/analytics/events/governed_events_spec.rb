@@ -86,7 +86,7 @@ RSpec.describe "Governed Events", type: :model do # rubocop:disable RSpec/Descri
   describe Analytics::Events::DeviceConnected do
     it_behaves_like "validates required properties",
       described_class,
-      { screen_pid: "a1", player_token: "abc123" },
-      %i[screen_pid player_token]
+      { screen_pid: "a1", player_pid: "abc123" },
+      %i[screen_pid player_pid]
   end
 end

@@ -6,7 +6,7 @@ module Play
     def landing
     end
 
-    # GET /players/:token — playback content
+    # GET /players/:id — playback content (auth via cookie)
     def show
       @screen = @player.screen
 
