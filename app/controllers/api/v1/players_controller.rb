@@ -6,7 +6,7 @@ module Api
 
       # GET /v1/player — player status (singular, auth via cookie)
       def show
-        render_data(paired: @player.paired?)
+        render_data(paired: current_player.paired?)
       end
 
       # POST /v1/players — register a new device

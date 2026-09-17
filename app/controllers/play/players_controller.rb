@@ -1,15 +1,15 @@
 module Play
   class PlayersController < Play::BaseController
     before_action :authenticate_player!, only: :show
-    skip_forgery_protection only: :authenticate
 
-    # GET / — check localStorage for token, redirect accordingly
+    # GET / — check localStorage for public_id, redirect accordingly
     def landing
     end
 
     # GET /players/:id — playback content (auth via cookie)
     def show
-      @screen = @player.screen
+      @player = current_player
+      @screen = current_player.screen
 
       unless @screen
         return render :unpaired
@@ -26,24 +26,6 @@ module Play
         render :experience
       else
         render :idle
-      end
-    end
-
-    # POST /players/authenticate — set player session cookie (same-origin from pairing JS)
-    def authenticate
-      session = PlayerSession.active.find_by(id: params[:session_id])
-      if session
-        cookies.signed[:player_session_id] = {
-          value: session.id,
-          httponly: true,
-          secure: Rails.env.production?,
-          same_site: :lax,
-          expires: 1.year.from_now,
-          domain: :all
-        }
-        render json: { ok: true }
-      else
-        render json: { error: "invalid session" }, status: :unauthorized
       end
     end
 

@@ -1,5 +1,7 @@
 module Api
   class BaseController < ActionController::Base
+    include PlayerAuthentication
+
     skip_forgery_protection
     rate_limit to: 60, within: 1.minute, by: -> { request.remote_ip }
 
@@ -17,10 +19,8 @@ module Api
 
     private
 
-    def authenticate_player!
-      @player_session = PlayerSession.active.find_by(id: cookies.signed[:player_session_id])
-      @player = @player_session&.player
-      render_error "Invalid session", status: :unauthorized unless @player
+    def request_player_authentication
+      render_error "Invalid session", status: :unauthorized
     end
 
     def render_data(data = nil, status: :ok, **kwargs)

@@ -19,9 +19,7 @@ module ApplicationCable
       end
 
       def find_verified_player
-        if player_session = PlayerSession.active.find_by(id: cookies.signed[:player_session_id])
-          player_session.player
-        end
+        PlayerSession.active.find_by(id: cookies.signed[:player_session_id])&.player
       end
   end
 end
