@@ -1,6 +1,7 @@
 module Play
   class PlayersController < Play::BaseController
     before_action :authenticate_player!, only: :show
+    skip_forgery_protection only: :authenticate
 
     # GET / — check localStorage for token, redirect accordingly
     def landing
