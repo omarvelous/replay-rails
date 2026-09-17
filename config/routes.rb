@@ -159,7 +159,7 @@ Rails.application.routes.draw do
   # ---------------------------------------------------------------
   constraints subdomain: "play" do
     scope module: "play" do
-      root "players#landing", as: :play_root
+      root "players#show", as: :play_root
       resource :player, only: %i[new show create] do
         resource :session, only: :create
         resource :heartbeat, only: :create

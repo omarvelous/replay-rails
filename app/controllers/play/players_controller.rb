@@ -4,11 +4,7 @@ module Play
     rate_limit to: 10, within: 1.minute, only: :create, by: -> { request.remote_ip }
     before_action :authenticate_player!, only: :show
 
-    # GET / — redirect to /player (auth handles the rest)
-    def landing
-    end
-
-    # GET /player — playback content (HTML) or player status (JSON)
+    # GET / and GET /player — playback content (HTML) or player status (JSON)
     def show
       @player = current_player
       @screen = current_player.screen
