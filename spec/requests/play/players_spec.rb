@@ -50,4 +50,18 @@ RSpec.describe "Play::Players" do
       expect(response).to redirect_to(new_player_path)
     end
   end
+
+  describe "POST /players/authenticate" do
+    it "sets the player cookie with a valid token" do
+      player = create(:player)
+      post "/players/authenticate", params: { token: player.token }, as: :json
+      expect(response).to be_successful
+      expect(cookies[:player_token]).to be_present
+    end
+
+    it "returns 401 with an invalid token" do
+      post "/players/authenticate", params: { token: "bad" }, as: :json
+      expect(response).to have_http_status(:unauthorized)
+    end
+  end
 end

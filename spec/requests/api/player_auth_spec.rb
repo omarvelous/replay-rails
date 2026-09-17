@@ -46,11 +46,6 @@ RSpec.describe "Player Authentication" do
   end
 
   describe "registration" do
-    it "sets a player_token cookie" do
-      post "/v1/players", as: :json
-      expect(cookies[:player_token]).to be_present
-    end
-
     it "returns public_id in the response" do
       post "/v1/players", as: :json
       data = response.parsed_body["data"]

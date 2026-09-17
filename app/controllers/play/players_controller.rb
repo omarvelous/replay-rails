@@ -28,6 +28,23 @@ module Play
       end
     end
 
+    # POST /players/authenticate — set player cookie (same-origin from pairing JS)
+    def authenticate
+      player = Player.find_by(token: params[:token])
+      if player
+        cookies.signed[:player_token] = {
+          value: player.token,
+          httponly: true,
+          secure: Rails.env.production?,
+          same_site: :lax,
+          domain: :all
+        }
+        render json: { ok: true }
+      else
+        render json: { error: "invalid token" }, status: :unauthorized
+      end
+    end
+
     # GET /players/new — pairing screen
     def new
     end

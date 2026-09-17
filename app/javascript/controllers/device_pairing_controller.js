@@ -47,6 +47,14 @@ export default class extends Controller {
     this.pairingCode = data.pairing_code
     this.expiresIn = data.expires_in
     localStorage.setItem("player_public_id", this.publicId)
+
+    // Set cookie via same-origin Play endpoint (cross-origin API can't set SameSite=Lax cookies)
+    await fetch("/players/authenticate", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ token: data.token })
+    })
+
     this.displayCode(data.pairing_code)
   }
 

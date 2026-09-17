@@ -21,14 +21,6 @@ module Api
         )
         ParseDeviceInfo.new(player: player).call
 
-        cookies.signed[:player_token] = {
-          value: player.token,
-          httponly: true,
-          secure: Rails.env.production?,
-          same_site: :lax,
-          domain: :all
-        }
-
         render_data({
           pairing_code: player.pairing_code,
           token: player.token,
