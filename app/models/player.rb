@@ -9,6 +9,7 @@ class Player < ApplicationRecord
     provisioned unknown
   ].freeze
 
+  has_many :player_sessions, dependent: :destroy
   has_many :screen_players, dependent: :destroy
   has_one  :active_assignment, -> { active }, class_name: "ScreenPlayer", inverse_of: :player
   has_one  :screen, through: :active_assignment

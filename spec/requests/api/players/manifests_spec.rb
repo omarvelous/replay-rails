@@ -10,12 +10,13 @@ RSpec.describe "Api::Players::Manifests" do
   before do
     host! "api.replay.localhost"
     pair_player!(screen, player)
+    sign_in_player(player)
   end
 
-  describe "GET /players/:token/manifest" do
+  describe "GET /v1/player/manifest" do
     context "with no content assigned" do
       it "returns null content" do
-        get "/v1/players/#{player.token}/manifest"
+        get "/v1/player/manifest"
         expect(response).to be_successful
         expect(parsed_json["data"]["content"]).to be_nil
       end
@@ -29,7 +30,7 @@ RSpec.describe "Api::Players::Manifests" do
       end
 
       it "returns the manifest JSON with dependency tree" do
-        get "/v1/players/#{player.token}/manifest"
+        get "/v1/player/manifest"
         expect(response).to be_successful
         json = parsed_json
         expect(json["deploy"]).to be_present
@@ -39,20 +40,20 @@ RSpec.describe "Api::Players::Manifests" do
       end
 
       it "returns an ETag header" do
-        get "/v1/players/#{player.token}/manifest"
+        get "/v1/player/manifest"
         expect(response.headers["ETag"]).to be_present
       end
 
       it "returns 304 when content unchanged" do
-        get "/v1/players/#{player.token}/manifest"
+        get "/v1/player/manifest"
         etag = response.headers["ETag"]
 
-        get "/v1/players/#{player.token}/manifest", headers: { "If-None-Match" => etag }
+        get "/v1/player/manifest", headers: { "If-None-Match" => etag }
         expect(response).to have_http_status(:not_modified)
       end
 
       it "returns 200 with new ETag when content changes" do
-        get "/v1/players/#{player.token}/manifest"
+        get "/v1/player/manifest"
         etag = response.headers["ETag"]
 
         # Change ad headline → manifest should differ
@@ -60,7 +61,7 @@ RSpec.describe "Api::Players::Manifests" do
         ad = Ad.last
         ad.update_columns(headline: "Updated Headline", updated_at: 1.minute.from_now)
 
-        get "/v1/players/#{player.token}/manifest"
+        get "/v1/player/manifest"
         new_etag = response.headers["ETag"]
         expect(new_etag).not_to eq(etag)
       end
@@ -75,7 +76,7 @@ RSpec.describe "Api::Players::Manifests" do
       end
 
       it "returns the manifest with experience dependency tree including listing" do
-        get "/v1/players/#{player.token}/manifest"
+        get "/v1/player/manifest"
         json = parsed_json
         expect(json["contentable"]["type"]).to eq("Experience")
         experienceable = json["contentable"]["experienceable"]
@@ -96,7 +97,7 @@ RSpec.describe "Api::Players::Manifests" do
       end
 
       it "produces different ETag when a photo is attached" do
-        get "/v1/players/#{player.token}/manifest"
+        get "/v1/player/manifest"
         etag_before = response.headers["ETag"]
 
         listing_ad = ad.adable
@@ -104,24 +105,25 @@ RSpec.describe "Api::Players::Manifests" do
           io: StringIO.new("fake"), filename: "photo.jpg", content_type: "image/jpeg"
         )
 
-        get "/v1/players/#{player.token}/manifest"
+        get "/v1/player/manifest"
         expect(response.headers["ETag"]).not_to eq(etag_before)
       end
 
       it "produces different ETag when playlist_ad is added" do
-        get "/v1/players/#{player.token}/manifest"
+        get "/v1/player/manifest"
         etag_before = response.headers["ETag"]
 
         new_ad = create(:ad, account: account, headline: "New Ad")
         create(:playlist_ad, playlist: playlist, ad: new_ad, position: 2, duration: 10)
 
-        get "/v1/players/#{player.token}/manifest"
+        get "/v1/player/manifest"
         expect(response.headers["ETag"]).not_to eq(etag_before)
       end
     end
 
-    it "returns 401 for invalid token" do
-      get "/v1/players/invalid/manifest"
+    it "returns 401 with revoked session" do
+      PlayerSession.last.revoke!
+      get "/v1/player/manifest"
       expect(response).to have_http_status(:unauthorized)
     end
   end

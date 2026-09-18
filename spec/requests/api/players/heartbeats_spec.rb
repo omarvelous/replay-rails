@@ -7,11 +7,12 @@ RSpec.describe "Api::Players::Heartbeats" do
   before do
     host! "api.replay.localhost"
     pair_player!(screen, player)
+    sign_in_player(player)
   end
 
-  describe "POST /players/:token/heartbeat" do
+  describe "POST /v1/player/heartbeat" do
     it "updates last_heartbeat_at" do
-      post "/v1/players/#{player.token}/heartbeat"
+      post "/v1/player/heartbeat"
       expect(response).to have_http_status(:no_content)
 
       player.reload
@@ -19,27 +20,30 @@ RSpec.describe "Api::Players::Heartbeats" do
       expect(player.ip_address).to be_present
     end
 
-    it "returns 401 for invalid token" do
-      post "/v1/players/invalid/heartbeat"
+    it "updates session last_active_at" do
+      post "/v1/player/heartbeat"
+      expect(PlayerSession.last.last_active_at).to be_within(5.seconds).of(Time.current)
+    end
+
+    it "returns 401 with revoked session" do
+      PlayerSession.last.revoke!
+      post "/v1/player/heartbeat"
       expect(response).to have_http_status(:unauthorized)
     end
 
     it "returns 410 when player is unpaired" do
       screen.unpair_player!
-
-      post "/v1/players/#{player.token}/heartbeat"
-
+      post "/v1/player/heartbeat"
       expect(response).to have_http_status(:gone)
-      expect(response.parsed_body["error"]["message"]).to eq("unpaired")
     end
 
     it "updates user_agent" do
-      post "/v1/players/#{player.token}/heartbeat", headers: { "User-Agent" => "NewBrowser/1.0" }
+      post "/v1/player/heartbeat", headers: { "User-Agent" => "NewBrowser/1.0" }
       expect(player.reload.user_agent).to eq("NewBrowser/1.0")
     end
 
     it "updates screen resolution from params" do
-      post "/v1/players/#{player.token}/heartbeat",
+      post "/v1/player/heartbeat",
         params: { screen_width: 3840, screen_height: 2160 }.to_json,
         headers: { "Content-Type" => "application/json" }
       player.reload

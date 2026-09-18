@@ -4,20 +4,8 @@ RSpec.describe Player do
   subject(:player) { build(:player) }
 
   describe "associations" do
+    it { is_expected.to have_many(:player_sessions).dependent(:destroy) }
     it { is_expected.to have_many(:screen_players).dependent(:destroy) }
-  end
-
-  describe "token generation" do
-    it "generates a token on create" do
-      player = create(:player)
-      expect(player.token).to be_present
-      expect(player.token.length).to be >= 32
-    end
-
-    it "does not overwrite an existing token" do
-      player = create(:player, token: "custom-token")
-      expect(player.token).to eq("custom-token")
-    end
   end
 
   describe "pairing code generation" do

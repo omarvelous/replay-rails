@@ -3,16 +3,16 @@ import consumer from "channels/consumer"
 import QrCreator from "qr-creator"
 
 export default class extends Controller {
-  static values = { apiHost: String, pairHost: String }
+  static values = { pairHost: String }
 
   async connect() {
-    const existingToken = localStorage.getItem("player_token")
+    const publicId = localStorage.getItem("player_public_id")
 
-    if (existingToken) {
-      const alreadyPaired = await this.checkIfPaired(existingToken)
+    if (publicId) {
+      const alreadyPaired = await this.checkIfPaired()
       if (alreadyPaired) return
 
-      await this.refreshPairingCode(existingToken)
+      await this.refreshPairingCode()
     } else {
       await this.registerNewPlayer()
     }
@@ -30,9 +30,8 @@ export default class extends Controller {
   }
 
   async registerNewPlayer() {
-    const res = await fetch(`${this.apiHostValue}/v1/players`, {
+    const res = await fetch("/player", {
       method: "POST",
-      credentials: "include",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         screen_width: screen.width,
@@ -41,23 +40,23 @@ export default class extends Controller {
         app_version: window.REPLAY_APP_VERSION || null
       })
     })
-    const { data } = await res.json()
+    const data = await res.json()
 
-    this.token = data.token
+    this.publicId = data.public_id
     this.pairingCode = data.pairing_code
-    this.expiresIn = data.expires_in
-    localStorage.setItem("player_token", this.token)
+    this.expiresIn = 600
+    localStorage.setItem("player_public_id", this.publicId)
+    // Cookie set directly in the response — no session dance needed
     this.displayCode(data.pairing_code)
   }
 
-  async checkIfPaired(token) {
+  async checkIfPaired() {
     try {
-      const res = await fetch(`${this.apiHostValue}/v1/players/${token}`)
+      const res = await fetch("/player", { headers: { "Accept": "application/json" } })
       if (!res.ok) return false
-      const { data } = await res.json()
+      const data = await res.json()
       if (data.paired) {
-        this.token = token
-        window.location.replace(`/players/${token}`)
+        window.location.replace("/player")
         return true
       }
     } catch {
@@ -66,20 +65,20 @@ export default class extends Controller {
     return false
   }
 
-  async refreshPairingCode(token) {
-    const res = await fetch(`${this.apiHostValue}/v1/players/${token}/pairing_code`, {
+  async refreshPairingCode() {
+    const res = await fetch("/player/pairing_code", {
       method: "POST",
       headers: { "Content-Type": "application/json" }
     })
 
     if (res.ok) {
-      const { data } = await res.json()
-      this.token = token
+      const data = await res.json()
+      this.publicId = localStorage.getItem("player_public_id")
       this.pairingCode = data.pairing_code
       this.expiresIn = data.expires_in
       this.displayCode(data.pairing_code)
     } else {
-      localStorage.removeItem("player_token")
+      localStorage.removeItem("player_public_id")
       await this.registerNewPlayer()
     }
   }
@@ -88,7 +87,7 @@ export default class extends Controller {
     this.subscription?.unsubscribe()
     this.subscription = consumer.subscriptions.create(
       { channel: "PairingChannel", code: this.pairingCode },
-      { received: (msg) => { if (msg.paired) this.onPaired() } }
+      { received: (msg) => { if (msg.paired) this.onPaired(msg.session_id) } }
     )
   }
 
@@ -138,8 +137,7 @@ export default class extends Controller {
   async onCodeExpired() {
     clearInterval(this.countdownInterval)
 
-    // Refresh the code using the existing token
-    await this.refreshPairingCode(this.token)
+    await this.refreshPairingCode()
     this.subscribeToPairing()
     this.startCountdown()
   }
@@ -150,12 +148,12 @@ export default class extends Controller {
 
   async checkStatus() {
     try {
-      const res = await fetch(`${this.apiHostValue}/v1/players/${this.token}`)
+      const res = await fetch("/player", { headers: { "Accept": "application/json" } })
       if (!res.ok) {
         this.backoff()
         return
       }
-      const { data } = await res.json()
+      const data = await res.json()
       if (data.paired) return this.onPaired()
       this.pollDelay = 3000 // reset on success
     } catch {
@@ -168,11 +166,20 @@ export default class extends Controller {
     this.pollDelay = Math.min(this.pollDelay * 2, 60000)
   }
 
-  onPaired() {
+  async onPaired(sessionId) {
     clearTimeout(this.pollTimeout)
     clearInterval(this.countdownInterval)
     this.subscription?.unsubscribe()
-    localStorage.setItem("player_token", this.token)
-    window.location.href = `/players/${this.token}`
+
+    // Re-auth with new session from pairing (pairing revokes old sessions)
+    if (sessionId) {
+      await fetch("/player/session", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ session_id: sessionId })
+      })
+    }
+
+    window.location.href = "/player"
   }
 }

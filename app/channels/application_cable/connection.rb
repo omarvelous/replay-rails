@@ -1,12 +1,13 @@
 module ApplicationCable
   class Connection < ActionCable::Connection::Base
-    identified_by :current_user
+    identified_by :current_user, :current_player
 
     def connect
       self.current_user = find_verified_user
-    rescue
-      # Allow anonymous connections — PairingChannel and ScreenChannel
-      # authenticate via their own params
+      self.current_player = find_verified_player
+    rescue StandardError
+      # Allow anonymous connections — PairingChannel authenticates
+      # via its own params
     end
 
     private
@@ -14,9 +15,11 @@ module ApplicationCable
       def find_verified_user
         if session = Session.find_by(id: cookies.signed[:session_id])
           session.user
-        else
-          raise "Unauthorized"
         end
+      end
+
+      def find_verified_player
+        PlayerSession.active.find_by(id: cookies.signed[:player_session_id])&.player
       end
   end
 end

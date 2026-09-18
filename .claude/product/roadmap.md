@@ -238,6 +238,9 @@ Documentation is in progress.
 | Go page enhancements | `.claude/plans/202609140200-go-page-enhancements.md` | Complete |
 | Docs audit update | `.claude/plans/202609150100-docs-audit-update.md` | Complete |
 | Contextual QR codes | `.claude/plans/202609160100-contextual-qr-codes.md` | Complete |
+| Player auth (cookie + bearer) | `.claude/plans/202609160200-player-auth.md` | Complete |
+| Player sessions | `.claude/plans/202609170100-player-sessions.md` | Complete |
+| Play self-contained | `.claude/plans/202609170200-play-self-contained.md` | Complete |
 | NYC product gaps | `.claude/plans/drafts/plan-nyc-product-gaps.md` | Draft — needs review |
 | Day-parting / Scheduling | `.claude/plans/drafts/plan-day-parting-scheduling.md` | Draft — needs review |
 | Live Preview | `.claude/plans/drafts/plan-live-preview.md` | Draft — needs review |

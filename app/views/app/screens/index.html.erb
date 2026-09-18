@@ -130,7 +130,7 @@
                       <%= link_to screen.name, screen_path(screen), class: "font-semibold text-sm text-gray-900 hover:text-indigo-600" %>
                     </td>
                     <td class="px-3 py-4 text-sm text-gray-500"><%= screen.site.name %></td>
-                    <td class="px-3 py-4 text-xs font-mono text-gray-400"><%= screen.player ? screen.player.token.first(8) : "—" %></td>
+                    <td class="px-3 py-4 text-xs font-mono text-gray-400"><%= screen.player ? screen.player.public_id.first(8) : "—" %></td>
                     <td class="px-3 py-4 text-sm text-gray-500"><%= table_content&.name || "—" %></td>
                     <td class="px-3 py-4"><%= screen_status_badge(status) %></td>
                     <td class="px-3 py-4 text-xs text-gray-400"><%= screen_heartbeat_text(screen, status) %></td>

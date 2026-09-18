@@ -9,8 +9,8 @@ RePlay uses 5 subdomains to separate concerns. Each maps to a Rails module with 
 | _(root)_ | `Marketing` | `marketing` | No | Public marketing pages + Go:: landing pages |
 | `app` | `App` | `app` | Yes | Main application for brokerage users |
 | `admin` | `Admin` | Administrate | Yes (admin) | Internal operations panel |
-| `play` | `Play` | `player` | No | HTML playback rendered on screen devices |
-| `api` | `Api` | — (JSON) | Token | Device communication API |
+| `play` | `Play` | `player` | Cookie | HTML playback rendered on screen devices |
+| `api` | `Api` | — (JSON) | Cookie | Native app API (future use) |
 
 ## Route structure
 
@@ -50,21 +50,29 @@ constraints subdomain: "admin" do
   end
 end
 
-# API — JSON responses
-constraints subdomain: "api" do
-  scope module: "api" do
-    resources :players, param: :token, only: [:create, :show] do
+# Play — HTML for screens (self-contained, cookie auth)
+constraints subdomain: "play" do
+  scope module: "play" do
+    root "players#show"           # redirects to /player/new if no session
+    resource :player, only: [:new, :create, :show] do
       resource :heartbeat, only: :create
       resource :manifest, only: :show
       resource :pairing_code, only: :create
+      resource :session, only: :create
     end
   end
 end
 
-# Play — HTML for screens
-constraints subdomain: "play" do
-  scope module: "play" do
-    resources :players, param: :token, only: [:new, :show]
+# API — JSON for native apps (future)
+constraints subdomain: "api" do
+  scope module: "api" do
+    namespace :v1 do
+      resource :player, only: [:create, :show] do
+        resource :heartbeat, only: :create
+        resource :manifest, only: :show
+        resource :pairing_code, only: :create
+      end
+    end
   end
 end
 
@@ -81,8 +89,9 @@ In development, subdomains resolve on `replay.localhost`:
 | `replay.localhost:3000` | Marketing home |
 | `app.replay.localhost:3000` | App dashboard |
 | `admin.replay.localhost:3000` | Admin panel |
-| `play.replay.localhost:3000/players/new` | Player pairing screen |
-| `api.replay.localhost:3000/players` | Player API |
+| `play.replay.localhost:3000` | Player (root → pairing if no session) |
+| `play.replay.localhost:3000/player/new` | Player pairing screen |
+| `play.replay.localhost:3000/player` | Player playback |
 | `replay.localhost:3000/s/ABC123` | QR scan redirect |
 
 `.localhost` domains resolve to `127.0.0.1` without `/etc/hosts` entries.
@@ -90,6 +99,8 @@ In development, subdomains resolve on `replay.localhost`:
 ## Cross-subdomain auth
 
 Sessions use a cookie with `domain: :all`, allowing a single login to work across `app`, `admin`, and other authenticated subdomains. The `resume_session` before_action runs globally so `Current.user` is available everywhere (even on unauthenticated pages).
+
+Player sessions use a separate `player_session_id` signed cookie scoped to the `play` subdomain.
 
 ## Controller inheritance
 
@@ -106,9 +117,13 @@ ApplicationController (Authentication concern, Pagy)
 ├── Admin::ApplicationController (Administrate)
 │   ├── Admin::DashboardController
 │   └── ... all admin controllers
-├── Play::PlayersController (skip auth)
-└── Api::PlayersController (token auth)
-    ├── Api::Players::HeartbeatsController
-    ├── Api::Players::ManifestsController
-    └── Api::Players::PairingCodesController
+├── Play::PlayersController (cookie auth)
+│   ├── Play::Players::HeartbeatsController
+│   ├── Play::Players::ManifestsController
+│   ├── Play::Players::PairingCodesController
+│   └── Play::Players::SessionsController
+└── Api::V1::PlayersController (cookie auth)
+    ├── Api::V1::Players::HeartbeatsController
+    ├── Api::V1::Players::ManifestsController
+    └── Api::V1::Players::PairingCodesController
 ```

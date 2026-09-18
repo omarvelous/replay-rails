@@ -1,6 +1,8 @@
 module Api
   class BaseController < ActionController::Base
-    protect_from_forgery with: :null_session
+    include PlayerAuthentication
+
+    skip_forgery_protection
     rate_limit to: 60, within: 1.minute, by: -> { request.remote_ip }
 
     rescue_from ActiveRecord::RecordNotFound do
@@ -17,9 +19,8 @@ module Api
 
     private
 
-    def authenticate_player!
-      @player = Player.find_by(token: params[:player_token] || params[:token])
-      render_error "Invalid player token", status: :unauthorized unless @player
+    def request_player_authentication
+      render_error "Invalid session", status: :unauthorized
     end
 
     def render_data(data = nil, status: :ok, **kwargs)

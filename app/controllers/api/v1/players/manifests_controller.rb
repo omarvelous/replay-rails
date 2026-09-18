@@ -5,7 +5,7 @@ module Api
         before_action :authenticate_player!
 
         def show
-          @screen_content = @player.screen&.active_screen_content
+          @screen_content = current_player.screen&.active_screen_content
 
           if @screen_content
             render :show, formats: [ :json ]

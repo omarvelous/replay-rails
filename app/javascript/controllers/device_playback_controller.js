@@ -4,8 +4,7 @@ import Analytics from "analytics"
 
 export default class extends Controller {
   static values = {
-    apiHost: String,
-    playerToken: String,
+    playerPid: String,
     playlistPid: String,
     screenPid: String,
     screenContentPid: String,
@@ -13,11 +12,8 @@ export default class extends Controller {
   }
 
   connect() {
-    const token = this.playerTokenValue
-    if (!token) return
-
     this.subscription = consumer.subscriptions.create(
-      { channel: "ScreenChannel", token },
+      { channel: "ScreenChannel" },
       {
         received: ({ event }) => {
           if (event === "content_changed" || event === "content_nudge") {
@@ -37,7 +33,6 @@ export default class extends Controller {
 
     // Manifest polling for content change detection
     this.manifestETag = null
-    this.manifestUrl = `${this.apiHostValue}/v1/players/${this.playerTokenValue}/manifest`
     this.manifestInterval = setInterval(() => this.checkManifest(), 30_000)
 
     this.element.addEventListener("slideshow:impression", (e) => {
@@ -48,7 +43,7 @@ export default class extends Controller {
     if (this.hasScreenPidValue) {
       Analytics.create("device.connected", {
         screen_pid: this.screenPidValue,
-        player_token: this.playerTokenValue,
+        player_pid: this.playerPidValue,
         account_pid: this.accountPidValue
       })
     }
@@ -63,24 +58,21 @@ export default class extends Controller {
 
   async checkManifest() {
     try {
-      const options = { credentials: "include" }
+      const options = {}
       if (this.manifestETag) {
         options.headers = { "If-None-Match": this.manifestETag }
       }
 
-      const res = await fetch(this.manifestUrl, options)
+      const res = await fetch("/player/manifest", options)
 
       if (res.status === 200) {
         const newETag = res.headers.get("ETag")
         if (!this.manifestETag) {
-          // First poll — seed the ETag
           this.manifestETag = newETag
         } else if (newETag !== this.manifestETag) {
-          // Content changed — reload
           window.location.reload()
         }
       }
-      // 304 = unchanged, do nothing
     } catch {
       // Network error — will retry next interval
     }
@@ -88,9 +80,8 @@ export default class extends Controller {
 
   async sendHeartbeat() {
     try {
-      const res = await fetch(`${this.apiHostValue}/v1/players/${this.playerTokenValue}/heartbeat`, {
+      const res = await fetch("/player/heartbeat", {
         method: "POST",
-        credentials: "include",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           screen_width: screen.width,
@@ -118,6 +109,6 @@ export default class extends Controller {
   handleUnpaired() {
     clearInterval(this.heartbeat)
     this.subscription?.unsubscribe()
-    window.location.href = "/players/new"
+    window.location.href = "/player/new"
   }
 }

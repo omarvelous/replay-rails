@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_09_16_135415) do
+ActiveRecord::Schema[8.1].define(version: 2026_09_17_132209) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -374,6 +374,17 @@ ActiveRecord::Schema[8.1].define(version: 2026_09_16_135415) do
     t.index ["account_id"], name: "index_metric_snapshots_on_account_id"
   end
 
+  create_table "player_sessions", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.string "ip_address"
+    t.datetime "last_active_at"
+    t.bigint "player_id", null: false
+    t.datetime "revoked_at"
+    t.datetime "updated_at", null: false
+    t.string "user_agent"
+    t.index ["player_id"], name: "index_player_sessions_on_player_id"
+  end
+
   create_table "players", force: :cascade do |t|
     t.string "app_version"
     t.string "browser_name"
@@ -582,6 +593,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_09_16_135415) do
   add_foreign_key "listing_experiences", "listings"
   add_foreign_key "listings", "accounts"
   add_foreign_key "metric_snapshots", "accounts"
+  add_foreign_key "player_sessions", "players"
   add_foreign_key "playlist_ads", "ads"
   add_foreign_key "playlist_ads", "playlists"
   add_foreign_key "playlists", "accounts"

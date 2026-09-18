@@ -1,15 +1,17 @@
 # Player API
 
-The player API spans two subdomains: `play` (HTML for screen rendering) and `api` (JSON for device communication).
+Players are browser-based devices that render content on screens. Browser players communicate entirely through the `play` subdomain using cookie-based sessions. A native app API also exists for future use.
 
-## API subdomain (JSON)
+## Play subdomain (browser players)
 
-Base URL: `api.replaytv.co`
+Base URL: `play.replaytv.co`
+
+Browser players are self-contained on the play subdomain. Auth is a signed cookie (`player_session_id`) set after pairing. No tokens in URLs.
 
 ### Register device
 
 ```
-POST /players
+POST /player
 ```
 
 Creates a new player with a pairing code. No authentication required. The server parses the user agent to populate device fields (model, manufacturer, OS, browser, device type).
@@ -31,44 +33,68 @@ Creates a new player with a pairing code. No authentication required. The server
 | `touch_capable` | boolean | Whether the device has touch input |
 | `app_version` | string | Version of the RePlay app (null for browser players) |
 
-Provisioned devices (Fire TV, dedicated hardware) send `app_version`. Browser players omit it. The presence of `app_version` distinguishes provisioned from browser players.
+The presence of `app_version` distinguishes provisioned devices (Fire TV, dedicated hardware) from plain browser players.
 
 **Response** `201 Created`:
 ```json
 {
   "pairing_code": "A7B3K2",
-  "token": "abc123...def456",
   "expires_in": 600
 }
 ```
 
-The pairing code expires after 10 minutes. The token is a permanent 32-byte identifier used for all subsequent requests.
+The pairing code expires after 10 minutes. The `PlayerSession` cookie is set in the response.
 
-### Player status
-
-```
-GET /players/:token
-```
-
-Returns the player's current state. Auth: token in URL.
-
-**Response** `200 OK`:
-```json
-{
-  "paired": true,
-  "screen_id": 7
-}
-```
-
-### Content Manifest
+### Set session after pairing
 
 ```
-GET /players/:token/manifest
+POST /player/session
 ```
 
-Returns a JSON dependency tree of everything the player renders.
-The player polls this every 30 seconds with `If-None-Match` to
-detect content changes.
+Called by the pairing page after `PairingChannel` broadcasts `{ paired: true }`. Sets the `player_session_id` signed cookie and redirects to `/player`.
+
+### Pairing screen
+
+```
+GET /player/new
+```
+
+Renders the pairing UI. The `device_pairing_controller.js` Stimulus controller handles registration (with device info), code display, and WebSocket subscription for pairing events.
+
+The root (`play.replaytv.co/`) redirects here automatically when no session is present.
+
+### Playback
+
+```
+GET /player
+```
+
+Renders content for the paired screen. Four possible states:
+
+| State | Condition | Renders |
+|-------|-----------|---------|
+| Slideshow | Paired + playlist content | Full-screen ad rotation with crossfade |
+| Experience | Paired + experience content | Interactive kiosk with photos, details, agent, QR |
+| Idle | Paired + no content | "No content assigned" |
+| Unpaired | No session | Redirect to `/player/new` |
+
+The `device_playback_controller.js` handles:
+- Heartbeat every 30 seconds (with screen resolution)
+- Analytics event tracking via `Analytics.create()` (content.impressed, device.connected)
+- ActionCable subscription for content change notifications
+
+The `experience_controller.js` additionally handles:
+- Touch detection and idle/attract mode
+- Kiosk session tracking via `ahoy.reset()` on interaction start
+- Interaction events (started, ended, navigated, opened, closed)
+
+### Content manifest
+
+```
+GET /player/manifest
+```
+
+Returns a JSON dependency tree of everything the player renders. The player polls every 30 seconds with `If-None-Match` to detect content changes.
 
 **Response** `200 OK` (content available):
 ```json
@@ -95,21 +121,17 @@ detect content changes.
 { "content": null }
 ```
 
-The manifest includes `updated_at` for every model and attachment
-arrays from `active_storage_attachments`. Any change — model
-update, photo upload, deploy — produces a different JSON body
-and therefore a different ETag.
+The manifest includes `updated_at` for every model and attachment arrays from `active_storage_attachments`. Any change — model update, photo upload, deploy — produces a different JSON body and therefore a different ETag.
 
-Jbuilder templates resolve partials dynamically by contentable
-and adable type. See `app/views/api/players/manifests/`.
+Jbuilder templates resolve partials dynamically by contentable and adable type. See `app/views/play/players/manifests/`.
 
 ### Heartbeat
 
 ```
-POST /players/:token/heartbeat
+POST /player/heartbeat
 ```
 
-Sent every 30 seconds by the player to report it's alive. Updates `last_heartbeat_at`, `ip_address`, and `user_agent`. If the user agent changes (OS or browser update), device fields are re-parsed.
+Sent every 30 seconds to report the player is alive. Updates `last_heartbeat_at`, `ip_address`, and `user_agent`. If the user agent changes (OS or browser update), device fields are re-parsed.
 
 **Request body** (optional — updates resolution):
 ```json
@@ -121,19 +143,17 @@ Sent every 30 seconds by the player to report it's alive. Updates `last_heartbea
 
 **Response** `200 OK`:
 ```json
-{
-  "ok": true
-}
+{ "ok": true }
 ```
 
 A player is considered online when `last_heartbeat_at > 2.minutes.ago`.
 
-**Response** `410 Gone` — player is no longer paired. The player should redirect to the pairing screen.
+**Response** `410 Gone` — player session is no longer valid. The player should redirect to `/player/new`.
 
 ### Pairing code refresh
 
 ```
-POST /players/:token/pairing_code
+POST /player/pairing_code
 ```
 
 Generates a new 6-character pairing code. Used when the current code expires (10 minutes).
@@ -146,42 +166,11 @@ Generates a new 6-character pairing code. Used when the current code expires (10
 }
 ```
 
-## Play subdomain (HTML)
+## API subdomain (native apps)
 
-Base URL: `play.replaytv.co`
+Base URL: `api.replaytv.co`
 
-### Pairing screen
-
-```
-GET /players/new
-```
-
-Renders the pairing UI. The `device_pairing_controller.js` Stimulus controller handles registration (with device info), code display, and WebSocket subscription for pairing events.
-
-### Playback
-
-```
-GET /players/:token
-```
-
-Renders content for the paired screen. Four possible states:
-
-| State | Condition | Renders |
-|-------|-----------|---------|
-| Slideshow | Paired + playlist content | Full-screen ad rotation with crossfade |
-| Experience | Paired + experience content | Interactive kiosk with photos, details, agent, QR |
-| Idle | Paired + no content | "No content assigned" |
-| Unpaired | Not paired | Pairing code screen |
-
-The `device_playback_controller.js` handles:
-- Heartbeat every 30 seconds (with screen resolution)
-- Analytics event tracking via `Analytics.create()` (content.impressed, device.connected)
-- ActionCable subscription for content change notifications
-
-The `experience_controller.js` additionally handles:
-- Touch detection and idle/attract mode
-- Kiosk session tracking via `ahoy.reset()` on interaction start
-- Interaction events (started, ended, navigated, opened, closed)
+Reserved for future native app clients. Uses the same session-based cookie auth as the play subdomain. Endpoints mirror the play routes under `/v1/player/`.
 
 ## Device Detection
 
@@ -209,17 +198,17 @@ Records a QR scan and redirects to the destination. The `sc` param captures the 
 
 ## Analytics
 
-Player events are tracked via Ahoy (ahoy.js client-side). Impressions are no longer sent to a dedicated API endpoint — they're tracked as `content.impressed` Ahoy events via `Analytics.create()` in the player JS. See `docs/dev/event-catalog.md`.
+Player events are tracked via Ahoy (ahoy.js client-side). Impressions are tracked as `content.impressed` Ahoy events via `Analytics.create()` in the player JS. See `docs/dev/event-catalog.md`.
 
 ## Authentication
 
-API endpoints authenticate via the player token in the URL path (`/players/:token/...`). No headers, no cookies for auth. Ahoy cookies are shared across subdomains for visit tracking (`credentials: "include"` on fetch calls).
+Browser players authenticate via the `player_session_id` signed cookie set after pairing. No tokens in URLs. Ahoy cookies are shared across subdomains for visit tracking.
 
-Registration (`POST /players`) requires no authentication — any device can register.
+Registration (`POST /player`) requires no authentication — any device can register.
 
 ## Rate limiting
 
 | Endpoint | Limit |
 |----------|-------|
-| `POST /players` | 5 per IP per hour |
+| `POST /player` | 5 per IP per hour |
 | `GET /s/:token` | 60 per IP per minute |

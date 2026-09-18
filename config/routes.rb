@@ -142,7 +142,8 @@ Rails.application.routes.draw do
   constraints subdomain: "api" do
     scope module: "api" do
       namespace :v1 do
-        resources :players, param: :token, only: %i[create show] do
+        resources :players, only: :create
+        resource :player, only: :show, controller: "players" do
           scope module: "players" do
             resource :heartbeat, only: :create
             resource :manifest, only: :show
@@ -158,8 +159,13 @@ Rails.application.routes.draw do
   # ---------------------------------------------------------------
   constraints subdomain: "play" do
     scope module: "play" do
-      root "players#landing", as: :play_root
-      resources :players, param: :token, only: %i[new show]
+      root "players#show", as: :play_root
+      resource :player, only: %i[new show create] do
+        resource :session, only: :create
+        resource :heartbeat, only: :create
+        resource :manifest, only: :show
+        resource :pairing_code, only: :create
+      end
     end
   end
 

@@ -50,14 +50,27 @@ RSpec.describe PairPlayerToScreen do
       expect(screen.reload.player).to eq(player)
     end
 
-    it "broadcasts the pairing event" do
+    it "revokes existing sessions and creates a new one" do
+      old_session = player.player_sessions.create!(ip_address: "1.1.1.1")
+
+      described_class.new(screen: screen, code: player.pairing_code, paired_by: user).call
+
+      expect(old_session.reload.revoked_at).to be_present
+      expect(player.player_sessions.active.count).to eq(1)
+      expect(player.player_sessions.active.last).not_to eq(old_session)
+    end
+
+    it "broadcasts the pairing event with session_id" do
       code = player.pairing_code
 
       allow(ActionCable.server).to receive(:broadcast)
 
       described_class.new(screen: screen, code: code, paired_by: user).call
 
-      expect(ActionCable.server).to have_received(:broadcast).with("pairing_#{code}", hash_including(paired: true))
+      expect(ActionCable.server).to have_received(:broadcast).with(
+        "pairing_#{code}",
+        hash_including(paired: true, session_id: PlayerSession.last.id)
+      )
     end
 
     context "with invalid code" do

@@ -11,6 +11,12 @@ module AuthenticationHelpers
     jar.signed[:session_id] = { value: session.id, httponly: true }
     cookies[:session_id] = jar[:session_id]
   end
+  def sign_in_player(player)
+    player_session = player.player_sessions.create!(ip_address: "127.0.0.1", user_agent: "RSpec")
+    jar = ActionDispatch::Request.new(Rails.application.env_config.deep_dup).cookie_jar
+    jar.signed[:player_session_id] = { value: player_session.id, httponly: true }
+    cookies[:player_session_id] = jar[:player_session_id]
+  end
 end
 
 RSpec.configure do |config|

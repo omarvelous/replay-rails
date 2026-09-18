@@ -10,8 +10,7 @@
      data-experience-screen-pid-value="<%= @screen&.public_id %>"
      data-experience-screen-content-pid-value="<%= @screen&.active_screen_content&.public_id %>"
      data-experience-account-pid-value="<%= @screen&.site&.account&.public_id %>"
-     data-device-playback-api-host-value="<%= request.protocol %>api.<%= request.domain %><%= ":#{request.port}" unless request.port == 80 || request.port == 443 %>"
-     data-device-playback-player-token-value="<%= params[:token] %>"
+     data-device-playback-player-pid-value="<%= @player&.public_id %>"
      data-device-playback-screen-pid-value="<%= @screen&.public_id %>"
      data-device-playback-screen-content-pid-value="<%= @screen&.active_screen_content&.public_id %>"
      data-device-playback-account-pid-value="<%= @screen&.site&.account&.public_id %>">
