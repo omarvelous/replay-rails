@@ -102,13 +102,27 @@ Rails.application.routes.draw do
       resources :listings
       resources :agents
       resources :ads
+      namespace :ads do
+        resources :listing_ads
+        resources :agent_ads
+        resources :brand_ads
+        resources :collection_ads
+        resources :collection_ad_ads
+      end
 
       # Playback
       resources :sites
       resources :screens
+      resources :screen_contents
       resources :players
       resources :playlists
+      resources :playlist_ads
       resources :experiences
+
+      # Joins & history
+      resources :listing_agents
+      resources :screen_players
+      resources :sessions, only: %i[index show destroy]
 
       # Analytics
       namespace :ahoy do
