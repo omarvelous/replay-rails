@@ -111,6 +111,17 @@ Dashboard, rollup job, and controller queries change from
 - `make lint`, `make test`
 - Push, create PR
 
+## Related: Add listing_pid to ContentImpressed
+
+The `ContentImpressed` event should carry `listing_pid` directly.
+Currently the listing impression count query in `ListingsController`
+works backwards from ad IDs → event properties, which is slow and
+fragile. With `listing_pid` as a property, the query becomes
+`ContentImpressed.where_properties(listing_pid: @listing.public_id).count`.
+
+The listing is known at impression time (via `ad.adable.listing`).
+Add it to the JS event emission alongside `ad_pid`.
+
 ## Trade-offs
 
 - Jsonb property queries are slightly slower than integer column
