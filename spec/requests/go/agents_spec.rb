@@ -14,8 +14,8 @@ RSpec.describe "Go::Agents" do
 
     it "displays agent details" do
       get go_agent_path(agent)
-      expect(response.body).to include(agent.name)
-      expect(response.body).to include(agent.email)
+      expect(response.body).to include(ERB::Util.html_escape(agent.name))
+      expect(response.body).to include(ERB::Util.html_escape(agent.email))
     end
 
     it "displays the agent's active listings" do
