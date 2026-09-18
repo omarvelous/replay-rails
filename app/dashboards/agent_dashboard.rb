@@ -4,10 +4,12 @@ require "administrate/field/active_storage"
 class AgentDashboard < Administrate::BaseDashboard
   ATTRIBUTE_TYPES = {
     id: Field::Number,
+    public_id: Field::String,
     account: Field::BelongsTo,
     name: Field::String,
     email: Field::String,
     phone: Field::String,
+    bio: Field::Text,
     photo: Field::ActiveStorage,
     user: Field::BelongsTo,
     listings: Field::HasMany,
@@ -16,8 +18,8 @@ class AgentDashboard < Administrate::BaseDashboard
   }.freeze
 
   COLLECTION_ATTRIBUTES = %i[ id name email phone account ].freeze
-  SHOW_PAGE_ATTRIBUTES = %i[ id account name email phone photo user listings qr_code created_at ].freeze
-  FORM_ATTRIBUTES = %i[ name email phone photo ].freeze
+  SHOW_PAGE_ATTRIBUTES = %i[ id public_id account name email phone bio photo user listings qr_code created_at ].freeze
+  FORM_ATTRIBUTES = %i[ name email phone bio photo ].freeze
   COLLECTION_FILTERS = {}.freeze
 
   def display_resource(agent)

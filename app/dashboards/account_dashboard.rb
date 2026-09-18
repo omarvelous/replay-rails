@@ -3,6 +3,7 @@ require "administrate/base_dashboard"
 class AccountDashboard < Administrate::BaseDashboard
   ATTRIBUTE_TYPES = {
     id: Field::Number,
+    public_id: Field::String,
     users: Field::HasMany,
     sites: Field::HasMany,
     listings: Field::HasMany,
@@ -14,7 +15,7 @@ class AccountDashboard < Administrate::BaseDashboard
   }.freeze
 
   COLLECTION_ATTRIBUTES = %i[ id users sites listings ads created_at ].freeze
-  SHOW_PAGE_ATTRIBUTES = %i[ id users sites listings ads playlists qr_codes created_at updated_at ].freeze
+  SHOW_PAGE_ATTRIBUTES = %i[ id public_id users sites listings ads playlists qr_codes created_at updated_at ].freeze
   FORM_ATTRIBUTES = %i[].freeze
   COLLECTION_FILTERS = {}.freeze
 

@@ -131,6 +131,24 @@ Extract from models when logic involves:
 Models keep: associations, validations, scopes, state queries
 (`paired?`, `online?`, `pending?`), simple delegations.
 
+## Admin Dashboard Maintenance
+
+When adding a column or association to a model, update the
+corresponding Administrate dashboard in `app/dashboards/`:
+
+1. Add to `ATTRIBUTE_TYPES` with the correct `Field::` type
+2. Add to `SHOW_PAGE_ATTRIBUTES` (always — admin needs to see it)
+3. Add to `FORM_ATTRIBUTES` (if the field is editable)
+4. Add to `COLLECTION_ATTRIBUTES` (if useful on the index table)
+
+When creating a new model:
+1. Generate a dashboard: `rails generate administrate:dashboard ModelName`
+2. Add a route in the admin section of `config/routes.rb`
+3. Add `public_id` to `ATTRIBUTE_TYPES` and `SHOW_PAGE_ATTRIBUTES`
+
+JSONB columns use `Field::Text` (not `Field::String`) for
+readable rendering.
+
 ## Testing
 
 Every model has `spec/models/model_name_spec.rb` with:

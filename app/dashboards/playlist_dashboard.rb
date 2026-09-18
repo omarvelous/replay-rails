@@ -9,6 +9,7 @@ class PlaylistDashboard < Administrate::BaseDashboard
   # on pages throughout the dashboard.
   ATTRIBUTE_TYPES = {
     id: Field::Number,
+    public_id: Field::String,
     account: Field::BelongsTo,
     ads: Field::HasMany,
     name: Field::String,
@@ -27,6 +28,7 @@ class PlaylistDashboard < Administrate::BaseDashboard
   # Feel free to add, remove, or rearrange items.
   COLLECTION_ATTRIBUTES = %i[
     id
+    public_id
     account
     ads
     name
@@ -36,6 +38,7 @@ class PlaylistDashboard < Administrate::BaseDashboard
   # an array of attributes that will be displayed on the model's show page.
   SHOW_PAGE_ATTRIBUTES = %i[
     id
+    public_id
     account
     ads
     name

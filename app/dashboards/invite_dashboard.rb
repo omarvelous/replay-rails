@@ -3,6 +3,7 @@ require "administrate/base_dashboard"
 class InviteDashboard < Administrate::BaseDashboard
   ATTRIBUTE_TYPES = {
     id: Field::Number,
+    public_id: Field::String,
     account: Field::BelongsTo,
     invited_by: Field::BelongsTo.with_options(class_name: "User"),
     email: Field::String,
@@ -15,6 +16,7 @@ class InviteDashboard < Administrate::BaseDashboard
 
   COLLECTION_ATTRIBUTES = %i[
     id
+    public_id
     email
     role
     accepted_at
@@ -23,6 +25,7 @@ class InviteDashboard < Administrate::BaseDashboard
 
   SHOW_PAGE_ATTRIBUTES = %i[
     id
+    public_id
     account
     invited_by
     email

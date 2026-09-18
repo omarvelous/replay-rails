@@ -3,6 +3,7 @@ require "administrate/base_dashboard"
 class LeadDashboard < Administrate::BaseDashboard
   ATTRIBUTE_TYPES = {
     id: Field::Number,
+    public_id: Field::String,
     account: Field::BelongsTo,
     listing: Field::BelongsTo,
     lead_agents: Field::HasMany,
@@ -13,13 +14,14 @@ class LeadDashboard < Administrate::BaseDashboard
     email: Field::String,
     phone: Field::String,
     message: Field::Text,
-    context: Field::String.with_options(searchable: false),
+    context: Field::Text.with_options(searchable: false),
     created_at: Field::DateTime,
     updated_at: Field::DateTime
   }.freeze
 
   COLLECTION_ATTRIBUTES = %i[
     id
+    public_id
     name
     lead_type
     status
@@ -28,6 +30,7 @@ class LeadDashboard < Administrate::BaseDashboard
 
   SHOW_PAGE_ATTRIBUTES = %i[
     id
+    public_id
     account
     listing
     lead_agents
