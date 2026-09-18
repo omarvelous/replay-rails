@@ -14,7 +14,7 @@ class LeadDashboard < Administrate::BaseDashboard
     email: Field::String,
     phone: Field::String,
     message: Field::Text,
-    context: Field::String.with_options(searchable: false),
+    context: Field::Text.with_options(searchable: false),
     created_at: Field::DateTime,
     updated_at: Field::DateTime
   }.freeze

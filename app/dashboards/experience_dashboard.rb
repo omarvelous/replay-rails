@@ -7,9 +7,8 @@ class ExperienceDashboard < Administrate::BaseDashboard
     account: Field::BelongsTo,
     experienceable_type: Field::String,
     experienceable_id: Field::Number,
-    public_id: Field::String,
     name: Field::String,
-    config: Field::String.with_options(searchable: false),
+    config: Field::Text.with_options(searchable: false),
     screen_contents: Field::HasMany,
     created_at: Field::DateTime,
     updated_at: Field::DateTime

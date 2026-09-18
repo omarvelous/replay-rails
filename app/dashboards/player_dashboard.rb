@@ -18,6 +18,8 @@ class PlayerDashboard < Administrate::BaseDashboard
     screen_height: Field::Number,
     touch_capable: Field::Boolean,
     pairing_code: Field::String,
+    pairing_code_expires_at: Field::DateTime,
+    firmware_version: Field::String,
     last_heartbeat_at: Field::DateTime,
     ip_address: Field::String,
     user_agent: Field::Text,
@@ -26,7 +28,7 @@ class PlayerDashboard < Administrate::BaseDashboard
   }.freeze
 
   COLLECTION_ATTRIBUTES = %i[id public_id device_name device_type device_model ip_address last_heartbeat_at].freeze
-  SHOW_PAGE_ATTRIBUTES = %i[id public_id token device_name device_type device_model device_manufacturer os_name os_version browser_name browser_version app_version screen_width screen_height touch_capable pairing_code last_heartbeat_at ip_address user_agent screen_players created_at].freeze
+  SHOW_PAGE_ATTRIBUTES = %i[id public_id token device_name device_type device_model device_manufacturer os_name os_version browser_name browser_version app_version screen_width screen_height touch_capable pairing_code pairing_code_expires_at firmware_version last_heartbeat_at ip_address user_agent screen_players created_at].freeze
   FORM_ATTRIBUTES = %i[device_name].freeze
   COLLECTION_FILTERS = {}.freeze
 
