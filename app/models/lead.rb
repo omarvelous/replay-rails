@@ -5,6 +5,8 @@ class Lead < ApplicationRecord
   acts_as_tenant :account
   visitable :ahoy_visit
 
+  store_accessor :context, :source_url, :ip_address, :user_agent
+
   TYPES = %w[
     buyer_inquiry
     renter_inquiry
