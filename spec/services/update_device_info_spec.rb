@@ -1,6 +1,6 @@
 require "rails_helper"
 
-RSpec.describe ParseDeviceInfo do
+RSpec.describe UpdateDeviceInfo do
   describe "#call" do
     it "parses browser info from user agent" do
       player = create(:player, user_agent: "Mozilla/5.0 (Windows NT 10.0) AppleWebKit/537.36 Chrome/120.0")

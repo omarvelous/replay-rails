@@ -23,7 +23,7 @@ class RecordHeartbeat
       screen_height: @params[:screen_height] || @player.screen_height
     )
 
-    ParseDeviceInfo.new(player: @player).call if ua_changed
+    UpdateDeviceInfo.new(player: @player).call if ua_changed
 
     Result.new(success?: true)
   end

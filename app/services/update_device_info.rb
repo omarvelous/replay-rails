@@ -1,4 +1,4 @@
-class ParseDeviceInfo
+class UpdateDeviceInfo
   def initialize(player:)
     @player = player
   end

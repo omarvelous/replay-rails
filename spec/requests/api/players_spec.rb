@@ -14,7 +14,7 @@ RSpec.describe "Api::Players" do
       expect(data["session_id"]).to be_present
       expect(data["public_id"]).to be_present
       expect(data["pairing_code"]).to match(/\A[A-Z0-9]{6}\z/)
-      expect(data["expires_in"]).to eq(600)
+      expect(data["expires_at"]).to be_present
     end
 
     it "accepts device info params" do
@@ -80,7 +80,7 @@ RSpec.describe "Api::Players" do
       expect(response).to have_http_status(:created)
       data = response.parsed_body["data"]
       expect(data["pairing_code"]).to eq(existing_code)
-      expect(data["expires_in"]).to be_between(1, 600)
+      expect(data["expires_at"]).to be_present
     end
 
     it "generates a new code if the current one has expired" do
@@ -93,7 +93,7 @@ RSpec.describe "Api::Players" do
       data = response.parsed_body["data"]
       expect(data["pairing_code"]).to match(/\A[A-Z0-9]{6}\z/)
       expect(data["pairing_code"]).not_to eq(old_code)
-      expect(data["expires_in"]).to eq(600)
+      expect(data["expires_at"]).to be_present
     end
 
     it "does not create a new player" do

@@ -130,7 +130,7 @@ if demo_account
         screen_height: 1080,
         touch_capable: false
       )
-      ParseDeviceInfo.new(player: player).call
+      UpdateDeviceInfo.new(player: player).call
       window_display.screen_players.create!(player: player)
       player.update!(pairing_code: nil, pairing_code_expires_at: nil)
       player.update!(last_heartbeat_at: Time.current)

@@ -9,7 +9,7 @@ module Api
 
           render_data({
             pairing_code: result.pairing_code,
-            expires_in: result.expires_in
+            expires_at: result.expires_at
           }, status: :created)
         end
       end

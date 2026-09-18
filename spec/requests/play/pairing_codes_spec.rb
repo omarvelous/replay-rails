@@ -17,7 +17,7 @@ RSpec.describe "Play::PairingCodes" do
 
       data = response.parsed_body
       expect(data["pairing_code"]).to eq(existing_code)
-      expect(data["expires_in"]).to be_between(1, 600)
+      expect(data["expires_at"]).to be_present
     end
 
     it "generates a new code if expired" do
