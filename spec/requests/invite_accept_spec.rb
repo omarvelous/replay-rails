@@ -6,15 +6,14 @@ RSpec.describe "Invite Accept Flow" do
 
   describe "GET /invites/:token (show)" do
     context "when logged in with matching email" do
-      it "auto-accepts the invite" do
+      it "auto-accepts the invite and updates the role" do
         invite = create(:invite, account: account, email: owner.email_address, role: "manager", invited_by: owner)
         sign_in(owner)
 
-        expect {
-          get invite_path(token: invite.token)
-        }.to change(AccountUser, :count).by(1)
+        get invite_path(token: invite.token)
 
         expect(invite.reload).to be_accepted
+        expect(owner.membership_on(account).reload.role).to eq("manager")
         expect(response).to redirect_to(app_root_path)
       end
     end

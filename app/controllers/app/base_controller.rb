@@ -5,6 +5,7 @@ module App
 
     authorize :user, through: :current_user
     authorize :account, through: :current_account
+    authorize :account_user, through: :current_account_user
 
     rescue_from ActionPolicy::Unauthorized, with: :handle_unauthorized
 
@@ -18,6 +19,10 @@ module App
 
       def current_account
         Current.account
+      end
+
+      def current_account_user
+        Current.account_user
       end
 
       def handle_unauthorized
