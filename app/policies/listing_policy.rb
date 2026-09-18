@@ -1,10 +1,10 @@
 class ListingPolicy < ApplicationPolicy
   def show?
-    account_user.at_least?("manager") || owns_listing?
+    manager_or_above? || owns_listing?
   end
 
   scope_for :active_record_relation do |relation|
-    if account_user.at_least?("manager")
+    if manager_or_above?
       relation
     else
       relation.joins(:listing_agents)
