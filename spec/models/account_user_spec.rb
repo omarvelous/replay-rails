@@ -9,22 +9,66 @@ RSpec.describe AccountUser do
   describe "validations" do
     it { is_expected.to validate_inclusion_of(:role).in_array(AccountUser::ROLES) }
 
-    it "allows multiple roles for the same user on the same account" do
+    it "enforces one membership per user per account" do
       account = create(:account)
       user = create(:user)
       create(:account_user, account: account, user: user, role: "manager")
 
-      agent_role = build(:account_user, account: account, user: user, role: "agent")
-      expect(agent_role).to be_valid
+      duplicate = build(:account_user, account: account, user: user, role: "agent")
+      expect(duplicate).not_to be_valid
+      expect(duplicate.errors[:user_id]).to be_present
     end
 
-    it "prevents duplicate roles for the same user on the same account" do
-      account = create(:account)
+    it "allows the same user on different accounts" do
       user = create(:user)
-      create(:account_user, account: account, user: user, role: "manager")
+      create(:account_user, user: user, role: "manager")
 
-      duplicate = build(:account_user, account: account, user: user, role: "manager")
-      expect(duplicate).not_to be_valid
+      other_account = build(:account_user, user: user, role: "agent")
+      expect(other_account).to be_valid
+    end
+  end
+
+  describe "#at_least?" do
+    let(:account) { create(:account) }
+
+    it "owner is at least owner" do
+      au = build(:account_user, account: account, role: "owner")
+      expect(au.at_least?("owner")).to be true
+    end
+
+    it "owner is at least manager" do
+      au = build(:account_user, account: account, role: "owner")
+      expect(au.at_least?("manager")).to be true
+    end
+
+    it "owner is at least agent" do
+      au = build(:account_user, account: account, role: "owner")
+      expect(au.at_least?("agent")).to be true
+    end
+
+    it "manager is at least manager" do
+      au = build(:account_user, account: account, role: "manager")
+      expect(au.at_least?("manager")).to be true
+    end
+
+    it "manager is at least agent" do
+      au = build(:account_user, account: account, role: "manager")
+      expect(au.at_least?("agent")).to be true
+    end
+
+    it "manager is NOT at least owner" do
+      au = build(:account_user, account: account, role: "manager")
+      expect(au.at_least?("owner")).to be false
+    end
+
+    it "agent is at least agent" do
+      au = build(:account_user, account: account, role: "agent")
+      expect(au.at_least?("agent")).to be true
+    end
+
+    it "agent is NOT at least manager" do
+      au = build(:account_user, account: account, role: "agent")
+      expect(au.at_least?("manager")).to be false
     end
   end
 

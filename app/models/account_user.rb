@@ -4,14 +4,19 @@ class AccountUser < ApplicationRecord
   has_paper_trail
 
   ROLES = %w[owner manager agent].freeze
+  ROLE_HIERARCHY = { "owner" => 0, "manager" => 1, "agent" => 2 }.freeze
 
   belongs_to :account
   belongs_to :user
 
   validates :role, inclusion: { in: ROLES }
-  validates :role, uniqueness: { scope: [ :account_id, :user_id ] }
+  validates :user_id, uniqueness: { scope: :account_id }
 
   before_destroy :ensure_not_last_owner
+
+  def at_least?(required_role)
+    ROLE_HIERARCHY[role] <= ROLE_HIERARCHY[required_role]
+  end
 
   private
 
