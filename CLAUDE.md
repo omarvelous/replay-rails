@@ -74,9 +74,9 @@ Uses Rails 8 built-in authentication with a many-to-many Account-User relationsh
 - `User` — Has `email_address` and `password_digest`. Can belong to multiple accounts.
 - `AccountUser` — Join model between User and Account. Carries the `role` (owner, manager, agent).
 - `Session` — Tracks active sessions per user.
-- `Current` — `ActiveSupport::CurrentAttributes` provides `Current.user`, `Current.account_user`, and `Current.account` throughout the request.
+- `Current` — `ActiveSupport::CurrentAttributes` provides `Current.user` and `Current.account` throughout the request.
 
-`Current.account_user` is set on login/session resume and provides both the account context and the user's role within that account. `Current.account` delegates through it.
+`Current.session` is set on login/session resume. `Current.account` is derived from the user's first account. Role checks go through the `Authorizable` concern on User (`user.can_manage?(account)`, `user.owner_of?(account)`) which queries `AccountUser` records.
 
 The `Authentication` concern exposes `current_user` and `current_account` as public on-demand methods. They call `resume_session` lazily and read from `Current`. This is important because Ahoy's controller skips before_actions — `current_user` works without callbacks having run (same pattern as Devise's `current_user`).
 
