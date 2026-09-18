@@ -85,7 +85,8 @@ erDiagram
 |-------|-------|------------|:---:|:---:|
 | Site | `sites` | name, address | Yes | Yes |
 | Screen | `screens` | site_id, name | Yes | Yes |
-| Player | `players` | token, pairing_code, last_heartbeat_at, device_type, device_name | — | Yes |
+| Player | `players` | pairing_code, last_heartbeat_at, device_type, device_name | — | Yes |
+| PlayerSession | `player_sessions` | player_id, ip_address, user_agent, last_active_at, revoked_at | — | — |
 | ScreenPlayer | `screen_players` | screen_id, player_id, active, paired_by_id | — | Yes |
 | ScreenContent | `screen_contents` | screen_id, contentable_type, contentable_id | — | Yes |
 | Playlist | `playlists` | name | Yes | Yes |
