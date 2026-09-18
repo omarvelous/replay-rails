@@ -1,6 +1,5 @@
 module Go
-  class ExperiencesController < ApplicationController
-    skip_before_action :require_authentication
+  class ExperiencesController < Go::BaseController
     layout "player"
 
     def show
