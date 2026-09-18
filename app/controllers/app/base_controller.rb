@@ -3,8 +3,6 @@ module App
     include ActionPolicy::Controller
     layout "app"
 
-    before_action :require_membership
-
     authorize :user, through: :current_user
     authorize :account, through: :current_account
     authorize :account_user, through: :current_account_user
@@ -25,11 +23,6 @@ module App
 
       def current_account_user
         Current.account_user
-      end
-
-      def require_membership
-        return if Current.account_user.present?
-        redirect_to app_root_path, alert: "You don't have access to this account."
       end
 
       def handle_unauthorized

@@ -1,7 +1,6 @@
 module App
   class AccountsController < BaseController
   allow_unauthenticated_access only: %i[ new create ]
-  skip_before_action :require_membership, only: %i[ new create ]
 
   def new
     @account = Account.new

@@ -1,7 +1,6 @@
 module App
   class InvitesController < App::BaseController
     allow_unauthenticated_access only: %i[show update]
-    skip_before_action :require_membership, only: %i[show update]
     before_action :set_invite, only: %i[show update destroy resend]
     before_action :require_authentication_for_existing_users, only: :show
 
