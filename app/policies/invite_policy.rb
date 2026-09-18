@@ -1,6 +1,6 @@
 class InvitePolicy < ApplicationPolicy
   # Read — inviter sees list, invitee sees their own invite
-  def index? = user&.can_manage?(account)
+  def index? = account_user.at_least?("manager")
 
   def show?
     user.nil? || user.email_address == record.email
@@ -8,8 +8,8 @@ class InvitePolicy < ApplicationPolicy
 
   # Write — role-based for inviters, identity-based for acceptance
   def create?
-    return true if user&.owner_of?(account)
-    user&.can_manage?(account) && record.role == "agent"
+    return true if account_user.role == "owner"
+    account_user.at_least?("manager") && record.role == "agent"
   end
 
   def new?     = create?
@@ -18,6 +18,6 @@ class InvitePolicy < ApplicationPolicy
     user.nil? || user.email_address == record.email
   end
 
-  def resend?  = user&.can_manage?(account)
-  def destroy? = user&.can_manage?(account)
+  def resend?  = account_user.at_least?("manager")
+  def destroy? = account_user.at_least?("manager")
 end

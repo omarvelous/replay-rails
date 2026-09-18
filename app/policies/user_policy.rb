@@ -1,6 +1,6 @@
 class UserPolicy < ApplicationPolicy
-  def index? = user&.can_manage?(account)
-  def show?  = user&.can_manage?(account)
+  def index? = account_user.at_least?("manager")
+  def show?  = account_user.at_least?("manager")
 
   scope_for :active_record_relation do |relation|
     relation.joins(:account_users)
