@@ -5,8 +5,9 @@ RSpec.describe ScreenPolicy do
 
   context "when user is owner" do
     let(:user) { create(:user, account: account, role: "owner") }
+    let(:account_user) { user.membership_on(account) }
     let(:screen) { create(:screen, site: create(:site, account: account)) }
-    let(:policy) { described_class.new(screen, user: user, account: account) }
+    let(:policy) { described_class.new(screen, user: user, account: account, account_user: account_user) }
 
     it { expect(policy).to permit(:index?) }
     it { expect(policy).to permit(:show?) }
@@ -17,8 +18,9 @@ RSpec.describe ScreenPolicy do
 
   context "when user is agent" do
     let(:user) { create(:user, account: account, role: "agent") }
+    let(:account_user) { user.membership_on(account) }
     let(:screen) { create(:screen, site: create(:site, account: account)) }
-    let(:policy) { described_class.new(screen, user: user, account: account) }
+    let(:policy) { described_class.new(screen, user: user, account: account, account_user: account_user) }
 
     it { expect(policy).to permit(:index?) }
     it { expect(policy).to permit(:show?) }
@@ -29,11 +31,12 @@ RSpec.describe ScreenPolicy do
 
   describe "scope" do
     let(:user) { create(:user, account: account, role: "owner") }
+    let(:account_user) { user.membership_on(account) }
     let!(:own_screen) { create(:screen, site: create(:site, account: account)) }
     let!(:other_screen) { create(:screen) }
 
     it "returns only screens belonging to the account's sites" do
-      scope = described_class.new(own_screen, user: user, account: account)
+      scope = described_class.new(own_screen, user: user, account: account, account_user: account_user)
                              .apply_scope(Screen.all, type: :active_record_relation)
       expect(scope).to include(own_screen)
       expect(scope).not_to include(other_screen)

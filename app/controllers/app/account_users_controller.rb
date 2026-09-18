@@ -5,22 +5,20 @@ module App
 
     def index
       authorize! AccountUser
-      @account_users = @user.account_users.where(account: Current.account)
-      @available_roles = AccountUser::ROLES - @account_users.pluck(:role)
+      @account_user = @user.membership_on(Current.account)
+      @account_users = [ @account_user ].compact
+      @available_roles = AccountUser::ROLES
     end
 
     def create
-      @account_user = Current.account.account_users.build(
-        user: @user,
-        role: params.dig(:account_user, :role)
-      )
+      @account_user = @user.membership_on(Current.account)
       authorize! @account_user
 
-      if @account_user.save
+      if @account_user.update(role: params.dig(:account_user, :role))
         redirect_to user_roles_path(@user), notice: t(".success")
       else
-        @account_users = @user.account_users.where(account: Current.account)
-        @available_roles = AccountUser::ROLES - @account_users.pluck(:role)
+        @account_users = [ @account_user ].compact
+        @available_roles = AccountUser::ROLES
         render :index, status: :unprocessable_entity
       end
     end

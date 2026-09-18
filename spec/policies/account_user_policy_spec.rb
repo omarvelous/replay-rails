@@ -6,7 +6,8 @@ RSpec.describe AccountUserPolicy do
 
   context "when user is owner" do
     let(:user) { create(:user, account: account, role: "owner") }
-    let(:policy) { described_class.new(record, user: user, account: account) }
+    let(:account_user) { user.membership_on(account) }
+    let(:policy) { described_class.new(record, user: user, account: account, account_user: account_user) }
 
     it { expect(policy).to permit(:index?) }
     it { expect(policy).to permit(:show?) }
@@ -16,7 +17,8 @@ RSpec.describe AccountUserPolicy do
 
   context "when user is manager" do
     let(:user) { create(:user, account: account, role: "manager") }
-    let(:policy) { described_class.new(record, user: user, account: account) }
+    let(:account_user) { user.membership_on(account) }
+    let(:policy) { described_class.new(record, user: user, account: account, account_user: account_user) }
 
     it { expect(policy).to permit(:index?) }
     it { expect(policy).to permit(:show?) }
@@ -26,7 +28,8 @@ RSpec.describe AccountUserPolicy do
 
   context "when user is agent" do
     let(:user) { create(:user, account: account, role: "agent") }
-    let(:policy) { described_class.new(record, user: user, account: account) }
+    let(:account_user) { user.membership_on(account) }
+    let(:policy) { described_class.new(record, user: user, account: account, account_user: account_user) }
 
     it { expect(policy).not_to permit(:index?) }
     it { expect(policy).not_to permit(:show?) }
@@ -36,11 +39,12 @@ RSpec.describe AccountUserPolicy do
 
   describe "scope" do
     let(:user) { create(:user, account: account, role: "owner") }
+    let(:account_user) { user.membership_on(account) }
     let!(:account_au) { create(:account_user, account: account, role: "agent") }
     let!(:other_au) { create(:account_user, role: "agent") }
 
     it "returns only account_users for the current account" do
-      scope = described_class.new(account_au, user: user, account: account)
+      scope = described_class.new(account_au, user: user, account: account, account_user: account_user)
                              .apply_scope(AccountUser.all, type: :active_record_relation)
       expect(scope).to include(account_au)
       expect(scope).not_to include(other_au)
