@@ -3,6 +3,7 @@ require "administrate/base_dashboard"
 class LeadDashboard < Administrate::BaseDashboard
   ATTRIBUTE_TYPES = {
     id: Field::Number,
+    public_id: Field::String,
     account: Field::BelongsTo,
     listing: Field::BelongsTo,
     lead_agents: Field::HasMany,
@@ -20,6 +21,7 @@ class LeadDashboard < Administrate::BaseDashboard
 
   COLLECTION_ATTRIBUTES = %i[
     id
+    public_id
     name
     lead_type
     status
@@ -28,6 +30,7 @@ class LeadDashboard < Administrate::BaseDashboard
 
   SHOW_PAGE_ATTRIBUTES = %i[
     id
+    public_id
     account
     listing
     lead_agents

@@ -3,6 +3,7 @@ require "administrate/base_dashboard"
 class Ads::BrandAdDashboard < Administrate::BaseDashboard
   ATTRIBUTE_TYPES = {
     id: Field::Number,
+    public_id: Field::String,
     ad: Field::HasOne,
     created_at: Field::DateTime,
     updated_at: Field::DateTime
@@ -10,6 +11,7 @@ class Ads::BrandAdDashboard < Administrate::BaseDashboard
 
   COLLECTION_ATTRIBUTES = %i[
     id
+    public_id
     ad
     created_at
     updated_at
@@ -17,6 +19,7 @@ class Ads::BrandAdDashboard < Administrate::BaseDashboard
 
   SHOW_PAGE_ATTRIBUTES = %i[
     id
+    public_id
     ad
     created_at
     updated_at

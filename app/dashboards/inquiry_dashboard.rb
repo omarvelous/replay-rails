@@ -3,6 +3,7 @@ require "administrate/base_dashboard"
 class InquiryDashboard < Administrate::BaseDashboard
   ATTRIBUTE_TYPES = {
     id: Field::Number,
+    public_id: Field::String,
     name: Field::String,
     email: Field::String,
     phone: Field::String,
@@ -17,6 +18,7 @@ class InquiryDashboard < Administrate::BaseDashboard
 
   COLLECTION_ATTRIBUTES = %i[
     id
+    public_id
     name
     email
     company
@@ -26,6 +28,7 @@ class InquiryDashboard < Administrate::BaseDashboard
 
   SHOW_PAGE_ATTRIBUTES = %i[
     id
+    public_id
     name
     email
     phone

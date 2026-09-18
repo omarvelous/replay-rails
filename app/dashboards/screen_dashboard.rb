@@ -3,6 +3,7 @@ require "administrate/base_dashboard"
 class ScreenDashboard < Administrate::BaseDashboard
   ATTRIBUTE_TYPES = {
     id: Field::Number,
+    public_id: Field::String,
     name: Field::String,
     orientation: Field::String,
     site: Field::BelongsTo,
@@ -12,7 +13,7 @@ class ScreenDashboard < Administrate::BaseDashboard
   }.freeze
 
   COLLECTION_ATTRIBUTES = %i[ id name orientation site created_at ].freeze
-  SHOW_PAGE_ATTRIBUTES = %i[ id name orientation site screen_contents screen_players created_at ].freeze
+  SHOW_PAGE_ATTRIBUTES = %i[ id public_id name orientation site screen_contents screen_players created_at ].freeze
   FORM_ATTRIBUTES = %i[ name orientation ].freeze
   COLLECTION_FILTERS = {}.freeze
 

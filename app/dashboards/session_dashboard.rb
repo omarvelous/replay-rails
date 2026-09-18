@@ -9,6 +9,7 @@ class SessionDashboard < Administrate::BaseDashboard
   # on pages throughout the dashboard.
   ATTRIBUTE_TYPES = {
     id: Field::Number,
+    public_id: Field::String,
     ip_address: Field::String,
     user: Field::BelongsTo,
     user_agent: Field::String,
@@ -23,6 +24,7 @@ class SessionDashboard < Administrate::BaseDashboard
   # Feel free to add, remove, or rearrange items.
   COLLECTION_ATTRIBUTES = %i[
     id
+    public_id
     ip_address
     user
     user_agent
@@ -32,6 +34,7 @@ class SessionDashboard < Administrate::BaseDashboard
   # an array of attributes that will be displayed on the model's show page.
   SHOW_PAGE_ATTRIBUTES = %i[
     id
+    public_id
     ip_address
     user
     user_agent

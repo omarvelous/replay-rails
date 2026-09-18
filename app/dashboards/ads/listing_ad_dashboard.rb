@@ -3,6 +3,7 @@ require "administrate/base_dashboard"
 class Ads::ListingAdDashboard < Administrate::BaseDashboard
   ATTRIBUTE_TYPES = {
     id: Field::Number,
+    public_id: Field::String,
     ad: Field::HasOne,
     badge: Field::String,
     event_date: Field::Date,
@@ -18,6 +19,7 @@ class Ads::ListingAdDashboard < Administrate::BaseDashboard
 
   COLLECTION_ATTRIBUTES = %i[
     id
+    public_id
     ad
     badge
     event_date
@@ -25,6 +27,7 @@ class Ads::ListingAdDashboard < Administrate::BaseDashboard
 
   SHOW_PAGE_ATTRIBUTES = %i[
     id
+    public_id
     ad
     badge
     event_date

@@ -4,6 +4,7 @@ require "administrate/field/active_storage"
 class AdDashboard < Administrate::BaseDashboard
   ATTRIBUTE_TYPES = {
     id: Field::Number,
+    public_id: Field::String,
     account: Field::BelongsTo,
     adable: Field::Polymorphic,
     headline: Field::String,
@@ -16,7 +17,7 @@ class AdDashboard < Administrate::BaseDashboard
   }.freeze
 
   COLLECTION_ATTRIBUTES = %i[ id headline adable layout theme account ].freeze
-  SHOW_PAGE_ATTRIBUTES = %i[ id account adable headline body layout theme image playlists created_at ].freeze
+  SHOW_PAGE_ATTRIBUTES = %i[ id public_id account adable headline body layout theme image playlists created_at ].freeze
   FORM_ATTRIBUTES = %i[ headline body layout theme image ].freeze
   COLLECTION_FILTERS = {}.freeze
 

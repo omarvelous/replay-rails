@@ -3,6 +3,7 @@ require "administrate/base_dashboard"
 class Ads::CollectionAdAdDashboard < Administrate::BaseDashboard
   ATTRIBUTE_TYPES = {
     id: Field::Number,
+    public_id: Field::String,
     ad: Field::BelongsTo,
     collection_ad: Field::BelongsTo,
     position: Field::Number,
@@ -12,6 +13,7 @@ class Ads::CollectionAdAdDashboard < Administrate::BaseDashboard
 
   COLLECTION_ATTRIBUTES = %i[
     id
+    public_id
     ad
     collection_ad
     position
@@ -19,6 +21,7 @@ class Ads::CollectionAdAdDashboard < Administrate::BaseDashboard
 
   SHOW_PAGE_ATTRIBUTES = %i[
     id
+    public_id
     ad
     collection_ad
     position

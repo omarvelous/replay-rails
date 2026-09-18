@@ -9,6 +9,7 @@ class PlaylistAdDashboard < Administrate::BaseDashboard
   # on pages throughout the dashboard.
   ATTRIBUTE_TYPES = {
     id: Field::Number,
+    public_id: Field::String,
     ad: Field::BelongsTo,
     duration: Field::Number,
     playlist: Field::BelongsTo,
@@ -24,6 +25,7 @@ class PlaylistAdDashboard < Administrate::BaseDashboard
   # Feel free to add, remove, or rearrange items.
   COLLECTION_ATTRIBUTES = %i[
     id
+    public_id
     ad
     duration
     playlist
@@ -33,6 +35,7 @@ class PlaylistAdDashboard < Administrate::BaseDashboard
   # an array of attributes that will be displayed on the model's show page.
   SHOW_PAGE_ATTRIBUTES = %i[
     id
+    public_id
     ad
     duration
     playlist

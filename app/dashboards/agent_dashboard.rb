@@ -4,6 +4,7 @@ require "administrate/field/active_storage"
 class AgentDashboard < Administrate::BaseDashboard
   ATTRIBUTE_TYPES = {
     id: Field::Number,
+    public_id: Field::String,
     account: Field::BelongsTo,
     name: Field::String,
     email: Field::String,
@@ -16,7 +17,7 @@ class AgentDashboard < Administrate::BaseDashboard
   }.freeze
 
   COLLECTION_ATTRIBUTES = %i[ id name email phone account ].freeze
-  SHOW_PAGE_ATTRIBUTES = %i[ id account name email phone photo user listings qr_code created_at ].freeze
+  SHOW_PAGE_ATTRIBUTES = %i[ id public_id account name email phone photo user listings qr_code created_at ].freeze
   FORM_ATTRIBUTES = %i[ name email phone photo ].freeze
   COLLECTION_FILTERS = {}.freeze
 
