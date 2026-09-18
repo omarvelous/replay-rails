@@ -10,7 +10,7 @@ RSpec.describe "LeadAgents" do
 
   describe "GET /leads/:lead_id/lead_agents/new" do
     it "returns a successful response" do
-      get new_lead_lead_agent_path(lead)
+      get new_lead_agent_path(lead)
       expect(response).to be_successful
     end
   end
@@ -18,14 +18,14 @@ RSpec.describe "LeadAgents" do
   describe "POST /leads/:lead_id/lead_agents" do
     it "assigns an agent to the lead" do
       expect {
-        post lead_lead_agents_path(lead), params: { lead_agent: { agent_id: agent.id } }
+        post lead_agents_path(lead), params: { lead_agent: { agent_id: agent.id } }
       }.to change(LeadAgent, :count).by(1)
 
       expect(lead.current_agent).to eq(agent)
     end
 
     it "redirects to the lead" do
-      post lead_lead_agents_path(lead), params: { lead_agent: { agent_id: agent.id } }
+      post lead_agents_path(lead), params: { lead_agent: { agent_id: agent.id } }
       expect(response).to redirect_to(lead_path(lead))
     end
 
@@ -33,7 +33,7 @@ RSpec.describe "LeadAgents" do
       other_agent = create(:agent, account: account)
       lead.lead_agents.create!(agent: agent)
 
-      post lead_lead_agents_path(lead), params: { lead_agent: { agent_id: other_agent.id } }
+      post lead_agents_path(lead), params: { lead_agent: { agent_id: other_agent.id } }
 
       expect(lead.current_agent).to eq(other_agent)
       expect(lead.lead_agents.count).to eq(2)
@@ -43,7 +43,7 @@ RSpec.describe "LeadAgents" do
   describe "tenant isolation" do
     it "returns 404 for another account's lead" do
       other_lead = create(:lead)
-      post lead_lead_agents_path(other_lead), params: { lead_agent: { agent_id: agent.id } }
+      post lead_agents_path(other_lead), params: { lead_agent: { agent_id: agent.id } }
       expect(response).to have_http_status(:not_found)
     end
   end

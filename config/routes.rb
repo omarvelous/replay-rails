@@ -44,7 +44,7 @@ Rails.application.routes.draw do
 
       # Content
       resources :listings do
-        resources :listing_agents, only: %i[new create edit update destroy]
+        resources :agents, controller: "listing_agents", only: %i[new create edit update destroy]
       end
       resources :agents
       namespace :ads do
@@ -61,15 +61,15 @@ Rails.application.routes.draw do
       resources :experiences
 
       # Playback
-      resource :pair, only: %i[show create], controller: "pairings"
+      resource :pairing, only: %i[show create], controller: "pairings"
       resources :sites
       resources :screens do
-        resource :screen_content, only: %i[new create destroy]
-        resource :screen_player, only: %i[new create destroy]
+        resource :content, controller: "screen_contents", only: %i[new create destroy]
+        resource :player, controller: "screen_players", only: %i[new create destroy]
       end
       resources :playlists do
         member { get :preview }
-        resources :playlist_ads, only: %i[new create edit update destroy]
+        resources :ads, controller: "playlist_ads", only: %i[new create edit update destroy]
       end
 
       # Engagement
@@ -77,12 +77,12 @@ Rails.application.routes.draw do
         resources :scans, controller: "qr_scans", only: :index
       end
       resources :leads, only: %i[index show update] do
-        resources :lead_agents, only: %i[new create]
+        resources :agents, controller: "lead_agents", only: %i[new create]
       end
 
       # Team
       resources :users, only: %i[index show] do
-        resources :account_users, only: %i[index create destroy]
+        resources :roles, controller: "account_users", only: %i[index create destroy]
       end
       resources :invites, param: :token, only: %i[index new create show update destroy] do
         member { post :resend }

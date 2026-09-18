@@ -14,7 +14,7 @@
         <% @account_users.each do |au| %>
           <div class="flex items-center justify-between px-4 py-3">
             <span class="inline-flex items-center rounded-md bg-gray-50 px-2 py-1 text-xs font-medium text-gray-600 ring-1 ring-gray-500/10 ring-inset"><%= au.role.capitalize %></span>
-            <%= button_to user_account_user_path(@user, au), method: :delete,
+            <%= button_to user_role_path(@user, au), method: :delete,
                 class: "text-xs text-red-600 font-semibold hover:text-red-500",
                 data: { turbo_confirm: "Remove #{au.role} role from #{@user.first_name}?" } do %>
               Remove
@@ -31,7 +31,7 @@
   <% if @available_roles.any? %>
     <div class="rounded-lg bg-white shadow-sm ring-1 ring-gray-900/5 p-4">
       <h3 class="text-sm font-semibold mb-3">Add role</h3>
-      <%= form_with url: user_account_users_path(@user), method: :post, class: "flex items-center gap-3" do |f| %>
+      <%= form_with url: user_roles_path(@user), method: :post, class: "flex items-center gap-3" do |f| %>
         <div class="grid grid-cols-1 flex-1">
           <%= f.select "account_user[role]", @available_roles.map { |r| [r.capitalize, r] },
               {},
