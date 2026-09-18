@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_09_17_132209) do
+ActiveRecord::Schema[8.1].define(version: 2026_09_18_133728) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -208,31 +208,6 @@ ActiveRecord::Schema[8.1].define(version: 2026_09_17_132209) do
     t.index ["public_id"], name: "index_experiences_on_public_id", unique: true
   end
 
-  create_table "impressions", force: :cascade do |t|
-    t.bigint "account_id", null: false
-    t.bigint "ad_id", null: false
-    t.datetime "created_at", null: false
-    t.integer "duration"
-    t.bigint "player_id", null: false
-    t.bigint "playlist_id"
-    t.integer "position"
-    t.bigint "screen_id", null: false
-    t.bigint "site_id", null: false
-    t.datetime "updated_at", null: false
-    t.index ["account_id", "created_at"], name: "index_impressions_on_account_id_and_created_at"
-    t.index ["account_id"], name: "index_impressions_on_account_id"
-    t.index ["ad_id", "created_at"], name: "index_impressions_on_ad_id_and_created_at"
-    t.index ["ad_id"], name: "index_impressions_on_ad_id"
-    t.index ["player_id", "created_at"], name: "index_impressions_on_player_id_and_created_at"
-    t.index ["player_id"], name: "index_impressions_on_player_id"
-    t.index ["playlist_id", "created_at"], name: "index_impressions_on_playlist_id_and_created_at"
-    t.index ["playlist_id"], name: "index_impressions_on_playlist_id"
-    t.index ["screen_id", "created_at"], name: "index_impressions_on_screen_id_and_created_at"
-    t.index ["screen_id"], name: "index_impressions_on_screen_id"
-    t.index ["site_id", "created_at"], name: "index_impressions_on_site_id_and_created_at"
-    t.index ["site_id"], name: "index_impressions_on_site_id"
-  end
-
   create_table "inquiries", force: :cascade do |t|
     t.bigint "ahoy_visit_id"
     t.string "company"
@@ -404,14 +379,12 @@ ActiveRecord::Schema[8.1].define(version: 2026_09_17_132209) do
     t.uuid "public_id", default: -> { "gen_random_uuid()" }, null: false
     t.integer "screen_height"
     t.integer "screen_width"
-    t.string "token", null: false
     t.boolean "touch_capable", default: false
     t.datetime "updated_at", null: false
     t.string "user_agent"
     t.index ["device_type"], name: "index_players_on_device_type"
     t.index ["pairing_code"], name: "index_players_on_pairing_code", unique: true
     t.index ["public_id"], name: "index_players_on_public_id", unique: true
-    t.index ["token"], name: "index_players_on_token", unique: true
   end
 
   create_table "playlist_ads", force: :cascade do |t|
@@ -574,12 +547,6 @@ ActiveRecord::Schema[8.1].define(version: 2026_09_17_132209) do
   add_foreign_key "collection_ad_ads", "ads"
   add_foreign_key "collection_ad_ads", "collection_ads"
   add_foreign_key "experiences", "accounts"
-  add_foreign_key "impressions", "accounts"
-  add_foreign_key "impressions", "ads"
-  add_foreign_key "impressions", "players"
-  add_foreign_key "impressions", "playlists"
-  add_foreign_key "impressions", "screens"
-  add_foreign_key "impressions", "sites"
   add_foreign_key "invites", "accounts"
   add_foreign_key "invites", "users", column: "invited_by_id"
   add_foreign_key "lead_agents", "agents"
