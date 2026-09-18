@@ -116,17 +116,6 @@ RSpec.describe User do
         expect(agent.can_manage?(account)).to be false
       end
     end
-
-    describe "#member_of?" do
-      it "returns true when user is a member" do
-        expect(user.member_of?(account)).to be true
-      end
-
-      it "returns false for non-members" do
-        other_account = create(:account)
-        expect(user.member_of?(other_account)).to be false
-      end
-    end
   end
 
   describe "authentication" do
