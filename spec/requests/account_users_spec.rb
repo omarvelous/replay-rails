@@ -8,12 +8,12 @@ RSpec.describe "AccountUsers (Roles)" do
 
   describe "GET /users/:user_id/account_users" do
     it "returns a successful response" do
-      get user_account_users_path(owner)
+      get user_roles_path(owner)
       expect(response).to be_successful
     end
 
     it "shows the user's roles for this account" do
-      get user_account_users_path(owner)
+      get user_roles_path(owner)
       expect(response.body).to include("Owner")
     end
   end
@@ -23,23 +23,23 @@ RSpec.describe "AccountUsers (Roles)" do
 
     it "adds a role to the user" do
       expect {
-        post user_account_users_path(member), params: { account_user: { role: "manager" } }
+        post user_roles_path(member), params: { account_user: { role: "manager" } }
       }.to change { member.account_users.where(account: account).count }.by(1)
     end
 
     it "redirects with notice on success" do
-      post user_account_users_path(member), params: { account_user: { role: "manager" } }
-      expect(response).to redirect_to(user_account_users_path(member))
+      post user_roles_path(member), params: { account_user: { role: "manager" } }
+      expect(response).to redirect_to(user_roles_path(member))
       expect(flash[:notice]).to eq("Role added.")
     end
 
     it "rejects duplicate roles" do
-      post user_account_users_path(member), params: { account_user: { role: "agent" } }
+      post user_roles_path(member), params: { account_user: { role: "agent" } }
       expect(response).to have_http_status(:unprocessable_content)
     end
 
     it "rejects invalid roles" do
-      post user_account_users_path(member), params: { account_user: { role: "superadmin" } }
+      post user_roles_path(member), params: { account_user: { role: "superadmin" } }
       expect(response).to have_http_status(:unprocessable_content)
     end
   end
@@ -50,7 +50,7 @@ RSpec.describe "AccountUsers (Roles)" do
       au = member.account_users.find_by(account: account, role: "agent")
 
       expect {
-        delete user_account_user_path(member, au)
+        delete user_role_path(member, au)
       }.to change { member.account_users.where(account: account).count }.by(-1)
     end
 
@@ -58,8 +58,8 @@ RSpec.describe "AccountUsers (Roles)" do
       member = create(:user, account: account, role: "agent")
       au = member.account_users.find_by(account: account, role: "agent")
 
-      delete user_account_user_path(member, au)
-      expect(response).to redirect_to(user_account_users_path(member))
+      delete user_role_path(member, au)
+      expect(response).to redirect_to(user_roles_path(member))
       expect(flash[:notice]).to eq("Role removed.")
     end
 
@@ -67,10 +67,10 @@ RSpec.describe "AccountUsers (Roles)" do
       au = owner.account_users.find_by(account: account, role: "owner")
 
       expect {
-        delete user_account_user_path(owner, au)
+        delete user_role_path(owner, au)
       }.not_to change(AccountUser, :count)
 
-      expect(response).to redirect_to(user_account_users_path(owner))
+      expect(response).to redirect_to(user_roles_path(owner))
       expect(flash[:alert]).to include("Cannot remove the last owner")
     end
 
@@ -79,7 +79,7 @@ RSpec.describe "AccountUsers (Roles)" do
       au = owner.account_users.find_by(account: account, role: "owner")
 
       expect {
-        delete user_account_user_path(owner, au)
+        delete user_role_path(owner, au)
       }.to change { AccountUser.where(role: "owner", account: account).count }.by(-1)
     end
   end
@@ -90,18 +90,18 @@ RSpec.describe "AccountUsers (Roles)" do
     before { sign_in(agent) }
 
     it "denies access to index" do
-      get user_account_users_path(agent)
+      get user_roles_path(agent)
       expect(response).to redirect_to(app_root_path)
     end
 
     it "denies creating a role" do
-      post user_account_users_path(agent), params: { account_user: { role: "manager" } }
+      post user_roles_path(agent), params: { account_user: { role: "manager" } }
       expect(response).to redirect_to(app_root_path)
     end
 
     it "denies destroying a role" do
       au = agent.account_users.find_by(account: account)
-      delete user_account_user_path(agent, au)
+      delete user_role_path(agent, au)
       expect(response).to redirect_to(app_root_path)
     end
   end
@@ -109,7 +109,7 @@ RSpec.describe "AccountUsers (Roles)" do
   describe "tenant isolation" do
     it "returns 404 for a user not on this account" do
       other_user = create(:user)
-      get user_account_users_path(other_user)
+      get user_roles_path(other_user)
       expect(response).to have_http_status(:not_found)
     end
   end

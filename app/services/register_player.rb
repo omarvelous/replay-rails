@@ -16,7 +16,7 @@ class RegisterPlayer
       screen_height: @params[:screen_height],
       touch_capable: @params[:touch_capable]
     )
-    ParseDeviceInfo.new(player: player).call
+    UpdateDeviceInfo.new(player: player).call
 
     player_session = player.player_sessions.create!(
       ip_address: @ip_address,

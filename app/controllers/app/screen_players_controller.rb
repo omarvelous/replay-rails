@@ -19,7 +19,7 @@ module App
       redirect_to @screen, notice: t(".success")
     else
       flash[:alert] = result.error
-      redirect_to new_screen_screen_player_path(@screen)
+      redirect_to new_screen_player_path(@screen)
     end
   end
 

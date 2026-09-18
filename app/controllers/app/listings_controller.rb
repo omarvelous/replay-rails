@@ -13,10 +13,10 @@ module App
 
   def show
     authorize! @listing
-    ad_ids = @listing.ads.pluck(:id)
-    @impressions_count = if ad_ids.any?
+    ad_pids = @listing.ads.pluck(:public_id)
+    @impressions_count = if ad_pids.any?
       Analytics::Events::ContentImpressed.events
-        .where("properties->>'ad_id' IN (?)", ad_ids.map(&:to_s)).count
+        .where("properties->>'ad_pid' IN (?)", ad_pids).count
     else
       0
     end

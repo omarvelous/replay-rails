@@ -11,7 +11,7 @@ RSpec.describe "Screen Content" do
 
   describe "GET /screens/:screen_id/screen_content/new" do
     it "returns a successful response" do
-      get new_screen_screen_content_path(screen)
+      get new_screen_content_path(screen)
       expect(response).to be_successful
     end
   end
@@ -19,12 +19,12 @@ RSpec.describe "Screen Content" do
   describe "POST /screens/:screen_id/screen_content" do
     it "assigns a playlist to the screen" do
       expect {
-        post screen_screen_content_path(screen), params: { screen_content: { contentable_type: "Playlist", contentable_id: playlist.to_param } }
+        post screen_content_path(screen), params: { screen_content: { contentable_type: "Playlist", contentable_id: playlist.to_param } }
       }.to change(screen.screen_contents, :count).by(1)
     end
 
     it "redirects to the screen" do
-      post screen_screen_content_path(screen), params: { screen_content: { contentable_type: "Playlist", contentable_id: playlist.to_param } }
+      post screen_content_path(screen), params: { screen_content: { contentable_type: "Playlist", contentable_id: playlist.to_param } }
       expect(response).to redirect_to(screen_path(screen))
     end
 
@@ -32,20 +32,20 @@ RSpec.describe "Screen Content" do
       old_playlist = create(:playlist, account: account, status: "published")
       create(:screen_content, screen: screen, contentable: old_playlist)
 
-      post screen_screen_content_path(screen), params: { screen_content: { contentable_type: "Playlist", contentable_id: playlist.to_param } }
+      post screen_content_path(screen), params: { screen_content: { contentable_type: "Playlist", contentable_id: playlist.to_param } }
       expect(screen.screen_contents.where(active: true).count).to eq(1)
       expect(screen.screen_contents.find_by(active: true).contentable).to eq(playlist)
     end
 
     it "returns 404 for invalid contentable_type" do
-      post screen_screen_content_path(screen), params: { screen_content: { contentable_type: "User", contentable_id: user.to_param } }
+      post screen_content_path(screen), params: { screen_content: { contentable_type: "User", contentable_id: user.to_param } }
       expect(response).to have_http_status(:not_found)
     end
 
     it "assigns an experience to the screen" do
       experience = create(:experience, account: account)
       expect {
-        post screen_screen_content_path(screen), params: { screen_content: { contentable_type: "Experience", contentable_id: experience.to_param } }
+        post screen_content_path(screen), params: { screen_content: { contentable_type: "Experience", contentable_id: experience.to_param } }
       }.to change(screen.screen_contents, :count).by(1)
       expect(screen.active_content).to eq(experience)
     end
@@ -54,13 +54,13 @@ RSpec.describe "Screen Content" do
   describe "DELETE /screens/:screen_id/screen_content" do
     it "deactivates the content on the screen" do
       content = create(:screen_content, screen: screen, contentable: playlist, active: true)
-      delete screen_screen_content_path(screen)
+      delete screen_content_path(screen)
       expect(content.reload.active).to be false
     end
 
     it "redirects to the screen" do
       create(:screen_content, screen: screen, contentable: playlist)
-      delete screen_screen_content_path(screen)
+      delete screen_content_path(screen)
       expect(response).to redirect_to(screen_path(screen))
     end
   end
@@ -68,7 +68,7 @@ RSpec.describe "Screen Content" do
   describe "tenant isolation" do
     it "returns 404 for another account's screen" do
       other_screen = create(:screen)
-      get new_screen_screen_content_path(other_screen)
+      get new_screen_content_path(other_screen)
       expect(response).to have_http_status(:not_found)
     end
   end

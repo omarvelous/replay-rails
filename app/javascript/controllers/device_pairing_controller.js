@@ -44,7 +44,7 @@ export default class extends Controller {
 
     this.publicId = data.public_id
     this.pairingCode = data.pairing_code
-    this.expiresIn = 600
+    this.expiresAt = new Date(data.expires_at)
     localStorage.setItem("player_public_id", this.publicId)
     // Cookie set directly in the response — no session dance needed
     this.displayCode(data.pairing_code)
@@ -75,7 +75,7 @@ export default class extends Controller {
       const data = await res.json()
       this.publicId = localStorage.getItem("player_public_id")
       this.pairingCode = data.pairing_code
-      this.expiresIn = data.expires_in
+      this.expiresAt = new Date(data.expires_at)
       this.displayCode(data.pairing_code)
     } else {
       localStorage.removeItem("player_public_id")
@@ -111,15 +111,15 @@ export default class extends Controller {
   }
 
   startCountdown() {
-    this.secondsRemaining = this.expiresIn || 600
     this.updateCountdownDisplay()
 
     this.countdownInterval = setInterval(() => {
-      this.secondsRemaining -= 1
+      const remaining = Math.floor((this.expiresAt - Date.now()) / 1000)
 
-      if (this.secondsRemaining <= 0) {
+      if (remaining <= 0) {
         this.onCodeExpired()
       } else {
+        this.secondsRemaining = remaining
         this.updateCountdownDisplay()
       }
     }, 1000)

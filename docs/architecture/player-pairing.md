@@ -41,7 +41,7 @@ Everything happens on the `play` subdomain. Auth is a signed cookie set after pa
 - Parses user agent via `device_detector` gem for device type, model, manufacturer, OS, browser
 - Accepts client-reported info: `screen_width`, `screen_height`, `touch_capable`, `app_version`
 - Pairing code expires after 10 minutes
-- Returns `{ pairing_code, expires_in: 600 }`
+- Returns `{ pairing_code, public_id, expires_at }`
 
 **Pairing** (`Screen#pair_player!`):
 - Deactivates any existing `ScreenPlayer` on both the screen and player (a player can only be on one screen, a screen can only have one player)

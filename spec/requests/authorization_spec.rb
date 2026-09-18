@@ -53,7 +53,7 @@ RSpec.describe "Authorization" do
       lead = create(:lead, account: account)
       lead.lead_agents.create!(agent: agent)
 
-      get new_lead_lead_agent_path(lead)
+      get new_lead_agent_path(lead)
       expect(response).to redirect_to(app_root_path)
     end
 
@@ -93,7 +93,7 @@ RSpec.describe "Authorization" do
 
     it "can assign agents to leads" do
       lead = create(:lead, account: account)
-      get new_lead_lead_agent_path(lead)
+      get new_lead_agent_path(lead)
       expect(response).to be_successful
     end
   end

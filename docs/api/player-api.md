@@ -39,7 +39,7 @@ The presence of `app_version` distinguishes provisioned devices (Fire TV, dedica
 ```json
 {
   "pairing_code": "A7B3K2",
-  "expires_in": 600
+  "expires_at": "2026-09-18T14:10:00Z"
 }
 ```
 
@@ -162,7 +162,7 @@ Generates a new 6-character pairing code. Used when the current code expires (10
 ```json
 {
   "pairing_code": "X9M4P1",
-  "expires_in": 600
+  "expires_at": "2026-09-18T14:10:00Z"
 }
 ```
 

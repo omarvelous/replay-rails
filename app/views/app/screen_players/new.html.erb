@@ -6,7 +6,7 @@
       Enter the 6-character code shown on the TV to pair it with this screen.
     </p>
 
-    <%= form_with url: screen_screen_player_path(@screen), method: :post do |form| %>
+    <%= form_with url: screen_player_path(@screen), method: :post do |form| %>
       <div class="mb-4">
         <%= form.label :code, "Pairing code", class: "block text-sm font-medium text-gray-700 mb-1" %>
         <%= form.text_field :code, autofocus: true, autocomplete: "off", spellcheck: false,

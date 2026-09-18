@@ -138,4 +138,30 @@ RSpec.describe Listing do
       end
     end
   end
+
+  describe "tenant scoping" do
+    it "scopes queries to the current tenant" do
+      account_a = create(:account)
+      account_b = create(:account)
+      listing_a = create(:listing, account: account_a)
+      listing_b = create(:listing, account: account_b)
+
+      ActsAsTenant.with_tenant(account_a) do
+        expect(described_class.all).to include(listing_a)
+        expect(described_class.all).not_to include(listing_b)
+      end
+    end
+
+    it "automatically sets account on creation when tenant is set" do
+      account = create(:account)
+      ActsAsTenant.with_tenant(account) do
+        listing = described_class.create!(
+          address: "123 Main St",
+          price: 500_000,
+          status: "active"
+        )
+        expect(listing.account).to eq(account)
+      end
+    end
+  end
 end

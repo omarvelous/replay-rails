@@ -9,7 +9,7 @@
     <% if @playlists.any? %>
       <div class="divide-y divide-gray-100">
         <% @playlists.each do |playlist| %>
-          <%= button_to screen_screen_content_path(@screen), method: :post,
+          <%= button_to screen_content_path(@screen), method: :post,
               params: { screen_content: { contentable_type: "Playlist", contentable_id: playlist.to_param } },
               class: "w-full flex items-center justify-between px-4 py-3 hover:bg-gray-50 transition-colors text-left" do %>
             <div>
@@ -33,7 +33,7 @@
     <% if @experiences.any? %>
       <div class="divide-y divide-gray-100">
         <% @experiences.each do |experience| %>
-          <%= button_to screen_screen_content_path(@screen), method: :post,
+          <%= button_to screen_content_path(@screen), method: :post,
               params: { screen_content: { contentable_type: "Experience", contentable_id: experience.to_param } },
               class: "w-full flex items-center justify-between px-4 py-3 hover:bg-gray-50 transition-colors text-left" do %>
             <div>
@@ -52,7 +52,7 @@
   <%# Remove content %>
   <% if @screen.active_content %>
     <div class="pt-2">
-      <%= button_to "Remove content", screen_screen_content_path(@screen), method: :delete,
+      <%= button_to "Remove content", screen_content_path(@screen), method: :delete,
           class: "text-sm font-semibold text-red-600 hover:text-red-500",
           data: { turbo_confirm: "Remove content from this screen?" } %>
     </div>

@@ -21,7 +21,7 @@ module Api
           pairing_code: result.player.pairing_code,
           session_id: result.session.id,
           public_id: result.player.public_id,
-          expires_in: 600
+          expires_at: result.player.pairing_code_expires_at
         }, status: :created)
       end
 
