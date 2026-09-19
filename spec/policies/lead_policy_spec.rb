@@ -6,7 +6,8 @@ RSpec.describe LeadPolicy do
 
   context "when user is owner" do
     let(:user) { create(:user, account: account, role: "owner") }
-    let(:policy) { described_class.new(lead, user: user, account: account) }
+    let(:account_user) { user.membership_on(account) }
+    let(:policy) { described_class.new(lead, user: user, account: account, account_user: account_user) }
 
     it { expect(policy).to permit(:index?) }
     it { expect(policy).to permit(:show?) }
@@ -16,7 +17,8 @@ RSpec.describe LeadPolicy do
 
   context "when user is manager" do
     let(:user) { create(:user, account: account, role: "manager") }
-    let(:policy) { described_class.new(lead, user: user, account: account) }
+    let(:account_user) { user.membership_on(account) }
+    let(:policy) { described_class.new(lead, user: user, account: account, account_user: account_user) }
 
     it { expect(policy).to permit(:show?) }
     it { expect(policy).to permit(:update?) }
@@ -25,8 +27,9 @@ RSpec.describe LeadPolicy do
 
   context "when user is agent" do
     let(:user) { create(:user, account: account, role: "agent") }
+    let(:account_user) { user.membership_on(account) }
     let(:agent) { create(:agent, account: account, user: user) }
-    let(:policy) { described_class.new(lead, user: user, account: account) }
+    let(:policy) { described_class.new(lead, user: user, account: account, account_user: account_user) }
 
     it { expect(policy).to permit(:index?) }
     it { expect(policy).not_to permit(:destroy?) }
@@ -48,12 +51,13 @@ RSpec.describe LeadPolicy do
     let!(:own_lead) { create(:lead, account: account) }
     let!(:other_lead) { create(:lead, account: account) }
     let(:user) { create(:user, account: account, role: "agent") }
+    let(:account_user) { user.membership_on(account) }
     let(:agent) { create(:agent, account: account, user: user) }
 
     before { own_lead.lead_agents.create!(agent: agent) }
 
     it "returns only the agent's leads for agents" do
-      scope = described_class.new(own_lead, user: user, account: account)
+      scope = described_class.new(own_lead, user: user, account: account, account_user: account_user)
                              .apply_scope(Lead.all, type: :active_record_relation)
       expect(scope).to include(own_lead)
       expect(scope).not_to include(other_lead)
@@ -61,7 +65,8 @@ RSpec.describe LeadPolicy do
 
     it "returns all leads for managers" do
       manager = create(:user, account: account, role: "manager")
-      scope = described_class.new(own_lead, user: manager, account: account)
+      manager_au = manager.membership_on(account)
+      scope = described_class.new(own_lead, user: manager, account: account, account_user: manager_au)
                              .apply_scope(Lead.all, type: :active_record_relation)
       expect(scope).to include(own_lead, other_lead)
     end

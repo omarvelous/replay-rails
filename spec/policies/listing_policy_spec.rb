@@ -6,7 +6,8 @@ RSpec.describe ListingPolicy do
 
   context "when user is owner" do
     let(:user) { create(:user, account: account, role: "owner") }
-    let(:policy) { described_class.new(listing, user: user, account: account) }
+    let(:account_user) { user.membership_on(account) }
+    let(:policy) { described_class.new(listing, user: user, account: account, account_user: account_user) }
 
     it { expect(policy).to permit(:index?) }
     it { expect(policy).to permit(:show?) }
@@ -17,7 +18,8 @@ RSpec.describe ListingPolicy do
 
   context "when user is manager" do
     let(:user) { create(:user, account: account, role: "manager") }
-    let(:policy) { described_class.new(listing, user: user, account: account) }
+    let(:account_user) { user.membership_on(account) }
+    let(:policy) { described_class.new(listing, user: user, account: account, account_user: account_user) }
 
     it { expect(policy).to permit(:show?) }
     it { expect(policy).to permit(:create?) }
@@ -25,8 +27,9 @@ RSpec.describe ListingPolicy do
 
   context "when user is agent" do
     let(:user) { create(:user, account: account, role: "agent") }
+    let(:account_user) { user.membership_on(account) }
     let(:agent) { create(:agent, account: account, user: user) }
-    let(:policy) { described_class.new(listing, user: user, account: account) }
+    let(:policy) { described_class.new(listing, user: user, account: account, account_user: account_user) }
 
     it { expect(policy).to permit(:index?) }
     it { expect(policy).not_to permit(:create?) }
@@ -48,12 +51,13 @@ RSpec.describe ListingPolicy do
     let!(:own_listing) { create(:listing, account: account) }
     let!(:other_listing) { create(:listing, account: account) }
     let(:user) { create(:user, account: account, role: "agent") }
+    let(:account_user) { user.membership_on(account) }
     let(:agent) { create(:agent, account: account, user: user) }
 
     before { create(:listing_agent, listing: own_listing, agent: agent) }
 
     it "returns only the agent's listings for agents" do
-      scope = described_class.new(own_listing, user: user, account: account)
+      scope = described_class.new(own_listing, user: user, account: account, account_user: account_user)
                              .apply_scope(Listing.all, type: :active_record_relation)
       expect(scope).to include(own_listing)
       expect(scope).not_to include(other_listing)
@@ -61,7 +65,8 @@ RSpec.describe ListingPolicy do
 
     it "returns all listings for managers" do
       manager = create(:user, account: account, role: "manager")
-      scope = described_class.new(own_listing, user: manager, account: account)
+      manager_au = manager.membership_on(account)
+      scope = described_class.new(own_listing, user: manager, account: account, account_user: manager_au)
                              .apply_scope(Listing.all, type: :active_record_relation)
       expect(scope).to include(own_listing, other_listing)
     end
@@ -69,8 +74,9 @@ RSpec.describe ListingPolicy do
     it "excludes listings from other accounts" do
       other_account_listing = ActsAsTenant.without_tenant { create(:listing) }
       manager = create(:user, account: account, role: "manager")
+      manager_au = manager.membership_on(account)
       ActsAsTenant.with_tenant(account) do
-        scope = described_class.new(own_listing, user: manager, account: account)
+        scope = described_class.new(own_listing, user: manager, account: account, account_user: manager_au)
                                .apply_scope(Listing.all, type: :active_record_relation)
         expect(scope).not_to include(other_account_listing)
       end

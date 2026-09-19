@@ -3,7 +3,8 @@ RSpec.shared_examples "default policy" do |policy_class|
 
   context "when user is owner" do
     let(:user) { create(:user, account: account, role: "owner") }
-    let(:policy) { policy_class.new(nil, user: user, account: account) }
+    let(:account_user) { user.membership_on(account) }
+    let(:policy) { policy_class.new(nil, user: user, account: account, account_user: account_user) }
 
     it { expect(policy).to permit(:index?) }
     it { expect(policy).to permit(:show?) }
@@ -14,7 +15,8 @@ RSpec.shared_examples "default policy" do |policy_class|
 
   context "when user is manager" do
     let(:user) { create(:user, account: account, role: "manager") }
-    let(:policy) { policy_class.new(nil, user: user, account: account) }
+    let(:account_user) { user.membership_on(account) }
+    let(:policy) { policy_class.new(nil, user: user, account: account, account_user: account_user) }
 
     it { expect(policy).to permit(:index?) }
     it { expect(policy).to permit(:show?) }
@@ -25,7 +27,8 @@ RSpec.shared_examples "default policy" do |policy_class|
 
   context "when user is agent" do
     let(:user) { create(:user, account: account, role: "agent") }
-    let(:policy) { policy_class.new(nil, user: user, account: account) }
+    let(:account_user) { user.membership_on(account) }
+    let(:policy) { policy_class.new(nil, user: user, account: account, account_user: account_user) }
 
     it { expect(policy).to permit(:index?) }
     it { expect(policy).to permit(:show?) }

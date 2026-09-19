@@ -66,20 +66,27 @@ RSpec.describe User do
     let(:account) { create(:account) }
     let(:user) { create(:user, account: account, role: "manager") }
 
-    describe "#roles_on" do
-      it "returns all roles for the account" do
-        create(:account_user, account: account, user: user, role: "agent")
-        expect(user.roles_on(account)).to contain_exactly("manager", "agent")
+    describe "#membership_on" do
+      it "returns the AccountUser for the account" do
+        au = user.membership_on(account)
+        expect(au).to be_an(AccountUser)
+        expect(au.role).to eq("manager")
+      end
+
+      it "returns nil for non-member" do
+        other_account = create(:account)
+        expect(user.membership_on(other_account)).to be_nil
       end
     end
 
-    describe "#has_role?" do
-      it "returns true when user has the role" do
-        expect(user.has_role?("manager", account)).to be true
+    describe "#member_of?" do
+      it "returns true when user is a member" do
+        expect(user.member_of?(account)).to be true
       end
 
-      it "returns false when user does not have the role" do
-        expect(user.has_role?("owner", account)).to be false
+      it "returns false for non-members" do
+        other_account = create(:account)
+        expect(user.member_of?(other_account)).to be false
       end
     end
 
@@ -107,24 +114,6 @@ RSpec.describe User do
       it "returns false for agents" do
         agent = create(:user, account: account, role: "agent")
         expect(agent.can_manage?(account)).to be false
-      end
-    end
-
-    describe "#agent_on?" do
-      it "returns true when user has agent role" do
-        agent = create(:user, account: account, role: "agent")
-        expect(agent.agent_on?(account)).to be true
-      end
-    end
-
-    describe "#member_of?" do
-      it "returns true when user is a member" do
-        expect(user.member_of?(account)).to be true
-      end
-
-      it "returns false for non-members" do
-        other_account = create(:account)
-        expect(user.member_of?(other_account)).to be false
       end
     end
   end

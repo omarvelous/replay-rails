@@ -1,5 +1,5 @@
 class AgentPolicy < ApplicationPolicy
-  def update? = user.can_manage?(account) || own_profile?
+  def update? = manager_or_above? || own_profile?
   def edit?   = update?
 
   private

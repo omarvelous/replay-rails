@@ -21,21 +21,20 @@ RSpec.describe "AccountUsers (Roles)" do
   describe "POST /users/:user_id/account_users" do
     let(:member) { create(:user, account: account, role: "agent") }
 
-    it "adds a role to the user" do
-      expect {
-        post user_roles_path(member), params: { account_user: { role: "manager" } }
-      }.to change { member.account_users.where(account: account).count }.by(1)
+    it "changes the user's role" do
+      post user_roles_path(member), params: { account_user: { role: "manager" } }
+      expect(member.membership_on(account).reload.role).to eq("manager")
     end
 
     it "redirects with notice on success" do
       post user_roles_path(member), params: { account_user: { role: "manager" } }
       expect(response).to redirect_to(user_roles_path(member))
-      expect(flash[:notice]).to eq("Role added.")
     end
 
-    it "rejects duplicate roles" do
+    it "allows setting the same role (no-op update)" do
       post user_roles_path(member), params: { account_user: { role: "agent" } }
-      expect(response).to have_http_status(:unprocessable_content)
+      expect(response).to redirect_to(user_roles_path(member))
+      expect(member.membership_on(account).reload.role).to eq("agent")
     end
 
     it "rejects invalid roles" do

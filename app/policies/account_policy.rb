@@ -1,5 +1,5 @@
 class AccountPolicy < ApplicationPolicy
-  def update?  = user&.owner_of?(account)
+  def update?  = owner?
   def edit?    = update?
-  def destroy? = user&.owner_of?(account)
+  def destroy? = owner?
 end

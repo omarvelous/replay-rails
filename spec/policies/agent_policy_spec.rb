@@ -6,7 +6,8 @@ RSpec.describe AgentPolicy do
 
   context "when user is manager" do
     let(:user) { create(:user, account: account, role: "manager") }
-    let(:policy) { described_class.new(agent, user: user, account: account) }
+    let(:account_user) { user.membership_on(account) }
+    let(:policy) { described_class.new(agent, user: user, account: account, account_user: account_user) }
 
     it { expect(policy).to permit(:index?) }
     it { expect(policy).to permit(:show?) }
@@ -17,7 +18,8 @@ RSpec.describe AgentPolicy do
 
   context "when user is agent" do
     let(:user) { create(:user, account: account, role: "agent") }
-    let(:policy) { described_class.new(agent, user: user, account: account) }
+    let(:account_user) { user.membership_on(account) }
+    let(:policy) { described_class.new(agent, user: user, account: account, account_user: account_user) }
 
     it { expect(policy).to permit(:index?) }
     it { expect(policy).to permit(:show?) }

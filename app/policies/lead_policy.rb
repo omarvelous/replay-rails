@@ -1,10 +1,10 @@
 class LeadPolicy < ApplicationPolicy
-  def show?    = user.can_manage?(account) || owns_lead?
-  def update?  = user.can_manage?(account) || owns_lead?
-  def destroy? = user.can_manage?(account)
+  def show?    = manager_or_above? || owns_lead?
+  def update?  = manager_or_above? || owns_lead?
+  def destroy? = manager_or_above?
 
   scope_for :active_record_relation do |relation|
-    if user.can_manage?(account)
+    if manager_or_above?
       relation
     else
       relation.joins(:lead_agents)

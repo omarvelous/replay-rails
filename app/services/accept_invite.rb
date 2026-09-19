@@ -7,7 +7,9 @@ class AcceptInvite
   def call
     @invite.transaction do
       @invite.update!(accepted_at: Time.current)
-      AccountUser.create!(account: @invite.account, user: @user, role: @invite.role)
+
+      membership = AccountUser.find_or_initialize_by(account: @invite.account, user: @user)
+      membership.update!(role: @invite.role)
       link_agent_profile if @invite.role == "agent"
     end
   end
