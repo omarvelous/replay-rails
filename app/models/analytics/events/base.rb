@@ -8,6 +8,8 @@ module Analytics
       class_attribute :event_name, instance_writer: false
       class_attribute :event_context, instance_writer: false
 
+      attribute :account_pid, :string
+
       attr_accessor :request
 
       def create
