@@ -71,18 +71,34 @@ No implementation code is written without a failing spec. Factories are created 
 Uses Rails 8 built-in authentication with a many-to-many Account-User relationship:
 
 - `Account` — Tenant model. All resources are scoped to an account.
-- `User` — Has `email_address` and `password_digest`. Can belong to multiple accounts.
-- `AccountUser` — Join model between User and Account. Carries the `role` (owner, manager, agent).
+- `User` — Has `email_address` and `password_digest`. Can belong to multiple accounts (e.g., agent at multiple brokerages).
+- `AccountUser` — Membership record. One per user per account, carrying the `role` (owner, manager, agent). Roles are hierarchical: owner > manager > agent.
 - `Session` — Tracks active sessions per user.
-- `Current` — `ActiveSupport::CurrentAttributes` provides `Current.user` and `Current.account` throughout the request.
+- `Current` — `ActiveSupport::CurrentAttributes` provides `Current.user`, `Current.account`, and `Current.account_user` throughout the request.
 
-`Current.session` is set on login/session resume. `Current.account` is derived from the user's first account. Role checks go through the `Authorizable` concern on User (`user.can_manage?(account)`, `user.owner_of?(account)`) which queries `AccountUser` records.
+`Current.session` is set on login/session resume. `Current.account` is derived from the user's first account. `Current.account_user` lazy-loads the user's membership on the current account — one query, cached for the entire request.
 
-The `Authentication` concern exposes `current_user` and `current_account` as public on-demand methods. They call `resume_session` lazily and read from `Current`. This is important because Ahoy's controller skips before_actions — `current_user` works without callbacks having run (same pattern as Devise's `current_user`).
+Role checks use `AccountUser#at_least?` for hierarchical comparison:
 
 ```ruby
-current_user     # → calls resume_session, returns Current.user
-current_account  # → calls resume_session, returns Current.account
+Current.account_user.at_least?("manager")  # true for owner or manager
+Current.account_user.role == "owner"        # true for owner only
+```
+
+`ApplicationPolicy` provides convenience methods used across all policies:
+
+```ruby
+owner?             # account_user.role == "owner"
+manager_or_above?  # account_user.at_least?("manager")
+agent_or_above?    # account_user.at_least?("agent")
+```
+
+The `Authentication` concern exposes `current_user`, `current_account`, and `current_account_user` as public methods. They call `resume_session` lazily and read from `Current`.
+
+```ruby
+current_user          # → Current.user
+current_account       # → Current.account
+current_account_user  # → Current.account_user (lazy-loaded)
 ```
 
 At sign-in, `ahoy.authenticate(user)` associates the Ahoy visit with the user.
