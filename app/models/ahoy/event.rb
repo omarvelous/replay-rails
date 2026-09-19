@@ -5,4 +5,6 @@ class Ahoy::Event < ApplicationRecord
 
   belongs_to :visit
   belongs_to :user, optional: true
+
+  scope :for_account, ->(account) { where_properties(account_pid: account.public_id) }
 end

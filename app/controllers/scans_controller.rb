@@ -14,6 +14,7 @@ class ScansController < ApplicationController
 
     Analytics::Events::QrScanned.create(
       qr_code_pid: qr.public_id,
+      account_pid: qr.account&.public_id,
       destination_url: destination,
       request: request
     )
