@@ -31,16 +31,16 @@ RSpec.describe DashboardPresenter do
   describe "#impressions_month" do
     it "counts content.impressed events for the account" do
       visit = create(:ahoy_visit)
-      Ahoy::Event.create!(visit: visit, name: "content.impressed", time: 1.day.ago, account_id: account.id, properties: {})
-      Ahoy::Event.create!(visit: visit, name: "content.impressed", time: 1.day.ago, account_id: account.id, properties: {})
-      Ahoy::Event.create!(visit: visit, name: "qr.scanned", time: 1.day.ago, account_id: account.id, properties: {})
+      Ahoy::Event.create!(visit: visit, name: "content.impressed", time: 1.day.ago, properties: { "account_pid" => account.public_id })
+      Ahoy::Event.create!(visit: visit, name: "content.impressed", time: 1.day.ago, properties: { "account_pid" => account.public_id })
+      Ahoy::Event.create!(visit: visit, name: "qr.scanned", time: 1.day.ago, properties: { "account_pid" => account.public_id })
 
       expect(presenter.impressions_month).to eq(2)
     end
 
     it "excludes events older than the period" do
       visit = create(:ahoy_visit)
-      Ahoy::Event.create!(visit: visit, name: "content.impressed", time: 31.days.ago, account_id: account.id, properties: {})
+      Ahoy::Event.create!(visit: visit, name: "content.impressed", time: 31.days.ago, properties: { "account_pid" => account.public_id })
 
       expect(presenter.impressions_month).to eq(0)
     end
@@ -49,7 +49,7 @@ RSpec.describe DashboardPresenter do
   describe "#scans_month" do
     it "counts qr.scanned events for the account" do
       visit = create(:ahoy_visit)
-      Ahoy::Event.create!(visit: visit, name: "qr.scanned", time: 1.day.ago, account_id: account.id, properties: {})
+      Ahoy::Event.create!(visit: visit, name: "qr.scanned", time: 1.day.ago, properties: { "account_pid" => account.public_id })
 
       expect(presenter.scans_month).to eq(1)
     end
@@ -85,9 +85,9 @@ RSpec.describe DashboardPresenter do
   describe "#chart_impressions" do
     it "returns impressions grouped by day" do
       visit = create(:ahoy_visit)
-      Ahoy::Event.create!(visit: visit, name: "content.impressed", time: Date.yesterday.noon, account_id: account.id, properties: {})
-      Ahoy::Event.create!(visit: visit, name: "content.impressed", time: Date.yesterday.noon, account_id: account.id, properties: {})
-      Ahoy::Event.create!(visit: visit, name: "content.impressed", time: Date.current.noon, account_id: account.id, properties: {})
+      Ahoy::Event.create!(visit: visit, name: "content.impressed", time: Date.yesterday.noon, properties: { "account_pid" => account.public_id })
+      Ahoy::Event.create!(visit: visit, name: "content.impressed", time: Date.yesterday.noon, properties: { "account_pid" => account.public_id })
+      Ahoy::Event.create!(visit: visit, name: "content.impressed", time: Date.current.noon, properties: { "account_pid" => account.public_id })
 
       result = presenter.chart_impressions
       expect(result[Date.yesterday]).to eq(2)

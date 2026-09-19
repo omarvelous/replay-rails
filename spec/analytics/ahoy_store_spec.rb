@@ -31,17 +31,4 @@ RSpec.describe "Ahoy Store configuration", type: :model do # rubocop:disable RSp
       expect(exclude.call(nil, request)).to be false
     end
   end
-
-  describe "account_id enrichment" do
-    it "Current.account provides account_id when available" do
-      account = create(:account)
-      allow(Current).to receive(:account).and_return(account)
-      expect(Current.account.id).to eq(account.id)
-    end
-
-    it "event properties provide account_id fallback" do
-      props = { "account_id" => 42 }.with_indifferent_access
-      expect(props[:account_id]).to eq(42)
-    end
-  end
 end

@@ -52,6 +52,6 @@ class DashboardPresenter
   private
 
   def account_events
-    Ahoy::Event.where(account_id: account.id).where("time > ?", @period.ago)
+    Ahoy::Event.for_account(account).where("time > ?", @period.ago)
   end
 end

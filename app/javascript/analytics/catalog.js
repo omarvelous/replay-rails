@@ -5,6 +5,7 @@ export const EVENTS = {
       screen_pid:         { required: true },
       screen_content_pid: { required: true },
       playlist_pid:       { required: true },
+      account_pid:        { required: true },
       position:           { required: true },
       duration:           { required: true },
     }
@@ -13,6 +14,7 @@ export const EVENTS = {
     properties: {
       screen_pid:         { required: true },
       screen_content_pid: { required: true },
+      account_pid:        { required: true },
       content_type:       { required: true },
       content_pid:        { required: true },
     }
@@ -22,6 +24,7 @@ export const EVENTS = {
       experience_pid:     { required: true },
       screen_pid:         { required: true },
       screen_content_pid: { required: true },
+      account_pid:        { required: true },
     }
   },
   "interaction.ended": {
@@ -29,6 +32,7 @@ export const EVENTS = {
       experience_pid:     { required: true },
       screen_pid:         { required: true },
       screen_content_pid: { required: true },
+      account_pid:        { required: true },
       duration:           { required: true },
     }
   },
@@ -36,6 +40,7 @@ export const EVENTS = {
     properties: {
       experience_pid:     { required: true },
       screen_content_pid: { required: true },
+      account_pid:        { required: true },
       direction:          { required: true },
       photo_index:        { required: true },
     }
@@ -44,6 +49,7 @@ export const EVENTS = {
     properties: {
       experience_pid:     { required: true },
       screen_content_pid: { required: true },
+      account_pid:        { required: true },
       target:             { required: true },
     }
   },
@@ -51,6 +57,7 @@ export const EVENTS = {
     properties: {
       experience_pid:     { required: true },
       screen_content_pid: { required: true },
+      account_pid:        { required: true },
       target:             { required: true },
       view_duration:      { required: true },
     }
@@ -59,6 +66,7 @@ export const EVENTS = {
     properties: {
       screen_pid:    { required: true },
       player_pid:    { required: true },
+      account_pid:   { required: true },
     }
   }
 }

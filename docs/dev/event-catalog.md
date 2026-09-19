@@ -96,14 +96,17 @@ custom session_id — Ahoy visits ARE the sessions.
 
 ## Account Association
 
-- **App subdomain** — `current_account` resolves account from
-  session cookie via `resume_session`. Set on visits and events
-  by `Ahoy::Store`.
-- **Player subdomain** — No authenticated session. `account_pid`
-  passed as event property from the template, promoted to the
-  column by the Store.
+Account context flows through `account_pid` in event properties
+(jsonb). No custom Ahoy::Store — the default DatabaseStore is used.
+
+- **Player subdomain** — `account_pid` passed as event property
+  from the template data attributes.
+- **Server-side events** — `account_pid` set explicitly (e.g.,
+  `qr.account.public_id` for QrScanned).
 - **Admin subdomain** — Excluded from tracking via
   `Ahoy.exclude_method`.
+
+Query events by account: `Ahoy::Event.for_account(account)`.
 
 ## Visit Attribution
 
