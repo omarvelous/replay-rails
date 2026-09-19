@@ -34,6 +34,10 @@ class Player < ApplicationRecord
     app_version.present?
   end
 
+  def revoke_all_sessions!
+    player_sessions.active.each(&:revoke!)
+  end
+
   def refresh_pairing_code!
     update!(
       pairing_code: SecureRandom.alphanumeric(6).upcase,
