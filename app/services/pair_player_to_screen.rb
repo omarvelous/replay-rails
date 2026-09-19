@@ -24,17 +24,9 @@ class PairPlayerToScreen
       player.update!(pairing_code: nil, pairing_code_expires_at: nil)
     end
 
-    # Revoke existing sessions and create a new one
-    player.player_sessions.active.each(&:revoke!)
-    new_session = player.player_sessions.create!(
-      ip_address: player.ip_address,
-      user_agent: player.user_agent
-    )
+    player.revoke_all_sessions!
 
-    ActionCable.server.broadcast("pairing_#{@code}", {
-      paired: true,
-      session_id: new_session.id
-    })
+    ActionCable.server.broadcast("pairing_#{@code}", { paired: true })
 
     Result.new(success?: true)
   end
