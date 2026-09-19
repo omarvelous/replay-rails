@@ -8,7 +8,7 @@ RSpec.describe AnalyticsRollupJob do
   it "creates rollup entries from ahoy events" do
     account = create(:account)
     visit = Ahoy::Visit.create!(visit_token: SecureRandom.hex, visitor_token: SecureRandom.hex, started_at: Time.current)
-    Ahoy::Event.create!(visit: visit, name: "content.impressed", properties: {}, time: Time.current, account_id: account.id)
+    Ahoy::Event.create!(visit: visit, name: "content.impressed", time: Time.current, properties: { "account_pid" => account.public_id })
 
     described_class.perform_now
 
