@@ -172,14 +172,14 @@ attribute :screen_pid, :string   # NOT :screen_id
 
 Unified event tracking via Ahoy with governed event definitions.
 
-- **Ahoy** — visits, events, page views across all subdomains. `ahoy_visits` and `ahoy_events` tables with custom `account_id` column.
+- **Ahoy** — visits, events, page views across all subdomains. `ahoy_visits` and `ahoy_events` tables.
 - **Governed events** — ActiveModel POROs in `app/models/analytics/events/`. Each event has typed attributes and validations. Create with `Analytics::Events::ContentImpressed.create(...)`.
 - **JS analytics wrapper** — `app/javascript/analytics/` mirrors Ruby POROs. `Analytics.create("event.name", { ... })` validates before calling `ahoy.track()`.
 - **ahoy-email** — `has_history` + `track_clicks` on mailers for open/click tracking.
 - **rollups** — `AnalyticsRollupJob` aggregates daily metrics per account. Scheduled via Solid Queue.
 - **Page views** — `ahoy.trackView()` fires on initial load and `turbo:load` events.
 - **Exclusions** — Admin subdomain excluded via `Ahoy.exclude_method`.
-- **Account on events** — Set via `Ahoy::Store` from `current_account` (app) or event properties (player).
+- **Account on events** — `account_pid` flows through event properties (jsonb). No custom Ahoy::Store — the default DatabaseStore is used. Query with `Ahoy::Event.for_account(account)` scope.
 - **Visitable** — `Lead`, `Inquiry` use `visitable :ahoy_visit` for visit attribution.
 - **QR scans** — Tracked as `qr.scanned` Ahoy events. `QrCode#scan_events` queries events by qr_code_id. Lead attribution flows through the visit's `qr.scanned` event. QR codes are contextual — each carries a `creative` (polymorphic: Ad, Experience) and optional `screen_content` for full attribution from the token alone. `listing.qr_code_for(creative: ad, screen_content: sc)` finds or creates the right QR code.
 

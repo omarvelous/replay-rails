@@ -31,5 +31,4 @@ RSpec.describe "Ahoy Store configuration", type: :model do # rubocop:disable RSp
       expect(exclude.call(nil, request)).to be false
     end
   end
-
 end
