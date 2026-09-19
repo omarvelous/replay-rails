@@ -1,9 +1,5 @@
 class ApplicationPolicy < ActionPolicy::Base
-  # account_user is optional for unauthenticated invite acceptance.
-  # Once InviteAcceptancesController is split out, this can become required.
-  authorize :user, optional: true
-  authorize :account, optional: true
-  authorize :account_user, optional: true
+  authorize :user, :account, :account_user
 
   def index?   = true
   def show?    = true
@@ -19,17 +15,15 @@ class ApplicationPolicy < ActionPolicy::Base
 
   private
 
-  # Safe for unauthenticated contexts (invite acceptance).
-  # Once InviteAcceptancesController is split out, the &. can be removed.
   def owner?
-    account_user&.role == "owner"
+    account_user.role == "owner"
   end
 
   def manager_or_above?
-    account_user&.at_least?("manager") || false
+    account_user.at_least?("manager")
   end
 
   def agent_or_above?
-    account_user&.at_least?("agent") || false
+    account_user.at_least?("agent")
   end
 end
