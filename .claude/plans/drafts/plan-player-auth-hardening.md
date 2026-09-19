@@ -1,127 +1,178 @@
-# Plan: Player Auth Hardening
+# Plan v2: Player Auth Hardening
 
-**Created:** 2026-09-16
+**Created:** 2026-09-16 (v1), **Updated:** 2026-09-19 (v2)
 **Status:** Draft
-**Branch:** `player-auth-hardening`
 
-## Problem
+## Context
 
-Security audit of the player pairing and authentication flow identified
-four important issues and three minor ones. No critical vulnerabilities,
-but these fixes close gaps before production launch.
+v1 identified 7 issues. Since then, the auth architecture changed
+significantly:
 
-## Important Fixes
+- `PlayerSession` model exists — cookie-based auth via signed
+  `player_session_id` cookie
+- `RegisterPlayer` service creates player + session together
+- `PlayerAuthentication` concern handles session resume from cookie
+- Cookie has `expires: 1.year.from_now`, `httponly`, `secure`
+- `PairPlayerToScreen` service handles pairing orchestration
+- Rate limit on player registration
 
-### 1. Remove token from pairing broadcast
+**Already resolved (3 of 7):**
+- ~~Issue #2 (cookie expiry)~~ — `expires: 1.year.from_now` set
+- ~~Issue #6 (bare rescue)~~ — already `rescue StandardError`
+- ~~Issue #7 (rate limit)~~ — already on `create` action
 
-`PairPlayerToScreen` broadcasts `{ paired: true, token: player.token }`
-on the PairingChannel. The JS client only checks `msg.paired` — it
-already has the token from registration. The PairingChannel allows
-unauthenticated subscriptions, so anyone who guesses the 6-char code
-could intercept the token.
+**Still open (3 issues, updated for new architecture):**
 
-**Fix:** Remove `token` (and any other sensitive data) from the
-broadcast payload. Only send `{ paired: true }`.
+---
+
+## Issue 1: Sensitive data in pairing broadcast
+
+**Current:** `PairPlayerToScreen` broadcasts:
+```ruby
+ActionCable.server.broadcast("pairing_#{@code}", {
+  paired: true,
+  session_id: new_session.id
+})
+```
+
+`session_id` is a `PlayerSession` integer ID. The `PairingChannel`
+allows unauthenticated subscriptions, so anyone who guesses the
+6-char code could intercept this ID. Combined with issue #2, this
+is exploitable.
+
+**Fix:** Broadcast only `{ paired: true }`. The device already has
+its session cookie from registration — it doesn't need the session
+ID from the broadcast. The JS `onPaired()` handler just redirects
+to `/player` which authenticates via the cookie.
 
 **File:** `app/services/pair_player_to_screen.rb`
 
-### 2. Set cookie expiration
+---
 
-The `player_token` cookie has no `expires` — it's a session cookie
-that disappears when the browser closes. On Fire TV Silk or Android
-WebView, "closing the browser" is unpredictable. These are long-lived
-device tokens that should persist.
+## Issue 2: PairingChannel accepts any code
 
-**Fix:** Add `expires: 1.year.from_now` to the cookie options in
-the Play `authenticate` action.
+**Current:** `PairingChannel#subscribed` streams from any code
+without verification:
 
-**File:** `app/controllers/play/players_controller.rb`
+```ruby
+def subscribed
+  code = params[:code]
+  stream_from "pairing_#{code}" if code.present?
+end
+```
 
-### 3. Validate PairingChannel subscriptions
+Anyone can subscribe to `pairing_ABCDEF` without the code being
+real or active. With issue #1 fixed (no session_id in broadcast),
+the impact is reduced — an attacker learns when *some* device gets
+paired, but can't hijack the session. Still worth fixing for
+defense in depth.
 
-Any WebSocket connection can subscribe to `pairing_#{code}` without
-checking if the code is real or active. Combined with issue #1, this
-allows token interception.
+**Fix:** Look up the code and reject if invalid/expired:
 
-**Fix:** Look up the pairing code in the database and reject the
-subscription if the code doesn't exist or is expired.
+```ruby
+def subscribed
+  code = params[:code]
+  player = Player.find_by(pairing_code: code)
+
+  if player&.pairing_code_valid?
+    stream_from "pairing_#{code}"
+  else
+    reject
+  end
+end
+```
 
 **File:** `app/channels/pairing_channel.rb`
 
-### 4. Token rotation on re-pairing
+---
 
-Player tokens are generated once at creation and never change. A
-leaked token grants permanent access with no way to revoke it short
-of deleting the player record.
+## Issue 3: Revoke old sessions on re-pairing
 
-**Fix:** Add `rotate_token!` to Player that generates a new token.
-Call it in `PairPlayerToScreen#call` after pairing. The device gets
-the new token on the next `/players/authenticate` call (which happens
-after `onPaired()` fires — the JS should call authenticate again
-before redirecting).
+**Current:** When a player is re-paired (e.g., moved to a different
+screen), old `PlayerSession` records remain active. If a device's
+cookie is compromised, the session can't be invalidated without
+manually finding and revoking it.
 
-**Files:** `app/models/player.rb`, `app/services/pair_player_to_screen.rb`,
-`app/javascript/controllers/device_pairing_controller.js`
+`PairPlayerToScreen` unpairs old screen assignments but doesn't
+touch sessions.
 
-## Minor Fixes
+**Fix:** Revoke all active sessions for the player when re-pairing.
+The device's next request to `/player` will fail auth (session
+revoked), redirect to `/player/new`, and re-register with a fresh
+session. The device self-heals on next page load.
 
-### 5. Landing page cookie check
+```ruby
+# In PairPlayerToScreen#call, after pairing:
+player.player_sessions.active.each(&:revoke!)
+```
 
-If localStorage has `player_public_id` but the cookie is cleared,
-the landing page redirects to `/players/new` and re-registers —
-orphaning the old player. Could check the cookie first.
+Add convenience method to Player:
 
-**Fix:** In the landing page script, attempt a fetch to
-`/v1/player` before redirecting to `/players/new`. If 401,
-clear localStorage and redirect to new. If 200, redirect to
-`/players/${publicId}`.
+```ruby
+def revoke_all_sessions!
+  player_sessions.active.each(&:revoke!)
+end
+```
 
-**File:** `app/views/play/players/landing.html.erb`
+**Files:** `app/services/pair_player_to_screen.rb`,
+`app/models/player.rb`
 
-### 6. Explicit rescue in ActionCable connection
+---
 
-The bare `rescue` in `ApplicationCable::Connection#connect` catches
-all exceptions including `Exception` subclasses (SignalException, etc.).
+## Bonus: Landing page resilience
 
-**Fix:** Change to `rescue StandardError`.
+**Current behavior when cookie is cleared but device was paired:**
 
-**File:** `app/channels/application_cable/connection.rb`
+1. Device loads `/` (landing page)
+2. Landing JS checks for `player_session_id` cookie — missing
+3. Redirects to `/player/new` — registers as new player
+4. Old player record orphaned
 
-### 7. Rate limit on authenticate endpoint
+This is acceptable — `PlayerCleanupJob` handles orphans. The
+current `device_pairing_controller.js` checks `localStorage`
+before registering. Verify this path works correctly after session
+revocation (issue #3).
 
-The `/players/authenticate` endpoint has no rate limit. Token entropy
-(256 bits) makes brute-force infeasible, but defense in depth is good.
+**No code change needed** — just verification in specs.
 
-**Fix:** Add `rate_limit to: 10, within: 1.minute, only: :authenticate`.
+---
 
-**File:** `app/controllers/play/players_controller.rb`
+## Build Order
 
-## Execution
+```
+1. Remove session_id from pairing broadcast
+2. Update PairPlayerToScreen spec
+3. COMMIT
 
-### Step 1 — Remove token from pairing broadcast
-- Update `PairPlayerToScreen` to broadcast only `{ paired: true }`
-- Update spec
+4. RED:  PairingChannel spec — invalid/expired codes rejected
+5. GREEN: Add code validation in PairingChannel#subscribed
+6. COMMIT
 
-### Step 2 — Set cookie expiration
-- Add `expires: 1.year.from_now` to cookie in `authenticate` action
-- Update spec to verify expiry is set
+7. Add Player#revoke_all_sessions!
+8. Call in PairPlayerToScreen after pairing
+9. Update specs
+10. COMMIT
+```
 
-### Step 3 — Validate PairingChannel subscriptions (TDD)
-- **RED:** Channel spec asserting invalid/expired codes are rejected
-- **GREEN:** Add code lookup + expiry check in `PairingChannel#subscribed`
+---
 
-### Step 4 — Token rotation on re-pairing (TDD)
-- **RED:** Model spec for `Player#rotate_token!`, service spec asserting token changes on pairing
-- **GREEN:** Implement `rotate_token!`, call in `PairPlayerToScreen`
-- Update pairing JS to call `/players/authenticate` after pairing completes (before redirect)
+## Verification
 
-### Step 5 — Landing page cookie check
-- Update landing page script to fetch API status before defaulting to re-registration
+1. `make test` — green
+2. Pair a device — broadcast contains only `{ paired: true }`
+3. Subscribe to PairingChannel with invalid code — rejected
+4. Re-pair a device — old sessions revoked
+5. Device with revoked session loads `/` — re-registers cleanly
 
-### Step 6 — Explicit rescue + rate limit
-- Change bare `rescue` to `rescue StandardError` in connection.rb
-- Add rate limit to authenticate action
+---
 
-### Step 7 — Ship
-- `make lint`, `make test`
-- Push, create PR
+## Files Changed
+
+| File | Change |
+|------|--------|
+| `app/services/pair_player_to_screen.rb` | Remove session_id from broadcast, revoke old sessions |
+| `app/channels/pairing_channel.rb` | Validate code before subscribing |
+| `app/models/player.rb` | Add `revoke_all_sessions!` |
+| `spec/services/pair_player_to_screen_spec.rb` | Update broadcast assertion, add session revocation test |
+| `spec/channels/pairing_channel_spec.rb` | Add rejection tests |
+| `spec/models/player_spec.rb` | Add revoke_all_sessions! test |

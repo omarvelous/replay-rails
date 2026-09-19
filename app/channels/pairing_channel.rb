@@ -1,6 +1,11 @@
 class PairingChannel < ActionCable::Channel::Base
   def subscribed
-    code = params[:code]
-    stream_from "pairing_#{code}" if code.present?
+    player = Player.find_by(pairing_code: params[:code])
+
+    if player&.pairing_code_valid?
+      stream_from "pairing_#{params[:code]}"
+    else
+      reject
+    end
   end
 end
