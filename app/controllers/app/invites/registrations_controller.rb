@@ -48,7 +48,7 @@ module App
     private
 
       def set_invite
-        @invite = Invite.find_by!(token: params[:token])
+        @invite = Invite.find_by!(token: params[:invite_token])
       end
 
       def user_params

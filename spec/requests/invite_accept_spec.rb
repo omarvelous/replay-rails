@@ -10,7 +10,7 @@ RSpec.describe "Invite Registration Flow" do
         invite = create(:invite, account: account, email: owner.email_address, role: "manager", invited_by: owner)
         sign_in(owner)
 
-        get invite_registration_path(token: invite.token)
+        get invite_registration_path(invite_token: invite.token)
 
         expect(invite.reload).to be_accepted
         expect(owner.membership_on(account).reload.role).to eq("manager")
@@ -23,7 +23,7 @@ RSpec.describe "Invite Registration Flow" do
         invite = create(:invite, account: account, email: "other@example.com", invited_by: owner)
         sign_in(owner)
 
-        get invite_registration_path(token: invite.token)
+        get invite_registration_path(invite_token: invite.token)
         expect(response).to redirect_to(app_root_path)
       end
     end
@@ -33,7 +33,7 @@ RSpec.describe "Invite Registration Flow" do
         create(:user, email_address: "invited@example.com")
         invite = create(:invite, account: account, email: "invited@example.com", invited_by: owner)
 
-        get invite_registration_path(token: invite.token)
+        get invite_registration_path(invite_token: invite.token)
         expect(response).to redirect_to(new_session_path)
       end
     end
@@ -42,7 +42,7 @@ RSpec.describe "Invite Registration Flow" do
       it "shows the registration form" do
         invite = create(:invite, account: account, email: "newuser@example.com", invited_by: owner)
 
-        get invite_registration_path(token: invite.token)
+        get invite_registration_path(invite_token: invite.token)
         expect(response).to be_successful
         expect(response.body).to include("Join RePlay")
         expect(response.body).to include("newuser@example.com")
@@ -53,7 +53,7 @@ RSpec.describe "Invite Registration Flow" do
       it "shows the expired page" do
         invite = create(:invite, account: account, email: "expired@example.com", invited_by: owner, created_at: 8.days.ago)
 
-        get invite_registration_path(token: invite.token)
+        get invite_registration_path(invite_token: invite.token)
         expect(response).to be_successful
         expect(response.body).to include("Invite expired")
       end
@@ -63,7 +63,7 @@ RSpec.describe "Invite Registration Flow" do
       it "redirects with notice" do
         invite = create(:invite, account: account, email: "done@example.com", invited_by: owner, accepted_at: 1.day.ago)
 
-        get invite_registration_path(token: invite.token)
+        get invite_registration_path(invite_token: invite.token)
         expect(response).to redirect_to(app_root_path)
       end
     end
@@ -74,7 +74,7 @@ RSpec.describe "Invite Registration Flow" do
 
     context "with valid params" do
       it "creates a user, accepts the invite, and starts a session" do
-        patch invite_registration_path(token: invite.token), params: {
+        patch invite_registration_path(invite_token: invite.token), params: {
           user: { first_name: "New", last_name: "Agent", phone: "+12125559999",
                   password: "password123", password_confirmation: "password123" }
         }
@@ -90,7 +90,7 @@ RSpec.describe "Invite Registration Flow" do
 
     context "with invalid params" do
       it "re-renders the form" do
-        patch invite_registration_path(token: invite.token), params: {
+        patch invite_registration_path(invite_token: invite.token), params: {
           user: { first_name: "", last_name: "", password: "short" }
         }
         expect(response).to have_http_status(:unprocessable_content)
@@ -101,7 +101,7 @@ RSpec.describe "Invite Registration Flow" do
       it "redirects with alert" do
         expired_invite = create(:invite, account: account, email: "late@example.com",
                                 invited_by: owner, created_at: 8.days.ago)
-        patch invite_registration_path(token: expired_invite.token), params: {
+        patch invite_registration_path(invite_token: expired_invite.token), params: {
           user: { first_name: "Late", last_name: "User", password: "password123",
                   password_confirmation: "password123" }
         }

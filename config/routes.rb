@@ -86,9 +86,8 @@ Rails.application.routes.draw do
       end
       resources :invites, param: :token, only: %i[index new create destroy] do
         member { post :resend }
+        resource :registration, only: %i[show update], module: :invites
       end
-      resource :invite_registration, only: %i[show update], param: :token,
-               path: "invites/:token/register", controller: "invites/registrations"
     end
   end
 
