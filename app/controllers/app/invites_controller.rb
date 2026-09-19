@@ -1,35 +1,10 @@
 module App
   class InvitesController < App::BaseController
-    allow_unauthenticated_access only: %i[show update]
-    before_action :set_invite, only: %i[show update destroy resend]
-    before_action :require_authentication_for_existing_users, only: :show
+    before_action :set_invite, only: %i[destroy resend]
 
     # GET /invites
     def index
       @pagy, @invites = pagy(authorized_scope(Invite.all).order(created_at: :desc))
-    end
-
-    # GET /invites/:token — accept page
-    def show
-      authorize! @invite
-
-      if @invite.expired?
-        render :expired, layout: "public"
-        return
-      end
-
-      if @invite.accepted?
-        redirect_to app_root_path, notice: "This invite has already been accepted."
-        return
-      end
-
-      if Current.user
-        AcceptInvite.new(invite: @invite, user: Current.user).call
-        redirect_to app_root_path, notice: "You've joined the team."
-        return
-      end
-
-      @user = User.new
     end
 
     # GET /invites/new
@@ -47,30 +22,9 @@ module App
 
       if @invite.save
         InviteMailer.invite(@invite).deliver_later
-        redirect_to invites_path, notice: "Invite sent to #{@invite.email}."
+        redirect_to invites_path, notice: t(".success")
       else
         render :new, status: :unprocessable_content
-      end
-    end
-
-    # PATCH /invites/:token — register + accept
-    def update
-      authorize! @invite
-
-      if @invite.expired? || @invite.accepted?
-        redirect_to app_root_path, alert: "This invite is no longer valid."
-        return
-      end
-
-      @user = User.new(user_params)
-      @user.email_address = @invite.email
-
-      if @user.save
-        AcceptInvite.new(invite: @invite, user: @user).call
-        start_new_session_for(@user)
-        redirect_to app_root_path, notice: "Welcome! You've joined the team."
-      else
-        render :show, status: :unprocessable_content
       end
     end
 
@@ -78,7 +32,7 @@ module App
     def destroy
       authorize! @invite
       @invite.destroy
-      redirect_to invites_path, notice: "Invite revoked."
+      redirect_to invites_path, notice: t(".success")
     end
 
     # POST /invites/:token/resend
@@ -87,7 +41,7 @@ module App
       if @invite.pending?
         @invite.update!(resent_at: Time.current)
         InviteMailer.invite(@invite).deliver_later
-        redirect_to invites_path, notice: "Invite resent to #{@invite.email}."
+        redirect_to invites_path, notice: t(".success")
       else
         redirect_to invites_path, alert: "This invite can no longer be resent."
       end
@@ -95,28 +49,14 @@ module App
 
     private
 
-    def set_invite
-      @invite = Invite.find_by!(token: params[:token])
-    end
+      def set_invite
+        @invite = Invite.find_by!(token: params[:token])
+      end
 
-    def invite_params
-      permitted = params.require(:invite).permit(:email, :invited_role)
-      permitted[:role] = permitted.delete(:invited_role) if permitted[:invited_role]
-      permitted
-    end
-
-    def user_params
-      params.require(:user).permit(
-        :first_name, :last_name, :phone,
-        :password, :password_confirmation
-      )
-    end
-
-    def require_authentication_for_existing_users
-      return if Current.user
-      return unless User.exists?(email_address: @invite.email)
-
-      require_authentication
-    end
+      def invite_params
+        permitted = params.require(:invite).permit(:email, :invited_role)
+        permitted[:role] = permitted.delete(:invited_role) if permitted[:invited_role]
+        permitted
+      end
   end
 end

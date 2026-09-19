@@ -84,8 +84,9 @@ Rails.application.routes.draw do
       resources :users, only: %i[index show] do
         resources :roles, controller: "account_users", only: %i[index create destroy]
       end
-      resources :invites, param: :token, only: %i[index new create show update destroy] do
+      resources :invites, param: :token, only: %i[index new create destroy] do
         member { post :resend }
+        resource :registration, only: %i[show update], module: :invites
       end
     end
   end
