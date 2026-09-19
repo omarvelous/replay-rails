@@ -1,0 +1,7 @@
+<div class="border-t border-gray-200 pt-6 mt-6 text-center">
+  <button onclick="if(navigator.share){navigator.share({title:'<%= j title %>',url:window.location.href})}else{navigator.clipboard.writeText(window.location.href);this.textContent='Link copied!'}"
+          class="inline-flex items-center gap-2 px-4 py-2.5 rounded-lg text-sm font-semibold text-gray-700 bg-white ring-1 ring-gray-200 hover:bg-gray-50 cursor-pointer">
+    <svg viewBox="0 0 20 20" fill="currentColor" class="w-4 h-4"><path d="M13 4.5a2.5 2.5 0 11.702 1.737L6.97 9.604a2.518 2.518 0 010 .799l6.733 3.366a2.5 2.5 0 11-.671 1.341l-6.733-3.366a2.5 2.5 0 110-3.483l6.733-3.366A2.52 2.52 0 0113 4.5z"/></svg>
+    Share this listing
+  </button>
+</div>

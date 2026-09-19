@@ -1,0 +1,15 @@
+<%= render "go/shared/photo_gallery", listing: @listing %>
+<%= render "go/shared/property_details", listing: @listing %>
+<%= render "go/shared/floor_plans", listing: @listing %>
+
+<% if @agent %>
+  <%= render "go/shared/agent_card", agent: @agent %>
+<% end %>
+
+<%# Lead capture form %>
+<div class="border-t border-gray-200 pt-6 mt-2">
+  <h2 class="text-sm font-semibold text-gray-500 uppercase tracking-wider mb-4">Interested in this property?</h2>
+  <%= render "go/leads/form", listing: @listing, agent: @agent %>
+</div>
+
+<%= render "go/shared/share_button", title: @listing.address %>
