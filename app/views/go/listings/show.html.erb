@@ -1,112 +1,16 @@
-<%# Photo gallery %>
-<% if @listing.photos.any? %>
-  <div class="photo-gallery -mx-4 mb-6 relative">
-    <div class="flex overflow-x-auto snap-x snap-mandatory scroll-smooth" style="scroll-snap-type: x mandatory; -webkit-overflow-scrolling: touch;">
-      <% @listing.photos.each do |photo| %>
-        <div class="flex-none w-full snap-center">
-          <%= image_tag photo, class: "w-full aspect-video object-cover" %>
-        </div>
-      <% end %>
-    </div>
-    <% if @listing.photos.size > 1 %>
-      <div class="absolute bottom-3 right-3 px-2.5 py-1 rounded-full text-xs font-semibold text-white" style="background: rgba(0,0,0,0.5); backdrop-filter: blur(4px);">
-        1 / <%= @listing.photos.size %>
-      </div>
-    <% end %>
-  </div>
-<% else %>
-  <% tone = %w[#2f6bff #0fb5a6 #7c5cff #e8990f #1f9d57][@listing.id % 5] %>
-  <div class="w-full aspect-video rounded-xl mb-6" style="background: linear-gradient(135deg, #0b0d12, <%= tone %>40);"></div>
-<% end %>
-
-<%# Price + badges %>
-<div class="flex items-center justify-between mb-2">
-  <h1 class="text-3xl font-extrabold tracking-tight"><%= number_to_currency(@listing.price, precision: 0) %></h1>
-  <div class="flex items-center gap-2">
-    <% listing_type_labels = { "for_sale" => "For Sale", "for_rent" => "For Rent", "for_lease" => "For Lease" } %>
-    <span class="inline-flex items-center rounded-full bg-indigo-50 px-2.5 py-0.5 text-xs font-semibold text-indigo-700">
-      <%= listing_type_labels[@listing.listing_type] || @listing.listing_type&.humanize %>
-    </span>
-    <% status_colors = { "active" => "bg-green-100 text-green-800", "pending" => "bg-yellow-100 text-yellow-800", "sold" => "bg-gray-100 text-gray-600" } %>
-    <span class="inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-semibold <%= status_colors[@listing.status] %>">
-      <%= @listing.status.capitalize %>
-    </span>
-  </div>
-</div>
-
-<%# Address + directions %>
-<div class="flex items-center justify-between mb-4">
-  <p class="text-base text-gray-600 font-semibold"><%= @listing.address %></p>
-  <a href="https://maps.google.com/?q=<%= ERB::Util.url_encode(@listing.address) %>"
-     target="_blank" rel="noopener"
-     class="flex items-center gap-1 text-xs font-semibold text-indigo-600 hover:text-indigo-500 shrink-0">
-    <svg viewBox="0 0 20 20" fill="currentColor" class="w-4 h-4"><path fill-rule="evenodd" d="M9.69 18.933l.003.001C9.89 19.02 10 19 10 19s.11.02.308-.066l.002-.001.006-.003.018-.008a5.741 5.741 0 00.281-.14c.186-.096.446-.24.757-.433.62-.384 1.445-.966 2.274-1.765C15.302 14.988 17 12.493 17 9A7 7 0 103 9c0 3.492 1.698 5.988 3.355 7.584a13.731 13.731 0 002.273 1.765 11.842 11.842 0 00.976.544l.062.029.018.008.006.003zM10 11.25a2.25 2.25 0 100-4.5 2.25 2.25 0 000 4.5z" clip-rule="evenodd"/></svg>
-    Directions
-  </a>
-</div>
-
-<%# Specs %>
-<div class="flex gap-6 mb-4 text-sm text-gray-500 font-semibold">
-  <% if @listing.beds %>
-    <span><%= @listing.beds %> Beds</span>
-  <% end %>
-  <% if @listing.baths %>
-    <span><%= @listing.baths %> Baths</span>
-  <% end %>
-  <% if @listing.sqft %>
-    <span><%= number_with_delimiter(@listing.sqft) %> Sq Ft</span>
-  <% end %>
-</div>
-
-<%# Description %>
-<% if @listing.description.present? %>
-  <div class="mb-6">
-    <p class="text-sm text-gray-600 leading-relaxed line-clamp-4"><%= @listing.description %></p>
-  </div>
-<% end %>
-
-<%# Floor plans %>
-<% if @listing.floor_plans.any? %>
-  <div class="mb-6">
-    <h2 class="text-sm font-semibold text-gray-500 uppercase tracking-wider mb-3">Floor Plans</h2>
-    <div class="space-y-3">
-      <% @listing.floor_plans.each do |fp| %>
-        <%= image_tag fp, class: "w-full rounded-lg bg-white ring-1 ring-gray-200" %>
-      <% end %>
-    </div>
-  </div>
-<% end %>
+<%= render "go/shared/photo_gallery", listing: @listing %>
+<%= render "go/shared/property_details", listing: @listing %>
+<%= render "go/shared/floor_plans", listing: @listing %>
 
 <%# Primary agent card %>
 <% if @listing.primary_agent %>
-  <% agent = @listing.primary_agent %>
-  <div class="flex items-center gap-4 p-4 bg-white rounded-xl ring-1 ring-gray-200 mb-6">
-    <div class="w-14 h-14 rounded-full bg-indigo-50 grid place-items-center text-sm font-bold text-indigo-600 shrink-0 overflow-hidden">
-      <% if agent.photo.attached? %>
-        <%= image_tag agent.photo, class: "w-full h-full object-cover" %>
-      <% else %>
-        <%= agent.name.split.map(&:first).join.first(2).upcase %>
-      <% end %>
-    </div>
-    <div class="flex-1 min-w-0">
-      <p class="text-xs font-semibold text-indigo-600 uppercase tracking-wider">Your Agent</p>
-      <p class="font-semibold text-sm"><%= agent.name %></p>
-      <div class="flex flex-wrap gap-3 mt-1">
-        <% if agent.phone.present? %>
-          <a href="tel:<%= agent.phone %>" class="text-sm text-indigo-600 font-semibold hover:text-indigo-500"><%= agent.phone %></a>
-        <% end %>
-        <a href="mailto:<%= agent.email %>" class="text-sm text-indigo-600 font-semibold hover:text-indigo-500"><%= agent.email %></a>
-      </div>
-    </div>
-  </div>
+  <%= render "go/shared/agent_card", agent: @listing.primary_agent %>
 <% end %>
 
 <%# Lead capture form %>
 <div class="border-t border-gray-200 pt-6 mt-2">
   <h2 class="text-sm font-semibold text-gray-500 uppercase tracking-wider mb-4">Interested in this property?</h2>
-  <%= render "go/leads/form",
-      listing: @listing,
-      agent: @listing.primary_agent %>
+  <%= render "go/leads/form", listing: @listing, agent: @listing.primary_agent %>
 </div>
 
 <%# Other agents %>
@@ -116,34 +20,10 @@
     <h2 class="text-sm font-semibold text-gray-500 uppercase tracking-wider mb-4">Also listed by</h2>
     <div class="space-y-3">
       <% other_agents.each do |agent| %>
-        <div class="flex items-center gap-4 p-4 bg-white rounded-xl ring-1 ring-gray-200">
-          <div class="w-12 h-12 rounded-full bg-indigo-50 grid place-items-center text-sm font-bold text-indigo-600 shrink-0 overflow-hidden">
-            <% if agent.photo.attached? %>
-              <%= image_tag agent.photo, class: "w-full h-full object-cover" %>
-            <% else %>
-              <%= agent.name.split.map(&:first).join.first(2).upcase %>
-            <% end %>
-          </div>
-          <div class="flex-1 min-w-0">
-            <p class="font-semibold text-sm"><%= agent.name %></p>
-            <div class="flex flex-wrap gap-3 mt-1">
-              <% if agent.phone.present? %>
-                <a href="tel:<%= agent.phone %>" class="text-sm text-indigo-600 font-semibold hover:text-indigo-500"><%= agent.phone %></a>
-              <% end %>
-              <a href="mailto:<%= agent.email %>" class="text-sm text-indigo-600 font-semibold hover:text-indigo-500"><%= agent.email %></a>
-            </div>
-          </div>
-        </div>
+        <%= render "go/shared/agent_card", agent: agent, label: nil %>
       <% end %>
     </div>
   </div>
 <% end %>
 
-<%# Share button %>
-<div class="border-t border-gray-200 pt-6 mt-6 text-center">
-  <button onclick="if(navigator.share){navigator.share({title:'<%= j @listing.address %>',url:window.location.href})}else{navigator.clipboard.writeText(window.location.href);this.textContent='Link copied!'}"
-          class="inline-flex items-center gap-2 px-4 py-2.5 rounded-lg text-sm font-semibold text-gray-700 bg-white ring-1 ring-gray-200 hover:bg-gray-50 cursor-pointer">
-    <svg viewBox="0 0 20 20" fill="currentColor" class="w-4 h-4"><path d="M13 4.5a2.5 2.5 0 11.702 1.737L6.97 9.604a2.518 2.518 0 010 .799l6.733 3.366a2.5 2.5 0 11-.671 1.341l-6.733-3.366a2.5 2.5 0 110-3.483l6.733-3.366A2.52 2.52 0 0113 4.5z"/></svg>
-    Share this listing
-  </button>
-</div>
+<%= render "go/shared/share_button", title: @listing.address %>

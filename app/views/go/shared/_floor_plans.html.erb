@@ -1,0 +1,10 @@
+<% if listing.floor_plans.any? %>
+  <div class="mb-6">
+    <h2 class="text-sm font-semibold text-gray-500 uppercase tracking-wider mb-3">Floor Plans</h2>
+    <div class="space-y-3">
+      <% listing.floor_plans.each do |fp| %>
+        <%= image_tag fp, class: "w-full rounded-lg bg-white ring-1 ring-gray-200" %>
+      <% end %>
+    </div>
+  </div>
+<% end %>
