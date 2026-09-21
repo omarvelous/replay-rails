@@ -5,7 +5,7 @@
     <% if ad.image.attached? %>
       <%= image_tag ad.image.variant(:preview), class: "absolute inset-0 w-full h-full object-cover" %>
     <% end %>
-    <% qr = ad.listing&.qr_code_for(creative: ad, screen_content: @screen_content) %>
+    <% qr = ad.persisted? ? ad.listing&.qr_code_for(creative: ad, screen_content: @screen_content) : nil %>
     <% if qr %>
       <div class="absolute rounded-xl overflow-hidden bg-white"
            style="bottom: var(--s-pad); left: var(--s-pad); width: var(--s-qr); height: var(--s-qr); padding: var(--s-xs);">
