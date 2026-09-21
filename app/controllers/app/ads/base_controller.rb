@@ -29,7 +29,8 @@ module App
         authorize! Ad, to: :new?
 
         set_adable(adable_class.new(adable_params))
-        @ad = @adable.build_ad(ad_params.merge(account: Current.account).merge(ad_defaults))
+        @ad = Ad.new(ad_params.merge(account: Current.account).merge(ad_defaults))
+        @ad.adable = @adable
         @ad.apply_defaults
 
         render turbo_stream: turbo_stream.replace(
