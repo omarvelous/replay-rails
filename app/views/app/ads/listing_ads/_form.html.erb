@@ -3,7 +3,9 @@
 <div class="grid grid-cols-1 lg:grid-cols-[1fr_380px] gap-6 items-start">
   <%# Left — Live preview %>
   <div>
-    <%= render "app/ads/shared/preview_canvas", ad: @ad %>
+    <%= turbo_frame_tag "ad_preview" do %>
+      <%= render "app/ads/shared/preview_canvas", ad: @ad %>
+    <% end %>
   </div>
 
   <%# Right — Form fields %>
@@ -15,7 +17,7 @@
         <div class="flex flex-wrap gap-2 mb-4">
           <% ::Ads::ListingAd::BADGES.each do |badge_val| %>
             <label class="cursor-pointer">
-              <%= la_form.radio_button :badge, badge_val, class: "peer sr-only", data: { action: "change->badge-fields#toggle" } %>
+              <%= la_form.radio_button :badge, badge_val, class: "peer sr-only", data: { action: "change->badge-fields#toggle change->ad-builder#changed" } %>
               <span class="peer-checked:ring-2 peer-checked:ring-indigo-600 peer-checked:bg-indigo-50 peer-checked:text-indigo-700 inline-flex items-center rounded-md bg-white px-3 py-1.5 text-sm font-medium text-gray-600 ring-1 ring-gray-300 ring-inset hover:bg-gray-50 transition-colors">
                 <%= ::Ads::ListingAd::BADGE_LABELS[badge_val] %>
               </span>
@@ -29,7 +31,8 @@
           <%= la_form.select :listing_id,
               Current.account.listings.order(:address).map { |l| ["#{l.address} — #{number_to_currency(l.price, precision: 0)}", l.id] },
               { include_blank: "Select a listing…" },
-              class: "block w-full rounded-md bg-white py-2 pl-3 pr-8 text-sm text-gray-900 outline-1 -outline-offset-1 outline-gray-300 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600" %>
+              class: "block w-full rounded-md bg-white py-2 pl-3 pr-8 text-sm text-gray-900 outline-1 -outline-offset-1 outline-gray-300 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600",
+              data: { action: "change->ad-builder#changed" } %>
         </div>
 
         <%# Open house fields %>
