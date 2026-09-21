@@ -3,7 +3,9 @@
 <div class="grid grid-cols-1 lg:grid-cols-[1fr_380px] gap-6 items-start">
   <%# Left — Live preview %>
   <div>
-    <%= render "app/ads/shared/preview_canvas", ad: @ad %>
+    <%= turbo_frame_tag "ad_preview" do %>
+      <%= render "app/ads/shared/preview_canvas", ad: @ad %>
+    <% end %>
   </div>
 
   <%# Right — Form fields %>

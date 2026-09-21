@@ -33,7 +33,7 @@ module App
         @ad.adable = @adable
         @ad.apply_defaults
 
-        render turbo_stream: turbo_stream.replace(
+        render turbo_stream: turbo_stream.update(
           "ad_preview",
           partial: "app/ads/shared/preview_canvas",
           locals: { ad: @ad }
