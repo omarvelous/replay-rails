@@ -1,6 +1,9 @@
 <div class="rounded-lg overflow-hidden shadow-sm ring-1 ring-gray-900/5">
   <div class="bg-gray-100 p-8 flex items-center justify-center">
-    <% if ad.persisted? && ad.adable&.persisted? %>
+    <% can_preview = ad.layout.present? && ad.adable.present? &&
+         (ad.adable.respond_to?(:listing) ? ad.adable.listing.present? : true) &&
+         (ad.adable.respond_to?(:agent) ? ad.adable.agent.present? : true) %>
+    <% if can_preview %>
       <%= render "app/ads/layouts/#{ad.layout}", ad: ad %>
     <% else %>
       <div class="ad-canvas aspect-video flex items-center justify-center" style="background: var(--ad-bg); color: var(--ad-text); <%= ad_theme_style(ad.theme || 'dark') %>">

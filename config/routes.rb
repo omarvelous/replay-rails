@@ -48,10 +48,18 @@ Rails.application.routes.draw do
       end
       resources :agents
       namespace :ads do
-        resources :listing_ads,    only: %i[new create edit update]
-        resources :collection_ads, only: %i[new create edit update]
-        resources :agent_ads,      only: %i[new create edit update]
-        resources :brand_ads,      only: %i[new create edit update]
+        resources :listing_ads,    only: %i[new create edit update] do
+          collection { post :preview }
+        end
+        resources :collection_ads, only: %i[new create edit update] do
+          collection { post :preview }
+        end
+        resources :agent_ads,      only: %i[new create edit update] do
+          collection { post :preview }
+        end
+        resources :brand_ads,      only: %i[new create edit update] do
+          collection { post :preview }
+        end
       end
       resources :ads, only: %i[index new show edit update destroy] do
         member { get :preview }

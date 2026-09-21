@@ -25,6 +25,20 @@ module App
         end
       end
 
+      def preview
+        authorize! Ad, to: :new?
+
+        set_adable(adable_class.new(adable_params))
+        @ad = @adable.build_ad(ad_params.merge(account: Current.account).merge(ad_defaults))
+        @ad.apply_defaults
+
+        render turbo_stream: turbo_stream.replace(
+          "ad_preview",
+          partial: "app/ads/shared/preview_canvas",
+          locals: { ad: @ad }
+        )
+      end
+
       def edit
         authorize! @ad
         set_adable(@ad.adable)
