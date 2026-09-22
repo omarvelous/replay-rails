@@ -47,7 +47,11 @@ module Listings
         elsif response.is_a?(Net::HTTPRedirection)
           uri = URI.parse(response["location"])
         else
-          raise FetchError, "Could not fetch that URL. The site returned HTTP #{response.code}."
+          if response.code == "403"
+            raise FetchError, "This site blocked the import request. Some sites (like StreetEasy) use bot protection that prevents automated imports."
+          else
+            raise FetchError, "Could not fetch that URL. The site returned HTTP #{response.code}."
+          end
         end
       end
       raise FetchError, "Too many redirects fetching #{@url}"
