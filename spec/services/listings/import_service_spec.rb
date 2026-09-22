@@ -32,13 +32,13 @@ RSpec.describe Listings::ImportService do
 
       it "uses the StreetEasy extractor" do
         result = described_class.call(url: url)
-        expect(result[:address]).to eq("350 Fifth Ave, Apt 42B")
+        expect(result[:address]).to eq("60 Cedar Street #15G, Brooklyn, NY, 11221")
         expect(result[:source_url]).to eq(url)
       end
 
-      it "returns floor_plan_urls from the StreetEasy extractor" do
+      it "extracts price from StreetEasy JSON-LD" do
         result = described_class.call(url: url)
-        expect(result[:floor_plan_urls]).to include("https://images.streeteasy.com/floorplan/42B.jpg")
+        expect(result[:price]).to eq(4850)
       end
     end
 
@@ -99,7 +99,7 @@ RSpec.describe Listings::ImportService do
         html: fixture("streeteasy_listing.html"),
         url: "https://streeteasy.com/building/test/1a"
       )
-      expect(result[:address]).to eq("350 Fifth Ave, Apt 42B")
+      expect(result[:address]).to eq("60 Cedar Street #15G, Brooklyn, NY, 11221")
       expect(result[:source_url]).to eq("https://streeteasy.com/building/test/1a")
     end
 

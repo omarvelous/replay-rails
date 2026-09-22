@@ -142,7 +142,7 @@ RSpec.describe "Listings" do
         params: { source_html: streeteasy_html, source_url: "https://streeteasy.com/building/test/1a" },
         headers: turbo_headers
       expect(response).to be_successful
-      expect(response.body).to include("350 Fifth Ave")
+      expect(response.body).to include("60 Cedar Street")
     end
 
     it "works without a source_url" do

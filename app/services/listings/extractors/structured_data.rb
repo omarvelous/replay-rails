@@ -29,6 +29,17 @@ module Listings
           # Handle arrays of structured data
           parsed = parsed.is_a?(Array) ? parsed.first : parsed
           return parsed if real_estate_type?(parsed)
+
+          # Handle @graph arrays (used by StreetEasy, Zillow, etc.)
+          if parsed.is_a?(Hash) && parsed["@graph"].is_a?(Array)
+            parsed["@graph"].each do |node|
+              return node if real_estate_type?(node)
+              # Check nested about/mainEntity
+              %w[about mainEntity].each do |key|
+                return node[key] if node[key].is_a?(Hash) && real_estate_type?(node[key])
+              end
+            end
+          end
         end
         nil
       end
