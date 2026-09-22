@@ -5,18 +5,23 @@ RSpec.describe Listings::ImportService do
     File.read(Rails.root.join("spec/fixtures/html/#{name}"))
   end
 
-  def stub_fetch(url, body:, status: "200")
+  def stub_fetch(url, body:, code: "200")
     uri = URI.parse(url)
-    response = instance_double(Net::HTTPResponse, body: body, code: status)
-    allow(response).to receive(:is_a?).with(Net::HTTPSuccess).and_return(status == "200")
-    allow(Net::HTTP).to receive(:get_response).with(uri).and_return(response)
-  end
+    response = instance_double(Net::HTTPResponse, body: body, code: code)
+    allow(response).to receive(:is_a?) do |klass|
+      case klass.name
+      when "Net::HTTPSuccess" then code == "200"
+      when "Net::HTTPRedirection" then code.start_with?("3")
+      else false
+      end
+    end
 
-  def stub_fetch_failure(url, status: "404")
-    uri = URI.parse(url)
-    response = instance_double(Net::HTTPResponse, body: "", code: status)
-    allow(response).to receive(:is_a?).with(Net::HTTPSuccess).and_return(false)
-    allow(Net::HTTP).to receive(:get_response).with(uri).and_return(response)
+    http = instance_double(Net::HTTP)
+    allow(http).to receive(:use_ssl=)
+    allow(http).to receive(:open_timeout=)
+    allow(http).to receive(:read_timeout=)
+    allow(http).to receive(:request).and_return(response)
+    allow(Net::HTTP).to receive(:new).with(uri.host, uri.port).and_return(http)
   end
 
   describe ".call" do
@@ -59,7 +64,7 @@ RSpec.describe Listings::ImportService do
     context "when the fetch fails" do
       let(:url) { "https://example.com/listing/gone" }
 
-      before { stub_fetch_failure(url, status: "404") }
+      before { stub_fetch(url, body: "", code: "404") }
 
       it "raises a fetch error" do
         expect { described_class.call(url: url) }

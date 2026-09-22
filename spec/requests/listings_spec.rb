@@ -124,18 +124,27 @@ RSpec.describe "Listings" do
   end
 
   describe "POST /listings/import_preview" do
-    def stub_fetch(url, body:)
+    def stub_fetch(url, body:, code: "200")
       uri = URI.parse(url)
-      response = instance_double(Net::HTTPResponse, body: body, code: "200")
-      allow(response).to receive(:is_a?).with(Net::HTTPSuccess).and_return(true)
-      allow(Net::HTTP).to receive(:get_response).with(uri).and_return(response)
+      response = instance_double(Net::HTTPResponse, body: body, code: code)
+      allow(response).to receive(:is_a?) do |klass|
+        case klass.name
+        when "Net::HTTPSuccess" then code == "200"
+        when "Net::HTTPRedirection" then code.start_with?("3")
+        else false
+        end
+      end
+
+      http = instance_double(Net::HTTP)
+      allow(http).to receive(:use_ssl=)
+      allow(http).to receive(:open_timeout=)
+      allow(http).to receive(:read_timeout=)
+      allow(http).to receive(:request).and_return(response)
+      allow(Net::HTTP).to receive(:new).with(uri.host, uri.port).and_return(http)
     end
 
     def stub_fetch_failure(url)
-      uri = URI.parse(url)
-      response = instance_double(Net::HTTPResponse, body: "", code: "404")
-      allow(response).to receive(:is_a?).with(Net::HTTPSuccess).and_return(false)
-      allow(Net::HTTP).to receive(:get_response).with(uri).and_return(response)
+      stub_fetch(url, body: "", code: "404")
     end
 
     let(:turbo_headers) { { "Accept" => "text/vnd.turbo-stream.html" } }
