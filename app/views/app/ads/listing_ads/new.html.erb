@@ -1,5 +1,7 @@
 <%= render "app/shared/page_header", title: "New Listing Ad", back_link: { label: "← Ads", path: ads_path } %>
 
-<%= form_with model: @ad, url: ads_listing_ads_path do |form| %>
-  <%= render "app/ads/listing_ads/form", form: form %>
-<% end %>
+<div data-controller="ad-builder" data-ad-builder-preview-url-value="<%= preview_ads_listing_ads_path %>">
+  <%= form_with model: @ad, url: ads_listing_ads_path, data: { ad_builder_target: "form" } do |form| %>
+    <%= render "app/ads/listing_ads/form", form: form %>
+  <% end %>
+</div>

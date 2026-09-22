@@ -4,7 +4,7 @@
   <div class="flex flex-wrap gap-2">
     <% layouts.each do |layout_name| %>
       <label class="cursor-pointer">
-        <%= form.radio_button :layout, layout_name, class: "peer sr-only" %>
+        <%= form.radio_button :layout, layout_name, class: "peer sr-only", data: { action: "change->ad-builder#changed" } %>
         <span class="peer-checked:ring-2 peer-checked:ring-indigo-600 peer-checked:bg-indigo-50 peer-checked:text-indigo-700 inline-flex items-center rounded-md bg-white px-3 py-1.5 text-sm font-medium text-gray-600 ring-1 ring-gray-300 ring-inset hover:bg-gray-50 transition-colors">
           <%= layout_name.humanize %>
         </span>
@@ -19,7 +19,7 @@
   <div class="flex gap-3">
     <% Ad::THEMES.each do |theme_name| %>
       <label class="cursor-pointer">
-        <%= form.radio_button :theme, theme_name, class: "peer sr-only" %>
+        <%= form.radio_button :theme, theme_name, class: "peer sr-only", data: { action: "change->ad-builder#changed" } %>
         <span class="peer-checked:ring-2 peer-checked:ring-indigo-600 flex items-center gap-2 rounded-lg px-3 py-2 ring-1 ring-gray-200 hover:bg-gray-50 transition-colors">
           <% bg = { "dark" => "#0b0d12", "light" => "#f9fafb", "brand" => "#2f6bff" }[theme_name] %>
           <span class="w-5 h-5 rounded-full border border-gray-300" style="background: <%= bg %>;"></span>

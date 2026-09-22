@@ -3,7 +3,9 @@
 <div class="grid grid-cols-1 lg:grid-cols-[1fr_380px] gap-6 items-start">
   <%# Left — Live preview %>
   <div>
-    <%= render "app/ads/shared/preview_canvas", ad: @ad %>
+    <%= turbo_frame_tag "ad_preview" do %>
+      <%= render "app/ads/shared/preview_canvas", ad: @ad %>
+    <% end %>
   </div>
 
   <%# Right — Form fields %>
@@ -17,7 +19,8 @@
           <%= aa_form.select :agent_id,
               Current.account.agents.order(:name).map { |a| [a.name, a.id] },
               { include_blank: "Select an agent…" },
-              class: "block w-full rounded-md bg-white py-2 pl-3 pr-8 text-sm text-gray-900 outline-1 -outline-offset-1 outline-gray-300 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600" %>
+              class: "block w-full rounded-md bg-white py-2 pl-3 pr-8 text-sm text-gray-900 outline-1 -outline-offset-1 outline-gray-300 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600",
+              data: { action: "change->ad-builder#changed" } %>
         </div>
       <% end %>
     </div>

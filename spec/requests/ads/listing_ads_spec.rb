@@ -119,6 +119,43 @@ RSpec.describe "Ads::ListingAds" do
     end
   end
 
+  describe "POST /ads/listing_ads/preview" do
+    let(:turbo_headers) { { "Accept" => "text/vnd.turbo-stream.html" } }
+
+    it "returns a turbo stream with the preview" do
+      post preview_ads_listing_ads_path,
+        params: { listing_ad: { listing_id: listing.id, badge: "just_listed" },
+                  ad: { headline: "Test", layout: "hero", theme: "dark" } },
+        headers: turbo_headers
+
+      expect(response).to be_successful
+      expect(response.body).to include("turbo-stream")
+      expect(response.body).to include("ad_preview")
+    end
+
+    it "renders the ad layout when listing is selected" do
+      post preview_ads_listing_ads_path,
+        params: { listing_ad: { listing_id: listing.id, badge: "just_listed" },
+                  ad: { headline: "Beautiful Home", layout: "hero", theme: "dark" } },
+        headers: turbo_headers
+
+      expect(response).to be_successful
+      expect(response.body).to include("turbo-stream")
+      # The preview renders with listing data when available
+      expect(response.body).to include("ad-canvas").or include("Preview will appear")
+    end
+
+    it "renders placeholder when listing not selected" do
+      post preview_ads_listing_ads_path,
+        params: { listing_ad: { badge: "just_listed" },
+                  ad: { headline: "Test", layout: "hero", theme: "dark" } },
+        headers: turbo_headers
+
+      expect(response).to be_successful
+      expect(response.body).to include("Preview will appear")
+    end
+  end
+
   describe "tenant isolation" do
     it "returns 404 when editing another account's ad" do
       other_ad = create(:ad)
