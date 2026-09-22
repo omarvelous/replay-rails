@@ -1,8 +1,9 @@
 # Plan: Listing Import (StreetEasy + General URL)
 
 **Created:** 2026-09-14
-**Status:** Draft
-**Branch:** `listing-import`
+**Completed:** 2026-09-19
+**Status:** Complete
+**Branch:** `feature/listing-import`
 
 ## Problem
 
