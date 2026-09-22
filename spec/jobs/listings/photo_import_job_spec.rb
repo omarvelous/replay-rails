@@ -10,14 +10,14 @@ RSpec.describe Listings::PhotoImportJob do
 
       stub_request_for(photo_url, body: jpg_data, content_type: "image/jpeg")
 
-      described_class.perform_now(listing.id, [photo_url])
+      described_class.perform_now(listing.id, [ photo_url ])
       listing.reload
       expect(listing.photos).to be_attached
       expect(listing.photos.count).to eq(1)
     end
 
     it "attaches multiple photos" do
-      urls = ["https://example.com/1.jpg", "https://example.com/2.jpg"]
+      urls = [ "https://example.com/1.jpg", "https://example.com/2.jpg" ]
       jpg_data = File.read(Rails.root.join("spec/fixtures/files/test.jpg"))
 
       urls.each { |url| stub_request_for(url, body: jpg_data, content_type: "image/jpeg") }
@@ -35,7 +35,7 @@ RSpec.describe Listings::PhotoImportJob do
       stub_request_for(good_url, body: jpg_data, content_type: "image/jpeg")
       stub_request_for(bad_url, status: "404")
 
-      described_class.perform_now(listing.id, [good_url, bad_url])
+      described_class.perform_now(listing.id, [ good_url, bad_url ])
       listing.reload
       expect(listing.photos.count).to eq(1)
     end

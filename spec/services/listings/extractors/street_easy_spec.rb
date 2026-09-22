@@ -5,9 +5,10 @@ RSpec.describe Listings::Extractors::StreetEasy do
     File.read(Rails.root.join("spec/fixtures/html/#{name}"))
   end
 
+  subject(:result) { described_class.new(html).call }
+
   let(:html) { fixture("streeteasy_listing.html") }
 
-  subject(:result) { described_class.new(html).call }
 
   describe "#call" do
     context "with a StreetEasy listing page" do

@@ -56,9 +56,9 @@ module Listings
         offers = data["offers"]
         price = if offers.is_a?(Hash)
                   offers["price"]
-                else
+        else
                   data["price"]
-                end
+        end
         price.to_i if price.present?
       end
 
@@ -76,10 +76,10 @@ module Listings
       def extract_photos(data)
         images = data["image"]
         urls = case images
-               when Array then images.select { |i| i.is_a?(String) }
-               when String then [images]
-               else []
-               end
+        when Array then images.select { |i| i.is_a?(String) }
+        when String then [ images ]
+        else []
+        end
 
         # Supplement with og:image if no images found
         if urls.empty?

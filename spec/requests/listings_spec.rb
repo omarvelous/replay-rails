@@ -50,7 +50,7 @@ RSpec.describe "Listings" do
       end
 
       it "enqueues photo import when photo_urls are provided" do
-        params = valid_params.merge(photo_urls: ["https://example.com/1.jpg", "https://example.com/2.jpg"])
+        params = valid_params.merge(photo_urls: [ "https://example.com/1.jpg", "https://example.com/2.jpg" ])
         expect {
           post listings_path, params: params
         }.to have_enqueued_job(Listings::PhotoImportJob)
