@@ -124,57 +124,42 @@ RSpec.describe "Listings" do
   end
 
   describe "POST /listings/import_preview" do
-    def stub_fetch(url, body:, code: "200")
-      uri = URI.parse(url)
-      response = instance_double(Net::HTTPResponse, body: body, code: code)
-      allow(response).to receive(:is_a?) do |klass|
-        case klass.name
-        when "Net::HTTPSuccess" then code == "200"
-        when "Net::HTTPRedirection" then code.start_with?("3")
-        else false
-        end
-      end
-
-      http = instance_double(Net::HTTP)
-      allow(http).to receive(:use_ssl=)
-      allow(http).to receive(:open_timeout=)
-      allow(http).to receive(:read_timeout=)
-      allow(http).to receive(:request).and_return(response)
-      allow(Net::HTTP).to receive(:new).with(uri.host, uri.port).and_return(http)
-    end
-
-    def stub_fetch_failure(url)
-      stub_fetch(url, body: "", code: "404")
-    end
-
     let(:turbo_headers) { { "Accept" => "text/vnd.turbo-stream.html" } }
     let(:listing_html) { File.read(Rails.root.join("spec/fixtures/html/listing_with_json_ld.html")) }
 
-    it "pre-fills the form with imported data" do
-      url = "https://example.com/listing/456"
-      stub_fetch(url, body: listing_html)
-
-      post import_preview_listings_path, params: { url: url }, headers: turbo_headers
+    it "pre-fills the form from pasted HTML" do
+      post import_preview_listings_path,
+        params: { source_html: listing_html, source_url: "https://example.com/listing/456" },
+        headers: turbo_headers
       expect(response).to be_successful
       expect(response.body).to include("turbo-stream")
       expect(response.body).to include("456 Park Ave")
     end
 
-    it "shows an error for invalid URLs" do
-      post import_preview_listings_path, params: { url: "not-a-url" }, headers: turbo_headers
+    it "selects StreetEasy parser when source_url matches" do
+      streeteasy_html = File.read(Rails.root.join("spec/fixtures/html/streeteasy_listing.html"))
+      post import_preview_listings_path,
+        params: { source_html: streeteasy_html, source_url: "https://streeteasy.com/building/test/1a" },
+        headers: turbo_headers
       expect(response).to be_successful
-      expect(response.body).to include("turbo-stream")
-      expect(response.body).to include("Invalid URL")
+      expect(response.body).to include("350 Fifth Ave")
     end
 
-    it "shows an error when fetch fails" do
-      url = "https://example.com/gone"
-      stub_fetch_failure(url)
+    it "works without a source_url" do
+      post import_preview_listings_path,
+        params: { source_html: listing_html },
+        headers: turbo_headers
+      expect(response).to be_successful
+      expect(response.body).to include("456 Park Ave")
+    end
 
-      post import_preview_listings_path, params: { url: url }, headers: turbo_headers
+    it "shows an error when HTML is blank" do
+      post import_preview_listings_path,
+        params: { source_html: "" },
+        headers: turbo_headers
       expect(response).to be_successful
       expect(response.body).to include("turbo-stream")
-      expect(response.body).to include("Could not fetch")
+      expect(response.body).to include("Paste the page source")
     end
   end
 

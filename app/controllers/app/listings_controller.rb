@@ -30,7 +30,17 @@ module App
 
   def import_preview
     authorize! Listing, to: :new?
-    result = Listings::ImportService.call(url: params[:url])
+
+    if params[:source_html].blank?
+      render turbo_stream: turbo_stream.update("import_feedback",
+        html: import_error("Paste the page source HTML to import."))
+      return
+    end
+
+    result = Listings::ImportService.call_with_html(
+      html: params[:source_html],
+      url: params[:source_url].presence
+    )
     @listing = Current.account.listings.build(
       address: result[:address],
       price: result[:price],
@@ -42,11 +52,8 @@ module App
       status: "active"
     )
     @photo_urls = result[:photo_urls] || []
-    render turbo_stream: turbo_stream.update("listing_form", partial: "form", locals: { listing: @listing, photo_urls: @photo_urls })
-  rescue Listings::ImportService::InvalidUrlError
-    render turbo_stream: turbo_stream.update("import_feedback", html: import_error("Invalid URL. Please enter a full URL starting with https://"))
-  rescue Listings::ImportService::FetchError
-    render turbo_stream: turbo_stream.update("import_feedback", html: import_error("Could not fetch that URL. Please check the link and try again."))
+    render turbo_stream: turbo_stream.update("listing_form",
+      partial: "form", locals: { listing: @listing, photo_urls: @photo_urls })
   end
 
   def create

@@ -1,15 +1,21 @@
-<%= render "app/shared/page_header", title: "New listing", subtitle: "Add a property manually, or import from a listing URL.", back_link: { label: "← Listings", path: listings_path } %>
+<%= render "app/shared/page_header", title: "New listing", subtitle: "Add a property manually, or import from a listing page source.", back_link: { label: "← Listings", path: listings_path } %>
 
-<%# Import from URL %>
+<%# Import from page source %>
 <div class="rounded-lg bg-white shadow-sm ring-1 ring-gray-900/5 p-5 mb-4">
-  <p class="text-xs font-semibold uppercase tracking-wider text-gray-400 mb-3">Import from URL</p>
-  <p class="text-sm text-gray-500 mb-3">Paste a StreetEasy or listing page URL to auto-fill the form.</p>
+  <p class="text-xs font-semibold uppercase tracking-wider text-gray-400 mb-3">Import from page source</p>
+  <p class="text-sm text-gray-500 mb-3">Open a listing page (e.g. StreetEasy), right-click → <strong>View Page Source</strong>, copy all, and paste below.</p>
   <%= form_with url: import_preview_listings_path, method: :post, data: { turbo_frame: "_top" } do |f| %>
-    <div class="flex gap-2">
-      <%= f.url_field :url, placeholder: "https://streeteasy.com/building/…",
+    <div class="mb-3">
+      <%= f.label :source_url, "Source URL (optional)", class: "block text-sm/6 font-medium text-gray-700 mb-1" %>
+      <%= f.url_field :source_url, placeholder: "https://streeteasy.com/building/…",
           class: "block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6" %>
-      <%= f.submit "Import", class: "rounded-md bg-indigo-600 px-4 py-1.5 text-sm font-semibold text-white shadow-xs hover:bg-indigo-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 cursor-pointer" %>
     </div>
+    <div class="mb-3">
+      <%= f.label :source_html, "Page source HTML", class: "block text-sm/6 font-medium text-gray-700 mb-1" %>
+      <%= f.text_area :source_html, rows: 4, placeholder: "<!DOCTYPE html>\n<html>…",
+          class: "block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6 font-mono text-xs" %>
+    </div>
+    <%= f.submit "Import", class: "rounded-md bg-indigo-600 px-4 py-1.5 text-sm font-semibold text-white shadow-xs hover:bg-indigo-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 cursor-pointer" %>
   <% end %>
   <div id="import_feedback" class="mt-2"></div>
 </div>

@@ -85,4 +85,30 @@ RSpec.describe Listings::ImportService do
       end
     end
   end
+
+  describe ".call_with_html" do
+    it "parses pasted HTML with StructuredData extractor" do
+      result = described_class.call_with_html(html: fixture("listing_with_json_ld.html"))
+      expect(result[:address]).to eq("456 Park Ave, Brooklyn, NY, 11217")
+      expect(result[:price]).to eq(2_450_000)
+      expect(result[:source_url]).to be_nil
+    end
+
+    it "selects StreetEasy extractor when URL matches" do
+      result = described_class.call_with_html(
+        html: fixture("streeteasy_listing.html"),
+        url: "https://streeteasy.com/building/test/1a"
+      )
+      expect(result[:address]).to eq("350 Fifth Ave, Apt 42B")
+      expect(result[:source_url]).to eq("https://streeteasy.com/building/test/1a")
+    end
+
+    it "falls back to StructuredData for unknown URLs" do
+      result = described_class.call_with_html(
+        html: fixture("listing_with_json_ld.html"),
+        url: "https://example.com/listing/123"
+      )
+      expect(result[:address]).to eq("456 Park Ave, Brooklyn, NY, 11217")
+    end
+  end
 end

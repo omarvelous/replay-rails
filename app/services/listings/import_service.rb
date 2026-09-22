@@ -13,6 +13,22 @@ module Listings
       new(url).call
     end
 
+    def self.call_with_html(html:, url: nil)
+      uri = url.present? ? (URI.parse(url) rescue nil) : nil
+      extractor = new_parser_for(uri)
+      result = extractor.new(html).call
+      result.merge(source_url: url)
+    end
+
+    def self.new_parser_for(uri)
+      return Extractors::StructuredData unless uri
+
+      PARSER_MAP.each do |pattern, klass|
+        return klass if uri.host&.match?(pattern)
+      end
+      Extractors::StructuredData
+    end
+
     def initialize(url)
       @url = url
       @uri = parse_url!(url)
