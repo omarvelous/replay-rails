@@ -28,6 +28,27 @@ module App
     authorize! @listing
   end
 
+  def import_preview
+    authorize! Listing, to: :new?
+    result = Listings::ImportService.call(url: params[:url])
+    @listing = Current.account.listings.build(
+      address: result[:address],
+      price: result[:price],
+      beds: result[:beds],
+      baths: result[:baths],
+      sqft: result[:sqft],
+      description: result[:description],
+      source_url: result[:source_url],
+      status: "active"
+    )
+    @photo_urls = result[:photo_urls] || []
+    render turbo_stream: turbo_stream.update("listing_form", partial: "form", locals: { listing: @listing, photo_urls: @photo_urls })
+  rescue Listings::ImportService::InvalidUrlError
+    render turbo_stream: turbo_stream.update("import_feedback", html: import_error("Invalid URL. Please enter a full URL starting with https://"))
+  rescue Listings::ImportService::FetchError
+    render turbo_stream: turbo_stream.update("import_feedback", html: import_error("Could not fetch that URL. Please check the link and try again."))
+  end
+
   def create
     @listing = Current.account.listings.build(listing_params)
     authorize! @listing
@@ -65,7 +86,11 @@ module App
     end
 
     def listing_params
-      params.require(:listing).permit(:address, :price, :beds, :baths, :sqft, :status, :property_type, :listing_type, :description, photos: [])
+      params.require(:listing).permit(:address, :price, :beds, :baths, :sqft, :status, :property_type, :listing_type, :description, :source_url, photos: [])
+    end
+
+    def import_error(message)
+      helpers.tag.div(class: "rounded-md bg-red-50 p-3 text-sm text-red-700") { message }
     end
   end
 end

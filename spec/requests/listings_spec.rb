@@ -116,6 +116,52 @@ RSpec.describe "Listings" do
     end
   end
 
+  describe "POST /listings/import_preview" do
+    def stub_fetch(url, body:)
+      uri = URI.parse(url)
+      response = instance_double(Net::HTTPResponse, body: body, code: "200")
+      allow(response).to receive(:is_a?).with(Net::HTTPSuccess).and_return(true)
+      allow(Net::HTTP).to receive(:get_response).with(uri).and_return(response)
+    end
+
+    def stub_fetch_failure(url)
+      uri = URI.parse(url)
+      response = instance_double(Net::HTTPResponse, body: "", code: "404")
+      allow(response).to receive(:is_a?).with(Net::HTTPSuccess).and_return(false)
+      allow(Net::HTTP).to receive(:get_response).with(uri).and_return(response)
+    end
+
+    let(:turbo_headers) { { "Accept" => "text/vnd.turbo-stream.html" } }
+    let(:listing_html) { File.read(Rails.root.join("spec/fixtures/html/listing_with_json_ld.html")) }
+
+    it "pre-fills the form with imported data" do
+      url = "https://example.com/listing/456"
+      stub_fetch(url, body: listing_html)
+
+      post import_preview_listings_path, params: { url: url }, headers: turbo_headers
+      expect(response).to be_successful
+      expect(response.body).to include("turbo-stream")
+      expect(response.body).to include("456 Park Ave")
+    end
+
+    it "shows an error for invalid URLs" do
+      post import_preview_listings_path, params: { url: "not-a-url" }, headers: turbo_headers
+      expect(response).to be_successful
+      expect(response.body).to include("turbo-stream")
+      expect(response.body).to include("Invalid URL")
+    end
+
+    it "shows an error when fetch fails" do
+      url = "https://example.com/gone"
+      stub_fetch_failure(url)
+
+      post import_preview_listings_path, params: { url: url }, headers: turbo_headers
+      expect(response).to be_successful
+      expect(response.body).to include("turbo-stream")
+      expect(response.body).to include("Could not fetch")
+    end
+  end
+
   describe "DELETE /listings/:id" do
     it "destroys the listing" do
       listing = create(:listing, account: account)
