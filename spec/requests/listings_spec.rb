@@ -49,6 +49,13 @@ RSpec.describe "Listings" do
         expect(response).to redirect_to(listing_path(Listing.last))
       end
 
+      it "enqueues photo import when photo_urls are provided" do
+        params = valid_params.merge(photo_urls: ["https://example.com/1.jpg", "https://example.com/2.jpg"])
+        expect {
+          post listings_path, params: params
+        }.to have_enqueued_job(Listings::PhotoImportJob)
+      end
+
       it "attaches photos when provided" do
         params = valid_params.deep_merge(listing: { photos: [ fixture_file_upload("test.jpg", "image/jpeg") ] })
         post listings_path, params: params

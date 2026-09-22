@@ -54,6 +54,7 @@ module App
     authorize! @listing
 
     if @listing.save
+      enqueue_photo_import if params[:photo_urls].present?
       redirect_to @listing, notice: t(".success")
     else
       render :new, status: :unprocessable_entity
@@ -87,6 +88,11 @@ module App
 
     def listing_params
       params.require(:listing).permit(:address, :price, :beds, :baths, :sqft, :status, :property_type, :listing_type, :description, :source_url, photos: [])
+    end
+
+    def enqueue_photo_import
+      urls = Array(params[:photo_urls]).select { |u| u.start_with?("http") }
+      Listings::PhotoImportJob.perform_later(@listing.id, urls) if urls.any?
     end
 
     def import_error(message)
