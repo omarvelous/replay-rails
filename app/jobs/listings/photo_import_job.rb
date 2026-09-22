@@ -1,3 +1,5 @@
+require "net/http"
+
 module Listings
   class PhotoImportJob < ApplicationJob
     queue_as :default
