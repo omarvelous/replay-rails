@@ -27,6 +27,7 @@ export default class extends Controller {
     if (!this.hasFormTarget || !this.previewUrlValue) return
 
     const formData = new FormData(this.formTarget)
+    formData.delete("_method") // Prevent PATCH override on edit forms
 
     try {
       const response = await fetch(this.previewUrlValue, {
