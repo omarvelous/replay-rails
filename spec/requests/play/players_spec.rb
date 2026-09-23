@@ -11,24 +11,6 @@ RSpec.describe "Play::Players" do
     end
   end
 
-  describe "POST /player (registration)" do
-    it "creates a player and session" do
-      expect {
-        post "/player", params: { screen_width: 1920, screen_height: 1080 }, as: :json
-      }.to change(Player, :count).by(1).and change(PlayerSession, :count).by(1)
-
-      expect(response).to have_http_status(:created)
-      data = response.parsed_body
-      expect(data["pairing_code"]).to match(/\A[A-Z0-9]{6}\z/)
-      expect(data["public_id"]).to be_present
-    end
-
-    it "sets the player session cookie" do
-      post "/player", as: :json
-      expect(cookies[:player_session_id]).to be_present
-    end
-  end
-
   describe "GET /player (playback)" do
     let(:account) { create(:account) }
     let(:site) { create(:site, account: account) }
@@ -66,28 +48,6 @@ RSpec.describe "Play::Players" do
     it "redirects to pairing without cookie" do
       get "/player"
       expect(response).to redirect_to(new_player_path)
-    end
-  end
-
-  describe "POST /player/session" do
-    it "sets the player session cookie with a valid session" do
-      player = create(:player)
-      player_session = player.player_sessions.create!(ip_address: "1.1.1.1")
-      post "/player/session", params: { session_id: player_session.id }, as: :json
-      expect(response).to be_successful
-      expect(cookies[:player_session_id]).to be_present
-    end
-
-    it "returns 401 with an invalid session" do
-      post "/player/session", params: { session_id: 0 }, as: :json
-      expect(response).to have_http_status(:unauthorized)
-    end
-
-    it "returns 401 with a revoked session" do
-      player = create(:player)
-      player_session = player.player_sessions.create!(ip_address: "1.1.1.1", revoked_at: Time.current)
-      post "/player/session", params: { session_id: player_session.id }, as: :json
-      expect(response).to have_http_status(:unauthorized)
     end
   end
 end

@@ -242,7 +242,7 @@ Documentation is in progress.
 | Player sessions | `.claude/plans/202609170100-player-sessions.md` | Complete |
 | Play self-contained | `.claude/plans/202609170200-play-self-contained.md` | Complete |
 | Codebase cleanup | `.claude/plans/202609180100-codebase-cleanup.md` | Complete |
-| Consolidate API under Play | `.claude/plans/202609220100-consolidate-api-under-play.md` | **In progress** |
+| Consolidate API under Play | `.claude/plans/202609220100-consolidate-api-under-play.md` | Complete |
 | NYC product gaps | `.claude/plans/drafts/plan-nyc-product-gaps.md` | Draft — needs review |
 | Day-parting / Scheduling | `.claude/plans/drafts/plan-day-parting-scheduling.md` | Draft — needs review |
 | Live Preview | `.claude/plans/drafts/plan-live-preview.md` | Draft — needs review |

@@ -63,7 +63,7 @@ export default class extends Controller {
         options.headers = { "If-None-Match": this.manifestETag }
       }
 
-      const res = await fetch("/player/manifest", options)
+      const res = await fetch("/api/v1/player/manifest", options)
 
       if (res.status === 200) {
         const newETag = res.headers.get("ETag")
@@ -80,7 +80,7 @@ export default class extends Controller {
 
   async sendHeartbeat() {
     try {
-      const res = await fetch("/player/heartbeat", {
+      const res = await fetch("/api/v1/player/heartbeat", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
