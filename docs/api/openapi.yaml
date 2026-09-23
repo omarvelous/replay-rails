@@ -1,39 +1,106 @@
----
-openapi: 3.2.0
+openapi: "3.0.3"
 info:
   title: RePlay Player API
-  version: 1.0.0
+  version: "1.0.0"
+  description: |
+    Device communication API for RePlay digital signage players.
+
+    Browser players authenticate via a signed session cookie set on registration.
+    Native apps (future) authenticate via a Bearer token returned on registration.
+
+    All endpoints are on the Play subdomain: `play.replaytv.co/api/v1/`
 servers:
-- url: https://play.replaytv.co
-  description: Production
-- url: http://play.replay.localhost:3000
-  description: Development
+  - url: https://play.replaytv.co
+    description: Production
+  - url: http://play.replay.localhost:3000
+    description: Development
+
+tags:
+  - name: Registration
+    description: Device registration and pairing code generation
+  - name: Status
+    description: Player pairing status
+  - name: Pairing
+    description: Pairing code management
+  - name: Playback
+    description: Content delivery and device health
+
 paths:
-  "/api/v1/player":
-    get:
-      summary: show
-      tags:
-      - Play::Api::V1::Player
-      parameters:
-      - name: Authorization
-        in: header
-        required: false
-        schema:
-          type: string
-        example: Bearer Mg==--b675c1954c1f3164e41d1d6e758ced4f9758539d
-      - name: subdomain
-        in: path
-        required: true
-        schema:
-          type: string
-        example: play
+  /api/v1/players:
+    post:
+      summary: Register a new player device
+      description: |
+        Creates a new player and session. Returns a pairing code to display
+        on screen, a bearer token for native app auth, and a public ID for
+        identification. Sets a session cookie for browser players.
+      tags: [Registration]
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                screen_width:
+                  type: integer
+                  example: 1920
+                screen_height:
+                  type: integer
+                  example: 1080
+                touch_capable:
+                  type: boolean
+                  example: false
+                app_version:
+                  type: string
+                  example: "1.0.0"
+                  nullable: true
       responses:
-        '200':
-          description: 'returns paired: true when paired'
+        "201":
+          description: Player registered
           headers:
-            ETag:
+            Set-Cookie:
+              description: Signed player_session_id cookie (browser players)
               schema:
                 type: string
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      pairing_code:
+                        type: string
+                        description: 6-character alphanumeric code to display on screen
+                        example: A7B3K2
+                      token:
+                        type: string
+                        description: Signed bearer token for native app auth
+                        example: "Mg==--b675c1954c1f31..."
+                      public_id:
+                        type: string
+                        format: uuid
+                        description: Player public identifier
+                      expires_at:
+                        type: string
+                        format: date-time
+                        description: When the pairing code expires
+        "429":
+          description: Rate limited (10 registrations per IP per minute)
+
+  /api/v1/player:
+    get:
+      summary: Get player status
+      description: |
+        Returns whether the player is currently paired to a screen.
+        Used by the pairing UI to poll for pairing completion.
+      tags: [Status]
+      security:
+        - cookieAuth: []
+        - bearerAuth: []
+      responses:
+        "200":
+          description: Player status
           content:
             application/json:
               schema:
@@ -44,123 +111,71 @@ paths:
                     properties:
                       paired:
                         type: boolean
-                    required:
-                    - paired
-                required:
-                - data
-              example:
-                data:
-                  paired: true
-        '401':
-          description: returns 401 without session
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  error:
-                    type: object
-                    properties:
-                      message:
-                        type: string
-                    required:
-                    - message
-                required:
-                - error
-              example:
-                error:
-                  message: Invalid session
-  "/api/v1/player/heartbeat":
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+
+  /api/v1/player/heartbeat:
     post:
-      summary: create
-      tags:
-      - Play::Api::V1::Players::Heartbeat
-      parameters:
-      - name: subdomain
-        in: path
-        required: true
-        schema:
-          type: string
-        example: play
+      summary: Send device heartbeat
+      description: |
+        Reports that the player is still online. Updates IP address,
+        user agent, and screen resolution. Returns 410 Gone if the
+        player has been unpaired. Should be called every 30 seconds.
+      tags: [Playback]
+      security:
+        - cookieAuth: []
+        - bearerAuth: []
       requestBody:
         content:
-          application/x-www-form-urlencoded:
-            schema:
-              type: object
-              properties: {}
-            example: {}
           application/json:
             schema:
               type: object
               properties:
                 screen_width:
                   type: integer
+                  example: 1920
                 screen_height:
                   type: integer
-              required:
-              - screen_width
-              - screen_height
-            example:
-              screen_width: 3840
-              screen_height: 2160
+                  example: 1080
       responses:
-        '204':
-          description: updates screen resolution from params
-        '401':
-          description: returns 401 with revoked session
+        "204":
+          description: Heartbeat recorded
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "410":
+          description: Player has been unpaired
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  error:
-                    type: object
-                    properties:
-                      message:
-                        type: string
-                    required:
-                    - message
-                required:
-                - error
-              example:
-                error:
-                  message: Invalid session
-        '410':
-          description: returns 410 when player is unpaired
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  error:
-                    type: object
-                    properties:
-                      message:
-                        type: string
-                    required:
-                    - message
-                required:
-                - error
-              example:
-                error:
-                  message: unpaired
-  "/api/v1/player/manifest":
+                $ref: "#/components/schemas/Error"
+
+  /api/v1/player/manifest:
     get:
-      summary: show
-      tags:
-      - Play::Api::V1::Players::Manifest
+      summary: Get content manifest
+      description: |
+        Returns the full content dependency tree for the player's
+        assigned screen. Includes playlist ads, images, QR codes,
+        and experience data.
+
+        Uses ETag for conditional requests — send `If-None-Match`
+        with the previous ETag to get 304 when unchanged.
+        Poll every 30 seconds.
+      tags: [Playback]
+      security:
+        - cookieAuth: []
+        - bearerAuth: []
       parameters:
-      - name: subdomain
-        in: path
-        required: true
-        schema:
-          type: string
-        example: play
+        - name: If-None-Match
+          in: header
+          description: ETag from previous response for conditional request
+          schema:
+            type: string
       responses:
-        '200':
-          description: produces different ETag when playlist_ad is added
+        "200":
+          description: Content manifest
           headers:
             ETag:
+              description: Content fingerprint for conditional requests
               schema:
                 type: string
           content:
@@ -168,289 +183,48 @@ paths:
               schema:
                 type: object
                 properties:
-                  data:
-                    type: object
-                    properties:
-                      content:
-                        type: 'null'
-                    required:
-                    - content
                   deploy:
                     type: string
+                    description: Application revision
                   screen_content:
                     type: object
                     properties:
                       pid:
                         type: string
+                        format: uuid
                       updated_at:
                         type: integer
-                    required:
-                    - pid
-                    - updated_at
+                        description: Unix timestamp
                   contentable:
                     type: object
+                    description: Playlist or Experience with nested dependencies
                     properties:
                       type:
                         type: string
+                        enum: [Playlist, Experience]
                       pid:
                         type: string
-                      updated_at:
-                        type: integer
-                      status:
-                        type: string
-                      playlist_ads:
-                        type: array
-                        items:
-                          type: object
-                          properties:
-                            pid:
-                              type: string
-                            updated_at:
-                              type: integer
-                            position:
-                              type: integer
-                            duration:
-                              type: integer
-                            layout:
-                              type: string
-                            theme:
-                              type: string
-                            images:
-                              type: array
-                              items: {}
-                            adable:
-                              type: object
-                              properties:
-                                type:
-                                  type: string
-                                pid:
-                                  type: string
-                                updated_at:
-                                  type: integer
-                                listing:
-                                  type: object
-                                  properties:
-                                    pid:
-                                      type: string
-                                    updated_at:
-                                      type: integer
-                                    photos:
-                                      type: array
-                                      items:
-                                        type: object
-                                        properties:
-                                          id:
-                                            type: integer
-                                          created_at:
-                                            type: integer
-                                        required:
-                                        - id
-                                        - created_at
-                                    floor_plans:
-                                      type: array
-                                      items: {}
-                                    qr_codes:
-                                      type: array
-                                      items: {}
-                                  required:
-                                  - pid
-                                  - updated_at
-                                  - photos
-                                  - floor_plans
-                                  - qr_codes
-                              required:
-                              - type
-                              - pid
-                              - updated_at
-                              - listing
-                          required:
-                          - pid
-                          - updated_at
-                          - position
-                          - duration
-                          - layout
-                          - theme
-                          - images
-                          - adable
-                      config:
-                        type: object
-                        properties:
-                          sections:
-                            type: object
-                            properties:
-                              photos:
-                                type: boolean
-                              details:
-                                type: boolean
-                              agent_card:
-                                type: boolean
-                              qr_handoff:
-                                type: boolean
-                              floor_plans:
-                                type: boolean
-                            required:
-                            - photos
-                            - details
-                            - agent_card
-                            - qr_handoff
-                            - floor_plans
-                        required:
-                        - sections
-                      experienceable:
-                        type: object
-                        properties:
-                          type:
-                            type: string
-                          pid:
-                            type: string
-                          updated_at:
-                            type: integer
-                          listing:
-                            type: object
-                            properties:
-                              pid:
-                                type: string
-                              updated_at:
-                                type: integer
-                              photos:
-                                type: array
-                                items: {}
-                              floor_plans:
-                                type: array
-                                items: {}
-                              qr_codes:
-                                type: array
-                                items: {}
-                            required:
-                            - pid
-                            - updated_at
-                            - photos
-                            - floor_plans
-                            - qr_codes
-                        required:
-                        - type
-                        - pid
-                        - updated_at
-                        - listing
-                    required:
-                    - type
-                    - pid
-                    - updated_at
-              example:
-                data:
-                  content:
-                deploy: dev
-                screen_content:
-                  pid: 26a54746-780e-4f56-9c4a-b84c39db010d
-                  updated_at: 1790167376
-                contentable:
-                  type: Playlist
-                  pid: 1f16f9ba-ec9a-4f32-b234-8ef58f84bd35
-                  updated_at: 1790167376
-                  status: published
-                  playlist_ads:
-                  - pid: 0dcbf936-aafa-43f9-b82b-28a20491ec95
-                    updated_at: 1790167376
-                    position: 1
-                    duration: 10
-                    layout: hero
-                    theme: dark
-                    images: []
-                    adable:
-                      type: Ads::ListingAd
-                      pid: a9f75903-fdd1-43bd-8f12-dbd4570d54f1
-                      updated_at: 1790167376
-                      listing:
-                        pid: 521d8950-9846-4b98-b24b-4ebecee9d8c6
-                        updated_at: 1790167376
-                        photos: []
-                        floor_plans: []
-                        qr_codes: []
-                  - pid: 7238b3b3-59ce-4d56-9d5b-e404a62f8ecf
-                    updated_at: 1790167376
-                    position: 2
-                    duration: 10
-                    layout: hero
-                    theme: dark
-                    images: []
-                    adable:
-                      type: Ads::ListingAd
-                      pid: 7fb5ce6a-bae4-4c8f-9567-97db148ce8a8
-                      updated_at: 1790167376
-                      listing:
-                        pid: 75862fa7-564d-459f-9505-dd470797c87e
-                        updated_at: 1790167376
-                        photos: []
-                        floor_plans: []
-                        qr_codes: []
-                  config:
-                    sections:
-                      photos: true
-                      details: true
-                      agent_card: true
-                      qr_handoff: true
-                      floor_plans: true
-                  experienceable:
-                    type: Experiences::ListingExperience
-                    pid: f4d1d82a-ce1f-4e92-a0a9-2a53573a5404
-                    updated_at: 1790167376
-                    listing:
-                      pid: 5c51ac32-d6d1-42b9-8dfa-a72b36b29304
-                      updated_at: 1790167376
-                      photos: []
-                      floor_plans: []
-                      qr_codes: []
-        '304':
-          description: returns 304 when content unchanged
-          headers:
-            ETag:
-              schema:
-                type: string
-        '401':
-          description: returns 401 with revoked session
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  error:
-                    type: object
-                    properties:
-                      message:
-                        type: string
-                    required:
-                    - message
-                required:
-                - error
-              example:
-                error:
-                  message: Invalid session
-  "/api/v1/player/pairing_code":
+                        format: uuid
+        "304":
+          description: Content unchanged (ETag matched)
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+
+  /api/v1/player/pairing_code:
     post:
-      summary: create
-      tags:
-      - Play::Api::V1::Players::PairingCode
-      parameters:
-      - name: subdomain
-        in: path
-        required: true
-        schema:
-          type: string
-        example: play
-      requestBody:
-        content:
-          application/json:
-            schema:
-              type: object
-              properties: {}
-            example: {}
+      summary: Refresh pairing code
+      description: |
+        Returns the current pairing code if still valid, or generates
+        a new one. The code is a 6-character alphanumeric string
+        displayed on the screen for the user to enter in the app.
+        Codes expire after 10 minutes.
+      tags: [Pairing]
+      security:
+        - cookieAuth: []
+        - bearerAuth: []
       responses:
-        '201':
-          description: does not create a new player
-          headers:
-            ETag:
-              schema:
-                type: string
+        "201":
+          description: Pairing code
           content:
             application/json:
               schema:
@@ -461,100 +235,40 @@ paths:
                     properties:
                       pairing_code:
                         type: string
+                        description: 6-character alphanumeric code
+                        example: X9Y2Z1
                       expires_at:
                         type: string
-                    required:
-                    - pairing_code
-                    - expires_at
-                required:
-                - data
-              example:
-                data:
-                  pairing_code: ZE0WP2
-                  expires_at: '2026-09-23T12:52:56.533Z'
-        '401':
-          description: returns 401 with revoked session
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  error:
-                    type: object
-                    properties:
-                      message:
-                        type: string
-                    required:
-                    - message
-                required:
-                - error
-              example:
-                error:
-                  message: Invalid session
-  "/api/v1/players":
-    post:
-      summary: create
-      tags:
-      - Play::Api::V1::Player
-      parameters:
-      - name: subdomain
-        in: path
-        required: true
-        schema:
-          type: string
-        example: play
-      requestBody:
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                screen_width:
-                  type: integer
-                screen_height:
-                  type: integer
-                touch_capable:
-                  type: boolean
-                app_version:
-                  type: string
-            example:
-              screen_width: 1920
-              screen_height: 1080
-              touch_capable: true
-              app_version: 1.0.0
-      responses:
-        '201':
-          description: parses user agent into device fields
-          headers:
-            ETag:
-              schema:
-                type: string
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  data:
-                    type: object
-                    properties:
-                      pairing_code:
-                        type: string
-                      token:
-                        type: string
-                      public_id:
-                        type: string
-                      expires_at:
-                        type: string
-                    required:
-                    - pairing_code
-                    - token
-                    - public_id
-                    - expires_at
-                required:
-                - data
-              example:
-                data:
-                  pairing_code: LNBCEK
-                  token: MjQ=--9e28bcd54c831d13174332587546a90e4fe733e6
-                  public_id: a3c25418-e013-44d6-adb4-b0b92f3be5c4
-                  expires_at: '2026-09-23T12:52:56.421Z'
+                        format: date-time
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+
+components:
+  securitySchemes:
+    cookieAuth:
+      type: apiKey
+      in: cookie
+      name: player_session_id
+      description: Signed session cookie set on registration (browser players)
+    bearerAuth:
+      type: http
+      scheme: bearer
+      description: Signed session token returned on registration (native apps)
+
+  schemas:
+    Error:
+      type: object
+      properties:
+        error:
+          type: object
+          properties:
+            message:
+              type: string
+
+  responses:
+    Unauthorized:
+      description: Invalid or missing session
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Error"
