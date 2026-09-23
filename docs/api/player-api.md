@@ -2,6 +2,11 @@
 
 Players are browser-based devices that render content on screens. Browser players communicate entirely through the `play` subdomain using cookie-based sessions. A native app API also exists for future use.
 
+## Interactive docs
+
+- **Swagger UI:** `play.replaytv.co/api/docs`
+- **OpenAPI spec:** `docs/api/openapi.yaml` (hand-maintained)
+
 ## Play subdomain (browser players)
 
 Base URL: `play.replaytv.co`
