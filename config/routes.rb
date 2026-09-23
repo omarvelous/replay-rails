@@ -170,6 +170,9 @@ Rails.application.routes.draw do
 
       # Device API (JSON)
       namespace :api do
+        # Docs
+        get "docs", to: "/play/api_docs#show"
+        get "openapi.yaml", to: "/play/api_docs#spec"
         namespace :v1 do
           resources :players, only: :create
           resource :player, only: :show do

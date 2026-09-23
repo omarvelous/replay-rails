@@ -341,16 +341,16 @@ paths:
                   content:
                 deploy: dev
                 screen_content:
-                  pid: 5dde6b49-64cc-4652-ba5c-e7429611b289
-                  updated_at: 1790166798
+                  pid: 26a54746-780e-4f56-9c4a-b84c39db010d
+                  updated_at: 1790167376
                 contentable:
                   type: Playlist
-                  pid: 4c0d1d29-2f9e-48a1-b890-ecafd2c9363e
-                  updated_at: 1790166798
+                  pid: 1f16f9ba-ec9a-4f32-b234-8ef58f84bd35
+                  updated_at: 1790167376
                   status: published
                   playlist_ads:
-                  - pid: 4f513ab0-a5e4-4396-b6f1-1f12af9c1a8f
-                    updated_at: 1790166798
+                  - pid: 0dcbf936-aafa-43f9-b82b-28a20491ec95
+                    updated_at: 1790167376
                     position: 1
                     duration: 10
                     layout: hero
@@ -358,16 +358,16 @@ paths:
                     images: []
                     adable:
                       type: Ads::ListingAd
-                      pid: 5151f5ce-e1d0-4823-a302-4ea323e14de4
-                      updated_at: 1790166798
+                      pid: a9f75903-fdd1-43bd-8f12-dbd4570d54f1
+                      updated_at: 1790167376
                       listing:
-                        pid: c0004a57-ccbc-4609-a20e-b24358a0fe97
-                        updated_at: 1790166798
+                        pid: 521d8950-9846-4b98-b24b-4ebecee9d8c6
+                        updated_at: 1790167376
                         photos: []
                         floor_plans: []
                         qr_codes: []
-                  - pid: d93b831d-c073-42f6-8bb9-00c2159254fe
-                    updated_at: 1790166798
+                  - pid: 7238b3b3-59ce-4d56-9d5b-e404a62f8ecf
+                    updated_at: 1790167376
                     position: 2
                     duration: 10
                     layout: hero
@@ -375,11 +375,11 @@ paths:
                     images: []
                     adable:
                       type: Ads::ListingAd
-                      pid: 86263929-0506-4537-8b4d-e47f0a4d03ac
-                      updated_at: 1790166798
+                      pid: 7fb5ce6a-bae4-4c8f-9567-97db148ce8a8
+                      updated_at: 1790167376
                       listing:
-                        pid: b048a705-64ac-45f7-9596-235d1269e4d8
-                        updated_at: 1790166798
+                        pid: 75862fa7-564d-459f-9505-dd470797c87e
+                        updated_at: 1790167376
                         photos: []
                         floor_plans: []
                         qr_codes: []
@@ -392,11 +392,11 @@ paths:
                       floor_plans: true
                   experienceable:
                     type: Experiences::ListingExperience
-                    pid: 889b810b-9b2f-4067-8270-71b9246dd82b
-                    updated_at: 1790166798
+                    pid: f4d1d82a-ce1f-4e92-a0a9-2a53573a5404
+                    updated_at: 1790167376
                     listing:
-                      pid: f69ac571-b222-4538-9310-5fb44581715e
-                      updated_at: 1790166798
+                      pid: 5c51ac32-d6d1-42b9-8dfa-a72b36b29304
+                      updated_at: 1790167376
                       photos: []
                       floor_plans: []
                       qr_codes: []
@@ -470,8 +470,8 @@ paths:
                 - data
               example:
                 data:
-                  pairing_code: L0ZTS8
-                  expires_at: '2026-09-23T12:43:18.452Z'
+                  pairing_code: ZE0WP2
+                  expires_at: '2026-09-23T12:52:56.533Z'
         '401':
           description: returns 401 with revoked session
           content:
@@ -554,7 +554,7 @@ paths:
                 - data
               example:
                 data:
-                  pairing_code: BTUPUM
+                  pairing_code: LNBCEK
                   token: MjQ=--9e28bcd54c831d13174332587546a90e4fe733e6
-                  public_id: c1b4fbf8-d05c-4b9c-91d3-eda873a0e572
-                  expires_at: '2026-09-23T12:43:18.373Z'
+                  public_id: a3c25418-e013-44d6-adb4-b0b92f3be5c4
+                  expires_at: '2026-09-23T12:52:56.421Z'
