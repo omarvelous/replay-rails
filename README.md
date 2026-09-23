@@ -20,8 +20,7 @@ The app uses subdomain routing. Visit:
 | [replay.localhost:3000](http://replay.localhost:3000) | Marketing site |
 | [app.replay.localhost:3000](http://app.replay.localhost:3000) | App (login here) |
 | [admin.replay.localhost:3000](http://admin.replay.localhost:3000) | Admin panel (Administrate) |
-| [play.replay.localhost:3000](http://play.replay.localhost:3000) | Player screens (HTML) |
-| [api.replay.localhost:3000](http://api.replay.localhost:3000) | Player API (JSON) |
+| [play.replay.localhost:3000](http://play.replay.localhost:3000) | Player screens + device API |
 
 **Demo logins** (at `app.replay.localhost:3000`):
 

@@ -1,0 +1,560 @@
+---
+openapi: 3.2.0
+info:
+  title: RePlay Player API
+  version: 1.0.0
+servers:
+- url: https://play.replaytv.co
+  description: Production
+- url: http://play.replay.localhost:3000
+  description: Development
+paths:
+  "/api/v1/player":
+    get:
+      summary: show
+      tags:
+      - Play::Api::V1::Player
+      parameters:
+      - name: Authorization
+        in: header
+        required: false
+        schema:
+          type: string
+        example: Bearer Mg==--b675c1954c1f3164e41d1d6e758ced4f9758539d
+      - name: subdomain
+        in: path
+        required: true
+        schema:
+          type: string
+        example: play
+      responses:
+        '200':
+          description: 'returns paired: true when paired'
+          headers:
+            ETag:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      paired:
+                        type: boolean
+                    required:
+                    - paired
+                required:
+                - data
+              example:
+                data:
+                  paired: true
+        '401':
+          description: returns 401 without session
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      message:
+                        type: string
+                    required:
+                    - message
+                required:
+                - error
+              example:
+                error:
+                  message: Invalid session
+  "/api/v1/player/heartbeat":
+    post:
+      summary: create
+      tags:
+      - Play::Api::V1::Players::Heartbeat
+      parameters:
+      - name: subdomain
+        in: path
+        required: true
+        schema:
+          type: string
+        example: play
+      requestBody:
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties: {}
+            example: {}
+          application/json:
+            schema:
+              type: object
+              properties:
+                screen_width:
+                  type: integer
+                screen_height:
+                  type: integer
+              required:
+              - screen_width
+              - screen_height
+            example:
+              screen_width: 3840
+              screen_height: 2160
+      responses:
+        '204':
+          description: updates screen resolution from params
+        '401':
+          description: returns 401 with revoked session
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      message:
+                        type: string
+                    required:
+                    - message
+                required:
+                - error
+              example:
+                error:
+                  message: Invalid session
+        '410':
+          description: returns 410 when player is unpaired
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      message:
+                        type: string
+                    required:
+                    - message
+                required:
+                - error
+              example:
+                error:
+                  message: unpaired
+  "/api/v1/player/manifest":
+    get:
+      summary: show
+      tags:
+      - Play::Api::V1::Players::Manifest
+      parameters:
+      - name: subdomain
+        in: path
+        required: true
+        schema:
+          type: string
+        example: play
+      responses:
+        '200':
+          description: produces different ETag when playlist_ad is added
+          headers:
+            ETag:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      content:
+                        type: 'null'
+                    required:
+                    - content
+                  deploy:
+                    type: string
+                  screen_content:
+                    type: object
+                    properties:
+                      pid:
+                        type: string
+                      updated_at:
+                        type: integer
+                    required:
+                    - pid
+                    - updated_at
+                  contentable:
+                    type: object
+                    properties:
+                      type:
+                        type: string
+                      pid:
+                        type: string
+                      updated_at:
+                        type: integer
+                      status:
+                        type: string
+                      playlist_ads:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            pid:
+                              type: string
+                            updated_at:
+                              type: integer
+                            position:
+                              type: integer
+                            duration:
+                              type: integer
+                            layout:
+                              type: string
+                            theme:
+                              type: string
+                            images:
+                              type: array
+                              items: {}
+                            adable:
+                              type: object
+                              properties:
+                                type:
+                                  type: string
+                                pid:
+                                  type: string
+                                updated_at:
+                                  type: integer
+                                listing:
+                                  type: object
+                                  properties:
+                                    pid:
+                                      type: string
+                                    updated_at:
+                                      type: integer
+                                    photos:
+                                      type: array
+                                      items:
+                                        type: object
+                                        properties:
+                                          id:
+                                            type: integer
+                                          created_at:
+                                            type: integer
+                                        required:
+                                        - id
+                                        - created_at
+                                    floor_plans:
+                                      type: array
+                                      items: {}
+                                    qr_codes:
+                                      type: array
+                                      items: {}
+                                  required:
+                                  - pid
+                                  - updated_at
+                                  - photos
+                                  - floor_plans
+                                  - qr_codes
+                              required:
+                              - type
+                              - pid
+                              - updated_at
+                              - listing
+                          required:
+                          - pid
+                          - updated_at
+                          - position
+                          - duration
+                          - layout
+                          - theme
+                          - images
+                          - adable
+                      config:
+                        type: object
+                        properties:
+                          sections:
+                            type: object
+                            properties:
+                              photos:
+                                type: boolean
+                              details:
+                                type: boolean
+                              agent_card:
+                                type: boolean
+                              qr_handoff:
+                                type: boolean
+                              floor_plans:
+                                type: boolean
+                            required:
+                            - photos
+                            - details
+                            - agent_card
+                            - qr_handoff
+                            - floor_plans
+                        required:
+                        - sections
+                      experienceable:
+                        type: object
+                        properties:
+                          type:
+                            type: string
+                          pid:
+                            type: string
+                          updated_at:
+                            type: integer
+                          listing:
+                            type: object
+                            properties:
+                              pid:
+                                type: string
+                              updated_at:
+                                type: integer
+                              photos:
+                                type: array
+                                items: {}
+                              floor_plans:
+                                type: array
+                                items: {}
+                              qr_codes:
+                                type: array
+                                items: {}
+                            required:
+                            - pid
+                            - updated_at
+                            - photos
+                            - floor_plans
+                            - qr_codes
+                        required:
+                        - type
+                        - pid
+                        - updated_at
+                        - listing
+                    required:
+                    - type
+                    - pid
+                    - updated_at
+              example:
+                data:
+                  content:
+                deploy: dev
+                screen_content:
+                  pid: 5dde6b49-64cc-4652-ba5c-e7429611b289
+                  updated_at: 1790166798
+                contentable:
+                  type: Playlist
+                  pid: 4c0d1d29-2f9e-48a1-b890-ecafd2c9363e
+                  updated_at: 1790166798
+                  status: published
+                  playlist_ads:
+                  - pid: 4f513ab0-a5e4-4396-b6f1-1f12af9c1a8f
+                    updated_at: 1790166798
+                    position: 1
+                    duration: 10
+                    layout: hero
+                    theme: dark
+                    images: []
+                    adable:
+                      type: Ads::ListingAd
+                      pid: 5151f5ce-e1d0-4823-a302-4ea323e14de4
+                      updated_at: 1790166798
+                      listing:
+                        pid: c0004a57-ccbc-4609-a20e-b24358a0fe97
+                        updated_at: 1790166798
+                        photos: []
+                        floor_plans: []
+                        qr_codes: []
+                  - pid: d93b831d-c073-42f6-8bb9-00c2159254fe
+                    updated_at: 1790166798
+                    position: 2
+                    duration: 10
+                    layout: hero
+                    theme: dark
+                    images: []
+                    adable:
+                      type: Ads::ListingAd
+                      pid: 86263929-0506-4537-8b4d-e47f0a4d03ac
+                      updated_at: 1790166798
+                      listing:
+                        pid: b048a705-64ac-45f7-9596-235d1269e4d8
+                        updated_at: 1790166798
+                        photos: []
+                        floor_plans: []
+                        qr_codes: []
+                  config:
+                    sections:
+                      photos: true
+                      details: true
+                      agent_card: true
+                      qr_handoff: true
+                      floor_plans: true
+                  experienceable:
+                    type: Experiences::ListingExperience
+                    pid: 889b810b-9b2f-4067-8270-71b9246dd82b
+                    updated_at: 1790166798
+                    listing:
+                      pid: f69ac571-b222-4538-9310-5fb44581715e
+                      updated_at: 1790166798
+                      photos: []
+                      floor_plans: []
+                      qr_codes: []
+        '304':
+          description: returns 304 when content unchanged
+          headers:
+            ETag:
+              schema:
+                type: string
+        '401':
+          description: returns 401 with revoked session
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      message:
+                        type: string
+                    required:
+                    - message
+                required:
+                - error
+              example:
+                error:
+                  message: Invalid session
+  "/api/v1/player/pairing_code":
+    post:
+      summary: create
+      tags:
+      - Play::Api::V1::Players::PairingCode
+      parameters:
+      - name: subdomain
+        in: path
+        required: true
+        schema:
+          type: string
+        example: play
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties: {}
+            example: {}
+      responses:
+        '201':
+          description: does not create a new player
+          headers:
+            ETag:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      pairing_code:
+                        type: string
+                      expires_at:
+                        type: string
+                    required:
+                    - pairing_code
+                    - expires_at
+                required:
+                - data
+              example:
+                data:
+                  pairing_code: L0ZTS8
+                  expires_at: '2026-09-23T12:43:18.452Z'
+        '401':
+          description: returns 401 with revoked session
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      message:
+                        type: string
+                    required:
+                    - message
+                required:
+                - error
+              example:
+                error:
+                  message: Invalid session
+  "/api/v1/players":
+    post:
+      summary: create
+      tags:
+      - Play::Api::V1::Player
+      parameters:
+      - name: subdomain
+        in: path
+        required: true
+        schema:
+          type: string
+        example: play
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                screen_width:
+                  type: integer
+                screen_height:
+                  type: integer
+                touch_capable:
+                  type: boolean
+                app_version:
+                  type: string
+            example:
+              screen_width: 1920
+              screen_height: 1080
+              touch_capable: true
+              app_version: 1.0.0
+      responses:
+        '201':
+          description: parses user agent into device fields
+          headers:
+            ETag:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      pairing_code:
+                        type: string
+                      token:
+                        type: string
+                      public_id:
+                        type: string
+                      expires_at:
+                        type: string
+                    required:
+                    - pairing_code
+                    - token
+                    - public_id
+                    - expires_at
+                required:
+                - data
+              example:
+                data:
+                  pairing_code: BTUPUM
+                  token: MjQ=--9e28bcd54c831d13174332587546a90e4fe733e6
+                  public_id: c1b4fbf8-d05c-4b9c-91d3-eda873a0e572
+                  expires_at: '2026-09-23T12:43:18.373Z'

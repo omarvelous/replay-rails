@@ -28,7 +28,7 @@ module Play
 
           render_data({
             pairing_code: result.player.pairing_code,
-            session_id: result.session.id,
+            token: Rails.application.message_verifier(:player_session).generate(result.session.id),
             public_id: result.player.public_id,
             expires_at: result.player.pairing_code_expires_at
           }, status: :created)

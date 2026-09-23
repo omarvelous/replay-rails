@@ -166,11 +166,11 @@ Generates a new 6-character pairing code. Used when the current code expires (10
 }
 ```
 
-## API subdomain (native apps)
+## Native apps (future)
 
-Base URL: `api.replaytv.co`
-
-Reserved for future native app clients. Uses the same session-based cookie auth as the play subdomain. Endpoints mirror the play routes under `/v1/player/`.
+The same API endpoints at `play.replaytv.co/api/v1/` will serve
+native apps (Fire TV, Android TV) using bearer token auth. Bearer
+auth is not yet implemented — browser players use cookie auth.
 
 ## Device Detection
 

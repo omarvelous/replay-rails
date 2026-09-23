@@ -19,9 +19,22 @@ module PlayerAuthentication
 
   def resume_player_session
     return @current_player_session if defined?(@current_player_session)
-    @current_player_session = PlayerSession.active.find_by(id: cookies.signed[:player_session_id])
+    @current_player_session = find_session_from_bearer || find_session_from_cookie
     @current_player = @current_player_session&.player
     @current_player_session
+  end
+
+  def find_session_from_bearer
+    if header = request.headers["Authorization"]&.delete_prefix("Bearer ")
+      session_id = Rails.application.message_verifier(:player_session).verify(header)
+      PlayerSession.active.find_by(id: session_id)
+    end
+  rescue ActiveSupport::MessageVerifier::InvalidSignature
+    nil
+  end
+
+  def find_session_from_cookie
+    PlayerSession.active.find_by(id: cookies.signed[:player_session_id])
   end
 
   def request_player_authentication

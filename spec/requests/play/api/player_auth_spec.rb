@@ -9,6 +9,30 @@ RSpec.describe "Player Authentication" do
     pair_player!(screen, player)
   end
 
+  describe "bearer auth" do
+    it "authenticates with a signed session token" do
+      player_session = player.player_sessions.create!(ip_address: "1.1.1.1")
+      token = Rails.application.message_verifier(:player_session).generate(player_session.id)
+
+      get "/api/v1/player", headers: { "Authorization" => "Bearer #{token}" }
+      expect(response).to be_successful
+    end
+
+    it "returns 401 with an invalid bearer token" do
+      get "/api/v1/player", headers: { "Authorization" => "Bearer invalid" }
+      expect(response).to have_http_status(:unauthorized)
+    end
+
+    it "returns 401 with a revoked session bearer token" do
+      player_session = player.player_sessions.create!(ip_address: "1.1.1.1")
+      token = Rails.application.message_verifier(:player_session).generate(player_session.id)
+      player_session.revoke!
+
+      get "/api/v1/player", headers: { "Authorization" => "Bearer #{token}" }
+      expect(response).to have_http_status(:unauthorized)
+    end
+  end
+
   describe "cookie auth" do
     it "authenticates with signed player_session_id cookie" do
       sign_in_player(player)
@@ -30,10 +54,10 @@ RSpec.describe "Player Authentication" do
   end
 
   describe "registration" do
-    it "returns session_id and public_id" do
+    it "returns token and public_id" do
       post "/api/v1/players", as: :json
       data = response.parsed_body["data"]
-      expect(data["session_id"]).to be_present
+      expect(data["token"]).to be_present
       expect(data["public_id"]).to be_present
     end
 

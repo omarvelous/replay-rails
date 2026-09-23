@@ -80,6 +80,7 @@ end
 group :test do
   gem "capybara"
   gem "database_cleaner-active_record"
+  gem "rspec-openapi", require: false
   gem "selenium-webdriver"
   gem "shoulda-matchers", "~> 8.0"
   gem "simplecov", require: false

@@ -1,4 +1,4 @@
-.PHONY: setup test test-file lint lint-fix scan migrate seed db-reset generate console routes up down build restart logs
+.PHONY: setup test test-file lint lint-fix scan migrate seed db-reset generate console routes up down build restart logs openapi
 
 # Setup (create DBs, migrate, seed)
 setup:
@@ -34,6 +34,10 @@ seed:
 
 db-reset:
 	docker compose exec web bin/rails db:reset
+
+# API docs
+openapi:
+	docker compose exec -e RAILS_ENV=test -e OPENAPI=1 web bundle exec rspec spec/requests/play/api/ --format documentation
 
 # Generators
 generate:
