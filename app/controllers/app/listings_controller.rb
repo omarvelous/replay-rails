@@ -94,7 +94,10 @@ module App
     end
 
     def listing_params
-      params.require(:listing).permit(:address, :price, :beds, :baths, :sqft, :status, :property_type, :listing_type, :description, :source_url, photos: [])
+      permitted = params.require(:listing).permit(:address, :price, :beds, :baths, :sqft, :status, :property_type, :listing_type, :description, :source_url, photos: [])
+      # Don't clear existing photos when no new files are uploaded
+      permitted.delete(:photos) if permitted[:photos]&.all?(&:blank?)
+      permitted
     end
 
     def enqueue_photo_import
