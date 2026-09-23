@@ -85,24 +85,21 @@ module Listings
       end
 
       def extract_photos(data)
-        images = data["image"]
-        urls = case images
+        json_ld_urls = case data["image"]
         when Array
-          images.filter_map { |i| i.is_a?(String) ? i : i.is_a?(Hash) ? i["url"] : nil }
+          data["image"].filter_map { |i| i.is_a?(String) ? i : i.is_a?(Hash) ? i["url"] : nil }
         when Hash
-          [ images["url"] ].compact
+          [ data["image"]["url"] ].compact
         when String
-          [ images ]
+          [ data["image"] ]
         else
           []
         end
 
-        # Supplement with all og:image tags if no JSON-LD images found
-        if urls.empty?
-          urls = all_og_images
-        end
+        og_urls = all_og_images
 
-        urls
+        # Take whichever source has more photos
+        og_urls.size > json_ld_urls.size ? og_urls : json_ld_urls
       end
 
       def og(property)
