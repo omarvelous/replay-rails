@@ -17,8 +17,10 @@ Rails.application.routes.draw do
 
     # Documentation
     scope module: "docs" do
-      get "/docs",       to: "pages#index", as: :docs
-      get "/docs/*slug", to: "pages#show",  as: :doc
+      get "/docs",            to: "pages#index", as: :docs
+      get "/docs/api",        to: "pages#api",   as: :api_docs
+      get "/docs/api/openapi.yaml", to: "pages#openapi_spec"
+      get "/docs/*slug",      to: "pages#show",  as: :doc
     end
 
     # Consumer-facing landing pages
@@ -170,9 +172,6 @@ Rails.application.routes.draw do
 
       # Device API (JSON)
       namespace :api do
-        # Docs
-        get "docs", to: "/play/api_docs#show"
-        get "openapi.yaml", to: "/play/api_docs#spec"
         namespace :v1 do
           resources :players, only: :create
           resource :player, only: :show do
