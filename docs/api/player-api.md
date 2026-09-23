@@ -4,7 +4,7 @@ Players are browser-based devices that render content on screens. Browser player
 
 ## Interactive docs
 
-- **Swagger UI:** `replaytv.co/docs/api`
+- **Swagger UI:** `replaytv.co/docs/play/api`
 - **OpenAPI spec:** `docs/api/openapi.yaml` (hand-maintained)
 
 ## Play subdomain (browser players)
