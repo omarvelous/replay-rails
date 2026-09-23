@@ -46,8 +46,12 @@ RSpec.describe Listings::Extractors::StructuredData do
         expect(result[:description]).to include("Stunning 2-bedroom")
       end
 
-      it "extracts photo from og:image" do
-        expect(result[:photo_urls]).to include("https://example.com/photos/og-main.jpg")
+      it "extracts all og:image photos" do
+        expect(result[:photo_urls]).to eq([
+          "https://example.com/photos/og-main.jpg",
+          "https://example.com/photos/og-2.jpg",
+          "https://example.com/photos/og-3.jpg"
+        ])
       end
     end
 

@@ -87,15 +87,19 @@ module Listings
       def extract_photos(data)
         images = data["image"]
         urls = case images
-        when Array then images.select { |i| i.is_a?(String) }
-        when String then [ images ]
-        else []
+        when Array
+          images.filter_map { |i| i.is_a?(String) ? i : i.is_a?(Hash) ? i["url"] : nil }
+        when Hash
+          [ images["url"] ].compact
+        when String
+          [ images ]
+        else
+          []
         end
 
-        # Supplement with og:image if no images found
+        # Supplement with all og:image tags if no JSON-LD images found
         if urls.empty?
-          og_image = og("image")
-          urls << og_image if og_image.present?
+          urls = all_og_images
         end
 
         urls
@@ -104,6 +108,10 @@ module Listings
       def og(property)
         tag = @doc.at_css("meta[property='og:#{property}']")
         tag&.[]("content")
+      end
+
+      def all_og_images
+        @doc.css('meta[property="og:image"]').filter_map { |m| m["content"].presence }
       end
     end
   end
