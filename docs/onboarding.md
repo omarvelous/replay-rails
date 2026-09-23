@@ -26,8 +26,7 @@ The app runs on `localhost:3000` with subdomain routing:
 | `replay.localhost:3000` | Marketing site |
 | `app.replay.localhost:3000` | Main application |
 | `admin.replay.localhost:3000` | Admin panel (Administrate) |
-| `play.replay.localhost:3000` | Player/screen playback |
-| `api.replay.localhost:3000` | JSON API (device communication) |
+| `play.replay.localhost:3000` | Player screens + device API (`/api/v1/`) |
 
 ## Demo credentials
 

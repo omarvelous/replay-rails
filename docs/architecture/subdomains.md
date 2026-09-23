@@ -1,6 +1,6 @@
 # Subdomain Routing
 
-RePlay uses 5 subdomains to separate concerns. Each maps to a Rails module with its own controllers, views, and layouts.
+RePlay uses 4 subdomains to separate concerns. Each maps to a Rails module with its own controllers, views, and layouts.
 
 ## Subdomain map
 
@@ -9,8 +9,7 @@ RePlay uses 5 subdomains to separate concerns. Each maps to a Rails module with 
 | _(root)_ | `Marketing` | `marketing` | No | Public marketing pages + Go:: landing pages |
 | `app` | `App` | `app` | Yes | Main application for brokerage users |
 | `admin` | `Admin` | Administrate | Yes (admin) | Internal operations panel |
-| `play` | `Play` | `player` | Cookie | HTML playback rendered on screen devices |
-| `api` | `Api` | — (JSON) | Cookie | Native app API (future use) |
+| `play` | `Play` | `player` | Cookie | Player screens + device API (`/api/v1/`) |
 
 ## Route structure
 
@@ -50,27 +49,21 @@ constraints subdomain: "admin" do
   end
 end
 
-# Play — HTML for screens (self-contained, cookie auth)
+# Play — player screens + device API (cookie auth)
 constraints subdomain: "play" do
   scope module: "play" do
     root "players#show"           # redirects to /player/new if no session
-    resource :player, only: [:new, :create, :show] do
-      resource :heartbeat, only: :create
-      resource :manifest, only: :show
-      resource :pairing_code, only: :create
-      resource :session, only: :create
-    end
-  end
-end
+    resource :player, only: [:new, :show]
 
-# API — JSON for native apps (future)
-constraints subdomain: "api" do
-  scope module: "api" do
-    namespace :v1 do
-      resource :player, only: [:create, :show] do
-        resource :heartbeat, only: :create
-        resource :manifest, only: :show
-        resource :pairing_code, only: :create
+    # Device API (JSON)
+    namespace :api do
+      namespace :v1 do
+        resources :players, only: :create
+        resource :player, only: :show do
+          resource :heartbeat, only: :create
+          resource :manifest, only: :show
+          resource :pairing_code, only: :create
+        end
       end
     end
   end
@@ -92,6 +85,7 @@ In development, subdomains resolve on `replay.localhost`:
 | `play.replay.localhost:3000` | Player (root → pairing if no session) |
 | `play.replay.localhost:3000/player/new` | Player pairing screen |
 | `play.replay.localhost:3000/player` | Player playback |
+| `play.replay.localhost:3000/api/v1/player/manifest` | Device API (JSON) |
 | `replay.localhost:3000/s/ABC123` | QR scan redirect |
 
 `.localhost` domains resolve to `127.0.0.1` without `/etc/hosts` entries.
@@ -107,8 +101,11 @@ Player sessions use a separate `player_session_id` signed cookie scoped to the `
 ```
 ApplicationController (Authentication concern, Pagy)
 ├── Marketing::PagesController (skip auth)
-├── Go::ListingsController (skip auth)
-├── Go::LeadsController (skip auth)
+├── Go::BaseController (skip auth)
+│   ├── Go::ListingsController
+│   ├── Go::AgentsController
+│   ├── Go::ExperiencesController
+│   └── Go::LeadsController
 ├── ScansController (skip auth)
 ├── App::BaseController (Action Policy, paper_trail whodunnit)
 │   ├── App::ListingsController
@@ -117,13 +114,11 @@ ApplicationController (Authentication concern, Pagy)
 ├── Admin::ApplicationController (Administrate)
 │   ├── Admin::DashboardController
 │   └── ... all admin controllers
-├── Play::PlayersController (cookie auth)
-│   ├── Play::Players::HeartbeatsController
-│   ├── Play::Players::ManifestsController
-│   ├── Play::Players::PairingCodesController
-│   └── Play::Players::SessionsController
-└── Api::V1::PlayersController (cookie auth)
-    ├── Api::V1::Players::HeartbeatsController
-    ├── Api::V1::Players::ManifestsController
-    └── Api::V1::Players::PairingCodesController
+├── Play::BaseController (cookie auth, skip CSRF)
+│   ├── Play::PlayersController (HTML views)
+│   └── Play::Api::V1::BaseController (JSON, rate limits)
+│       ├── Play::Api::V1::PlayersController
+│       └── Play::Api::V1::Players::HeartbeatsController
+│       └── Play::Api::V1::Players::ManifestsController
+│       └── Play::Api::V1::Players::PairingCodesController
 ```

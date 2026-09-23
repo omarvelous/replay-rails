@@ -4,14 +4,14 @@ RSpec.describe "Api::Players" do
   before { host! "play.replay.localhost" }
 
   describe "POST /v1/players" do
-    it "registers a player and returns JSON with session_id and public_id" do
+    it "registers a player and returns JSON with token and public_id" do
       expect {
         post "/api/v1/players", as: :json
       }.to change(Player, :count).by(1)
 
       expect(response).to have_http_status(:created)
       data = response.parsed_body["data"]
-      expect(data["session_id"]).to be_present
+      expect(data["token"]).to be_present
       expect(data["public_id"]).to be_present
       expect(data["pairing_code"]).to match(/\A[A-Z0-9]{6}\z/)
       expect(data["expires_at"]).to be_present

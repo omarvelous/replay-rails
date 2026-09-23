@@ -1,0 +1,274 @@
+openapi: "3.0.3"
+info:
+  title: RePlay Player API
+  version: "1.0.0"
+  description: |
+    Device communication API for RePlay digital signage players.
+
+    Browser players authenticate via a signed session cookie set on registration.
+    Native apps (future) authenticate via a Bearer token returned on registration.
+
+    All endpoints are on the Play subdomain: `play.replaytv.co/api/v1/`
+servers:
+  - url: https://play.replaytv.co
+    description: Production
+  - url: http://play.replay.localhost:3000
+    description: Development
+
+tags:
+  - name: Registration
+    description: Device registration and pairing code generation
+  - name: Status
+    description: Player pairing status
+  - name: Pairing
+    description: Pairing code management
+  - name: Playback
+    description: Content delivery and device health
+
+paths:
+  /api/v1/players:
+    post:
+      summary: Register a new player device
+      description: |
+        Creates a new player and session. Returns a pairing code to display
+        on screen, a bearer token for native app auth, and a public ID for
+        identification. Sets a session cookie for browser players.
+      tags: [Registration]
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                screen_width:
+                  type: integer
+                  example: 1920
+                screen_height:
+                  type: integer
+                  example: 1080
+                touch_capable:
+                  type: boolean
+                  example: false
+                app_version:
+                  type: string
+                  example: "1.0.0"
+                  nullable: true
+      responses:
+        "201":
+          description: Player registered
+          headers:
+            Set-Cookie:
+              description: Signed player_session_id cookie (browser players)
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      pairing_code:
+                        type: string
+                        description: 6-character alphanumeric code to display on screen
+                        example: A7B3K2
+                      token:
+                        type: string
+                        description: Signed bearer token for native app auth
+                        example: "Mg==--b675c1954c1f31..."
+                      public_id:
+                        type: string
+                        format: uuid
+                        description: Player public identifier
+                      expires_at:
+                        type: string
+                        format: date-time
+                        description: When the pairing code expires
+        "429":
+          description: Rate limited (10 registrations per IP per minute)
+
+  /api/v1/player:
+    get:
+      summary: Get player status
+      description: |
+        Returns whether the player is currently paired to a screen.
+        Used by the pairing UI to poll for pairing completion.
+      tags: [Status]
+      security:
+        - cookieAuth: []
+        - bearerAuth: []
+      responses:
+        "200":
+          description: Player status
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      paired:
+                        type: boolean
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+
+  /api/v1/player/heartbeat:
+    post:
+      summary: Send device heartbeat
+      description: |
+        Reports that the player is still online. Updates IP address,
+        user agent, and screen resolution. Returns 410 Gone if the
+        player has been unpaired. Should be called every 30 seconds.
+      tags: [Playback]
+      security:
+        - cookieAuth: []
+        - bearerAuth: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                screen_width:
+                  type: integer
+                  example: 1920
+                screen_height:
+                  type: integer
+                  example: 1080
+      responses:
+        "204":
+          description: Heartbeat recorded
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "410":
+          description: Player has been unpaired
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+  /api/v1/player/manifest:
+    get:
+      summary: Get content manifest
+      description: |
+        Returns the full content dependency tree for the player's
+        assigned screen. Includes playlist ads, images, QR codes,
+        and experience data.
+
+        Uses ETag for conditional requests — send `If-None-Match`
+        with the previous ETag to get 304 when unchanged.
+        Poll every 30 seconds.
+      tags: [Playback]
+      security:
+        - cookieAuth: []
+        - bearerAuth: []
+      parameters:
+        - name: If-None-Match
+          in: header
+          description: ETag from previous response for conditional request
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Content manifest
+          headers:
+            ETag:
+              description: Content fingerprint for conditional requests
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  deploy:
+                    type: string
+                    description: Application revision
+                  screen_content:
+                    type: object
+                    properties:
+                      pid:
+                        type: string
+                        format: uuid
+                      updated_at:
+                        type: integer
+                        description: Unix timestamp
+                  contentable:
+                    type: object
+                    description: Playlist or Experience with nested dependencies
+                    properties:
+                      type:
+                        type: string
+                        enum: [Playlist, Experience]
+                      pid:
+                        type: string
+                        format: uuid
+        "304":
+          description: Content unchanged (ETag matched)
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+
+  /api/v1/player/pairing_code:
+    post:
+      summary: Refresh pairing code
+      description: |
+        Returns the current pairing code if still valid, or generates
+        a new one. The code is a 6-character alphanumeric string
+        displayed on the screen for the user to enter in the app.
+        Codes expire after 10 minutes.
+      tags: [Pairing]
+      security:
+        - cookieAuth: []
+        - bearerAuth: []
+      responses:
+        "201":
+          description: Pairing code
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      pairing_code:
+                        type: string
+                        description: 6-character alphanumeric code
+                        example: X9Y2Z1
+                      expires_at:
+                        type: string
+                        format: date-time
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+
+components:
+  securitySchemes:
+    cookieAuth:
+      type: apiKey
+      in: cookie
+      name: player_session_id
+      description: Signed session cookie set on registration (browser players)
+    bearerAuth:
+      type: http
+      scheme: bearer
+      description: Signed session token returned on registration (native apps)
+
+  schemas:
+    Error:
+      type: object
+      properties:
+        error:
+          type: object
+          properties:
+            message:
+              type: string
+
+  responses:
+    Unauthorized:
+      description: Invalid or missing session
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Error"

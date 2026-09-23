@@ -17,8 +17,10 @@ Rails.application.routes.draw do
 
     # Documentation
     scope module: "docs" do
-      get "/docs",       to: "pages#index", as: :docs
-      get "/docs/*slug", to: "pages#show",  as: :doc
+      get "/docs",                        to: "pages#index", as: :docs
+      get "/docs/play/api",              to: "pages#api",   as: :api_docs
+      get "/docs/play/api/openapi.yaml", to: "pages#openapi_spec"
+      get "/docs/*slug",                 to: "pages#show",  as: :doc
     end
 
     # Consumer-facing landing pages

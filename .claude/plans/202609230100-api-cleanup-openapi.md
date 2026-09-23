@@ -11,15 +11,14 @@ The API has inconsistencies (envelope, rate limits, error shapes)
 and no machine-readable documentation. The `api.` subdomain is now
 empty after consolidation and should be removed.
 
-## Part 1: Drop API Subdomain
+## Part 1: Drop API Subdomain (code only — DNS deferred)
 
-### DNS / Infrastructure
-- Remove `api.replaytv.co` DNS record (OpenTofu)
-- Remove `api.replaytv.dev` staging record
-- Remove API subdomain CORS origin if any remain
+Remove the API subdomain from the codebase. DNS record removal
+(`api.replaytv.co`, `api.replaytv.dev`) is deferred to a separate
+infrastructure task.
 
 ### Routes
-- Remove the empty `constraints subdomain: "api"` block
+- Remove the empty `constraints subdomain: "api"` block (if any remains)
 - API routes already live under Play from the consolidation plan
 
 ### Code
@@ -27,9 +26,8 @@ empty after consolidation and should be removed.
 - Update `docs/architecture/subdomains.md` — 4 subdomains, not 5
 - Update any hardcoded API host references
 
-### Local development
-- `api.replay.localhost` no longer resolves to anything
-- Devs use `play.replay.localhost:3000/api/v1/...`
+### Deferred
+- DNS: Remove `api.replaytv.co` and `api.replaytv.dev` records (OpenTofu)
 
 ## Part 2: API Consistency
 
