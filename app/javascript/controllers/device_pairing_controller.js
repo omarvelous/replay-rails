@@ -30,7 +30,7 @@ export default class extends Controller {
   }
 
   async registerNewPlayer() {
-    const res = await fetch("/player", {
+    const res = await fetch("/api/v1/players", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
@@ -40,21 +40,20 @@ export default class extends Controller {
         app_version: window.REPLAY_APP_VERSION || null
       })
     })
-    const data = await res.json()
+    const { data } = await res.json()
 
     this.publicId = data.public_id
     this.pairingCode = data.pairing_code
     this.expiresAt = new Date(data.expires_at)
     localStorage.setItem("player_public_id", this.publicId)
-    // Cookie set directly in the response — no session dance needed
     this.displayCode(data.pairing_code)
   }
 
   async checkIfPaired() {
     try {
-      const res = await fetch("/player", { headers: { "Accept": "application/json" } })
+      const res = await fetch("/api/v1/player")
       if (!res.ok) return false
-      const data = await res.json()
+      const { data } = await res.json()
       if (data.paired) {
         window.location.replace("/player")
         return true
@@ -66,13 +65,13 @@ export default class extends Controller {
   }
 
   async refreshPairingCode() {
-    const res = await fetch("/player/pairing_code", {
+    const res = await fetch("/api/v1/player/pairing_code", {
       method: "POST",
       headers: { "Content-Type": "application/json" }
     })
 
     if (res.ok) {
-      const data = await res.json()
+      const { data } = await res.json()
       this.publicId = localStorage.getItem("player_public_id")
       this.pairingCode = data.pairing_code
       this.expiresAt = new Date(data.expires_at)
@@ -87,7 +86,7 @@ export default class extends Controller {
     this.subscription?.unsubscribe()
     this.subscription = consumer.subscriptions.create(
       { channel: "PairingChannel", code: this.pairingCode },
-      { received: (msg) => { if (msg.paired) this.onPaired(msg.session_id) } }
+      { received: (msg) => { if (msg.paired) this.onPaired() } }
     )
   }
 
@@ -148,14 +147,14 @@ export default class extends Controller {
 
   async checkStatus() {
     try {
-      const res = await fetch("/player", { headers: { "Accept": "application/json" } })
+      const res = await fetch("/api/v1/player")
       if (!res.ok) {
         this.backoff()
         return
       }
-      const data = await res.json()
+      const { data } = await res.json()
       if (data.paired) return this.onPaired()
-      this.pollDelay = 3000 // reset on success
+      this.pollDelay = 3000
     } catch {
       this.backoff()
     }
@@ -166,20 +165,10 @@ export default class extends Controller {
     this.pollDelay = Math.min(this.pollDelay * 2, 60000)
   }
 
-  async onPaired(sessionId) {
+  onPaired() {
     clearTimeout(this.pollTimeout)
     clearInterval(this.countdownInterval)
     this.subscription?.unsubscribe()
-
-    // Re-auth with new session from pairing (pairing revokes old sessions)
-    if (sessionId) {
-      await fetch("/player/session", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ session_id: sessionId })
-      })
-    }
-
     window.location.href = "/player"
   }
 }

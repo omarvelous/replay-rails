@@ -1,12 +1,12 @@
 require "rails_helper"
 
 RSpec.describe "Api::Players" do
-  before { host! "api.replay.localhost" }
+  before { host! "play.replay.localhost" }
 
   describe "POST /v1/players" do
     it "registers a player and returns JSON with session_id and public_id" do
       expect {
-        post "/v1/players", as: :json
+        post "/api/v1/players", as: :json
       }.to change(Player, :count).by(1)
 
       expect(response).to have_http_status(:created)
@@ -18,7 +18,7 @@ RSpec.describe "Api::Players" do
     end
 
     it "accepts device info params" do
-      post "/v1/players",
+      post "/api/v1/players",
         params: { screen_width: 1920, screen_height: 1080, touch_capable: true, app_version: "1.0.0" },
         as: :json
 
@@ -30,7 +30,7 @@ RSpec.describe "Api::Players" do
     end
 
     it "parses user agent into device fields" do
-      post "/v1/players",
+      post "/api/v1/players",
         headers: { "User-Agent" => "Mozilla/5.0 (Linux; Android 11; AFTSSS Build/NS6294) AppleWebKit/537.36" },
         as: :json
 
@@ -44,7 +44,7 @@ RSpec.describe "Api::Players" do
 
     it "returns paired: false when not paired" do
       sign_in_player(player)
-      get "/v1/player"
+      get "/api/v1/player"
       expect(response).to be_successful
       data = response.parsed_body["data"]
       expect(data["paired"]).to be false
@@ -55,14 +55,14 @@ RSpec.describe "Api::Players" do
       pair_player!(screen, player)
       sign_in_player(player)
 
-      get "/v1/player"
+      get "/api/v1/player"
       expect(response).to be_successful
       data = response.parsed_body["data"]
       expect(data["paired"]).to be true
     end
 
     it "returns 401 without session" do
-      get "/v1/player"
+      get "/api/v1/player"
       expect(response).to have_http_status(:unauthorized)
     end
   end
@@ -75,7 +75,7 @@ RSpec.describe "Api::Players" do
     it "returns the existing code if still valid" do
       existing_code = player.pairing_code
 
-      post "/v1/player/pairing_code", as: :json
+      post "/api/v1/player/pairing_code", as: :json
 
       expect(response).to have_http_status(:created)
       data = response.parsed_body["data"]
@@ -87,7 +87,7 @@ RSpec.describe "Api::Players" do
       player.update!(pairing_code_expires_at: 1.minute.ago)
       old_code = player.pairing_code
 
-      post "/v1/player/pairing_code", as: :json
+      post "/api/v1/player/pairing_code", as: :json
 
       expect(response).to have_http_status(:created)
       data = response.parsed_body["data"]
@@ -100,13 +100,13 @@ RSpec.describe "Api::Players" do
       player # ensure created
 
       expect {
-        post "/v1/player/pairing_code", as: :json
+        post "/api/v1/player/pairing_code", as: :json
       }.not_to change(Player, :count)
     end
 
     it "returns 401 with revoked session" do
       PlayerSession.last.revoke!
-      post "/v1/player/pairing_code", as: :json
+      post "/api/v1/player/pairing_code", as: :json
       expect(response).to have_http_status(:unauthorized)
     end
   end

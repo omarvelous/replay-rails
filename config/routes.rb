@@ -161,34 +161,25 @@ Rails.application.routes.draw do
   end
 
   # ---------------------------------------------------------------
-  # API — api subdomain (JSON, device communication)
-  # ---------------------------------------------------------------
-  constraints subdomain: "api" do
-    scope module: "api" do
-      namespace :v1 do
-        resources :players, only: :create
-        resource :player, only: :show, controller: "players" do
-          scope module: "players" do
-            resource :heartbeat, only: :create
-            resource :manifest, only: :show
-            resource :pairing_code, only: :create
-          end
-        end
-      end
-    end
-  end
-
-  # ---------------------------------------------------------------
-  # Play — play subdomain (HTML, visual content for screens)
+  # Play — play subdomain (HTML + device API)
   # ---------------------------------------------------------------
   constraints subdomain: "play" do
     scope module: "play" do
       root "players#show", as: :play_root
-      resource :player, only: %i[new show create] do
-        resource :session, only: :create
-        resource :heartbeat, only: :create
-        resource :manifest, only: :show
-        resource :pairing_code, only: :create
+      resource :player, only: %i[new show]
+
+      # Device API (JSON)
+      namespace :api do
+        namespace :v1 do
+          resources :players, only: :create
+          resource :player, only: :show do
+            scope module: "players" do
+              resource :heartbeat, only: :create
+              resource :manifest, only: :show
+              resource :pairing_code, only: :create
+            end
+          end
+        end
       end
     end
   end
