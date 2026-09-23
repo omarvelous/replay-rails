@@ -28,11 +28,40 @@ module App
     authorize! @listing
   end
 
+  def import_preview
+    authorize! Listing, to: :new?
+
+    if params[:source_html].blank?
+      render turbo_stream: turbo_stream.update("import_feedback",
+        html: import_error("Paste the page source HTML to import."))
+      return
+    end
+
+    result = Listings::ImportService.call_with_html(
+      html: params[:source_html],
+      url: params[:source_url].presence
+    )
+    @listing = Current.account.listings.build(
+      address: result[:address],
+      price: result[:price],
+      beds: result[:beds],
+      baths: result[:baths],
+      sqft: result[:sqft],
+      description: result[:description],
+      source_url: result[:source_url],
+      status: "active"
+    )
+    @photo_urls = result[:photo_urls] || []
+    render turbo_stream: turbo_stream.update("listing_form",
+      partial: "form", locals: { listing: @listing, photo_urls: @photo_urls })
+  end
+
   def create
     @listing = Current.account.listings.build(listing_params)
     authorize! @listing
 
     if @listing.save
+      enqueue_photo_import if params[:photo_urls].present?
       redirect_to @listing, notice: t(".success")
     else
       render :new, status: :unprocessable_entity
@@ -65,7 +94,19 @@ module App
     end
 
     def listing_params
-      params.require(:listing).permit(:address, :price, :beds, :baths, :sqft, :status, :property_type, :listing_type, :description, photos: [])
+      permitted = params.require(:listing).permit(:address, :price, :beds, :baths, :sqft, :status, :property_type, :listing_type, :description, :source_url, photos: [])
+      # Don't clear existing photos when no new files are uploaded
+      permitted.delete(:photos) if permitted[:photos]&.all?(&:blank?)
+      permitted
+    end
+
+    def enqueue_photo_import
+      urls = Array(params[:photo_urls]).select { |u| u.start_with?("http") }
+      Listings::PhotoImportJob.perform_later(@listing.id, urls) if urls.any?
+    end
+
+    def import_error(message)
+      helpers.tag.div(class: "rounded-md bg-red-50 p-3 text-sm text-red-700") { message }
     end
   end
 end

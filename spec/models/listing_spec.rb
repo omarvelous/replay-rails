@@ -15,6 +15,18 @@ RSpec.describe Listing do
     it { is_expected.to validate_inclusion_of(:listing_type).in_array(Listing::LISTING_TYPES) }
   end
 
+  describe "source_url" do
+    it "stores the import source URL" do
+      listing = create(:listing, source_url: "https://streeteasy.com/building/123")
+      expect(listing.reload.source_url).to eq("https://streeteasy.com/building/123")
+    end
+
+    it "allows blank source_url" do
+      listing = build(:listing, source_url: nil)
+      expect(listing).to be_valid
+    end
+  end
+
   describe "associations" do
     it { is_expected.to belong_to(:account) }
     it { is_expected.to have_many(:listing_agents).dependent(:destroy) }

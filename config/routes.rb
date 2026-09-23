@@ -44,6 +44,7 @@ Rails.application.routes.draw do
 
       # Content
       resources :listings do
+        collection { post :import_preview }
         resources :agents, controller: "listing_agents", only: %i[new create edit update destroy]
       end
       resources :agents

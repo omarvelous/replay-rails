@@ -49,6 +49,13 @@ RSpec.describe "Listings" do
         expect(response).to redirect_to(listing_path(Listing.last))
       end
 
+      it "enqueues photo import when photo_urls are provided" do
+        params = valid_params.merge(photo_urls: [ "https://example.com/1.jpg", "https://example.com/2.jpg" ])
+        expect {
+          post listings_path, params: params
+        }.to have_enqueued_job(Listings::PhotoImportJob)
+      end
+
       it "attaches photos when provided" do
         params = valid_params.deep_merge(listing: { photos: [ fixture_file_upload("test.jpg", "image/jpeg") ] })
         post listings_path, params: params
@@ -113,6 +120,46 @@ RSpec.describe "Listings" do
         patch listing_path(listing), params: { listing: { address: "" } }
         expect(response).to have_http_status(:unprocessable_content)
       end
+    end
+  end
+
+  describe "POST /listings/import_preview" do
+    let(:turbo_headers) { { "Accept" => "text/vnd.turbo-stream.html" } }
+    let(:listing_html) { File.read(Rails.root.join("spec/fixtures/html/listing_with_json_ld.html")) }
+
+    it "pre-fills the form from pasted HTML" do
+      post import_preview_listings_path,
+        params: { source_html: listing_html, source_url: "https://example.com/listing/456" },
+        headers: turbo_headers
+      expect(response).to be_successful
+      expect(response.body).to include("turbo-stream")
+      expect(response.body).to include("456 Park Ave")
+    end
+
+    it "selects StreetEasy parser when source_url matches" do
+      streeteasy_html = File.read(Rails.root.join("spec/fixtures/html/streeteasy_listing.html"))
+      post import_preview_listings_path,
+        params: { source_html: streeteasy_html, source_url: "https://streeteasy.com/building/test/1a" },
+        headers: turbo_headers
+      expect(response).to be_successful
+      expect(response.body).to include("60 Cedar Street")
+    end
+
+    it "works without a source_url" do
+      post import_preview_listings_path,
+        params: { source_html: listing_html },
+        headers: turbo_headers
+      expect(response).to be_successful
+      expect(response.body).to include("456 Park Ave")
+    end
+
+    it "shows an error when HTML is blank" do
+      post import_preview_listings_path,
+        params: { source_html: "" },
+        headers: turbo_headers
+      expect(response).to be_successful
+      expect(response.body).to include("turbo-stream")
+      expect(response.body).to include("Paste the page source")
     end
   end
 

@@ -1,4 +1,5 @@
 <%= form_with model: listing do |form| %>
+  <%= form.hidden_field :source_url if listing.source_url.present? %>
   <% if listing.errors.any? %>
     <div class="rounded-md bg-red-50 p-4 mb-4">
       <div class="flex">
@@ -82,6 +83,16 @@
 
     <%# Photos section %>
     <p class="text-xs font-semibold uppercase tracking-wider text-gray-400 mb-3">Photos</p>
+
+    <% if local_assigns[:photo_urls]&.any? %>
+      <div class="flex flex-wrap gap-2 mb-3">
+        <% photo_urls.each do |url| %>
+          <img src="<%= url %>" class="w-24 h-16 object-cover rounded-lg ring-1 ring-gray-200" loading="lazy" />
+          <input type="hidden" name="photo_urls[]" value="<%= url %>" />
+        <% end %>
+      </div>
+      <p class="text-xs text-gray-400 mb-3">Photos will be downloaded when you save.</p>
+    <% end %>
 
     <% if listing.photos.any? %>
       <div class="flex flex-wrap gap-2 mb-3">
