@@ -2,6 +2,7 @@ module Play
   module Api
     module V1
       class BaseController < Play::BaseController
+        layout false
         rate_limit to: 60, within: 1.minute, by: -> { request.remote_ip }
 
         rescue_from ActiveRecord::RecordNotFound do
