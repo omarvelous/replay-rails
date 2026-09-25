@@ -85,6 +85,16 @@ projects:
             region: ohio
             previewPlan: 0.1c-256mb
 
+        envVarGroups:
+          - name: replay-staging-shared
+            envVars:
+              - key: RAILS_LOG_TO_STDOUT
+                value: "true"
+              - key: RAILS_SERVE_STATIC_FILES
+                value: "true"
+              - key: RAILS_MASTER_KEY
+                sync: false
+
         services:
           - type: web
             name: replay-staging-web
@@ -101,6 +111,7 @@ projects:
                   name: replay-staging-db
                   property: connectionString
               - fromGroup: replay-staging-shared
+              - fromGroup: replay-preview-shared
             previews:
               plan: 0.5c-512mb
               generation: automatic
@@ -120,3 +131,4 @@ projects:
                   name: replay-staging-db
                   property: connectionString
               - fromGroup: replay-staging-shared
+              - fromGroup: replay-preview-shared
