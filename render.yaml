@@ -85,16 +85,6 @@ projects:
             region: ohio
             previewPlan: 0.1c-256mb
 
-        envVarGroups:
-          - name: replay-staging-shared
-            envVars:
-              - key: RAILS_LOG_TO_STDOUT
-                value: "true"
-              - key: RAILS_SERVE_STATIC_FILES
-                value: "true"
-              - key: RAILS_MASTER_KEY
-                sync: false
-
         services:
           - type: web
             name: replay-staging-web
