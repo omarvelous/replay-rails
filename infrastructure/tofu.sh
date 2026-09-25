@@ -2,11 +2,18 @@
 # Wrapper for OpenTofu that sets up the R2 state backend credentials.
 # Provider variables (Cloudflare, Render) come from terraform.tfvars.
 #
-# Usage: ./infrastructure/tofu.sh plan                   # production
-#        ./infrastructure/tofu.sh apply                  # production
-#        TOFU_ENV=staging ./infrastructure/tofu.sh plan   # staging
+# Usage: TOFU_ENV=staging ./infrastructure/tofu.sh plan
+#        TOFU_ENV=production ./infrastructure/tofu.sh apply
 
 set -euo pipefail
+
+# Require explicit environment — no default to prevent accidental production changes
+if [ -z "${TOFU_ENV:-}" ]; then
+  echo "Error: TOFU_ENV is required. Set to 'staging' or 'production'."
+  echo "  TOFU_ENV=staging ./infrastructure/tofu.sh plan"
+  echo "  TOFU_ENV=production ./infrastructure/tofu.sh apply"
+  exit 1
+fi
 
 # Load .env from project root (contains R2 credentials for state backend)
 ENV_FILE="$(dirname "$0")/../.env"
@@ -22,6 +29,5 @@ export AWS_SECRET_ACCESS_KEY="${R2_SECRET_ACCESS_KEY}"
 export AWS_ENDPOINT_URL_S3="${R2_ENDPOINT}"
 
 # Run tofu in the target environment
-ENV="${TOFU_ENV:-production}"
-cd "$(dirname "$0")/environments/${ENV}"
+cd "$(dirname "$0")/environments/${TOFU_ENV}"
 tofu "$@"
