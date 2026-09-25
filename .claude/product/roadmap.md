@@ -244,7 +244,7 @@ Documentation is in progress.
 | Codebase cleanup | `.claude/plans/202609180100-codebase-cleanup.md` | Complete |
 | Consolidate API under Play | `.claude/plans/202609220100-consolidate-api-under-play.md` | Complete |
 | API cleanup + OpenAPI | `.claude/plans/202609230100-api-cleanup-openapi.md` | Complete |
-| Security & infrastructure | `.claude/plans/202609250100-security-infrastructure.md` | **In progress** |
+| Security & infrastructure | `.claude/plans/202609250100-security-infrastructure.md` | Complete |
 | NYC product gaps | `.claude/plans/drafts/plan-nyc-product-gaps.md` | Draft — needs review |
 | Day-parting / Scheduling | `.claude/plans/drafts/plan-day-parting-scheduling.md` | Draft — needs review |
 | Live Preview | `.claude/plans/drafts/plan-live-preview.md` | Draft — needs review |
