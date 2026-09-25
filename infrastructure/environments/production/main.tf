@@ -33,6 +33,7 @@ module "cloudflare_replaytv" {
   subdomains            = ["app", "admin", "play", "api"]
   cloudflare_account_id = var.cloudflare_account_id
   r2_bucket_name        = "replay-production"
+  resend_dkim_key       = var.resend_dkim_key
 }
 
 # Short domain — rply.tv (QR scan URLs)

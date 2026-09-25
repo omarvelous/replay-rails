@@ -28,3 +28,9 @@ variable "r2_bucket_name" {
   description = "Name for the R2 storage bucket"
   type        = string
 }
+
+variable "resend_dkim_key" {
+  description = "Resend DKIM public key for email verification"
+  type        = string
+  default     = ""
+}

@@ -31,6 +31,47 @@ resource "cloudflare_dns_record" "subdomains" {
   ttl     = 1
 }
 
+# ── Email (Resend) ──────────────────────────────────
+
+# DKIM verification for app subdomain
+resource "cloudflare_dns_record" "resend_dkim" {
+  zone_id = var.zone_id
+  name    = "resend._domainkey.app"
+  content = var.resend_dkim_key
+  type    = "TXT"
+  proxied = false
+  ttl     = 1
+}
+
+# SPF return path CNAMEs
+resource "cloudflare_dns_record" "resend_spf_rsend" {
+  zone_id = var.zone_id
+  name    = "rsend.app"
+  content = "rsend.forge.rmta.net"
+  type    = "CNAME"
+  proxied = false
+  ttl     = 1
+}
+
+resource "cloudflare_dns_record" "resend_spf_send" {
+  zone_id = var.zone_id
+  name    = "send.app"
+  content = "send.forge.rmta.net"
+  type    = "CNAME"
+  proxied = false
+  ttl     = 1
+}
+
+# DMARC policy
+resource "cloudflare_dns_record" "dmarc" {
+  zone_id = var.zone_id
+  name    = "_dmarc"
+  content = "v=DMARC1; p=none;"
+  type    = "TXT"
+  proxied = false
+  ttl     = 1
+}
+
 # ── SSL / Security Settings ─────────────────────────
 
 resource "cloudflare_zone_setting" "ssl" {

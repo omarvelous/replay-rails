@@ -50,6 +50,9 @@ gem "administrate-field-active_storage"
 gem "jbuilder"
 gem "rack-cors"
 
+# ── Email ─────────────────────────────────────────────
+gem "resend"
+
 # ── Infrastructure ────────────────────────────────────
 gem "bootsnap", require: false
 gem "kamal", require: false

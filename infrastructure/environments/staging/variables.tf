@@ -18,3 +18,8 @@ variable "render_cname" {
   description = "Render staging web service CNAME (e.g., replay-staging-web.onrender.com)"
   type        = string
 }
+
+variable "resend_dkim_key" {
+  description = "Resend DKIM public key for app.replaytv.dev email verification"
+  type        = string
+}

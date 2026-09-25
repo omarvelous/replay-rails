@@ -1,0 +1,8 @@
+# Copy to terraform.tfvars and fill in values.
+# terraform.tfvars is gitignored — never commit real credentials.
+
+cloudflare_api_token              = ""
+cloudflare_account_id             = ""
+cloudflare_zone_id_replaytv_dev   = ""
+render_cname                      = ""
+resend_dkim_key                   = "p=MIGfMA0GCSqGSIb3..."
