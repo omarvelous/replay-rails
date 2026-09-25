@@ -5,6 +5,11 @@ Rails.application.configure do
   # No tld_length override needed (both are standard TLD length 1).
   # Override default_url_options inherited from production (replay.com).
 
+  config.hosts = [
+    "replaytv.dev",
+    /.*\.replaytv\.dev/
+  ]
+
   config.action_controller.default_url_options = {
     host: "replaytv.dev",
     protocol: "https"
