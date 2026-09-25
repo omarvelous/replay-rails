@@ -245,34 +245,39 @@ fresh cookie on each login.
 
 ---
 
-## Execution
+## Execution — COMPLETED
 
-### Step 1 — SSL + hosts + session expiry
-- Uncomment SSL config
-- Add hosts config
-- Change session cookie to 30-day expiry
-- These are config-only changes, no specs needed
+### Step 1 — SSL + hosts + session expiry ✓
+- `assume_ssl` + `force_ssl` enabled in production
+- Health check excluded from SSL redirect
+- Host validation: replaytv.co + subdomains + rply.tv (production),
+  replaytv.dev + subdomains (staging, separate config)
+- Session cookie 30-day expiry (was permanent)
 
-### Step 2 — Rack::Attack store
-- One-line change to use Rails.cache
-- Verify rate limiting still works in specs
+### Step 2 — Rack::Attack store ✓
+- Rails.cache (Solid Cache) in production/staging
+- MemoryStore in dev/test
+- Fixed player registration throttle path: /api/v1/players
 
-### Step 3 — CSP (report-only)
-- Write the CSP initializer
-- Add `csp_meta_tag` to player layout
-- Deploy in report-only mode
-- Monitor for violations
+### Step 3 — CSP (report-only) ✓
+- Nonce-based script loading, external CDN allowlisted
+- unsafe-inline for styles (425 inline style attributes)
+- frame-ancestors: none
+- Added csp_meta_tag to player layout
+- Deployed in report-only mode
 
-### Step 4 — SMTP (Resend)
-- Add gem or SMTP config
-- Store API key in credentials
-- Test email delivery on staging
+### Step 4 — Resend email delivery ✓
+- `resend` gem with `delivery_method = :resend`
+- API key in Rails credentials
+- DNS records (DKIM, SPF, DMARC) managed via OpenTofu
 
-### Step 5 — CSP enforcement
-- After monitoring report-only for a period, switch to enforcement
-- Verify all subdomains work
+### Step 5 — OpenTofu infrastructure improvements ✓
+- Resend DNS records (DKIM, SPF, DMARC) added to Cloudflare module
+- DKIM key parameterized per environment
+- terraform.tfvars for provider credentials (separate from .env)
+- Wrapper script requires explicit TOFU_ENV (no production default)
 
-### Step 6 — Ship
-- `make lint`, `make test`
-- Deploy to staging, verify everything
-- Push to production
+### Remaining — CSP enforcement
+- After monitoring report-only for a period, switch to enforcement:
+  `config.content_security_policy_report_only = false`
+- Verify all subdomains work (marketing, app, play, admin, docs)
