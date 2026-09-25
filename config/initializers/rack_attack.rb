@@ -1,7 +1,11 @@
 class Rack::Attack
-  # Use in-memory store for rate limit tracking.
-  # For multi-process production (Puma workers), switch to Rails.cache or Redis.
-  cache.store = ActiveSupport::Cache::MemoryStore.new
+  # Use Rails.cache in production (Solid Cache — persists across restarts,
+  # works across Puma workers). MemoryStore in dev/test for simplicity.
+  cache.store = if Rails.env.production? || Rails.env.staging?
+    Rails.cache
+  else
+    ActiveSupport::Cache::MemoryStore.new
+  end
 
   ### Throttle rules ###
 
@@ -17,7 +21,7 @@ class Rack::Attack
 
   # Player registration: 5 per hour per IP
   throttle("player/register/ip", limit: 5, period: 1.hour) do |req|
-    req.ip if req.path == "/players" && req.post?
+    req.ip if req.path == "/api/v1/players" && req.post?
   end
 
   # Inquiry/demo request: 5 per hour per IP
