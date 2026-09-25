@@ -111,7 +111,6 @@ projects:
                   name: replay-staging-db
                   property: connectionString
               - fromGroup: replay-staging-shared
-              - fromGroup: replay-preview-shared
             previews:
               plan: 0.5c-512mb
               generation: automatic
@@ -131,4 +130,3 @@ projects:
                   name: replay-staging-db
                   property: connectionString
               - fromGroup: replay-staging-shared
-              - fromGroup: replay-preview-shared
