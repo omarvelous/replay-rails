@@ -34,4 +34,5 @@ module "cloudflare_replaytv_dev" {
   subdomains            = ["app", "admin", "play", "api"]
   cloudflare_account_id = var.cloudflare_account_id
   r2_bucket_name        = "replay-staging"
+  resend_dkim_key       = var.resend_dkim_key
 }

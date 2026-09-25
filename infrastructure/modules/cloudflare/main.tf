@@ -37,7 +37,7 @@ resource "cloudflare_dns_record" "subdomains" {
 resource "cloudflare_dns_record" "resend_dkim" {
   zone_id = var.zone_id
   name    = "resend._domainkey.app"
-  content = "p=MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDOz0b+0LMZ/OCBWUKSVO44MWf39MCJjFGwO6ZxtJixnNHwltiJ/57ctlaO3azwPQVpqDvCG9R5IjZ82vjYvl2vpL/TkuXutrbsAZ0MTx6+Z2hFahTmpJZ5Ljg0V3zXijpYXY2my/IDs/M3cOzCahHlnBPIMUkEyRF0vrXJ1OsE6QIDAQAB"
+  content = var.resend_dkim_key
   type    = "TXT"
   proxied = false
   ttl     = 1
