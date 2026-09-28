@@ -18,8 +18,15 @@ RSpec.describe InviteMailer do
 
     it "includes the accept URL with token" do
       mail = described_class.invite(invite)
-      body = mail.body.encoded
-      expect(body).to include(invite.token)
+      html = mail.html_part.body.decoded
+      expect(html).to include(invite.token)
+    end
+
+    it "includes a text part" do
+      mail = described_class.invite(invite)
+      text = mail.text_part.body.decoded
+      expect(text).to include("invited")
+      expect(text).to include(invite.token)
     end
   end
 end

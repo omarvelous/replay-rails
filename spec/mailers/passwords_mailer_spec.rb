@@ -16,8 +16,15 @@ RSpec.describe PasswordsMailer do
 
     it "includes a reset link in the body" do
       mail = described_class.reset(user)
-      body = mail.body.encoded
-      expect(body).to include("password")
+      html = mail.html_part.body.decoded
+      expect(html).to include("password")
+    end
+
+    it "includes a text part with reset link" do
+      mail = described_class.reset(user)
+      text = mail.text_part.body.decoded
+      expect(text).to include("password")
+      expect(text).to include("reset")
     end
   end
 end

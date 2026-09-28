@@ -28,17 +28,25 @@ RSpec.describe LeadMailer do
 
     it "includes the lead name in the body" do
       mail = described_class.new_lead(lead)
-      expect(mail.body.encoded).to include("Jane Doe")
+      expect(mail.html_part.body.decoded).to include("Jane Doe")
     end
 
     it "includes the message in the body" do
       mail = described_class.new_lead(lead)
-      expect(mail.body.encoded).to include("I would like a viewing")
+      expect(mail.html_part.body.decoded).to include("I would like a viewing")
     end
 
     it "includes a mailto link" do
       mail = described_class.new_lead(lead)
-      expect(mail.body.encoded).to include("mailto:jane@example.com")
+      expect(mail.html_part.body.decoded).to include("mailto:jane@example.com")
+    end
+
+    it "includes a text part with lead details" do
+      mail = described_class.new_lead(lead)
+      text = mail.text_part.body.decoded
+      expect(text).to include("Jane Doe")
+      expect(text).to include("jane@example.com")
+      expect(text).to include("I would like a viewing")
     end
   end
 end

@@ -1,0 +1,14 @@
+New Lead Inquiry
+
+Name: <%= @lead.name %>
+<% if @lead.email.present? %>Email: <%= @lead.email %>
+<% end %><% if @lead.phone.present? %>Phone: <%= @lead.phone %>
+<% end %>Type: <%= @lead.lead_type.humanize %>
+<% if @lead.listing %>Listing: <%= @lead.listing.address %>
+<% end %>
+<% if @lead.message.present? %>
+Message:
+<%= @lead.message %>
+<% end %>
+
+Submitted via RePlay on <%= @lead.created_at.strftime("%b %-d, %Y at %-I:%M %p") %>.

@@ -17,17 +17,26 @@ RSpec.describe InquiryMailer do
 
     it "includes inquiry details in the body" do
       mail = described_class.notification(inquiry)
-      body = mail.body.encoded
-      expect(body).to include("Jane Doe")
-      expect(body).to include("jane@example.com")
-      expect(body).to include("ABC Realty")
-      expect(body).to include("Interested in a demo")
+      html = mail.html_part.body.decoded
+      expect(html).to include("Jane Doe")
+      expect(html).to include("jane@example.com")
+      expect(html).to include("ABC Realty")
+      expect(html).to include("Interested in a demo")
     end
 
     it "works with general inquiry type" do
       inquiry.update!(inquiry_type: "general")
       mail = described_class.notification(inquiry)
       expect(mail.subject).to include("General")
+    end
+
+    it "includes a text part with inquiry details" do
+      mail = described_class.notification(inquiry)
+      text = mail.text_part.body.decoded
+      expect(text).to include("Jane Doe")
+      expect(text).to include("jane@example.com")
+      expect(text).to include("ABC Realty")
+      expect(text).to include("Interested in a demo")
     end
   end
 end
