@@ -18,6 +18,7 @@ module App
         AccountUser.create!(account: @account, user: @user, role: "owner")
       end
       start_new_session_for @user
+      AccountMailer.welcome(@user, @account).deliver_later
       redirect_to app_root_path
     else
       render :new, status: :unprocessable_entity
