@@ -52,6 +52,7 @@ gem "rack-cors"
 
 # ── Email ─────────────────────────────────────────────
 gem "resend"
+gem "premailer-rails"
 
 # ── Infrastructure ────────────────────────────────────
 gem "bootsnap", require: false
