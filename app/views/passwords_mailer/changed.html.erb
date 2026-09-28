@@ -1,0 +1,16 @@
+<h1>Your password was changed</h1>
+
+<p>
+  The password for your RePlay account (<%= @user.email_address %>)
+  was just changed.
+</p>
+
+<p>
+  If you made this change, no action is needed.
+</p>
+
+<p>
+  If you did not change your password, please
+  <a href="<%= new_password_url(subdomain: 'app') %>">reset it immediately</a>
+  and contact us at <a href="mailto:hello@replaytv.co">hello@replaytv.co</a>.
+</p>

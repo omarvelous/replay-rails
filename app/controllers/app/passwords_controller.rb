@@ -21,6 +21,7 @@ module App
   def update
     if @user.update(params.permit(:password, :password_confirmation))
       @user.sessions.destroy_all
+      PasswordsMailer.changed(@user).deliver_later
       redirect_to new_session_path, notice: t(".success")
     else
       redirect_to edit_password_path(params[:token]), alert: "Passwords did not match."
