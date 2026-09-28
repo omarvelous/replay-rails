@@ -1,18 +1,41 @@
-<h2>New <%= @inquiry.inquiry_type.humanize %></h2>
+<h1>New <%= @inquiry.inquiry_type.humanize %></h1>
 
-<table>
-  <tr><td><strong>Name:</strong></td><td><%= @inquiry.name %></td></tr>
-  <tr><td><strong>Email:</strong></td><td><%= @inquiry.email %></td></tr>
+<table class="info-table">
+  <tr>
+    <td class="label">Name</td>
+    <td class="value"><%= @inquiry.name %></td>
+  </tr>
+  <tr>
+    <td class="label">Email</td>
+    <td><a href="mailto:<%= @inquiry.email %>"><%= @inquiry.email %></a></td>
+  </tr>
   <% if @inquiry.phone.present? %>
-    <tr><td><strong>Phone:</strong></td><td><%= @inquiry.phone %></td></tr>
+    <tr>
+      <td class="label">Phone</td>
+      <td><%= @inquiry.phone %></td>
+    </tr>
   <% end %>
   <% if @inquiry.company.present? %>
-    <tr><td><strong>Company:</strong></td><td><%= @inquiry.company %></td></tr>
+    <tr>
+      <td class="label">Company</td>
+      <td><%= @inquiry.company %></td>
+    </tr>
   <% end %>
   <% if @inquiry.interest.present? %>
-    <tr><td><strong>Interest:</strong></td><td><%= @inquiry.interest.humanize %></td></tr>
-  <% end %>
-  <% if @inquiry.message.present? %>
-    <tr><td><strong>Message:</strong></td><td><%= @inquiry.message %></td></tr>
+    <tr>
+      <td class="label">Interest</td>
+      <td><%= @inquiry.interest.humanize %></td>
+    </tr>
   <% end %>
 </table>
+
+<% if @inquiry.message.present? %>
+  <div class="callout">
+    <p class="callout-label">Message</p>
+    <p style="margin: 0; white-space: pre-wrap;"><%= @inquiry.message %></p>
+  </div>
+<% end %>
+
+<p>
+  <a href="mailto:<%= @inquiry.email %>?subject=Re: Your inquiry" class="btn">Reply to <%= @inquiry.name %></a>
+</p>
