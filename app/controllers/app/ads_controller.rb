@@ -6,7 +6,7 @@ module App
     base = authorized_scope(Ad.all)
     base = base.search(params[:q]) if params[:q].present?
     base = base.where(adable_type: params[:ad_type]) if params[:ad_type].present?
-    @pagy, @ads = pagy(base.order(created_at: :desc))
+    @pagy, @ads = pagy(base.includes(:adable, image_attachment: :blob).order(created_at: :desc))
   end
 
   def show
