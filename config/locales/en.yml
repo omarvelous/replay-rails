@@ -32,6 +32,10 @@ en:
       create:
         success: "Player paired successfully."
 
+    settings:
+      update:
+        success: "Settings saved."
+
     listings:
       create:
         success: "Listing created."

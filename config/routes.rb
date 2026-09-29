@@ -43,6 +43,7 @@ Rails.application.routes.draw do
       resource :session, only: %i[new create destroy]
       resources :passwords, param: :token, only: %i[new create edit update]
       resources :accounts, only: %i[new create]
+      resource :settings, only: %i[show update]
 
       # Content
       resources :listings do
