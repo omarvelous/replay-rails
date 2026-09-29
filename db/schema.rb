@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_09_22_200000) do
+ActiveRecord::Schema[8.1].define(version: 2026_09_29_133225) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -29,6 +29,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_09_22_200000) do
 
   create_table "accounts", force: :cascade do |t|
     t.datetime "created_at", null: false
+    t.string "name", default: "", null: false
     t.uuid "public_id", default: -> { "gen_random_uuid()" }, null: false
     t.datetime "updated_at", null: false
     t.index ["public_id"], name: "index_accounts_on_public_id", unique: true

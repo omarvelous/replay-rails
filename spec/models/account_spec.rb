@@ -1,7 +1,13 @@
 require "rails_helper"
 
 RSpec.describe Account do
+  subject { build(:account) }
+
   it { is_expected.to be_valid }
+
+  describe "validations" do
+    it { is_expected.to validate_presence_of(:name) }
+  end
 
   describe "associations" do
     it { is_expected.to have_many(:account_users).dependent(:destroy) }
