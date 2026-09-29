@@ -37,6 +37,8 @@ The platform is functionally ready for a private beta.
 | Experiences | `experiences` | ScreenContent with delegated_type (Playlist/Experience), Experience with delegated_type (ListingExperience), kiosk player rendering, floor_plans attachment. |
 | Analytics | `analytics` | Ahoy unified tracking, 9 governed event POROs, ahoy-email, rollups, visitable associations, JS analytics wrapper. |
 | Player device enrichment | `player-device-enrichment` | Device detection via device_detector, structured device fields, client-reported resolution/touch, admin inventory. |
+| Listing import | `feature/listing-import` #83 | Paste-HTML import from StreetEasy and any listing page. StructuredData + StreetEasy extractors, ImportService, PhotoImportJob. |
+| Mailer overhaul | `feature/mailer-overhaul` #89 | premailer-rails, branded layout, text parts on all emails, AccountMailer#welcome, InviteMailer#accepted, PasswordsMailer#changed, previews for all 7 methods. |
 
 ---
 
@@ -111,18 +113,22 @@ Priority depends on which markets you enter and what customers ask for.
 
 ### 2. Notifications
 
-**Current state:** `LeadMailer#new_lead` is the only notification.
-Ad-hoc, not extensible.
+**Current state:** Transactional emails are shipped: welcome (signup),
+invite + accepted, password reset + changed, new lead, inquiry.
+Branded layout with premailer-rails CSS inlining, HTML + text parts
+on all emails. No in-app notification system yet.
 
 **Target state:** Unified notification system with multiple channels.
 
 **Events worth notifying:**
-- New lead submitted (email — already exists)
-- Player went offline (email after 15 min)
-- Player came back online (in-app only)
-- QR code milestone (100 scans, 500 scans — email)
-- User joined the account (in-app)
-- Lead status changed to qualified (email to owner)
+- New lead submitted (email — shipped)
+- Invite accepted (email — shipped)
+- Welcome on signup (email — shipped)
+- Password changed (email — shipped)
+- Player went offline (email after 15 min — not started)
+- Player came back online (in-app only — not started)
+- QR code milestone (100 scans, 500 scans — not started)
+- Lead status changed to qualified (email to owner — not started)
 
 **Approach:** `Notification` model (account, user, event, read_at)
 with an in-app notification bell + optional email delivery per event

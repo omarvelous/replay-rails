@@ -12,6 +12,8 @@ class AcceptInvite
       membership.update!(role: @invite.role)
       link_agent_profile if @invite.role == "agent"
     end
+
+    InviteMailer.accepted(@invite).deliver_later
   end
 
   private

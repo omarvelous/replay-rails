@@ -1,0 +1,10 @@
+<h1>Your invite was accepted</h1>
+
+<p>
+  <strong><%= @invite.email %></strong> has joined your team
+  as <strong><%= @invite.role.capitalize %></strong>.
+</p>
+
+<p>
+  <a href="<%= app_root_url(subdomain: 'app') %>" class="btn">View Team</a>
+</p>

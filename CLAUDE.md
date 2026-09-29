@@ -185,6 +185,25 @@ Unified event tracking via Ahoy with governed event definitions.
 
 See `docs/dev/event-catalog.md` for the governed event catalog.
 
+### Email / Mailers
+
+Transactional emails use a shared branded layout with `premailer-rails` for automatic CSS inlining.
+
+- **Layout** — `app/views/layouts/mailer.html.erb` defines all email styles in a `<style>` block. premailer inlines them at delivery time. 600px single-column, branded header/footer.
+- **Multipart** — Every mailer has both `.html.erb` and `.text.erb` templates. Always send `multipart/alternative`.
+- **Sender** — Default from: `RePlay <notifications@app.replaytv.co>` in `ApplicationMailer`. Uses `app.replaytv.co` subdomain to align with Resend's DNS (SPF/DKIM). `replaytv.co` root is Google Workspace.
+- **Mailers:**
+  - `AccountMailer#welcome` — sent on signup, onboarding steps
+  - `InviteMailer#invite` — team invite with accept link
+  - `InviteMailer#accepted` — notify inviter when accepted
+  - `PasswordsMailer#reset` — password reset link
+  - `PasswordsMailer#changed` — security notice after password change
+  - `LeadMailer#new_lead` — notify agent of new lead
+  - `InquiryMailer#notification` — marketing inquiry to hello@
+- **Ahoy tracking** — `has_history` + `track_clicks` on InviteMailer, LeadMailer, InquiryMailer.
+- **Previews** — All 7 methods have `ActionMailer::Preview` classes in `spec/mailers/previews/`. View at `/rails/mailers` in dev.
+- **Delivery** — All mailers use `deliver_later` (Solid Queue). Dev uses `letter_opener_web`.
+
 ### Content Pipeline
 
 Screens display content via a polymorphic `ScreenContent` model:

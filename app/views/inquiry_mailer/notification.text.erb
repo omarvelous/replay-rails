@@ -1,0 +1,12 @@
+New <%= @inquiry.inquiry_type.humanize %>
+
+Name: <%= @inquiry.name %>
+Email: <%= @inquiry.email %>
+<% if @inquiry.phone.present? %>Phone: <%= @inquiry.phone %>
+<% end %><% if @inquiry.company.present? %>Company: <%= @inquiry.company %>
+<% end %><% if @inquiry.interest.present? %>Interest: <%= @inquiry.interest.humanize %>
+<% end %>
+<% if @inquiry.message.present? %>
+Message:
+<%= @inquiry.message %>
+<% end %>

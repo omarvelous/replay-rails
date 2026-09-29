@@ -1,0 +1,7 @@
+You've been invited to RePlay
+
+<%= @invite.invited_by.first_name %> <%= @invite.invited_by.last_name %> has invited you to join their team as <%= @invite.role.capitalize %>.
+
+Accept the invite: <%= @accept_url %>
+
+This invite expires in 7 days. If you didn't expect this email, you can safely ignore it.
