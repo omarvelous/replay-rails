@@ -14,7 +14,7 @@ RSpec.describe "Settings" do
   end
 
   describe "PATCH /settings" do
-    context "as owner" do
+    context "when owner" do
       let(:owner) { create(:user, account: account, role: "owner") }
 
       before { sign_in(owner) }
@@ -35,7 +35,7 @@ RSpec.describe "Settings" do
       end
     end
 
-    context "as agent" do
+    context "when agent" do
       let(:agent) { create(:user, account: account, role: "agent") }
 
       before { sign_in(agent) }
