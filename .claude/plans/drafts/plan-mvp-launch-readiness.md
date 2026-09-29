@@ -54,17 +54,16 @@ commented out. No XSS browser-level mitigation.
 - Test each subdomain — marketing, app, play, admin may need
   different policies
 
-### 4. Configure SMTP for production
+### 4. Configure Resend for production
 
-**Problem:** SMTP settings commented out in production.rb. No
-emails send in production.
+**Problem:** Mailer delivery not configured for production.
+Resend gem is installed and `app.replaytv.co` DNS is set up,
+but production environment needs credentials wired in.
 
 **Fix:**
-- Configure SMTP via environment variables (Postmark, SendGrid,
-  or Amazon SES)
-- Set `config.action_mailer.smtp_settings` from credentials
-- Set `default_url_options` for production email links
-- Test: lead notification, invite, password reset
+- Set Resend API key in production credentials
+- Configure `config.action_mailer.delivery_method` for Resend
+- Verify: send a test invite and lead notification in staging
 
 ### 5. User profile edit page
 
@@ -171,7 +170,8 @@ Enterprise). `Subscription` model on Account. Feature gating via
 
 ### 14. Notification system
 
-Only new-lead email exists. Need:
+Transactional emails are shipped (welcome, invite + accepted, password
+reset + changed, new lead, inquiry). Remaining:
 - Player offline alerts (email after 15 min)
 - QR milestone notifications
 - In-app notification bell
@@ -220,8 +220,11 @@ day-of-week scheduling on playlists.
 ## Out of Scope
 
 - Offline player resilience (Tier 3)
-- StreetEasy listing import (draft plan exists)
 - SMS/NFC lead capture (draft plans exist)
-- Contextual QR codes (draft plan exists)
 - Native app client credentials
 - i18n, white-labeling, GDPR (Tier 4)
+
+## Already Shipped (removed from scope)
+
+- StreetEasy listing import (#83) — paste-HTML import with extractors
+- Mailer overhaul (#89) — branded layout, text parts, 3 new mailers, premailer-rails
