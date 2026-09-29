@@ -56,6 +56,45 @@ RSpec.describe "Users (Team)" do
     end
   end
 
+  describe "GET /users/:id/edit (profile)" do
+    it "allows a user to edit their own profile" do
+      get edit_user_path(owner)
+      expect(response).to be_successful
+      expect(response.body).to include(owner.first_name)
+    end
+
+    it "denies editing another user's profile" do
+      other = create(:user, account: account, role: "agent")
+      get edit_user_path(other)
+      expect(response).to redirect_to(app_root_path)
+    end
+  end
+
+  describe "PATCH /users/:id (profile update)" do
+    it "updates the user's own name" do
+      patch user_path(owner), params: { user: { first_name: "Updated" } }
+      expect(owner.reload.first_name).to eq("Updated")
+      expect(response).to redirect_to(user_path(owner))
+    end
+
+    it "updates email address" do
+      patch user_path(owner), params: { user: { email_address: "new@example.com" } }
+      expect(owner.reload.email_address).to eq("new@example.com")
+    end
+
+    it "returns 422 with invalid params" do
+      patch user_path(owner), params: { user: { first_name: "" } }
+      expect(response).to have_http_status(:unprocessable_content)
+    end
+
+    it "denies updating another user" do
+      other = create(:user, account: account, role: "agent")
+      patch user_path(other), params: { user: { first_name: "Hacked" } }
+      expect(response).to redirect_to(app_root_path)
+      expect(other.reload.first_name).not_to eq("Hacked")
+    end
+  end
+
   context "when user is agent" do
     let(:agent) { create(:user, account: account, role: "agent") }
 

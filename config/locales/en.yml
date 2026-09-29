@@ -118,6 +118,10 @@ en:
       create:
         success: "Agent assigned."
 
+    users:
+      update:
+        success: "Profile updated."
+
     account_users:
       create:
         success: "Role added."
