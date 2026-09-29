@@ -191,7 +191,7 @@ Transactional emails use a shared branded layout with `premailer-rails` for auto
 
 - **Layout** — `app/views/layouts/mailer.html.erb` defines all email styles in a `<style>` block. premailer inlines them at delivery time. 600px single-column, branded header/footer.
 - **Multipart** — Every mailer has both `.html.erb` and `.text.erb` templates. Always send `multipart/alternative`.
-- **Sender** — Default from: `RePlay <notifications@replaytv.co>` in `ApplicationMailer`.
+- **Sender** — Default from: `RePlay <notifications@app.replaytv.co>` in `ApplicationMailer`. Uses `app.replaytv.co` subdomain to align with Resend's DNS (SPF/DKIM). `replaytv.co` root is Google Workspace.
 - **Mailers:**
   - `AccountMailer#welcome` — sent on signup, onboarding steps
   - `InviteMailer#invite` — team invite with accept link
