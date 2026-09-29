@@ -39,7 +39,7 @@ end
 # One deterministic demo account so developers can log in immediately.
 
 unless User.exists?(email_address: "demo@example.com")
-  account = Account.create!
+  account = Account.create!(name: "Demo Brokerage")
 
   user = User.create!(
     email_address:  "demo@example.com",
