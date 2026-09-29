@@ -11,7 +11,7 @@ RSpec.describe "Accounts" do
   describe "POST /accounts (signup)" do
     let(:valid_params) do
       {
-        account: {},
+        account: { name: "Acme Realty" },
         user: {
           first_name: "Jane",
           last_name: "Smith",
@@ -40,6 +40,26 @@ RSpec.describe "Accounts" do
       it "redirects after signup" do
         post accounts_path, params: valid_params
         expect(response).to be_redirect
+      end
+
+      it "saves the account name" do
+        post accounts_path, params: valid_params
+        expect(Account.last.name).to eq("Acme Realty")
+      end
+    end
+
+    context "with missing account name" do
+      it "does not create an Account" do
+        params = valid_params.deep_merge(account: { name: "" })
+        expect {
+          post accounts_path, params: params
+        }.not_to change(Account, :count)
+      end
+
+      it "returns 422" do
+        params = valid_params.deep_merge(account: { name: "" })
+        post accounts_path, params: params
+        expect(response).to have_http_status(:unprocessable_content)
       end
     end
 

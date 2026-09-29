@@ -70,8 +70,8 @@ No implementation code is written without a failing spec. Factories are created 
 
 Uses Rails 8 built-in authentication with a many-to-many Account-User relationship:
 
-- `Account` — Tenant model. All resources are scoped to an account.
-- `User` — Has `email_address` and `password_digest`. Can belong to multiple accounts (e.g., agent at multiple brokerages).
+- `Account` — Tenant model with `name` (brokerage/company name). All resources are scoped to an account. Settings page at `/settings` (owner can edit name).
+- `User` — Has `email_address` and `password_digest`. Can belong to multiple accounts (e.g., agent at multiple brokerages). Profile edit at `/users/:id/edit` (self-only).
 - `AccountUser` — Membership record. One per user per account, carrying the `role` (owner, manager, agent). Roles are hierarchical: owner > manager > agent.
 - `Session` — Tracks active sessions per user.
 - `Current` — `ActiveSupport::CurrentAttributes` provides `Current.user`, `Current.account`, and `Current.account_user` throughout the request.

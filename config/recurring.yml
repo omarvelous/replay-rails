@@ -16,8 +16,20 @@ production:
   analytics_rollup:
     class: AnalyticsRollupJob
     schedule: at 3am every day
+  player_cleanup:
+    class: PlayerCleanupJob
+    schedule: at 3:30am every day
+  version_cleanup:
+    class: VersionCleanupJob
+    schedule: at 4am every day
 
 staging:
   analytics_rollup:
     class: AnalyticsRollupJob
     schedule: at 3am every day
+  player_cleanup:
+    class: PlayerCleanupJob
+    schedule: at 3:30am every day
+  version_cleanup:
+    class: VersionCleanupJob
+    schedule: at 4am every day

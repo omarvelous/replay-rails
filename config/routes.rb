@@ -43,6 +43,7 @@ Rails.application.routes.draw do
       resource :session, only: %i[new create destroy]
       resources :passwords, param: :token, only: %i[new create edit update]
       resources :accounts, only: %i[new create]
+      resource :settings, only: %i[show update]
 
       # Content
       resources :listings do
@@ -92,7 +93,7 @@ Rails.application.routes.draw do
       end
 
       # Team
-      resources :users, only: %i[index show] do
+      resources :users, only: %i[index show edit update] do
         resources :roles, controller: "account_users", only: %i[index create destroy]
       end
       resources :invites, param: :token, only: %i[index new create destroy] do

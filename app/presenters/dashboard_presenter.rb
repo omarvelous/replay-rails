@@ -7,26 +7,28 @@ class DashboardPresenter
   end
 
   def screens_online
-    account.screens
-      .joins(screen_players: :player)
-      .where("players.last_heartbeat_at > ?", 2.minutes.ago)
-      .distinct.count
+    cached("screens_online") do
+      account.screens
+        .joins(screen_players: :player)
+        .where("players.last_heartbeat_at > ?", 2.minutes.ago)
+        .distinct.count
+    end
   end
 
   def screens_total
-    account.screens.count
+    cached("screens_total") { account.screens.count }
   end
 
   def impressions_month
-    account_events.where(name: "content.impressed").count
+    cached("impressions_month") { account_events.where(name: "content.impressed").count }
   end
 
   def scans_month
-    account_events.where(name: "qr.scanned").count
+    cached("scans_month") { account_events.where(name: "qr.scanned").count }
   end
 
   def leads_month
-    account.leads.where("created_at > ?", @period.ago).count
+    cached("leads_month") { account.leads.where("created_at > ?", @period.ago).count }
   end
 
   def leads_unread
@@ -38,18 +40,22 @@ class DashboardPresenter
   end
 
   def chart_impressions
-    account_events.where(name: "content.impressed").group_by_day(:time).count
+    cached("chart_impressions") { account_events.where(name: "content.impressed").group_by_day(:time).count }
   end
 
   def chart_scans
-    account_events.where(name: "qr.scanned").group_by_day(:time).count
+    cached("chart_scans") { account_events.where(name: "qr.scanned").group_by_day(:time).count }
   end
 
   def chart_leads
-    account.leads.where("created_at > ?", @period.ago).group_by_day(:created_at).count
+    cached("chart_leads") { account.leads.where("created_at > ?", @period.ago).group_by_day(:created_at).count }
   end
 
   private
+
+  def cached(key, expires_in: 5.minutes, &block)
+    Rails.cache.fetch("dashboard/#{account.id}/#{key}", expires_in: expires_in, &block)
+  end
 
   def account_events
     Ahoy::Event.for_account(account).where("time > ?", @period.ago)

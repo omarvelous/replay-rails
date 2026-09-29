@@ -28,7 +28,7 @@ module App
   private
 
     def account_params
-      params.fetch(:account, {}).permit
+      params.require(:account).permit(:name)
     end
 
     def user_params

@@ -1,6 +1,8 @@
 class Account < ApplicationRecord
   include PublicIdentifiable
 
+  validates :name, presence: true
+
   has_many :account_users, dependent: :destroy
   has_many :users, through: :account_users
   has_many :sites, dependent: :destroy
