@@ -1,12 +1,13 @@
 <div class="mx-auto md:w-2/3 w-full">
   <h1 class="font-bold text-4xl">Sign up</h1>
 
-  <%= form_with model: @user, url: accounts_path, class: "contents" do |form| %>
-    <% if @user.errors.any? %>
+  <%= form_with url: accounts_path, class: "contents" do |form| %>
+    <% errors = @user.errors.full_messages + @account.errors.full_messages %>
+    <% if errors.any? %>
       <div id="error_explanation" class="my-4 rounded-md bg-red-50 p-4">
         <div>
           <ul class="list-disc list-inside text-sm text-red-700">
-            <% @user.errors.full_messages.each do |message| %>
+            <% errors.each do |message| %>
               <li><%= message %></li>
             <% end %>
           </ul>
@@ -14,41 +15,51 @@
       </div>
     <% end %>
 
-    <div class="my-5">
-      <%= form.label :first_name, "First name", class: "block text-sm/6 font-medium text-gray-900" %>
-      <%= form.text_field :first_name, required: true, autofocus: true,
-          class: "block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6" %>
-    </div>
+    <%= fields_for :account, @account do |af| %>
+      <div class="my-5">
+        <%= af.label :name, "Company / brokerage name", class: "block text-sm/6 font-medium text-gray-900" %>
+        <%= af.text_field :name, required: true, placeholder: "Acme Realty",
+            class: "block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6" %>
+      </div>
+    <% end %>
 
-    <div class="my-5">
-      <%= form.label :last_name, "Last name", class: "block text-sm/6 font-medium text-gray-900" %>
-      <%= form.text_field :last_name, required: true,
-          class: "block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6" %>
-    </div>
+    <%= fields_for :user, @user do |uf| %>
+      <div class="my-5">
+        <%= uf.label :first_name, "First name", class: "block text-sm/6 font-medium text-gray-900" %>
+        <%= uf.text_field :first_name, required: true, autofocus: true,
+            class: "block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6" %>
+      </div>
 
-    <div class="my-5">
-      <%= form.label :email_address, "Email address", class: "block text-sm/6 font-medium text-gray-900" %>
-      <%= form.email_field :email_address, required: true, autocomplete: "username",
-          class: "block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6" %>
-    </div>
+      <div class="my-5">
+        <%= uf.label :last_name, "Last name", class: "block text-sm/6 font-medium text-gray-900" %>
+        <%= uf.text_field :last_name, required: true,
+            class: "block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6" %>
+      </div>
 
-    <div class="my-5">
-      <%= form.label :phone, "Phone", class: "block text-sm/6 font-medium text-gray-900" %>
-      <%= form.telephone_field :phone,
-          class: "block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6" %>
-    </div>
+      <div class="my-5">
+        <%= uf.label :email_address, "Email address", class: "block text-sm/6 font-medium text-gray-900" %>
+        <%= uf.email_field :email_address, required: true, autocomplete: "username",
+            class: "block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6" %>
+      </div>
 
-    <div class="my-5">
-      <%= form.label :password, "Password", class: "block text-sm/6 font-medium text-gray-900" %>
-      <%= form.password_field :password, required: true, autocomplete: "new-password",
-          class: "block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6" %>
-    </div>
+      <div class="my-5">
+        <%= uf.label :phone, "Phone", class: "block text-sm/6 font-medium text-gray-900" %>
+        <%= uf.telephone_field :phone,
+            class: "block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6" %>
+      </div>
 
-    <div class="my-5">
-      <%= form.label :password_confirmation, "Password confirmation", class: "block text-sm/6 font-medium text-gray-900" %>
-      <%= form.password_field :password_confirmation, required: true, autocomplete: "new-password",
-          class: "block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6" %>
-    </div>
+      <div class="my-5">
+        <%= uf.label :password, "Password", class: "block text-sm/6 font-medium text-gray-900" %>
+        <%= uf.password_field :password, required: true, autocomplete: "new-password",
+            class: "block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6" %>
+      </div>
+
+      <div class="my-5">
+        <%= uf.label :password_confirmation, "Password confirmation", class: "block text-sm/6 font-medium text-gray-900" %>
+        <%= uf.password_field :password_confirmation, required: true, autocomplete: "new-password",
+            class: "block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6" %>
+      </div>
+    <% end %>
 
     <div class="flex items-center gap-4">
       <%= form.submit "Sign up", class: "rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-xs hover:bg-indigo-500" %>
