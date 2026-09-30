@@ -33,6 +33,7 @@ seed:
 	docker compose exec web bin/rails db:seed
 
 db-reset:
+	docker compose exec db psql -U postgres -c "SELECT pg_terminate_backend(pid) FROM pg_stat_activity WHERE datname = 'replay_rails_development' AND pid <> pg_backend_pid();"
 	docker compose exec web bin/rails db:reset
 
 # Generators
