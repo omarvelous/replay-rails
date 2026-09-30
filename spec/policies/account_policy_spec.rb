@@ -55,5 +55,17 @@ RSpec.describe AccountPolicy do
       scope = policy.apply_scope(Account.all, type: :active_record_relation)
       expect(scope).to include(account, other_account)
     end
+
+    context "when user is admin" do
+      let(:admin) { create(:user, account: account, role: "owner", admin: true) }
+      let(:admin_account_user) { admin.membership_on(account) }
+
+      it "returns all accounts" do
+        other_account # create it
+        policy = described_class.new(account, user: admin, account: account, account_user: admin_account_user)
+        scope = policy.apply_scope(Account.all, type: :active_record_relation)
+        expect(scope).to include(account, other_account)
+      end
+    end
   end
 end

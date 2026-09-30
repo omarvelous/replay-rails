@@ -5,6 +5,10 @@ class AccountPolicy < ApplicationPolicy
   def switch?  = true
 
   scope_for :active_record_relation do |relation|
-    relation.where(id: user.account_ids)
+    if user.admin?
+      relation.all
+    else
+      relation.where(id: user.account_ids)
+    end
   end
 end
