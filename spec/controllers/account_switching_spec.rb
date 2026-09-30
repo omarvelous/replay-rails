@@ -80,4 +80,27 @@ RSpec.describe "Account switching", type: :request do
       expect(response.body).to include(listing.address)
     end
   end
+
+  describe "accountless admin login redirect" do
+    it "redirects to admin panel after login when admin has no accounts" do
+      admin = User.create!(
+        email_address: "solo-admin@replaytv.co",
+        first_name: "Solo",
+        last_name: "Admin",
+        phone: "+12125550099",
+        password: "password",
+        admin: true
+      )
+
+      post session_path, params: { email_address: admin.email_address, password: "password" }
+      expect(response).to redirect_to(admin_root_url(subdomain: "admin"))
+    end
+
+    it "redirects to app dashboard when regular user logs in" do
+      regular = create(:user)
+
+      post session_path, params: { email_address: regular.email_address, password: "password123" }
+      expect(response).to redirect_to(app_root_path)
+    end
+  end
 end

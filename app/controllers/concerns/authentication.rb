@@ -62,7 +62,14 @@ module Authentication
     end
 
     def after_authentication_url
-      session.delete(:return_to_after_authenticating) || app_root_path
+      url = session.delete(:return_to_after_authenticating)
+      return url if url.present?
+
+      if Current.user&.admin? && Current.user.accounts.none?
+        admin_root_url(subdomain: "admin")
+      else
+        app_root_path
+      end
     end
 
     def start_new_session_for(user)
