@@ -119,12 +119,6 @@ unless User.exists?(email_address: "agent.02@remax.com")
   puts "Created user: agent.02@remax.com / password (agent)"
 end
 
-# Admin user is also a manager on RE/MAX (tests account switching)
-unless AccountUser.exists?(account: remax_account, user: admin_user)
-  AccountUser.create!(account: remax_account, user: admin_user, role: "manager")
-  puts "Added admin@replaytv.co as manager on RE/MAX Elite"
-end
-
 remax_owner = User.find_by(email_address: "owner@remax.com")
 remax_agent1 = User.find_by(email_address: "agent.01@remax.com")
 remax_agent2 = User.find_by(email_address: "agent.02@remax.com")

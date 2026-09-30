@@ -10,7 +10,7 @@
   </div>
 
   <%# Account switcher %>
-  <% user_accounts = current_user.accounts.order(:name) %>
+  <% user_accounts = AccountPolicy.accessible_by(current_user).order(:name) %>
   <% if user_accounts.size > 1 %>
     <div class="-mx-2">
       <%= form_with url: account_switch_path, method: :post, data: { turbo: false } do |f| %>
