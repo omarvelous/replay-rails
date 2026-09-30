@@ -5,6 +5,9 @@ class Current < ActiveSupport::CurrentAttributes
   delegate :user, to: :session, allow_nil: true
 
   def account_user
-    user&.account_users&.find_by(account: account)
+    membership = user&.account_users&.find_by(account: account)
+    return membership if membership
+
+    AdminAccountUser.new if user&.admin? && account
   end
 end
