@@ -723,7 +723,7 @@ if Ahoy::Event.for_account(remax_account).where(name: "content.impressed").empty
             playlist_pid: playlist&.public_id,
             position: playlist_ad&.position || rand(1..5),
             duration: playlist_ad&.duration || 10
-          }.to_json,
+          },
           time: date + rand(8..16).hours + rand(0..59).minutes
         }
       end
@@ -757,7 +757,7 @@ if Analytics::Events::QrScanned.events.for_account(remax_account).empty?
             account_pid: remax_account.public_id,
             qr_code_pid: qr_code.public_id,
             destination_url: "/go/listings/#{qr_code.destination_record&.to_param}"
-          }.to_json,
+          },
           time: date + rand(8..20).hours + rand(0..59).minutes
         }
       end
