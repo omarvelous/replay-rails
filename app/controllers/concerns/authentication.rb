@@ -77,7 +77,6 @@ module Authentication
         Current.session = session
         cookies.signed[:session_id] = { value: session.id, httponly: true, same_site: :lax, domain: :all, expires: 30.days.from_now }
         ahoy.authenticate(user)
-        ahoy.visit&.update(account_id: Current.account&.id) if ahoy.visit&.account_id.nil?
       end
     end
 
