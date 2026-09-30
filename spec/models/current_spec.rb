@@ -12,13 +12,13 @@ RSpec.describe Current do
       end
     end
 
-    context "when account is not set but user has accounts" do
-      it "falls back to the user's first account" do
+    context "when account is not set" do
+      it "returns nil (controller resolves account from session)" do
         user = create(:user)
         session = user.sessions.create!(user_agent: "test", ip_address: "127.0.0.1")
         described_class.session = session
 
-        expect(described_class.account).to eq(user.accounts.first)
+        expect(described_class.account).to be_nil
       end
     end
 

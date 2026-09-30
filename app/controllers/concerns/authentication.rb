@@ -35,6 +35,20 @@ module Authentication
 
     def resume_session
       Current.session ||= find_session_by_cookie
+      resolve_current_account if Current.session && Current.account.nil?
+      Current.session
+    end
+
+    def resolve_current_account
+      user = Current.user
+      return unless user
+
+      Current.account =
+        if session[:account_id]
+          user.accounts.find_by(id: session[:account_id]) || user.accounts.first
+        else
+          user.accounts.first
+        end
     end
 
     def find_session_by_cookie

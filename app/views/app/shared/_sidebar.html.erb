@@ -9,6 +9,28 @@
     </div>
   </div>
 
+  <%# Account switcher %>
+  <% user_accounts = current_user.accounts.order(:name) %>
+  <% if user_accounts.size > 1 %>
+    <div class="-mx-2">
+      <%= form_with url: account_switch_path, method: :post, data: { turbo: false } do |f| %>
+        <select
+          name="account_id"
+          onchange="this.form.requestSubmit()"
+          class="w-full rounded-md bg-gray-800 border-gray-700 text-sm text-white py-1.5 pl-3 pr-8 focus:ring-indigo-500 focus:border-indigo-500"
+        >
+          <% user_accounts.each do |account| %>
+            <option value="<%= account.to_param %>" <%= "selected" if account == current_account %>>
+              <%= account.name %>
+            </option>
+          <% end %>
+        </select>
+      <% end %>
+    </div>
+  <% else %>
+    <div class="-mx-2 px-2 py-1.5 text-sm text-gray-400 truncate"><%= current_account&.name %></div>
+  <% end %>
+
   <nav class="flex flex-1 flex-col">
     <ul role="list" class="flex flex-1 flex-col gap-y-7">
       <%# Dashboard %>

@@ -56,7 +56,7 @@ Can ship without these but can't sustain a business.
 |------|--------------------------|--------|
 | Marketing site | NYC-focused landing page with both product motions, pricing, demo CTA. | Shipped |
 | Subscriptions | Can't charge without billing. Stripe Billing, plan tiers, feature gating. | Not started |
-| Notifications | Leads email agents, but nothing else alerts users. Player offline, milestone scans, new team member. | Not started |
+| Notifications | Leads email agents, but nothing else alerts users. Player offline, milestone scans, new team member. | Draft plan exists |
 | Content scheduling | Brokerages want open house ads on weekends only. Day-parting and date ranges. | Plan exists |
 
 ### Tier 3 — Soon after launch
@@ -251,6 +251,7 @@ Documentation is in progress.
 | Consolidate API under Play | `.claude/plans/202609220100-consolidate-api-under-play.md` | Complete |
 | API cleanup + OpenAPI | `.claude/plans/202609230100-api-cleanup-openapi.md` | Complete |
 | Security & infrastructure | `.claude/plans/202609250100-security-infrastructure.md` | Complete |
+| Account switching | `.claude/plans/202609300100-account-switching.md` | Complete |
 | NYC product gaps | `.claude/plans/drafts/plan-nyc-product-gaps.md` | Draft — needs review |
 | Day-parting / Scheduling | `.claude/plans/drafts/plan-day-parting-scheduling.md` | Draft — needs review |
 | Live Preview | `.claude/plans/drafts/plan-live-preview.md` | Draft — needs review |
