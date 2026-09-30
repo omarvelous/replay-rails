@@ -335,7 +335,7 @@ ActsAsTenant.with_tenant(remax_account) do
 
   # ListingAd — price reduced
   unless Ad.exists?(account: remax_account, headline: "Price Reduced")
-    listing_ad = Ads::ListingAd.create!(listing: greenwich, badge: "price_reduced", original_price: 4_500_000)
+    listing_ad = Ads::ListingAd.create!(listing: greenwich, badge: "price_reduction", original_price: 4_500_000)
     Ad.create!(
       account: remax_account, adable: listing_ad,
       headline: "Price Reduced",
@@ -692,7 +692,7 @@ end
 # =====================================================================
 puts "\n=== Analytics ==="
 
-if Ahoy::Event.where(account_id: remax_account.id, name: "content.impressed").empty?
+if Ahoy::Event.for_account(remax_account).where(name: "content.impressed").empty?
   screen = Screen.joins(:site).find_by(sites: { account_id: remax_account.id })
   screen_content = screen&.active_screen_content
   playlist = Playlist.find_by(account: remax_account, status: "published")
@@ -702,7 +702,6 @@ if Ahoy::Event.where(account_id: remax_account.id, name: "content.impressed").em
     seed_visit = Ahoy::Visit.create!(
       visit_token: SecureRandom.hex(16),
       visitor_token: SecureRandom.hex(16),
-      account_id: remax_account.id,
       started_at: 30.days.ago
     )
 
@@ -715,16 +714,15 @@ if Ahoy::Event.where(account_id: remax_account.id, name: "content.impressed").em
         playlist_ad = playlist&.playlist_ads&.find_by(ad: ad)
         events << {
           visit_id: seed_visit.id,
-          account_id: remax_account.id,
           name: "content.impressed",
           properties: {
-            ad_id: ad.id,
-            screen_id: screen.id,
-            screen_content_id: screen_content&.id,
-            playlist_id: playlist&.id,
+            account_pid: remax_account.public_id,
+            ad_pid: ad.public_id,
+            screen_pid: screen.public_id,
+            screen_content_pid: screen_content&.public_id,
+            playlist_pid: playlist&.public_id,
             position: playlist_ad&.position || rand(1..5),
-            duration: playlist_ad&.duration || 10,
-            account_id: remax_account.id
+            duration: playlist_ad&.duration || 10
           }.to_json,
           time: date + rand(8..16).hours + rand(0..59).minutes
         }
@@ -737,30 +735,29 @@ if Ahoy::Event.where(account_id: remax_account.id, name: "content.impressed").em
 end
 
 # QR Scan Events (RE/MAX — 30 days)
-if Analytics::Events::QrScanned.events.where(account_id: remax_account.id).empty?
-  screen = Screen.joins(:site).find_by(sites: { account_id: remax_account.id })
-  ads = Ad.where(account: remax_account).limit(5).to_a
+if Analytics::Events::QrScanned.events.for_account(remax_account).empty?
   qr_codes = QrCode.where(account: remax_account).to_a
   demo_visit = Ahoy::Visit.find_or_create_by!(visit_token: "demo-scan-visit") do |v|
     v.visitor_token = "demo-scan-visitor"
-    v.account_id = remax_account.id
     v.started_at = 30.days.ago
   end
 
-  if screen && ads.any? && qr_codes.any?
+  if qr_codes.any?
     events = []
 
     30.downto(1) do |days_ago|
       date = days_ago.days.ago.to_date
       daily_count = rand(2..8)
       daily_count.times do
-        ad = ads.sample
         qr_code = qr_codes.sample
         events << {
           visit_id: demo_visit.id,
-          account_id: remax_account.id,
           name: "qr.scanned",
-          properties: { qr_code_id: qr_code.id, ad_id: ad.id, screen_id: screen.id, destination_url: "/go/listings/1" }.to_json,
+          properties: {
+            account_pid: remax_account.public_id,
+            qr_code_pid: qr_code.public_id,
+            destination_url: "/go/listings/#{qr_code.destination_record&.to_param}"
+          }.to_json,
           time: date + rand(8..20).hours + rand(0..59).minutes
         }
       end
