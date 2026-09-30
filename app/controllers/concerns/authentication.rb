@@ -43,11 +43,12 @@ module Authentication
       user = Current.user
       return unless user
 
+      accounts = AccountPolicy.accessible_by(user)
       Current.account =
         if session[:account_id]
-          user.accounts.find_by(id: session[:account_id]) || user.accounts.first
+          accounts.find_by(id: session[:account_id]) || accounts.first
         else
-          user.accounts.first
+          accounts.first
         end
     end
 

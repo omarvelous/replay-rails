@@ -52,4 +52,32 @@ RSpec.describe "Account switching", type: :request do
       expect(response).to have_http_status(:not_found)
     end
   end
+
+  describe "admin account access" do
+    let(:admin) { create(:user, admin: true) }
+    let(:target_account) { create(:account, name: "Target Brokerage") }
+
+    before { sign_in(admin) }
+
+    it "allows admin to switch into any account without membership" do
+      ActsAsTenant.with_tenant(target_account) { create(:listing, account: target_account) }
+
+      post account_switch_path, params: { account_id: target_account.public_id }
+      expect(response).to redirect_to(app_root_path)
+
+      get listings_path
+      expect(response).to be_successful
+    end
+
+    it "admin stays on switched non-member account across requests" do
+      listing = ActsAsTenant.with_tenant(target_account) { create(:listing, account: target_account) }
+
+      post account_switch_path, params: { account_id: target_account.public_id }
+
+      # Next request should still be on target_account (not fall back to admin's own account)
+      get listings_path
+      expect(response).to be_successful
+      expect(response.body).to include(listing.address)
+    end
+  end
 end
