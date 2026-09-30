@@ -211,3 +211,118 @@ end
 
 No more `resolve_account` fallback logic in the model — the
 controller owns account resolution.
+
+---
+
+## Phase 2 — Admin account access without membership
+
+**Problem:** Admins with no AccountUser records hit nil errors on
+the app subdomain. `Current.account` is nil, `Current.account_user`
+is nil, every policy check raises NoMethodError.
+
+**Admin subdomain is fine** — uses `without_tenant`, only checks
+`Current.user.admin?`, never touches `account_user`.
+
+### Changes
+
+**1. `resolve_current_account` uses policy scope**
+
+Single source of truth for which accounts a user can access.
+Admins see all accounts (via policy scope), regular users see
+only their memberships.
+
+```ruby
+# app/controllers/concerns/authentication.rb
+def resolve_current_account
+  user = Current.user
+  return unless user
+
+  accounts = AccountPolicy::Scope.new(Account.all, user: user).resolve
+  Current.account =
+    if session[:account_id]
+      accounts.find_by(id: session[:account_id]) || accounts.first
+    else
+      accounts.first
+    end
+end
+```
+
+**2. AccountPolicy scope — admin bypass**
+
+```ruby
+scope_for :active_record_relation do |relation|
+  if user.admin?
+    relation.all
+  else
+    relation.where(id: user.account_ids)
+  end
+end
+```
+
+**3. AdminAccountUser NullObject**
+
+When an admin switches into an account they don't belong to,
+`Current.account_user` returns nil. Policies call `.role` and
+`.at_least?` on it → NoMethodError. Fix with a NullObject that
+makes admins behave as owners:
+
+```ruby
+# app/models/admin_account_user.rb
+class AdminAccountUser
+  def role = "owner"
+  def at_least?(_) = true
+end
+```
+
+```ruby
+# app/models/current.rb
+def account_user
+  membership = user&.account_users&.find_by(account: account)
+  return membership if membership
+  AdminAccountUser.new if user&.admin? && account
+end
+```
+
+**4. Redirect accountless admins to admin panel after login**
+
+```ruby
+# app/controllers/concerns/authentication.rb
+def after_authentication_url
+  url = session.delete(:return_to_after_authenticating)
+  return url if url.present?
+
+  if Current.user&.admin? && Current.user.accounts.none?
+    admin_root_url(subdomain: "admin")
+  else
+    app_root_path
+  end
+end
+```
+
+**5. Sidebar — use policy scope for the dropdown**
+
+Replace `current_user.accounts` with `authorized_scope(Account.all)`
+so admins see all accounts in the switcher. Limit to avoid rendering
+hundreds of accounts — admins use admin panel to find and switch.
+
+### Execution
+
+```
+Step 6 — AdminAccountUser NullObject (TDD)
+  RED:  Spec that admin without membership gets owner-like account_user
+  GREEN: AdminAccountUser class + Current#account_user fallback
+
+Step 7 — Policy scope admin bypass (TDD)
+  RED:  Policy spec — admin sees all accounts
+  GREEN: Admin branch in scope_for
+
+Step 8 — resolve_current_account uses policy scope (TDD)
+  RED:  Auth spec — admin can resolve any account from session
+  GREEN: Update resolve_current_account
+
+Step 9 — Redirect accountless admins after login
+  RED:  Auth spec — admin with no accounts redirects to admin panel
+  GREEN: Update after_authentication_url
+
+Step 10 — Lint + test + commit
+```
