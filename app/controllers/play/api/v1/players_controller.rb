@@ -7,7 +7,6 @@ module Play
 
         # GET /api/v1/player — player status
         def show
-          set_session_cookie_if_missing
           render_data(paired: current_player.paired?)
         end
 
@@ -39,21 +38,6 @@ module Play
 
         def player_params
           params.permit(:screen_width, :screen_height, :touch_capable, :app_version)
-        end
-
-        def set_session_cookie_if_missing
-          return unless current_player_session
-
-          cookie_session_id = cookies.signed[:player_session_id]
-          return if cookie_session_id == current_player_session.id
-
-          cookies.signed[:player_session_id] = {
-            value: current_player_session.id,
-            httponly: true,
-            secure: Rails.env.production?,
-            same_site: :lax,
-            expires: 1.year.from_now
-          }
         end
       end
     end

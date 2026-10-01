@@ -165,18 +165,15 @@ export default class extends Controller {
     this.pollDelay = Math.min(this.pollDelay * 2, 60000)
   }
 
-  async onPaired(token) {
+  onPaired(token) {
     clearTimeout(this.pollTimeout)
     clearInterval(this.countdownInterval)
     this.subscription?.unsubscribe()
 
     if (token) {
-      // Exchange bearer token for a session cookie before redirecting
-      await fetch("/api/v1/player", {
-        headers: { "Authorization": `Bearer ${token}` }
-      })
+      window.location.href = `/player?token=${encodeURIComponent(token)}`
+    } else {
+      window.location.href = "/player"
     }
-
-    window.location.href = "/player"
   }
 }

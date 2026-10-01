@@ -49,5 +49,31 @@ RSpec.describe "Play::Players" do
       get "/player"
       expect(response).to redirect_to(new_player_path)
     end
+
+    it "authenticates via token param and sets session cookie" do
+      new_session = player.player_sessions.create!(ip_address: "127.0.0.1", user_agent: "RSpec")
+      token = new_session.bearer_token
+
+      get "/player", params: { token: token }
+      expect(response).to be_successful
+      expect(cookies[:player_session_id]).to be_present
+    end
+
+    it "authenticates via token even when stale cookie exists" do
+      old_session = player.player_sessions.create!(ip_address: "127.0.0.1", user_agent: "RSpec")
+      sign_in_player(player)
+      old_session.revoke!
+
+      new_session = player.player_sessions.create!(ip_address: "127.0.0.1", user_agent: "RSpec")
+      token = new_session.bearer_token
+
+      get "/player", params: { token: token }
+      expect(response).to be_successful
+    end
+
+    it "ignores invalid token param" do
+      get "/player", params: { token: "garbage" }
+      expect(response).to redirect_to(new_player_path)
+    end
   end
 end
