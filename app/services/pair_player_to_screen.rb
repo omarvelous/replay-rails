@@ -1,5 +1,5 @@
 class PairPlayerToScreen
-  Result = Struct.new(:success?, :error, keyword_init: true)
+  Result = Struct.new(:success?, :error, :session, keyword_init: true)
 
   def initialize(screen:, code:, paired_by: nil)
     @screen = screen
@@ -26,8 +26,16 @@ class PairPlayerToScreen
 
     player.revoke_all_sessions!
 
-    ActionCable.server.broadcast("pairing_#{@code}", { paired: true })
+    new_session = player.player_sessions.create!(
+      ip_address: player.ip_address,
+      user_agent: player.user_agent
+    )
 
-    Result.new(success?: true)
+    ActionCable.server.broadcast("pairing_#{@code}", {
+      paired: true,
+      token: new_session.bearer_token
+    })
+
+    Result.new(success?: true, session: new_session)
   end
 end
