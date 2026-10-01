@@ -86,7 +86,7 @@ export default class extends Controller {
     this.subscription?.unsubscribe()
     this.subscription = consumer.subscriptions.create(
       { channel: "PairingChannel", code: this.pairingCode },
-      { received: (msg) => { if (msg.paired) this.onPaired() } }
+      { received: (msg) => { if (msg.paired) this.onPaired(msg.token) } }
     )
   }
 
@@ -165,10 +165,18 @@ export default class extends Controller {
     this.pollDelay = Math.min(this.pollDelay * 2, 60000)
   }
 
-  onPaired() {
+  async onPaired(token) {
     clearTimeout(this.pollTimeout)
     clearInterval(this.countdownInterval)
     this.subscription?.unsubscribe()
+
+    if (token) {
+      // Exchange bearer token for a session cookie before redirecting
+      await fetch("/api/v1/player", {
+        headers: { "Authorization": `Bearer ${token}` }
+      })
+    }
+
     window.location.href = "/player"
   }
 }
