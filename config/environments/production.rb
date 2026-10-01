@@ -83,4 +83,9 @@ Rails.application.configure do
   config.action_dispatch.tld_length = 1
   config.action_controller.default_url_options = { host: "replaytv.co", protocol: "https" }
   config.action_mailer.default_url_options = { host: "app.replaytv.co", protocol: "https" }
+
+  # ActionCable — allow WebSocket connections from all subdomains
+  config.action_cable.allowed_request_origins = [
+    /https:\/\/.*\.replaytv\.co/
+  ]
 end
