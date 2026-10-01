@@ -44,6 +44,9 @@ Rails.application.routes.draw do
       resources :passwords, param: :token, only: %i[new create edit update]
       resources :accounts, only: %i[new create]
       resource :settings, only: %i[show update]
+      resource :account, only: [] do
+        resource :switch, only: :create, module: :accounts
+      end
 
       # Content
       resources :listings do
