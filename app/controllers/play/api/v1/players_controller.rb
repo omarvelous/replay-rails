@@ -42,8 +42,10 @@ module Play
         end
 
         def set_session_cookie_if_missing
-          return if cookies.signed[:player_session_id]
           return unless current_player_session
+
+          cookie_session_id = cookies.signed[:player_session_id]
+          return if cookie_session_id == current_player_session.id
 
           cookies.signed[:player_session_id] = {
             value: current_player_session.id,

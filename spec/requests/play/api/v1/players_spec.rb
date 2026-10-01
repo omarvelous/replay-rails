@@ -75,6 +75,20 @@ RSpec.describe "Api::Players" do
       expect(response).to be_successful
       expect(cookies[:player_session_id]).to be_present
     end
+
+    it "overwrites stale session cookie when authenticated via bearer" do
+      old_session = player.player_sessions.create!(ip_address: "127.0.0.1", user_agent: "RSpec")
+      sign_in_player(player) # sets cookie to old_session
+      old_session.revoke!
+
+      new_session = player.player_sessions.create!(ip_address: "127.0.0.1", user_agent: "RSpec")
+      token = new_session.bearer_token
+
+      get "/api/v1/player", headers: { "Authorization" => "Bearer #{token}" }
+
+      expect(response).to be_successful
+      expect(cookies[:player_session_id]).to be_present
+    end
   end
 
   describe "POST /v1/player/pairing_code" do
