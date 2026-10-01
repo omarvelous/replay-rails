@@ -86,7 +86,7 @@ export default class extends Controller {
     this.subscription?.unsubscribe()
     this.subscription = consumer.subscriptions.create(
       { channel: "PairingChannel", code: this.pairingCode },
-      { received: (msg) => { if (msg.paired) this.onPaired(msg.token) } }
+      { received: (msg) => { if (msg.paired) this.onPaired() } }
     )
   }
 
@@ -165,15 +165,10 @@ export default class extends Controller {
     this.pollDelay = Math.min(this.pollDelay * 2, 60000)
   }
 
-  onPaired(token) {
+  onPaired() {
     clearTimeout(this.pollTimeout)
     clearInterval(this.countdownInterval)
     this.subscription?.unsubscribe()
-
-    if (token) {
-      window.location.href = `/player?token=${encodeURIComponent(token)}`
-    } else {
-      window.location.href = "/player"
-    }
+    window.location.href = "/player"
   }
 }

@@ -50,42 +50,24 @@ RSpec.describe PairPlayerToScreen do
       expect(screen.reload.player).to eq(player)
     end
 
-    it "revokes all pre-existing sessions" do
-      old_session = player.player_sessions.create!(ip_address: "1.1.1.1")
+    it "does not revoke existing sessions" do
+      existing_session = player.player_sessions.create!(ip_address: "1.1.1.1")
 
       described_class.new(screen: screen, code: player.pairing_code, paired_by: user).call
 
-      expect(old_session.reload.revoked_at).to be_present
+      expect(existing_session.reload.revoked_at).to be_nil
     end
 
-    it "creates a new active session after revoking old ones" do
-      old_session = player.player_sessions.create!(ip_address: "1.1.1.1")
-
-      result = described_class.new(screen: screen, code: player.pairing_code, paired_by: user).call
-
-      expect(result).to be_success
-      expect(player.player_sessions.active.count).to eq(1)
-      expect(player.player_sessions.active.first).not_to eq(old_session)
-    end
-
-    it "returns the new session in the result" do
-      result = described_class.new(screen: screen, code: player.pairing_code, paired_by: user).call
-
-      expect(result.session).to be_a(PlayerSession)
-      expect(result.session).to be_persisted
-      expect(result.session.player).to eq(player)
-    end
-
-    it "broadcasts paired: true with a bearer token for the new session" do
+    it "broadcasts paired: true" do
       code = player.pairing_code
 
       allow(ActionCable.server).to receive(:broadcast)
 
-      result = described_class.new(screen: screen, code: code, paired_by: user).call
+      described_class.new(screen: screen, code: code, paired_by: user).call
 
       expect(ActionCable.server).to have_received(:broadcast).with(
         "pairing_#{code}",
-        { paired: true, token: result.session.bearer_token }
+        { paired: true }
       )
     end
 
