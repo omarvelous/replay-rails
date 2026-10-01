@@ -2,7 +2,7 @@ module Play
   module Api
     module V1
       class PlayersController < Play::Api::V1::BaseController
-        rate_limit to: 10, within: 1.minute, only: :create, by: -> { request.remote_ip }
+        rate_limit to: 10, within: 1.minute, only: :create, by: -> { request.remote_ip }, unless: -> { Rails.env.local? }
         before_action :authenticate_player!, only: :show
 
         # GET /api/v1/player — player status

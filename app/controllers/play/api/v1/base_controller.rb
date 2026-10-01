@@ -3,7 +3,7 @@ module Play
     module V1
       class BaseController < Play::BaseController
         layout false
-        rate_limit to: 60, within: 1.minute, by: -> { request.remote_ip }
+        rate_limit to: 60, within: 1.minute, by: -> { request.remote_ip }, unless: -> { Rails.env.local? }
 
         rescue_from ActiveRecord::RecordNotFound do
           render_error "Not found", status: :not_found
