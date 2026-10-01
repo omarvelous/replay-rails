@@ -32,7 +32,7 @@ export default class extends Controller {
     this.sendHeartbeat()
 
     // Manifest polling for content change detection
-    this.manifestETag = null
+    this.manifestHash = null
     this.manifestInterval = setInterval(() => this.checkManifest(), 30_000)
 
     this.element.addEventListener("slideshow:impression", (e) => {
@@ -58,18 +58,13 @@ export default class extends Controller {
 
   async checkManifest() {
     try {
-      const options = {}
-      if (this.manifestETag) {
-        options.headers = { "If-None-Match": this.manifestETag }
-      }
-
-      const res = await fetch("/api/v1/player/manifest", options)
+      const res = await fetch("/api/v1/player/manifest")
 
       if (res.status === 200) {
-        const newETag = res.headers.get("ETag")
-        if (!this.manifestETag) {
-          this.manifestETag = newETag
-        } else if (newETag !== this.manifestETag) {
+        const body = await res.text()
+        if (!this.manifestHash) {
+          this.manifestHash = body
+        } else if (body !== this.manifestHash) {
           window.location.reload()
         }
       }
