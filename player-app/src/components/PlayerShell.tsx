@@ -9,6 +9,7 @@ import { usePlayerQuery } from "../queries/usePlayerQuery"
 import { useManifestQuery } from "../queries/useManifestQuery"
 import { useHeartbeat } from "../queries/useHeartbeat"
 import { api, ApiError } from "../api/client"
+import { preloadManifestImages } from "../utils/preloadImages"
 import { PairingScreen } from "./PairingScreen"
 import { Slideshow } from "./Slideshow"
 import { Experience } from "./Experience"
@@ -99,7 +100,9 @@ export function PlayerShell() {
     if (manifest) {
       const version = manifest.screen_content?.updated_at ?? null
       if (manifest.contentable) {
-        dispatch({ type: "MANIFEST_LOADED", manifest, contentVersion: version })
+        preloadManifestImages(manifest).then(() => {
+          dispatch({ type: "MANIFEST_LOADED", manifest, contentVersion: version })
+        })
       } else {
         dispatch({ type: "NO_CONTENT", contentVersion: version })
       }
