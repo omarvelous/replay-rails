@@ -23,4 +23,11 @@ Rails.application.configure do
   config.action_cable.allowed_request_origins = [
     /https:\/\/.*\.replaytv\.dev/
   ]
+
+  config.host_authorization = {
+    exclude: ->(request) {
+      request.path == "/up" ||
+        request.headers["X-Forwarded-Host"]&.match?(/\A(play\.)?replaytv\.dev\z/)
+    }
+  }
 end
