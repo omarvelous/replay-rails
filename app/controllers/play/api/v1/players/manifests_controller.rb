@@ -8,11 +8,7 @@ module Play
           def show
             @screen_content = current_player.screen&.active_screen_content
 
-            if @screen_content
-              render template: "api/v1/players/manifests/show", formats: [ :json ]
-            else
-              render_data(content: nil)
-            end
+            render template: "api/v1/players/manifests/show", formats: [ :json ]
           end
         end
       end

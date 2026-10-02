@@ -2,8 +2,8 @@ class PlaylistAd < ApplicationRecord
   include PublicIdentifiable
 
   has_paper_trail
-  belongs_to :playlist, counter_cache: true
-  belongs_to :ad
+  belongs_to :playlist, counter_cache: true, touch: true
+  belongs_to :ad, touch: true
 
   positioned on: :playlist
 

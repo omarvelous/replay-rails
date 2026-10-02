@@ -15,7 +15,14 @@ module Play
             ).call
 
             if result.success?
-              head :no_content
+              screen_content = current_player.screen&.active_screen_content
+              contentable = screen_content&.contentable
+              content_version = [ screen_content, contentable ].compact.map(&:updated_at).max&.to_i
+
+              render_data({
+                status: "ok",
+                content_version: content_version
+              })
             else
               render_error result.error, status: :gone
             end

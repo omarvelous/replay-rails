@@ -45,6 +45,23 @@ services:
     stdin_open: true
     tty: true
 
+  player:
+    image: node:22-slim
+    command: sh -c "npm install && npm run dev -- --host 0.0.0.0"
+    working_dir: /app
+    ports:
+      - "3100:3100"
+    depends_on:
+      - web
+    environment:
+      API_URL: http://web:3000
+      WS_URL: ws://web:3000
+      VITE_CABLE_URL: ws://play.replay.localhost:3000
+    volumes:
+      - ./player-app:/app
+      - player_node_modules:/app/node_modules
+
 volumes:
   postgres_data:
   bundle_cache:
+  player_node_modules:

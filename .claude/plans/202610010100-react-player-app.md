@@ -1,8 +1,8 @@
 # Plan: React Player App
 
 **Created:** 2026-10-01
-**Status:** Draft
-**Branch:** TBD
+**Status:** In progress
+**Branch:** `feature/react-player-app`
 
 ## Problem
 

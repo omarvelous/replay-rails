@@ -8,9 +8,19 @@ class Playlist < ApplicationRecord
   has_many :screen_contents, as: :contentable, dependent: :destroy
   has_many :screens, through: :screen_contents
 
+  after_commit :notify_screens, if: :saved_change_to_updated_at?
+
   validates :name, presence: true
   validates :status, presence: true, inclusion: { in: %w[draft published archived] }
 
   scope :search, ->(q) { where("playlists.name ILIKE ?", "%#{sanitize_sql_like(q)}%") }
   scope :by_status, ->(s) { where(status: s) }
+
+  private
+
+  def notify_screens
+    screen_contents.each do |sc|
+      ActionCable.server.broadcast("screen_#{sc.screen_id}", { event: "content_changed" })
+    end
+  end
 end
