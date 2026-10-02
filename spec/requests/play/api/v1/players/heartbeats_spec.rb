@@ -11,17 +11,22 @@ RSpec.describe "Api::Players::Heartbeats" do
   end
 
   describe "POST /v1/player/heartbeat" do
-    it "updates last_heartbeat_at" do
+    it "updates last_heartbeat_at and returns content_version" do
       post "/api/v1/player/heartbeat"
-      expect(response).to have_http_status(:no_content)
+      expect(response).to be_successful
 
       player.reload
       expect(player.last_heartbeat_at).to be_within(5.seconds).of(Time.current)
       expect(player.ip_address).to be_present
+
+      data = response.parsed_body["data"]
+      expect(data["status"]).to eq("ok")
+      expect(data).to have_key("content_version")
     end
 
     it "updates session last_active_at" do
       post "/api/v1/player/heartbeat"
+      expect(response).to be_successful
       expect(PlayerSession.last.last_active_at).to be_within(5.seconds).of(Time.current)
     end
 

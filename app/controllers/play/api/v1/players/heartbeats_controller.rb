@@ -15,7 +15,11 @@ module Play
             ).call
 
             if result.success?
-              head :no_content
+              screen_content = current_player.screen&.active_screen_content
+              render_data({
+                status: "ok",
+                content_version: screen_content&.updated_at&.to_i
+              })
             else
               render_error result.error, status: :gone
             end
