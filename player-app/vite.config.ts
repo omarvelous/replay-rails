@@ -7,10 +7,15 @@ export default defineConfig({
   server: {
     port: 3100,
     proxy: {
-      '/api': process.env.API_URL || 'http://localhost:3000',
+      '/api': {
+        target: process.env.API_URL || 'http://localhost:3000',
+        changeOrigin: true,
+        headers: { 'Host': 'play.replay.localhost' },
+      },
       '/cable': {
         target: process.env.WS_URL || 'ws://localhost:3000',
         ws: true,
+        headers: { 'Host': 'play.replay.localhost' },
       },
     },
   },
