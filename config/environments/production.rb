@@ -76,8 +76,14 @@ Rails.application.configure do
     "rply.tv"
   ]
 
-  # Skip DNS rebinding protection for the default health check endpoint.
-  config.host_authorization = { exclude: ->(request) { request.path == "/up" } }
+  # Skip DNS rebinding protection for health checks and requests
+  # proxied from Cloudflare Pages (identified by X-Forwarded-Host).
+  config.host_authorization = {
+    exclude: ->(request) {
+      request.path == "/up" ||
+        request.headers["X-Forwarded-Host"]&.match?(/\A(play\.)?replaytv\.co\z/)
+    }
+  }
 
   # Subdomain routing
   config.action_dispatch.tld_length = 1
