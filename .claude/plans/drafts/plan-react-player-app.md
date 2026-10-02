@@ -33,6 +33,16 @@ limitations:
 
 ## Design
 
+### Tech stack
+
+- **React 18+** with TypeScript
+- **Vite** for build tooling
+- **TanStack Query** (React Query) for data fetching, caching,
+  polling, and stale-while-revalidate
+- **XState** (or `useReducer`) for the player state machine
+- **@rails/actioncable** for WebSocket (same protocol as Solid Cable)
+- **Tailwind CSS** to match the Rails app's styling
+
 ### Directory structure
 
 ```
@@ -42,25 +52,26 @@ replay-rails/
 │   │   ├── main.tsx
 │   │   ├── App.tsx
 │   │   ├── api/
-│   │   │   ├── client.ts           # fetch wrapper with bearer auth
-│   │   │   ├── players.ts          # register, show, heartbeat
-│   │   │   └── manifest.ts         # fetch manifest
+│   │   │   └── client.ts           # fetch wrapper, initialized with token
+│   │   ├── machines/
+│   │   │   └── playerMachine.ts    # XState or useReducer state machine
+│   │   ├── queries/
+│   │   │   ├── usePlayerQuery.ts   # check paired status
+│   │   │   ├── useManifestQuery.ts # fetch + cache manifest (TanStack Query)
+│   │   │   └── useHeartbeat.ts     # mutation with interval, content version
 │   │   ├── channels/
-│   │   │   ├── consumer.ts         # createConsumer with token
+│   │   │   ├── useConsumer.ts      # ActionCable lifecycle + reconnection
 │   │   │   ├── usePairingChannel.ts
 │   │   │   └── useScreenChannel.ts
+│   │   ├── context/
+│   │   │   └── AuthContext.tsx     # token + publicId only
 │   │   ├── components/
+│   │   │   ├── PlayerShell.tsx     # error boundary + state machine router
 │   │   │   ├── PairingScreen.tsx
 │   │   │   ├── Slideshow.tsx
 │   │   │   ├── Experience.tsx
 │   │   │   ├── IdleScreen.tsx
-│   │   │   └── UnpairedScreen.tsx
-│   │   ├── context/
-│   │   │   └── PlayerContext.tsx   # token, publicId, api client, consumer
-│   │   ├── hooks/
-│   │   │   ├── usePlayer.ts        # identity, registration, state + localStorage sync
-│   │   │   ├── useHeartbeat.ts     # 30s liveness + content version
-│   │   │   └── useManifest.ts      # fetch + cache manifest data
+│   │   │   └── ErrorScreen.tsx
 │   │   └── types/
 │   │       └── index.ts            # Player, Screen, Playlist, Ad, etc.
 │   ├── public/
@@ -68,7 +79,7 @@ replay-rails/
 │   ├── package.json
 │   ├── tsconfig.json
 │   ├── vite.config.ts
-│   └── wrangler.toml
+│   └── wrangler.toml               # Cloudflare Pages config
 ├── app/                            # Rails (unchanged)
 └── ...
 ```
@@ -79,83 +90,210 @@ Two values persisted in localStorage, hydrated into React state:
 - `player_public_id` — device identity
 - `player_token` — bearer token from registration
 
-localStorage is persistence only. React state is the source of
-truth at runtime. A `PlayerContext` provides the token to the
-API client and all hooks — nothing reads localStorage directly
-after initial hydration.
+`AuthContext` is narrow — token and publicId only. The API client
+is a module initialized with the token, not a React context value.
+The ActionCable consumer is created once via `useMemo`/`useRef`,
+not recreated on state changes.
 
 ```typescript
-// hooks/usePlayer.ts
-const [token, setToken] = useState(() => localStorage.getItem("player_token"))
-const [publicId, setPublicId] = useState(() => localStorage.getItem("player_public_id"))
-
-function register(data: RegistrationResponse) {
-  localStorage.setItem("player_token", data.token)
-  localStorage.setItem("player_public_id", data.public_id)
-  setToken(data.token)
-  setPublicId(data.public_id)
-}
-
-function clear() {
-  localStorage.removeItem("player_token")
-  localStorage.removeItem("player_public_id")
-  setToken(null)
-  setPublicId(null)
+// context/AuthContext.tsx — thin, focused
+interface AuthState {
+  token: string | null
+  publicId: string | null
+  register: (data: RegistrationResponse) => void
+  clear: () => void
 }
 ```
 
 ```typescript
-// api/client.ts — receives token from context, not localStorage
-export function createApiClient(token: string | null) {
-  return async function api(path: string, options: RequestInit = {}) {
-    return fetch(path, {
-      ...options,
-      headers: {
-        ...options.headers,
-        ...(token && { "Authorization": `Bearer ${token}` }),
-        "Content-Type": "application/json",
-      },
-    })
-  }
+// api/client.ts — plain module, not context
+let authToken: string | null = null
+
+export function setToken(token: string | null) {
+  authToken = token
+}
+
+export async function api<T>(path: string, options: RequestInit = {}): Promise<T> {
+  const res = await fetch(path, {
+    ...options,
+    headers: {
+      ...options.headers,
+      ...(authToken && { "Authorization": `Bearer ${authToken}` }),
+      "Content-Type": "application/json",
+    },
+  })
+  if (!res.ok) throw new ApiError(res.status, await res.text())
+  return res.json()
 }
 ```
+
+The API client is initialized once when `AuthContext` hydrates
+the token. No context subscription, no re-renders, no
+unnecessary consumer teardowns.
 
 ### Player state machine
 
-```
-LOADING → check localStorage for token
-  ├── no token → REGISTERING → POST /api/v1/players → store token
-  │                 └→ PAIRING (show code, subscribe to PairingChannel)
-  ├── token exists → GET /api/v1/player
-  │   ├── 401 → clear localStorage → REGISTERING
-  │   ├── paired: false → PAIRING
-  │   └── paired: true → FETCHING_MANIFEST
-  │                         └→ GET /api/v1/player/manifest
-  │                             ├── playlist → PLAYING_PLAYLIST
-  │                             ├── experience → PLAYING_EXPERIENCE
-  │                             └── no content → IDLE
-  └── UNPAIRED (received unpaired event) → PAIRING
+Explicit finite states — impossible states are unrepresentable:
+
+```typescript
+type PlayerState =
+  | { status: "loading" }
+  | { status: "registering" }
+  | { status: "pairing"; code: string; expiresAt: Date }
+  | { status: "playing"; manifest: Manifest }
+  | { status: "idle" }
+  | { status: "unpaired" }
+  | { status: "error"; error: string; lastGoodState?: PlayerState }
+
+type PlayerEvent =
+  | { type: "REGISTERED"; token: string; publicId: string; code: string; expiresAt: Date }
+  | { type: "PAIRED" }
+  | { type: "MANIFEST_LOADED"; manifest: Manifest }
+  | { type: "CONTENT_CHANGED" }
+  | { type: "UNPAIRED" }
+  | { type: "AUTH_FAILED" }
+  | { type: "ERROR"; error: string }
+  | { type: "CODE_EXPIRED"; code: string; expiresAt: Date }
 ```
 
-All state transitions happen in React — no page navigations.
-Switching from playlist to experience is a component swap, not
-a reload.
+Transitions:
+
+```
+LOADING
+  → token in localStorage? check paired status
+    → 401         → clear auth → REGISTERING
+    → paired:false → PAIRING
+    → paired:true  → fetch manifest → PLAYING | IDLE
+  → no token      → REGISTERING
+
+REGISTERING
+  → POST /api/v1/players → store token → PAIRING
+
+PAIRING
+  → PairingChannel receives { paired: true } → fetch manifest → PLAYING | IDLE
+  → code expires → refresh code → stay PAIRING
+
+PLAYING
+  → content_changed event → refetch manifest → re-render in place
+  → unpaired event → UNPAIRED → PAIRING
+  → heartbeat version mismatch → refetch manifest
+
+IDLE (no content assigned)
+  → content_changed event → refetch manifest → PLAYING
+
+ERROR
+  → retains lastGoodState for display (kiosk can't go blank)
+  → automatic retry after interval
+```
+
+`PlayerShell` reads the state machine and renders the
+corresponding component. No conditional chains — each state
+maps to exactly one component.
+
+### Error boundaries
+
+A kiosk device can never show a blank screen. Error handling
+strategy:
+
+- **React Error Boundary** wraps content components. On crash,
+  renders `ErrorScreen` with the last known good content if
+  available.
+- **API errors** transition to the `error` state which retains
+  `lastGoodState`. The Slideshow/Experience keeps rendering
+  stale content while the error is surfaced subtly (e.g., small
+  icon in the corner).
+- **Network loss** — the app continues rendering cached manifest
+  data. TanStack Query's `staleTime: Infinity` keeps data in
+  memory. Service Worker (Phase 2) persists across restarts.
+
+### Data fetching with TanStack Query
+
+No manual `fetch` + `useState` + `setInterval`. TanStack Query
+handles caching, refetch intervals, stale-while-revalidate,
+error retry, and background updates:
+
+```typescript
+// queries/useManifestQuery.ts
+export function useManifestQuery() {
+  return useQuery({
+    queryKey: ["manifest"],
+    queryFn: () => api("/api/v1/player/manifest"),
+    staleTime: Infinity,        // never refetch on mount — push or heartbeat triggers it
+    refetchOnWindowFocus: false, // kiosk devices don't switch tabs
+  })
+}
+```
+
+```typescript
+// queries/useHeartbeat.ts
+export function useHeartbeat(currentVersion: number | null) {
+  const queryClient = useQueryClient()
+
+  return useQuery({
+    queryKey: ["heartbeat"],
+    queryFn: () => api("/api/v1/player/heartbeat", { method: "POST" }),
+    refetchInterval: 30_000,
+    refetchIntervalInBackground: true,
+    onSuccess: (data) => {
+      if (currentVersion && data.content_version !== currentVersion) {
+        queryClient.invalidateQueries({ queryKey: ["manifest"] })
+      }
+    },
+  })
+}
+```
+
+The heartbeat polls every 30s. When the server's content version
+differs from what the app has, it invalidates the manifest query.
+TanStack Query refetches automatically. React re-renders. No
+manual state management.
 
 ### ActionCable connection
 
-Use `@rails/actioncable` npm package. Pass bearer token via
-query parameter on the WebSocket URL:
-
-The consumer is created inside a hook that reads the token from
-PlayerContext — not from localStorage:
+Consumer created once with the token, managed via `useRef` to
+avoid recreation on re-renders:
 
 ```typescript
-// channels/consumer.ts
+// channels/useConsumer.ts
 import { createConsumer } from "@rails/actioncable"
 
-export function createPlayerConsumer(token: string) {
-  const wsUrl = `wss://${location.host}/cable?token=${encodeURIComponent(token)}`
-  return createConsumer(wsUrl)
+export function useConsumer(token: string | null) {
+  const consumerRef = useRef<ActionCable.Consumer | null>(null)
+
+  useEffect(() => {
+    if (!token) return
+
+    const wsUrl = `wss://${location.host}/cable?token=${encodeURIComponent(token)}`
+    consumerRef.current = createConsumer(wsUrl)
+
+    return () => {
+      consumerRef.current?.disconnect()
+      consumerRef.current = null
+    }
+  }, [token])
+
+  return consumerRef
+}
+```
+
+**Reconnection strategy:** `@rails/actioncable` auto-reconnects
+and resubscribes. On reconnect, the `useScreenChannel` hook
+invalidates the manifest query to catch any broadcasts missed
+during the gap:
+
+```typescript
+// channels/useScreenChannel.ts
+connected() {
+  // Reconnected — refetch manifest in case we missed a broadcast
+  queryClient.invalidateQueries({ queryKey: ["manifest"] })
+},
+received({ event }) {
+  if (event === "content_changed") {
+    queryClient.invalidateQueries({ queryKey: ["manifest"] })
+  }
+  if (event === "unpaired") {
+    dispatch({ type: "UNPAIRED" })
+  }
 }
 ```
 
@@ -166,7 +304,7 @@ not just cookies:
 ```ruby
 # app/channels/application_cable/connection.rb
 def find_verified_player
-  # Existing cookie path
+  # Existing cookie path (HTML player)
   if session = PlayerSession.active.find_by(id: cookies.signed[:player_session_id])
     return session.player
   end
@@ -181,16 +319,32 @@ rescue ActiveSupport::MessageVerifier::InvalidSignature
 end
 ```
 
-### Channels
+### Image preloading
 
-**PairingChannel** — unchanged. React subscribes with the
-pairing code, receives `{ paired: true }`, transitions to
-manifest fetch.
+The Slideshow cycles through ads with images. Without preloading,
+the first rotation shows blank frames while images download.
 
-**ScreenChannel** — unchanged. React subscribes after pairing,
-receives `content_changed` / `unpaired` events. On
-`content_changed`, refetch manifest and re-render. On `unpaired`,
-transition to pairing state.
+When the manifest loads, preload all image URLs before
+transitioning to the `playing` state:
+
+```typescript
+async function preloadImages(manifest: Manifest): Promise<void> {
+  const urls = manifest.playlist_ads
+    .map(pa => pa.ad.image_url)
+    .filter(Boolean)
+
+  await Promise.all(
+    urls.map(url => new Promise<void>((resolve) => {
+      const img = new Image()
+      img.onload = img.onerror = () => resolve()
+      img.src = url
+    }))
+  )
+}
+```
+
+The state machine transitions `LOADING_MANIFEST → PRELOADING →
+PLAYING`, so the screen shows nothing until all images are ready.
 
 ### Heartbeat with content version
 
@@ -209,15 +363,6 @@ def create
 end
 ```
 
-React hook compares the version:
-
-```typescript
-// hooks/useHeartbeat.ts
-if (data.content_version !== currentVersion) {
-  refetchManifest()
-}
-```
-
 **Touch chain** ensures `updated_at` cascades:
 - `PlaylistAd` → touches `Playlist`
 - `Playlist` → touches `ScreenContent` (via after_save callback)
@@ -225,45 +370,69 @@ if (data.content_version !== currentVersion) {
 
 ### Content rendering
 
-The manifest response already contains everything the player
-needs. React components render directly from the manifest data:
+The manifest response contains everything the player needs.
+React components render directly from the manifest data:
 
 - **Slideshow** — cycles through `playlist_ads` with timed
   transitions. Fires `content.impressed` analytics events via
-  the API (Ahoy tracker).
+  the API.
 - **Experience** — renders listing details, agent card, photos.
   Touch interactions for kiosk mode.
-- **Idle** — "No content assigned" with a polling check.
+- **IdleScreen** — "No content assigned" state.
 
 Content switching (playlist → experience or vice versa) is a
-React component swap — no DOM teardown, no flicker, no reload.
+React component swap driven by the state machine — no DOM
+teardown, no flicker, no page reload.
+
+### Analytics — server-side via API
+
+Events fire through the API, not client-side Ahoy JS. This
+avoids Ahoy cookie dependency and keeps event creation
+server-authoritative:
+
+- `POST /api/v1/player/events` — new endpoint
+- Accepts governed event name + properties
+- Server-side creates the Ahoy event with the player's visit
+- Bearer auth identifies the player
+
+```typescript
+// In Slideshow, on ad transition:
+api.post("/api/v1/player/events", {
+  name: "content.impressed",
+  properties: {
+    ad_pid: ad.public_id,
+    screen_pid: screen.public_id,
+    screen_content_pid: screenContent.public_id,
+    playlist_pid: playlist.public_id,
+    position,
+    duration,
+  }
+})
+```
 
 ### CORS (Rails side)
 
-The React app on Cloudflare Pages (`play.replaytv.co`) calls
-the API on Render (`api.replaytv.co` or same origin via proxy).
+The React app on Cloudflare Pages and the API on Render share
+the same domain (`play.replaytv.co`). Cloudflare routes:
 
-**Option A — Cloudflare proxy:** Cloudflare routes `/api/*` on
-`play.replaytv.co` to the Render backend. Same origin, no CORS
-needed. Clean but requires Cloudflare Workers or Page Rules.
+- Static assets (`/`, `/assets/*`) → Cloudflare Pages
+- API traffic (`/api/*`, `/cable`) → Render backend
 
-**Option B — CORS headers:** Add `rack-cors` gem scoped to
-`/api/v1/*` and `/cable` for the Pages origins:
+Same origin, no CORS needed. This is configured via Cloudflare
+Workers or Page Rules.
+
+If direct CORS is needed as a fallback:
 
 ```ruby
 # config/initializers/cors.rb
 Rails.application.config.middleware.insert_before 0, Rack::Cors do
   allow do
-    origins /https:\/\/.*\.replaytv\.co/, /https:\/\/.*\.replaytv\.dev/
+    origins /https:\/\/.*\.replaytv\.co/
     resource "/api/v1/*", headers: :any, methods: [:get, :post, :patch], credentials: false
     resource "/cable", headers: :any, methods: [:get], credentials: false
   end
 end
 ```
-
-Option A is preferred — simpler, no CORS complexity. Cloudflare
-can route API traffic to Render and serve static assets from
-Pages, all on the same domain.
 
 ### Cloudflare Pages deployment
 
@@ -286,35 +455,17 @@ pages_build_output_dir = "./dist"
 - Preview deploys on PRs via Cloudflare Pages automatic previews
 
 **Environment variables:**
-- `VITE_API_URL` — API base URL (e.g., `https://play.replaytv.co`
-  if proxied, or `https://api.replaytv.co` if direct)
-
-### Analytics
-
-The current player fires Ahoy events via `ahoy.track()` which
-uses the Ahoy JS library and cookies. The React app should fire
-events via the API instead:
-
-- `POST /api/v1/player/events` — new endpoint
-- Accepts governed event name + properties
-- Server-side creates the Ahoy event with the player's visit
-- Bearer auth identifies the player
-
-This avoids Ahoy cookie dependency and keeps event creation
-server-authoritative.
-
-Alternatively, the React app can use the Ahoy JS library
-directly if same-origin (via Cloudflare proxy).
+- `VITE_API_BASE` — API base URL (same origin if proxied)
 
 ## Rails-side changes summary
 
 | Change | File | Notes |
 |--------|------|-------|
 | ActionCable bearer auth | `application_cable/connection.rb` | Token from query params |
-| CORS or Cloudflare proxy | `config/initializers/cors.rb` or Cloudflare | API access from Pages origin |
+| Cloudflare proxy or CORS | Cloudflare Workers or `cors.rb` | API access from Pages origin |
 | Heartbeat content version | `heartbeats_controller.rb` | Return `content_version` |
 | Touch chain | `playlist_ad.rb`, `screen_content.rb` | Cascade `updated_at` |
-| Events API (optional) | New controller | Server-side event creation |
+| Events API | New controller | Server-side analytics event creation |
 
 Existing API endpoints, channels, services, and models are
 unchanged. The React app consumes the same API the Stimulus
@@ -322,52 +473,59 @@ controllers use.
 
 ## Execution
 
-### Phase 1 — Scaffold + registration + pairing
+### Phase 1 — Scaffold + auth + registration
 ```
 1. npm create vite@latest player-app -- --template react-ts
-   Install Tailwind, @rails/actioncable
+   Install Tailwind, TanStack Query, @rails/actioncable
    COMMIT
 
-2. usePlayer hook — localStorage identity, registration
-   API client with bearer auth
+2. AuthContext — token + publicId, localStorage hydration
+   API client module — initialized with token, not context
    COMMIT
 
-3. PairingScreen component — code display, QR, countdown
-   usePairingChannel hook — subscribe, receive paired event
+3. Player state machine (useReducer or XState)
+   PlayerShell — routes state to components
    COMMIT
 
-4. Test full registration + pairing flow against local Rails API
+4. Registration flow — usePlayerQuery, PairingScreen
+   usePairingChannel hook
+   Test against local Rails API
    COMMIT
 ```
 
 ### Phase 2 — Content rendering
 ```
-5. useManifest hook — fetch and cache manifest data
+5. useManifestQuery (TanStack Query) — fetch + cache
+   Image preloading before transition to playing
    COMMIT
 
 6. Slideshow component — playlist ad rotation with timers
+   Impression tracking via events API
    COMMIT
 
 7. Experience component — listing kiosk with touch interactions
    COMMIT
 
-8. IdleScreen + UnpairedScreen components
-   App.tsx state machine wiring
+8. IdleScreen + ErrorScreen components
+   React Error Boundary wrapping content
    COMMIT
 ```
 
 ### Phase 3 — Real-time + heartbeat
 ```
-9. useScreenChannel hook — content_changed, unpaired events
-   Refetch manifest on change, re-render in place
+9. useConsumer hook — ActionCable lifecycle with useRef
+   useScreenChannel — content_changed invalidates manifest query
+   Reconnection: refetch manifest on reconnect
    COMMIT
 
-10. useHeartbeat hook — 30s interval, content_version comparison
+10. useHeartbeat — TanStack Query mutation, 30s interval
+    content_version comparison, invalidates manifest on mismatch
     COMMIT
 
 11. Rails: ActionCable bearer auth in Connection
     Rails: heartbeat content_version response
     Rails: touch chain on PlaylistAd → Playlist → ScreenContent
+    Rails: POST /api/v1/player/events endpoint
     COMMIT
 ```
 
@@ -378,7 +536,6 @@ controllers use.
     COMMIT
 
 13. Cloudflare proxy rules — /api/* and /cable to Render
-    Or: rack-cors configuration
     COMMIT
 
 14. DNS: play.replaytv.dev → Cloudflare Pages (staging)
@@ -393,8 +550,7 @@ controllers use.
 ```
 16. Service Worker — cache app shell, manifest, images
 17. IndexedDB — persist manifest for offline playback
-18. Analytics — events API or Ahoy JS integration
-19. Deprecate HTML player templates
+18. Deprecate HTML player templates
 ```
 
 ## Out of scope
@@ -407,20 +563,27 @@ controllers use.
 ## Risks
 
 - **Device compatibility** — Fire TV Silk, Raspberry Pi Chromium
-  must support React 18+ and modern JS. Vite's output targets
+  must support React 18+ and modern JS. Vite's `build.target`
   can be configured for older browsers if needed.
 - **Cloudflare proxy complexity** — routing `/api/*` through
-  Cloudflare to Render adds a layer. Alternative is direct CORS.
-- **Two players in parallel** — during migration, both the HTML
-  and React players exist. DNS determines which one serves. No
-  code conflicts, but two things to maintain temporarily.
+  Cloudflare to Render adds a layer. Direct CORS is the fallback.
+- **Two players in parallel** — during migration, both HTML and
+  React players exist. DNS determines which one serves. No code
+  conflicts, but two things to maintain temporarily.
+- **TanStack Query + ActionCable coordination** — both can
+  trigger manifest refetches. TanStack Query deduplicates
+  concurrent requests automatically, so double-triggers are
+  harmless.
 
 ## Verification
 
 1. Register a new device — shows pairing code
 2. Pair from the app — transitions to content without reload
 3. Change content type (playlist → experience) — swaps in place
-4. Unplug network — player keeps showing last content (Phase 5)
-5. Reconnect — player picks up changes automatically
-6. Heartbeat visible in admin — device shows as online
-7. Analytics events fire on impressions and scans
+4. Change playlist ads — slideshow updates without flicker
+5. Unplug network — player keeps showing last content (Phase 5)
+6. Reconnect — player picks up changes automatically
+7. Heartbeat visible in admin — device shows as online
+8. Analytics events fire on impressions
+9. Error in a component — ErrorScreen with last good content
+10. Kill the API — player keeps rendering cached manifest
