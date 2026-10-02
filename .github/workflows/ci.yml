@@ -118,5 +118,25 @@ jobs:
           bin/rails tailwindcss:build
           bundle exec rspec --exclude-pattern "spec/system/**/*_spec.rb"
 
-  # system-test: disabled — no system specs exist yet (using request specs)
-  # Re-enable when system/integration specs are added to spec/system/
+  player_test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v7
+
+      - name: Set up Node
+        uses: actions/setup-node@v7
+        with:
+          node-version: lts/*
+          cache: npm
+          cache-dependency-path: player-app/package-lock.json
+
+      - name: Install dependencies
+        run: cd player-app && npm ci
+
+      - name: Type check
+        run: cd player-app && npx tsc -b
+
+      - name: Run tests
+        run: cd player-app && npm test

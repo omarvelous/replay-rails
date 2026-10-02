@@ -28,7 +28,7 @@ export type PlayerEvent =
 
 const initialState: PlayerState = { status: "loading" }
 
-function reducer(state: PlayerState, event: PlayerEvent): PlayerState {
+export function reducer(state: PlayerState, event: PlayerEvent): PlayerState {
   switch (event.type) {
     case "REGISTER":
       return { status: "registering" }
