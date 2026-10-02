@@ -1,4 +1,4 @@
-.PHONY: setup test test-file lint lint-fix scan migrate seed db-reset generate console routes up down build restart logs
+.PHONY: setup test test-file lint lint-fix scan migrate seed db-reset generate console routes up down build restart logs player-logs
 
 # Setup (create DBs, migrate, seed)
 setup:
@@ -62,3 +62,6 @@ restart:
 
 logs:
 	docker compose logs -f web
+
+player-logs:
+	docker compose logs -f player
