@@ -92,6 +92,20 @@ resource "cloudflare_zone_setting" "min_tls" {
   value      = "1.2"
 }
 
+# ── Cloudflare Pages (React Player App) ─────────────
+
+resource "cloudflare_pages_project" "player" {
+  account_id        = var.cloudflare_account_id
+  name              = "replay-player"
+  production_branch = "main"
+}
+
+resource "cloudflare_pages_domain" "player" {
+  account_id   = var.cloudflare_account_id
+  project_name = cloudflare_pages_project.player.name
+  domain       = "play.${var.domain}"
+}
+
 # ── R2 Storage ──────────────────────────────────────
 
 resource "cloudflare_r2_bucket" "storage" {
