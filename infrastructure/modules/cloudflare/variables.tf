@@ -14,9 +14,10 @@ variable "render_cname" {
 }
 
 variable "subdomains" {
-  description = "List of subdomains to create CNAME records for"
+  description = "List of subdomains to create CNAME records for (Render)"
   type        = list(string)
-  default     = ["app", "admin", "play", "api"]
+  default     = ["app", "admin", "api"]
+  # Note: "play" is managed by Cloudflare Pages, not OpenTofu
 }
 
 variable "cloudflare_account_id" {
