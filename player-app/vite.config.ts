@@ -12,6 +12,10 @@ export default defineConfig({
         changeOrigin: true,
         headers: { 'Host': 'play.replay.localhost' },
       },
+      '/rails/active_storage': {
+        target: process.env.API_URL || 'http://localhost:3000',
+        changeOrigin: true,
+      },
       '/cable': {
         target: process.env.WS_URL || 'ws://localhost:3000',
         ws: true,
