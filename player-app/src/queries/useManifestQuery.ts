@@ -1,15 +1,6 @@
 import { useQuery } from "@tanstack/react-query"
 import { api } from "../api/client"
-
-export interface ManifestResponse {
-  deploy: string
-  screen_content: { pid: string; updated_at: number } | null
-  contentable: {
-    type: string
-    pid: string
-    [key: string]: unknown
-  } | null
-}
+import type { ManifestResponse } from "../types"
 
 export function useManifestQuery(enabled: boolean) {
   return useQuery({

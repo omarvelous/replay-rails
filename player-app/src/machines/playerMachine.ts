@@ -1,5 +1,5 @@
 import { useReducer } from "react"
-import type { ManifestResponse } from "../queries/useManifestQuery"
+import type { ManifestResponse } from "../types"
 
 // States — each variant is the only shape the state can take
 export type PlayerState =
