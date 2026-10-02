@@ -1,4 +1,4 @@
-.PHONY: setup test test-file lint lint-fix scan migrate seed db-reset generate console routes up down build restart logs player-logs player-test
+.PHONY: setup test test-file lint lint-fix scan migrate seed db-reset generate console routes up down build restart logs player-logs player-test storybook
 
 # Setup (create DBs, migrate, seed)
 setup:
@@ -68,3 +68,6 @@ player-logs:
 
 player-test:
 	cd player-app && npm test
+
+storybook:
+	docker compose --profile storybook up storybook
