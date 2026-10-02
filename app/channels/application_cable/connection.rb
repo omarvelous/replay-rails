@@ -19,7 +19,18 @@ module ApplicationCable
       end
 
       def find_verified_player
-        PlayerSession.active.find_by(id: cookies.signed[:player_session_id])&.player
+        # Cookie path (HTML player)
+        if (session = PlayerSession.active.find_by(id: cookies.signed[:player_session_id]))
+          return session.player
+        end
+
+        # Bearer token path (React player app)
+        if (token = request.params[:token])
+          session_id = Rails.application.message_verifier(:player_session).verify(token)
+          PlayerSession.active.find_by(id: session_id)&.player
+        end
+      rescue ActiveSupport::MessageVerifier::InvalidSignature
+        nil
       end
   end
 end
