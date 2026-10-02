@@ -3,11 +3,13 @@ json.updated_at listing.updated_at.to_i
 
 json.photos listing.photos_attachments do |attachment|
   json.id attachment.id
+  json.url url_for(attachment)
   json.created_at attachment.created_at.to_i
 end
 
 json.floor_plans listing.floor_plans_attachments do |attachment|
   json.id attachment.id
+  json.url url_for(attachment)
   json.created_at attachment.created_at.to_i
 end
 
