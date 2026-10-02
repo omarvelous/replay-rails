@@ -82,7 +82,6 @@ resource "cloudflare_pages_project" "player" {
       production_deployments_enabled = true
       preview_deployment_setting     = "all"
       preview_branch_includes        = ["*"]
-      deployments_enabled            = true
       pr_comments_enabled            = true
     }
   }
