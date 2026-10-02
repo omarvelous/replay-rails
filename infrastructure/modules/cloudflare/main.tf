@@ -98,6 +98,27 @@ resource "cloudflare_pages_project" "player" {
   account_id        = var.cloudflare_account_id
   name              = "replay-player"
   production_branch = "main"
+
+  build_config = {
+    build_command   = "npm run build"
+    destination_dir = "dist"
+    root_dir        = "player-app"
+    build_caching   = true
+  }
+
+  source = {
+    type = "github"
+    config = {
+      owner                          = "omarvelous"
+      repo_name                      = "replay-rails"
+      production_branch              = "main"
+      production_deployments_enabled = true
+      preview_deployment_setting     = "all"
+      preview_branch_includes        = ["*"]
+      deployments_enabled            = true
+      pr_comments_enabled            = true
+    }
+  }
 }
 
 resource "cloudflare_pages_domain" "player" {
