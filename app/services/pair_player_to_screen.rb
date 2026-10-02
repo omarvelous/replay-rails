@@ -24,8 +24,6 @@ class PairPlayerToScreen
       player.update!(pairing_code: nil, pairing_code_expires_at: nil)
     end
 
-    player.revoke_all_sessions!
-
     ActionCable.server.broadcast("pairing_#{@code}", { paired: true })
 
     Result.new(success?: true)

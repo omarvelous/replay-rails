@@ -6,4 +6,8 @@ class PlayerSession < ApplicationRecord
   def revoke!
     update!(revoked_at: Time.current)
   end
+
+  def bearer_token
+    Rails.application.message_verifier(:player_session).generate(id)
+  end
 end

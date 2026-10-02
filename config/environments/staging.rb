@@ -19,4 +19,8 @@ Rails.application.configure do
     host: "app.replaytv.dev",
     protocol: "https"
   }
+
+  config.action_cable.allowed_request_origins = [
+    /https:\/\/.*\.replaytv\.dev/
+  ]
 end

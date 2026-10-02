@@ -50,16 +50,15 @@ RSpec.describe PairPlayerToScreen do
       expect(screen.reload.player).to eq(player)
     end
 
-    it "revokes all active sessions" do
-      old_session = player.player_sessions.create!(ip_address: "1.1.1.1")
+    it "does not revoke existing sessions" do
+      existing_session = player.player_sessions.create!(ip_address: "1.1.1.1")
 
       described_class.new(screen: screen, code: player.pairing_code, paired_by: user).call
 
-      expect(old_session.reload.revoked_at).to be_present
-      expect(player.player_sessions.active.count).to eq(0)
+      expect(existing_session.reload.revoked_at).to be_nil
     end
 
-    it "broadcasts only { paired: true }" do
+    it "broadcasts paired: true" do
       code = player.pairing_code
 
       allow(ActionCable.server).to receive(:broadcast)
