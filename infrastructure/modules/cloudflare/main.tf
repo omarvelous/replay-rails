@@ -102,7 +102,7 @@ resource "cloudflare_pages_project" "player" {
 
 resource "cloudflare_pages_domain" "player" {
   account_id         = var.cloudflare_account_id
-  pages_project_name = cloudflare_pages_project.player.name
+  project_name = cloudflare_pages_project.player.name
   name               = "play.${var.domain}"
 }
 
