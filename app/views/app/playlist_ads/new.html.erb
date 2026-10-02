@@ -43,7 +43,7 @@
     </div>
 
     <%# Duration slider + submit %>
-    <%= form_with model: PlaylistAd.new, url: polymorphic_path([@playlist, PlaylistAd]) do |form| %>
+    <%= form_with model: PlaylistAd.new, url: playlist_ads_path(@playlist) do |form| %>
       <%= form.hidden_field :ad_id, value: "", data: { content_picker_target: "adIdField" } %>
       <%= form.hidden_field :duration, value: 10, data: { content_picker_target: "durationField" } %>
 
