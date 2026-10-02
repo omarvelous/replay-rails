@@ -101,9 +101,9 @@ resource "cloudflare_pages_project" "player" {
 }
 
 resource "cloudflare_pages_domain" "player" {
-  account_id   = var.cloudflare_account_id
-  project_name = cloudflare_pages_project.player.name
-  domain       = "play.${var.domain}"
+  account_id         = var.cloudflare_account_id
+  pages_project_name = cloudflare_pages_project.player.name
+  name               = "play.${var.domain}"
 }
 
 # ── R2 Storage ──────────────────────────────────────
