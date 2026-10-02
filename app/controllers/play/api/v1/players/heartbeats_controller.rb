@@ -17,7 +17,7 @@ module Play
             if result.success?
               screen_content = current_player.screen&.active_screen_content
               contentable = screen_content&.contentable
-              content_version = [screen_content, contentable].compact.map(&:updated_at).max&.to_i
+              content_version = [ screen_content, contentable ].compact.map(&:updated_at).max&.to_i
 
               render_data({
                 status: "ok",
