@@ -55,8 +55,10 @@ replay-rails/
 │   │   │   ├── Experience.tsx
 │   │   │   ├── IdleScreen.tsx
 │   │   │   └── UnpairedScreen.tsx
+│   │   ├── context/
+│   │   │   └── PlayerContext.tsx   # token, publicId, api client, consumer
 │   │   ├── hooks/
-│   │   │   ├── usePlayer.ts        # identity, registration, localStorage
+│   │   │   ├── usePlayer.ts        # identity, registration, state + localStorage sync
 │   │   │   ├── useHeartbeat.ts     # 30s liveness + content version
 │   │   │   └── useManifest.ts      # fetch + cache manifest data
 │   │   └── types/
@@ -73,27 +75,48 @@ replay-rails/
 
 ### Auth — bearer tokens, no cookies
 
-The React app stores two values in localStorage:
-- `player_public_id` — device identity (already exists)
+Two values persisted in localStorage, hydrated into React state:
+- `player_public_id` — device identity
 - `player_token` — bearer token from registration
 
-Every API call uses `Authorization: Bearer <token>`. No cookies
-involved. This eliminates all cross-origin cookie issues, kiosk
-mode cookie clearing, and session revocation problems.
+localStorage is persistence only. React state is the source of
+truth at runtime. A `PlayerContext` provides the token to the
+API client and all hooks — nothing reads localStorage directly
+after initial hydration.
 
 ```typescript
-// api/client.ts
-const token = localStorage.getItem("player_token")
+// hooks/usePlayer.ts
+const [token, setToken] = useState(() => localStorage.getItem("player_token"))
+const [publicId, setPublicId] = useState(() => localStorage.getItem("player_public_id"))
 
-export async function api(path: string, options: RequestInit = {}) {
-  return fetch(path, {
-    ...options,
-    headers: {
-      ...options.headers,
-      "Authorization": `Bearer ${token}`,
-      "Content-Type": "application/json",
-    },
-  })
+function register(data: RegistrationResponse) {
+  localStorage.setItem("player_token", data.token)
+  localStorage.setItem("player_public_id", data.public_id)
+  setToken(data.token)
+  setPublicId(data.public_id)
+}
+
+function clear() {
+  localStorage.removeItem("player_token")
+  localStorage.removeItem("player_public_id")
+  setToken(null)
+  setPublicId(null)
+}
+```
+
+```typescript
+// api/client.ts — receives token from context, not localStorage
+export function createApiClient(token: string | null) {
+  return async function api(path: string, options: RequestInit = {}) {
+    return fetch(path, {
+      ...options,
+      headers: {
+        ...options.headers,
+        ...(token && { "Authorization": `Bearer ${token}` }),
+        "Content-Type": "application/json",
+      },
+    })
+  }
 }
 ```
 
@@ -123,13 +146,17 @@ a reload.
 Use `@rails/actioncable` npm package. Pass bearer token via
 query parameter on the WebSocket URL:
 
+The consumer is created inside a hook that reads the token from
+PlayerContext — not from localStorage:
+
 ```typescript
 // channels/consumer.ts
 import { createConsumer } from "@rails/actioncable"
 
-const token = localStorage.getItem("player_token")
-const wsUrl = `wss://${location.host}/cable?token=${encodeURIComponent(token)}`
-export default createConsumer(wsUrl)
+export function createPlayerConsumer(token: string) {
+  const wsUrl = `wss://${location.host}/cable?token=${encodeURIComponent(token)}`
+  return createConsumer(wsUrl)
+}
 ```
 
 **Rails-side change required:** `ApplicationCable::Connection`
