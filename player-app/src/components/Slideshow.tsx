@@ -1,11 +1,24 @@
 import { useState, useEffect, useCallback } from "react"
-import type { ManifestAd } from "../types"
+import type { ManifestResponse } from "../queries/useManifestQuery"
 
 interface SlideshowProps {
-  ads: ManifestAd[]
+  manifest: ManifestResponse
 }
 
-export function Slideshow({ ads }: SlideshowProps) {
+interface PlaylistAd {
+  pid: string
+  position: number
+  duration: number
+  pid_ad?: string
+  layout?: string
+  theme?: string
+  [key: string]: unknown
+}
+
+export function Slideshow({ manifest }: SlideshowProps) {
+  const contentable = manifest.contentable as { playlist_ads?: PlaylistAd[] } | null
+  const ads = contentable?.playlist_ads ?? []
+
   const [currentIndex, setCurrentIndex] = useState(0)
 
   const advance = useCallback(() => {
@@ -16,7 +29,8 @@ export function Slideshow({ ads }: SlideshowProps) {
 
   useEffect(() => {
     if (!currentAd) return
-    const timer = setTimeout(advance, currentAd.duration * 1000)
+    const duration = (currentAd.duration ?? 10) * 1000
+    const timer = setTimeout(advance, duration)
     return () => clearTimeout(timer)
   }, [currentIndex, currentAd, advance])
 
@@ -24,20 +38,11 @@ export function Slideshow({ ads }: SlideshowProps) {
 
   return (
     <div className="relative h-dvh w-full bg-black overflow-hidden">
-      {currentAd.image_url && (
-        <img
-          key={currentAd.pid}
-          src={currentAd.image_url}
-          alt={currentAd.headline}
-          className="absolute inset-0 w-full h-full object-cover"
-        />
-      )}
       <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
       <div className="absolute bottom-0 left-0 right-0 p-8 text-white">
-        <h2 className="text-4xl font-bold">{currentAd.headline}</h2>
-        {currentAd.body && (
-          <p className="text-lg text-white/80 mt-2">{currentAd.body}</p>
-        )}
+        <p className="text-sm text-white/40 uppercase tracking-wider">
+          {currentIndex + 1} / {ads.length}
+        </p>
       </div>
     </div>
   )

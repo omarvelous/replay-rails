@@ -1,5 +1,5 @@
 import { useReducer } from "react"
-import type { Manifest } from "../types"
+import type { ManifestResponse } from "../queries/useManifestQuery"
 
 // States — each variant is the only shape the state can take
 export type PlayerState =
@@ -7,7 +7,7 @@ export type PlayerState =
   | { status: "registering" }
   | { status: "pairing"; code: string; expiresAt: Date }
   | { status: "loading_manifest" }
-  | { status: "playing"; manifest: Manifest; contentVersion: number | null }
+  | { status: "playing"; manifest: ManifestResponse; contentVersion: number | null }
   | { status: "idle"; contentVersion: number | null }
   | { status: "unpaired" }
   | { status: "error"; error: string; lastGoodState: PlayerState | null }
@@ -17,7 +17,7 @@ export type PlayerEvent =
   | { type: "REGISTER" }
   | { type: "REGISTERED"; code: string; expiresAt: Date }
   | { type: "PAIRED" }
-  | { type: "MANIFEST_LOADED"; manifest: Manifest; contentVersion: number | null }
+  | { type: "MANIFEST_LOADED"; manifest: ManifestResponse; contentVersion: number | null }
   | { type: "NO_CONTENT"; contentVersion: number | null }
   | { type: "CONTENT_CHANGED" }
   | { type: "UNPAIRED" }

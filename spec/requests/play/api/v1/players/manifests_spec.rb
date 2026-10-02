@@ -18,7 +18,8 @@ RSpec.describe "Api::Players::Manifests" do
       it "returns null content" do
         get "/api/v1/player/manifest"
         expect(response).to be_successful
-        expect(parsed_json["data"]["content"]).to be_nil
+        expect(parsed_json["screen_content"]).to be_nil
+        expect(parsed_json["contentable"]).to be_nil
       end
     end
 

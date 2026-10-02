@@ -97,10 +97,11 @@ export function PlayerShell() {
     }
 
     if (manifest) {
-      if (manifest.content_type) {
-        dispatch({ type: "MANIFEST_LOADED", manifest, contentVersion: null })
+      const version = manifest.screen_content?.updated_at ?? null
+      if (manifest.contentable) {
+        dispatch({ type: "MANIFEST_LOADED", manifest, contentVersion: version })
       } else {
-        dispatch({ type: "NO_CONTENT", contentVersion: null })
+        dispatch({ type: "NO_CONTENT", contentVersion: version })
       }
     }
   }, [state.status, manifest, manifestError])
@@ -110,12 +111,13 @@ export function PlayerShell() {
     if (state.status !== "playing" && state.status !== "idle") return
     if (!manifest) return
 
-    if (manifest.content_type) {
+    const version = manifest.screen_content?.updated_at ?? null
+    if (manifest.contentable) {
       if (state.status !== "playing" || manifest !== state.manifest) {
-        dispatch({ type: "MANIFEST_LOADED", manifest, contentVersion: null })
+        dispatch({ type: "MANIFEST_LOADED", manifest, contentVersion: version })
       }
     } else if (state.status !== "idle") {
-      dispatch({ type: "NO_CONTENT", contentVersion: null })
+      dispatch({ type: "NO_CONTENT", contentVersion: version })
     }
   }, [manifest])
 
@@ -183,14 +185,16 @@ export function PlayerShell() {
         />
       )
 
-    case "playing":
-      if (state.manifest.content_type === "playlist" && state.manifest.playlist) {
-        return <Slideshow ads={state.manifest.playlist.ads} />
+    case "playing": {
+      const { contentable } = state.manifest
+      if (contentable?.type === "Playlist") {
+        return <Slideshow manifest={state.manifest} />
       }
-      if (state.manifest.content_type === "experience" && state.manifest.experience) {
-        return <Experience experience={state.manifest.experience} />
+      if (contentable?.type === "Experience") {
+        return <Experience manifest={state.manifest} />
       }
       return <IdleScreen />
+    }
 
     case "idle":
       return <IdleScreen />
