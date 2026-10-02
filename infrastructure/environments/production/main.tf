@@ -30,7 +30,7 @@ module "cloudflare_replaytv" {
   zone_id               = var.cloudflare_zone_id_replaytv
   domain                = "replaytv.co"
   render_cname          = var.render_cname
-  subdomains            = ["app", "admin", "play", "api"]
+  subdomains            = ["app", "admin", "api"]
   cloudflare_account_id = var.cloudflare_account_id
   r2_bucket_name        = "replay-production"
   resend_dkim_key       = var.resend_dkim_key
