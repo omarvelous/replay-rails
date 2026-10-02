@@ -19,7 +19,7 @@ resource "cloudflare_dns_record" "root" {
   ttl     = 1
 }
 
-# Subdomains → Render (app, admin, play, api)
+# Subdomains → Render (app, admin, api — play is on Cloudflare Pages)
 resource "cloudflare_dns_record" "subdomains" {
   for_each = toset(var.subdomains)
 

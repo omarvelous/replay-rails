@@ -11,7 +11,9 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "storybook": "storybook dev -p 6006",
-    "build-storybook": "storybook build"
+    "build-storybook": "storybook build",
+    "deploy": "npm run build && wrangler pages deploy dist --project-name replay-player",
+    "deploy:staging": "npm run build && wrangler pages deploy dist --project-name replay-player --branch staging"
   },
   "dependencies": {
     "@rails/actioncable": "^8.1.400",

@@ -30,7 +30,7 @@ module "cloudflare_replaytv" {
   zone_id               = var.cloudflare_zone_id_replaytv
   domain                = "replaytv.co"
   render_cname          = var.render_cname
-  subdomains            = ["app", "admin", "play", "api"]
+  subdomains            = ["app", "admin", "api"]
   cloudflare_account_id = var.cloudflare_account_id
   r2_bucket_name        = "replay-production"
   resend_dkim_key       = var.resend_dkim_key
@@ -56,4 +56,65 @@ resource "cloudflare_zone_setting" "rply_always_https" {
   zone_id    = var.cloudflare_zone_id_rply
   setting_id = "always_use_https"
   value      = "on"
+}
+
+# ── Cloudflare Pages (React Player App) ─────────────
+# One project, two custom domains (production + staging branches)
+
+resource "cloudflare_pages_project" "player" {
+  account_id        = var.cloudflare_account_id
+  name              = "replay-player"
+  production_branch = "main"
+
+  build_config = {
+    build_command   = "npm run build"
+    destination_dir = "dist"
+    root_dir        = "player-app"
+    build_caching   = true
+  }
+
+  source = {
+    type = "github"
+    config = {
+      owner                          = "omarvelous"
+      repo_name                      = "replay-rails"
+      production_branch              = "main"
+      production_deployments_enabled = true
+      preview_deployment_setting     = "all"
+      preview_branch_includes        = ["*"]
+      pr_comments_enabled            = true
+    }
+  }
+}
+
+# Production: play.replaytv.co → Pages
+resource "cloudflare_pages_domain" "player_production" {
+  account_id   = var.cloudflare_account_id
+  project_name = cloudflare_pages_project.player.name
+  name         = "play.replaytv.co"
+}
+
+resource "cloudflare_dns_record" "play_production" {
+  zone_id = var.cloudflare_zone_id_replaytv
+  name    = "play.replaytv.co"
+  content = "replay-player-esm.pages.dev"
+  type    = "CNAME"
+  proxied = true
+  ttl     = 1
+}
+
+# Staging: play.replaytv.dev → Pages
+resource "cloudflare_pages_domain" "player_staging" {
+  account_id   = var.cloudflare_account_id
+  project_name = cloudflare_pages_project.player.name
+  name         = "play.replaytv.dev"
+}
+
+resource "cloudflare_dns_record" "play_staging" {
+  zone_id = var.cloudflare_zone_id_replaytv_dev
+  name    = "play.replaytv.dev"
+  content = "replay-player-esm.pages.dev"
+  type    = "CNAME"
+  proxied = true
+  ttl     = 1
 }
