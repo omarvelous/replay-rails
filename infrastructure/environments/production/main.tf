@@ -88,16 +88,34 @@ resource "cloudflare_pages_project" "player" {
   }
 }
 
-# Production: play.replaytv.co → main branch
+# Production: play.replaytv.co → Pages
 resource "cloudflare_pages_domain" "player_production" {
   account_id   = var.cloudflare_account_id
   project_name = cloudflare_pages_project.player.name
   name         = "play.replaytv.co"
 }
 
-# Staging: play.replaytv.dev → staging branch
+resource "cloudflare_dns_record" "play_production" {
+  zone_id = var.cloudflare_zone_id_replaytv
+  name    = "play.replaytv.co"
+  content = "replay-player-esm.pages.dev"
+  type    = "CNAME"
+  proxied = true
+  ttl     = 1
+}
+
+# Staging: play.replaytv.dev → Pages
 resource "cloudflare_pages_domain" "player_staging" {
   account_id   = var.cloudflare_account_id
   project_name = cloudflare_pages_project.player.name
   name         = "play.replaytv.dev"
+}
+
+resource "cloudflare_dns_record" "play_staging" {
+  zone_id = var.cloudflare_zone_id_replaytv_dev
+  name    = "play.replaytv.dev"
+  content = "replay-player-esm.pages.dev"
+  type    = "CNAME"
+  proxied = true
+  ttl     = 1
 }

@@ -19,6 +19,11 @@ variable "cloudflare_zone_id_rply" {
   type        = string
 }
 
+variable "cloudflare_zone_id_replaytv_dev" {
+  description = "Zone ID for replaytv.dev (needed for Pages staging domain)"
+  type        = string
+}
+
 variable "render_cname" {
   description = "Render production web service CNAME (e.g., replay-web.onrender.com)"
   type        = string
