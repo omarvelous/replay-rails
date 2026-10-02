@@ -57,3 +57,47 @@ resource "cloudflare_zone_setting" "rply_always_https" {
   setting_id = "always_use_https"
   value      = "on"
 }
+
+# ── Cloudflare Pages (React Player App) ─────────────
+# One project, two custom domains (production + staging branches)
+
+resource "cloudflare_pages_project" "player" {
+  account_id        = var.cloudflare_account_id
+  name              = "replay-player"
+  production_branch = "main"
+
+  build_config = {
+    build_command   = "npm run build"
+    destination_dir = "dist"
+    root_dir        = "player-app"
+    build_caching   = true
+  }
+
+  source = {
+    type = "github"
+    config = {
+      owner                          = "omarvelous"
+      repo_name                      = "replay-rails"
+      production_branch              = "main"
+      production_deployments_enabled = true
+      preview_deployment_setting     = "all"
+      preview_branch_includes        = ["*"]
+      deployments_enabled            = true
+      pr_comments_enabled            = true
+    }
+  }
+}
+
+# Production: play.replaytv.co → main branch
+resource "cloudflare_pages_domain" "player_production" {
+  account_id   = var.cloudflare_account_id
+  project_name = cloudflare_pages_project.player.name
+  name         = "play.replaytv.co"
+}
+
+# Staging: play.replaytv.dev → staging branch
+resource "cloudflare_pages_domain" "player_staging" {
+  account_id   = var.cloudflare_account_id
+  project_name = cloudflare_pages_project.player.name
+  name         = "play.replaytv.dev"
+}

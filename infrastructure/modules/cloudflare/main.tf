@@ -92,41 +92,6 @@ resource "cloudflare_zone_setting" "min_tls" {
   value      = "1.2"
 }
 
-# ── Cloudflare Pages (React Player App) ─────────────
-
-resource "cloudflare_pages_project" "player" {
-  account_id        = var.cloudflare_account_id
-  name              = "replay-player"
-  production_branch = "main"
-
-  build_config = {
-    build_command   = "npm run build"
-    destination_dir = "dist"
-    root_dir        = "player-app"
-    build_caching   = true
-  }
-
-  source = {
-    type = "github"
-    config = {
-      owner                          = "omarvelous"
-      repo_name                      = "replay-rails"
-      production_branch              = "main"
-      production_deployments_enabled = true
-      preview_deployment_setting     = "all"
-      preview_branch_includes        = ["*"]
-      deployments_enabled            = true
-      pr_comments_enabled            = true
-    }
-  }
-}
-
-resource "cloudflare_pages_domain" "player" {
-  account_id         = var.cloudflare_account_id
-  project_name = cloudflare_pages_project.player.name
-  name               = "play.${var.domain}"
-}
-
 # ── R2 Storage ──────────────────────────────────────
 
 resource "cloudflare_r2_bucket" "storage" {
