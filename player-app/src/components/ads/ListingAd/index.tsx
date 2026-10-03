@@ -12,7 +12,6 @@ interface ListingAdProps {
 
 export function ListingAd({ ad }: ListingAdProps) {
   const listingAd = ad.adable as ManifestListingAd
-  const listing = listingAd.listing
   const imageUrl = ad.images[0]?.url
 
   const content = <ListingContent ad={ad} listingAd={listingAd} />
@@ -30,7 +29,7 @@ export function ListingAd({ ad }: ListingAdProps) {
   }
 }
 
-function ListingContent({ ad, listingAd }: { ad: ManifestPlaylistAd; listingAd: ManifestListingAd }) {
+function ListingContent({ listingAd }: { ad: ManifestPlaylistAd; listingAd: ManifestListingAd }) {
   const listing = listingAd.listing
 
   const formatPrice = (price: number) =>
