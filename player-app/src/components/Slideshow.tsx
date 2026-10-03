@@ -28,7 +28,8 @@ export function Slideshow({ manifest }: SlideshowProps) {
     return () => clearTimeout(timer)
   }, [currentIndex, currentAd, advance])
 
-  // Track impression when ad becomes visible
+  // Track impression when ad becomes visible — depends only on currentIndex;
+  // manifest values (screen_pid, account_pid) are stable for the lifetime of a Slideshow
   useEffect(() => {
     if (!currentAd) return
 
@@ -41,7 +42,7 @@ export function Slideshow({ manifest }: SlideshowProps) {
       position: currentAd.position,
       duration: currentAd.duration,
     })
-  }, [currentIndex, currentAd, manifest, playlist.pid])
+  }, [currentIndex]) // eslint-disable-line react-hooks/exhaustive-deps
 
   // Progress bar animation
   useEffect(() => {

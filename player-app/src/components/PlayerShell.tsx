@@ -125,10 +125,9 @@ export function PlayerShell() {
     }
   }, [manifest])
 
-  // Analytics — fire events on state transitions
+  // content.loaded — fires on each manifest load (initial play + content changes)
   useEffect(() => {
     if (state.status !== "playing") return
-
     const m = state.manifest
     track("content.loaded", {
       screen_pid: m.screen_pid,
@@ -137,13 +136,18 @@ export function PlayerShell() {
       content_type: m.contentable?.type,
       content_pid: m.contentable?.pid,
     })
+  }, [state.status === "playing" ? state.manifest : null]) // eslint-disable-line react-hooks/exhaustive-deps
 
+  // device.connected — fires once per session when player first enters playing
+  useEffect(() => {
+    if (state.status !== "playing") return
+    const m = state.manifest
     track("device.connected", {
       screen_pid: m.screen_pid,
       player_pid: publicId,
       account_pid: m.account_pid,
     })
-  }, [state.status === "playing" ? state.manifest : null])
+  }, [state.status]) // eslint-disable-line react-hooks/exhaustive-deps
 
   // Heartbeat — only when playing or idle
   const contentVersion = (state.status === "playing" || state.status === "idle")
