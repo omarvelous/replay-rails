@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from "react"
-import { track } from "../analytics"
-import type { ManifestResponse, ManifestPlaylist, ManifestPlaylistAd, ManifestListingAd } from "../types"
+import { track } from "../../../analytics"
+import type { ManifestResponse, ManifestPlaylist, ManifestPlaylistAd, ManifestListingAd } from "../../../types"
 
 interface SlideshowProps {
   manifest: ManifestResponse

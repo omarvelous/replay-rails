@@ -7,7 +7,7 @@ import {
   mockListing,
   mockAgent,
   mockAttachment,
-} from "../__mocks__/manifest"
+} from "../../../__mocks__/manifest"
 
 const meta = {
   title: "Player/Experience",

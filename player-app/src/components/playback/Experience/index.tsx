@@ -1,4 +1,4 @@
-import type { ManifestResponse, ManifestExperience } from "../types"
+import type { ManifestResponse, ManifestExperience } from "../../../types"
 
 interface ExperienceProps {
   manifest: ManifestResponse

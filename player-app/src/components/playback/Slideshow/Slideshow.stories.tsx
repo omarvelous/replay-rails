@@ -10,7 +10,7 @@ import {
   mockAttachment,
   mockListing,
   mockAgent,
-} from "../__mocks__/manifest"
+} from "../../../__mocks__/manifest"
 
 const meta = {
   title: "Player/Slideshow",

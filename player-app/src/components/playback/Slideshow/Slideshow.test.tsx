@@ -9,7 +9,7 @@ import {
   mockAgentAd,
   mockBrandAd,
   mockAttachment,
-} from "../__mocks__/manifest"
+} from "../../../__mocks__/manifest"
 
 describe("Slideshow", () => {
   it("renders the first ad headline", () => {
