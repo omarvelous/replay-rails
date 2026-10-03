@@ -25,6 +25,8 @@ export interface HeartbeatResponse {
 // Manifest — matches the actual Jbuilder response
 export interface ManifestResponse {
   deploy: string
+  account_pid: string | null
+  screen_pid: string | null
   screen_content: { pid: string; updated_at: number } | null
   contentable: ManifestPlaylist | ManifestExperience | null
 }

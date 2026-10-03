@@ -2,7 +2,7 @@
 // ActiveStorage requests to the Render backend. Everything else
 // is served as static assets from the Pages build.
 
-const PROXY_PREFIXES = ["/api/", "/cable", "/rails/active_storage/"]
+const PROXY_PREFIXES = ["/api/", "/cable", "/rails/active_storage/", "/ahoy/"]
 
 function shouldProxy(pathname: string): boolean {
   return PROXY_PREFIXES.some((prefix) => pathname.startsWith(prefix))

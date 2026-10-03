@@ -1,4 +1,6 @@
 json.deploy ENV.fetch("REVISION", "dev")
+json.account_pid @screen_content&.screen&.site&.account&.public_id
+json.screen_pid @screen_content&.screen&.public_id
 
 if @screen_content
   json.screen_content do

@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback } from "react"
+import { track } from "../analytics"
 import type { ManifestResponse, ManifestPlaylist, ManifestPlaylistAd, ManifestListingAd } from "../types"
 
 interface SlideshowProps {
@@ -26,6 +27,21 @@ export function Slideshow({ manifest }: SlideshowProps) {
     const timer = setTimeout(advance, duration)
     return () => clearTimeout(timer)
   }, [currentIndex, currentAd, advance])
+
+  // Track impression when ad becomes visible
+  useEffect(() => {
+    if (!currentAd) return
+
+    track("content.impressed", {
+      ad_pid: currentAd.pid,
+      screen_pid: manifest.screen_pid,
+      screen_content_pid: manifest.screen_content?.pid,
+      playlist_pid: playlist.pid,
+      account_pid: manifest.account_pid,
+      position: currentAd.position,
+      duration: currentAd.duration,
+    })
+  }, [currentIndex, currentAd, manifest, playlist.pid])
 
   // Progress bar animation
   useEffect(() => {

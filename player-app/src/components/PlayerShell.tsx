@@ -9,6 +9,7 @@ import { usePlayerQuery } from "../queries/usePlayerQuery"
 import { useManifestQuery } from "../queries/useManifestQuery"
 import { useHeartbeat } from "../queries/useHeartbeat"
 import { api, ApiError } from "../api/client"
+import { track } from "../analytics"
 import { preloadManifestImages } from "../utils/preloadImages"
 import { PairingScreen } from "./PairingScreen"
 import { Slideshow } from "./Slideshow"
@@ -18,7 +19,7 @@ import { ErrorScreen } from "./ErrorScreen"
 import type { ApiResponse, RegistrationResponse } from "../types"
 
 export function PlayerShell() {
-  const { token, isAuthenticated, register, clear } = useAuth()
+  const { token, publicId, isAuthenticated, register, clear } = useAuth()
   const [state, dispatch] = usePlayerMachine()
   const consumer = useConsumer(token)
   const queryClient = useQueryClient()
@@ -123,6 +124,26 @@ export function PlayerShell() {
       dispatch({ type: "NO_CONTENT", contentVersion: version })
     }
   }, [manifest])
+
+  // Analytics — fire events on state transitions
+  useEffect(() => {
+    if (state.status !== "playing") return
+
+    const m = state.manifest
+    track("content.loaded", {
+      screen_pid: m.screen_pid,
+      screen_content_pid: m.screen_content?.pid,
+      account_pid: m.account_pid,
+      content_type: m.contentable?.type,
+      content_pid: m.contentable?.pid,
+    })
+
+    track("device.connected", {
+      screen_pid: m.screen_pid,
+      player_pid: publicId,
+      account_pid: m.account_pid,
+    })
+  }, [state.status === "playing" ? state.manifest : null])
 
   // Heartbeat — only when playing or idle
   const contentVersion = (state.status === "playing" || state.status === "idle")
