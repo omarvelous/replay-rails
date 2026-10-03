@@ -35,6 +35,13 @@ export default defineConfig({
         headers: {
           'Host': 'play.replay.localhost'
         }
+      },
+      '/ahoy': {
+        target: process.env.API_URL || 'http://localhost:3000',
+        changeOrigin: true,
+        headers: {
+          'Host': 'play.replay.localhost'
+        }
       }
     }
   },
