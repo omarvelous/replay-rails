@@ -29,7 +29,7 @@ export default defineConfig({
         }
       },
       '/cable': {
-        target: process.env.WS_URL || 'ws://localhost:3000',
+        target: process.env.WS_URL || 'http://localhost:3000',
         ws: true,
         headers: {
           'Host': 'play.replay.localhost'

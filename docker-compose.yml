@@ -55,7 +55,7 @@ services:
       - web
     environment:
       API_URL: http://web:3000
-      WS_URL: ws://web:3000
+      WS_URL: http://web:3000
       VITE_CABLE_URL: ws://play.replay.localhost:3000
     volumes:
       - ./player-app:/app
