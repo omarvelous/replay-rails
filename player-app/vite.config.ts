@@ -13,6 +13,7 @@ export default defineConfig({
   plugins: [react(), tailwindcss()],
   server: {
     port: 3100,
+    allowedHosts: ['.replay.localhost'],
     proxy: {
       '/api': {
         target: process.env.API_URL || 'http://localhost:3000',
