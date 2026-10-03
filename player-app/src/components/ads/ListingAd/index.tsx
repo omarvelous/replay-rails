@@ -49,16 +49,29 @@ function ListingContent({ listingAd }: { ad: ManifestPlaylistAd; listingAd: Mani
         </div>
       )}
 
-      <div className="flex items-baseline" style={{ gap: "var(--s-gap)" }}>
-        <span className="font-extrabold tracking-tight leading-none" style={{ fontSize: "var(--s-hero)" }}>
-          {formatPrice(listing.price)}
-        </span>
-        {listingAd.original_price && (
+      {listingAd.badge === "just_sold" && listingAd.sold_price ? (
+        <div>
+          <div className="font-extrabold tracking-tight leading-none" style={{ fontSize: "var(--s-hero)" }}>
+            {formatPrice(listingAd.sold_price)}
+          </div>
+          <div style={{ fontSize: "var(--s-2xl)", marginTop: "var(--s-xs)", color: "var(--ad-text-faint)" }}>
+            Listed at {formatPrice(listing.price)}
+          </div>
+        </div>
+      ) : listingAd.original_price ? (
+        <div className="flex items-baseline" style={{ gap: "var(--s-gap)" }}>
+          <span className="font-extrabold tracking-tight leading-none" style={{ fontSize: "var(--s-hero)" }}>
+            {formatPrice(listing.price)}
+          </span>
           <span className="line-through" style={{ fontSize: "var(--s-3xl)", color: "var(--ad-text-faint)" }}>
             {formatPrice(listingAd.original_price)}
           </span>
-        )}
-      </div>
+        </div>
+      ) : (
+        <div className="font-extrabold tracking-tight leading-none" style={{ fontSize: "var(--s-hero)" }}>
+          {formatPrice(listing.price)}
+        </div>
+      )}
 
       <div style={{ fontSize: "var(--s-3xl)", marginTop: "var(--s-gap)", color: "var(--ad-text-muted)" }}>
         {listing.address}

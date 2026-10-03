@@ -18,7 +18,7 @@ export function Badge({ badge, label }: BadgeProps) {
   return (
     <span
       className={`inline-flex items-center rounded-full ${color} font-bold text-white tracking-wider uppercase`}
-      style={{ fontSize: "var(--s-sm)", padding: "var(--s-badge-py) var(--s-badge-px)" }}
+      style={{ fontSize: "var(--s-2xl)", padding: "var(--s-badge-py) var(--s-badge-px)" }}
     >
       {label}
     </span>

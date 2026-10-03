@@ -15,7 +15,7 @@ export function AgentStrip({ agent }: AgentStripProps) {
           <img src={agent.photos[0].url} alt={agent.name} className="w-full h-full object-cover" />
         ) : (
           <span className="font-bold" style={{ fontSize: "var(--s-base)", color: "var(--ad-text)" }}>
-            {agent.name.slice(0, 2).toUpperCase()}
+            {agent.name.split(" ").map(w => w[0]).join("").slice(0, 2).toUpperCase()}
           </span>
         )}
       </div>
