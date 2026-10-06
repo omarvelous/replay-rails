@@ -1,7 +1,7 @@
 interface SpecsProps {
-  beds?: number
-  baths?: number
-  sqft?: number
+  beds?: number | null
+  baths?: number | null
+  sqft?: number | null
 }
 
 export function Specs({ beds, baths, sqft }: SpecsProps) {

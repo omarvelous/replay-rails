@@ -2,7 +2,7 @@ interface PriceProps {
   price: number
   originalPrice?: number | null
   soldPrice?: number | null
-  badge?: string
+  badge?: string | null
 }
 
 const fmt = (n: number) =>
