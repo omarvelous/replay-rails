@@ -2,6 +2,24 @@ import type { Preview } from '@storybook/react-vite'
 import '../src/index.css'
 
 const preview: Preview = {
+  globalTypes: {
+    adTheme: {
+      description: 'Ad theme',
+      toolbar: {
+        title: 'Theme',
+        icon: 'paintbrush',
+        items: [
+          { value: 'dark', title: 'Dark' },
+          { value: 'light', title: 'Light' },
+          { value: 'brand', title: 'Brand' },
+        ],
+        dynamicTitle: true,
+      },
+    },
+  },
+  initialGlobals: {
+    adTheme: 'dark',
+  },
   parameters: {
     controls: {
       matchers: {
