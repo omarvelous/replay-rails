@@ -6,7 +6,7 @@ import type { ManifestListingAd } from "../../../../types"
 
 function Wrap(props: React.ComponentProps<typeof SplitPortrait> & { theme?: string }) {
   return (
-    <div style={{ height: "90vh", aspectRatio: "9/16" }}>
+    <div style={{ width: 540, height: 960 }}>
       <AdCanvas theme={props.theme ?? "dark"} aspect="portrait">
         <SplitPortrait {...props} />
       </AdCanvas>

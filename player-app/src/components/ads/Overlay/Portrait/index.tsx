@@ -17,7 +17,7 @@ export function OverlayPortrait({ ad, listingAd }: Props) {
   const agent = listingAd.agent
 
   return (
-    <>
+    <div className="relative w-full h-full" style={{ background: "var(--ad-bg)", color: "var(--ad-text)" }}>
       <PhotoWrap src={ad.images[0]?.url} scrim />
 
       {/* Top row: agent left, QR right */}
@@ -48,6 +48,6 @@ export function OverlayPortrait({ ad, listingAd }: Props) {
           />
         </div>
       </div>
-    </>
+    </div>
   )
 }

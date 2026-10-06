@@ -17,7 +17,7 @@ export function OverlayLandscape({ ad, listingAd }: Props) {
   const agent = listingAd.agent
 
   return (
-    <>
+    <div className="relative w-full h-full" style={{ background: "var(--ad-bg)", color: "var(--ad-text)" }}>
       <PhotoWrap src={ad.images[0]?.url} scrim />
 
       {/* Top row: agent left, QR right */}
@@ -34,24 +34,22 @@ export function OverlayLandscape({ ad, listingAd }: Props) {
         className="relative flex flex-col justify-end h-full"
         style={{ padding: "var(--safe)" }}
       >
-        <div className="flex justify-between items-end w-full">
-          <div style={{ maxWidth: "58cqw" }}>
-            <Badge badge={listingAd.badge} label={listingAd.badge_label} />
-            <div style={{ marginTop: "var(--gap-sm)" }}>
-              <Address address={listing.address} />
-            </div>
-            <Specs beds={listing.beds} baths={listing.baths} sqft={listing.sqft} />
-            <div style={{ marginTop: "calc(var(--gap) * 2)" }}>
-              <Price
-                price={listing.price}
-                originalPrice={listingAd.original_price}
-                soldPrice={listingAd.sold_price}
-                badge={listingAd.badge}
-              />
-            </div>
+        <div style={{ maxWidth: "58cqw" }}>
+          <Badge badge={listingAd.badge} label={listingAd.badge_label} />
+          <div style={{ marginTop: "var(--gap-sm)" }}>
+            <Address address={listing.address} />
+          </div>
+          <Specs beds={listing.beds} baths={listing.baths} sqft={listing.sqft} />
+          <div style={{ marginTop: "calc(var(--gap) * 2)" }}>
+            <Price
+              price={listing.price}
+              originalPrice={listingAd.original_price}
+              soldPrice={listingAd.sold_price}
+              badge={listingAd.badge}
+            />
           </div>
         </div>
       </div>
-    </>
+    </div>
   )
 }

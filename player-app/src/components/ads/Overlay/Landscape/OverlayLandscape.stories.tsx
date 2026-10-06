@@ -6,7 +6,7 @@ import type { ManifestListingAd } from "../../../../types"
 
 function Wrap(props: React.ComponentProps<typeof OverlayLandscape> & { theme?: string }) {
   return (
-    <div style={{ width: "100%", maxWidth: 1200, aspectRatio: "16/9" }}>
+    <div style={{ width: 960, height: 540 }}>
       <AdCanvas theme={props.theme ?? "dark"} aspect="landscape">
         <OverlayLandscape {...props} />
       </AdCanvas>
