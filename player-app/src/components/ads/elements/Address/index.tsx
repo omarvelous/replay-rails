@@ -1,10 +1,16 @@
 interface AddressProps {
-  address: string
-  neighborhood?: string
+  street?: string | null
+  city?: string | null
+  state?: string | null
+  neighborhood?: string | null
+  address?: string // fallback when structured fields aren't populated
   style?: React.CSSProperties
 }
 
-export function Address({ address, neighborhood, style }: AddressProps) {
+export function Address({ street, city, state, neighborhood, address, style }: AddressProps) {
+  const mainLine = street || address || ""
+  const subLine = [neighborhood, city, state].filter(Boolean).join(", ") || null
+
   return (
     <div>
       <div
@@ -17,11 +23,11 @@ export function Address({ address, neighborhood, style }: AddressProps) {
           ...style,
         }}
       >
-        {address}
+        {mainLine}
       </div>
-      {neighborhood && (
+      {subLine && (
         <div style={{ fontSize: "var(--t-sub)", fontWeight: 500, color: "var(--ad-text-muted)", marginTop: "var(--gap-sm)" }}>
-          {neighborhood}
+          {subLine}
         </div>
       )}
     </div>

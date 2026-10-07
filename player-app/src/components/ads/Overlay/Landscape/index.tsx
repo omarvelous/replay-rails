@@ -37,7 +37,7 @@ export function OverlayLandscape({ ad, listingAd }: Props) {
         <div style={{ maxWidth: "58cqw" }}>
           <Badge badge={listingAd.badge} label={listingAd.badge_label} />
           <div style={{ marginTop: "var(--gap-sm)" }}>
-            <Address address={listing.address} />
+            <Address street={listing.street} city={listing.city} state={listing.state} neighborhood={listing.neighborhood} address={listing.address} />
           </div>
           <Specs beds={listing.beds} baths={listing.baths} sqft={listing.sqft} />
           <div style={{ marginTop: "calc(var(--gap) * 2)" }}>

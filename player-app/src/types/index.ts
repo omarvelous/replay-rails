@@ -118,6 +118,11 @@ export interface ManifestListing {
   pid: string
   updated_at: number
   address: string
+  street: string | null
+  city: string | null
+  state: string | null
+  zip: string | null
+  neighborhood: string | null
   price: number
   beds: number | null
   baths: number | null
