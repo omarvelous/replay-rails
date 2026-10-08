@@ -27,7 +27,8 @@ module AdsHelper
 
   def ad_preview_iframe_url(ad)
     base = ENV.fetch("PLAYER_PREVIEW_URL", "http://play.replay.localhost:3100")
-    "#{base}/preview.html?pid=#{ad.public_id}"
+    data = Base64.urlsafe_encode64(Ad::ManifestSerializer.new(ad).as_json.to_json)
+    "#{base}/preview.html##{data}"
   end
 
   def edit_typed_ad_path(ad)

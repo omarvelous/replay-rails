@@ -108,11 +108,11 @@ RSpec.describe "Ads" do
       expect(response).to be_successful
     end
 
-    it "renders the preview iframe" do
+    it "renders the preview iframe with encoded ad data" do
       ad = create(:ad, account: account, headline: "Test")
       get preview_ad_path(ad)
       expect(response.body).to include("iframe")
-      expect(response.body).to include(ad.public_id)
+      expect(response.body).to include("preview.html#")
     end
 
     it "returns ad JSON when requested as JSON" do
