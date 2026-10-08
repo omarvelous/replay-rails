@@ -11,6 +11,8 @@ import { CardLandscape } from "../listings/Card/Landscape"
 import { CardPortrait } from "../listings/Card/Portrait"
 import { TypePhotoLandscape } from "../listings/TypePhoto/Landscape"
 import { TypePhotoPortrait } from "../listings/TypePhoto/Portrait"
+import { StatGridLandscape } from "../listings/StatGrid/Landscape"
+import { StatGridPortrait } from "../listings/StatGrid/Portrait"
 import { AgentAd } from "../AgentAd"
 import { BrandAd } from "../BrandAd"
 import { CollectionAd } from "../CollectionAd"
@@ -38,6 +40,7 @@ const LISTING_COMPOSITIONS: Record<string, Record<Aspect, React.ComponentType<{ 
   card:      { landscape: CardLandscape,    portrait: CardPortrait },
   type_photo:{ landscape: TypePhotoLandscape, portrait: TypePhotoPortrait },
   minimal:   { landscape: TypePhotoLandscape, portrait: TypePhotoPortrait }, // alias for old records
+  stat_grid: { landscape: StatGridLandscape, portrait: StatGridPortrait },
   hero:      { landscape: OverlayLandscape,  portrait: OverlayPortrait }, // alias for old records
 }
 
