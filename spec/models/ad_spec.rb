@@ -7,7 +7,6 @@ RSpec.describe Ad do
     it { is_expected.to belong_to(:account) }
     it { is_expected.to have_many(:playlist_ads).dependent(:destroy) }
     it { is_expected.to have_many(:playlists).through(:playlist_ads) }
-    it { is_expected.to have_many(:collection_ad_ads).dependent(:restrict_with_error) }
 
     it "has one attached image" do
       expect(described_class.new.image).not_to be_attached
@@ -31,8 +30,8 @@ RSpec.describe Ad do
     end
 
     it "provides adable_name" do
-      ad = build(:ad, adable: build(:brand_ad))
-      expect(ad.adable_name).to eq("ads_brand_ad")
+      ad = build(:ad, adable: build(:listing_ad))
+      expect(ad.adable_name).to eq("ads_listing_ad")
     end
   end
 
@@ -49,7 +48,7 @@ RSpec.describe Ad do
 
     it "accepts a valid layout for the adable type" do
       listing_ad = build(:listing_ad)
-      ad = build(:ad, adable: listing_ad, layout: "hero")
+      ad = build(:ad, adable: listing_ad, layout: "overlay")
       expect(ad).to be_valid
     end
   end
@@ -60,10 +59,10 @@ RSpec.describe Ad do
       expect(ad.allowed_layouts).to eq(Ads::ListingAd::LAYOUTS)
     end
 
-    it "returns hero as default when adable is nil" do
+    it "returns overlay as default when adable is nil" do
       ad = build(:ad)
       ad.adable = nil
-      expect(ad.allowed_layouts).to eq(%w[hero])
+      expect(ad.allowed_layouts).to eq(%w[overlay])
     end
   end
 
@@ -78,7 +77,7 @@ RSpec.describe Ad do
     it "sets layout to first allowed layout when blank" do
       ad = build(:ad, adable: build(:listing_ad), layout: nil)
       ad.apply_defaults
-      expect(ad.layout).to eq("hero")
+      expect(ad.layout).to eq("overlay")
     end
 
     it "sets theme to dark when blank" do
@@ -93,17 +92,6 @@ RSpec.describe Ad do
       expect(ad.headline).to eq("Custom")
       expect(ad.layout).to eq("split")
       expect(ad.theme).to eq("light")
-    end
-  end
-
-  describe "deletion protection" do
-    it "cannot be deleted when referenced by a collection" do
-      collection_ad = create(:collection_ad)
-      ad = create(:ad, adable: create(:listing_ad))
-      create(:collection_ad_ad, collection_ad: collection_ad, ad: ad)
-
-      expect(ad.destroy).to be false
-      expect(ad.errors[:base]).to be_present
     end
   end
 

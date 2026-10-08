@@ -1,7 +1,10 @@
 FactoryBot.define do
   factory :listing do
     account
-    address { Faker::Address.full_address }
+    street { Faker::Address.street_address }
+    city { Faker::Address.city }
+    state { Faker::Address.state_abbr }
+    zip { Faker::Address.zip_code }
     price { Faker::Number.between(from: 200_000, to: 5_000_000) }
     beds { Faker::Number.between(from: 1, to: 6) }
     baths { Faker::Number.between(from: 1, to: 4) }

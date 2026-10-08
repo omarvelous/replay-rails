@@ -22,10 +22,15 @@ class Listing < ApplicationRecord
   LISTING_TYPES = %w[for_sale for_rent for_lease].freeze
 
   validates :address, presence: true
+  validates :street, presence: true
+  validates :city, presence: true
+  validates :state, presence: true
   validates :price, presence: true, numericality: { greater_than: 0 }
   validates :status, presence: true, inclusion: { in: %w[active pending sold] }
   validates :property_type, presence: true, inclusion: { in: PROPERTY_TYPES }
   validates :listing_type, presence: true, inclusion: { in: LISTING_TYPES }
+
+  before_validation :compose_address
 
   scope :search, ->(q) { where("listings.address ILIKE ?", "%#{sanitize_sql_like(q)}%") }
   scope :by_status, ->(s) { where(status: s) }
@@ -39,4 +44,11 @@ class Listing < ApplicationRecord
   def qr_code_for(creative: nil, screen_content: nil)
     QrCode.for(destination: self, creative: creative, screen_content: screen_content)
   end
+
+  private
+
+    def compose_address
+      return if street.blank?
+      self.address = [ street, city, [ state, zip ].compact_blank.join(" ") ].compact_blank.join(", ")
+    end
 end

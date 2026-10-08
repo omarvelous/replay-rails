@@ -1,7 +1,0 @@
-<%= render "app/shared/page_header", title: "Edit Agent Ad", back_link: { label: "← Ad", path: ad_path(@ad) } %>
-
-<div data-controller="ad-builder" data-ad-builder-preview-url-value="<%= preview_ads_agent_ads_path %>">
-  <%= form_with model: @ad, url: ads_agent_ad_path(@ad), method: :patch, data: { ad_builder_target: "form" } do |form| %>
-    <%= render "app/ads/agent_ads/form", form: form %>
-  <% end %>
-</div>

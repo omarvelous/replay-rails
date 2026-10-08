@@ -139,8 +139,8 @@ RSpec.describe "Playlists" do
 
     it "includes ad content in order" do
       playlist = create(:playlist, account: account)
-      listing1 = create(:listing, account: account, address: "100 First Ave")
-      listing2 = create(:listing, account: account, address: "200 Second Ave")
+      listing1 = create(:listing, account: account, street: "100 First Ave", city: "Austin", state: "TX")
+      listing2 = create(:listing, account: account, street: "200 Second Ave", city: "Austin", state: "TX")
       listing_ad1 = create(:listing_ad, listing: listing1)
       listing_ad2 = create(:listing_ad, listing: listing2)
       ad1 = create(:ad, account: account, headline: "First", adable: listing_ad1)

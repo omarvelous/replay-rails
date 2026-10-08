@@ -24,7 +24,7 @@ RSpec.describe "Authorization" do
     end
 
     it "cannot create a listing" do
-      post listings_path, params: { listing: { address: "123 Main St", price: 500_000, status: "active" } }
+      post listings_path, params: { listing: { street: "123 Main St", city: "Austin", state: "TX", price: 500_000, status: "active" } }
       expect(response).to redirect_to(app_root_path)
       expect(flash[:alert]).to be_present
     end
@@ -75,9 +75,9 @@ RSpec.describe "Authorization" do
     before { sign_in(user) }
 
     it "can create a listing" do
-      post listings_path, params: { listing: { address: "123 Main St", price: 500_000, status: "active" } }
+      post listings_path, params: { listing: { street: "123 Main St", city: "Austin", state: "TX", price: 500_000, status: "active" } }
       expect(response).to be_redirect
-      expect(Listing.last.address).to eq("123 Main St")
+      expect(Listing.last.street).to eq("123 Main St")
     end
 
     it "can delete a listing" do
@@ -104,7 +104,7 @@ RSpec.describe "Authorization" do
     before { sign_in(user) }
 
     it "can do everything a manager can" do
-      post listings_path, params: { listing: { address: "789 Oak Ave", price: 750_000, status: "active" } }
+      post listings_path, params: { listing: { street: "789 Oak Ave", city: "Dallas", state: "TX", price: 750_000, status: "active" } }
       expect(response).to be_redirect
     end
   end

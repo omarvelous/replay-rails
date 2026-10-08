@@ -34,7 +34,8 @@
       "Bash(tofu *)",
       "WebSearch",
       "WebFetch",
-      "Bash(ruby -r nokogiri -r json -e ':*)"
+      "Bash(ruby -r nokogiri -r json -e ':*)",
+      "Bash(npm run:*)"
     ],
     "additionalDirectories": [
       "/Users/omarjohnson/Development/github.com/omarvelous/replay-rails/.claude/plans/drafts"

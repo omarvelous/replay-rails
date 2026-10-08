@@ -1,6 +1,11 @@
 json.pid listing.public_id
 json.updated_at listing.updated_at.to_i
 json.address listing.address
+json.street listing.street
+json.city listing.city
+json.state listing.state
+json.zip listing.zip
+json.neighborhood listing.neighborhood
 json.price listing.price.to_f
 json.beds listing.beds
 json.baths listing.baths

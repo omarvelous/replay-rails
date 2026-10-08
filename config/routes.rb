@@ -55,16 +55,7 @@ Rails.application.routes.draw do
       end
       resources :agents
       namespace :ads do
-        resources :listing_ads,    only: %i[new create edit update] do
-          collection { post :preview }
-        end
-        resources :collection_ads, only: %i[new create edit update] do
-          collection { post :preview }
-        end
-        resources :agent_ads,      only: %i[new create edit update] do
-          collection { post :preview }
-        end
-        resources :brand_ads,      only: %i[new create edit update] do
+        resources :listing_ads, only: %i[new create edit update] do
           collection { post :preview }
         end
       end
@@ -120,10 +111,6 @@ Rails.application.routes.draw do
       resources :ads
       namespace :ads do
         resources :listing_ads
-        resources :agent_ads
-        resources :brand_ads
-        resources :collection_ads
-        resources :collection_ad_ads
       end
 
       # Playback
@@ -171,10 +158,7 @@ Rails.application.routes.draw do
   # ---------------------------------------------------------------
   constraints subdomain: "play" do
     scope module: "play" do
-      root "players#show", as: :play_root
-      resource :player, only: %i[new show]
-
-      # Device API (JSON)
+      # Device API (JSON) — consumed by the React player app
       namespace :api do
         namespace :v1 do
           resources :players, only: :create

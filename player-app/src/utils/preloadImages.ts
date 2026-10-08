@@ -42,9 +42,4 @@ function addAdImages(ad: ManifestPlaylistAd, urls: string[]): void {
     }
   }
 
-  if (ad.adable.type === "Ads::AgentAd") {
-    if (ad.adable.agent.photos[0]?.url) {
-      urls.push(ad.adable.agent.photos[0].url)
-    }
-  }
 }

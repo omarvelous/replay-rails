@@ -3,13 +3,12 @@ class Ad < ApplicationRecord
 
   has_paper_trail ignore: [ :updated_at ]
   acts_as_tenant :account
-  delegated_type :adable, types: %w[Ads::ListingAd Ads::CollectionAd Ads::AgentAd Ads::BrandAd], dependent: :destroy
+  delegated_type :adable, types: %w[Ads::ListingAd], dependent: :destroy
 
   THEMES = %w[dark light brand].freeze
 
   has_many :playlist_ads, dependent: :destroy
   has_many :playlists, through: :playlist_ads
-  has_many :collection_ad_ads, class_name: "Ads::CollectionAdAd", dependent: :restrict_with_error
 
   has_one_attached :image do |attachable|
     attachable.variant :thumb,   resize_to_fill: [ 400, 225 ]
@@ -28,7 +27,7 @@ class Ad < ApplicationRecord
   end
 
   def allowed_layouts
-    adable ? adable.class::LAYOUTS : %w[hero]
+    adable ? adable.class::LAYOUTS : %w[overlay]
   end
 
   def adable_partial_path
