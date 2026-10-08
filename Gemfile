@@ -35,7 +35,7 @@ gem "device_detector"
 gem "chartkick"
 gem "groupdate"
 gem "aws-sdk-s3", require: false
-gem "image_processing", "~> 2.1"
+gem "image_processing", "~> 2.2"
 gem "pagy", "~> 43.7"
 gem "paper_trail"
 gem "positioning"
