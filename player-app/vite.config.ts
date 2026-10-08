@@ -45,6 +45,14 @@ export default defineConfig({
       }
     }
   },
+  build: {
+    rollupOptions: {
+      input: {
+        main: path.resolve(dirname, 'index.html'),
+        preview: path.resolve(dirname, 'preview.html'),
+      }
+    }
+  },
   test: {
     projects: [{
       extends: true,

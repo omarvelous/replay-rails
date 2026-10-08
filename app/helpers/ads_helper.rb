@@ -25,6 +25,12 @@ module AdsHelper
       .join("; ")
   end
 
+  def ad_preview_iframe_url(ad)
+    base = ENV.fetch("PLAYER_PREVIEW_URL", "http://play.replay.localhost:3100")
+    data = Base64.urlsafe_encode64(Ad::ManifestSerializer.new(ad).as_json.to_json)
+    "#{base}/preview.html##{data}"
+  end
+
   def edit_typed_ad_path(ad)
     # Uses namespaced routes when available (Phase E), falls back to base route
     route = "edit_ads_#{ad.adable_short_name}_path"

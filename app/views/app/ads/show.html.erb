@@ -14,7 +14,12 @@
   <div class="flex flex-col gap-5">
     <%# Live preview card %>
     <div class="rounded-lg bg-white shadow-sm ring-1 ring-gray-900/5 overflow-hidden">
-      <%= render "app/ads/layouts/#{@ad.layout}", ad: @ad %>
+      <div class="w-full aspect-video bg-black">
+        <iframe src="<%= ad_preview_iframe_url(@ad) %>"
+                class="w-full h-full border-0"
+                sandbox="allow-scripts allow-same-origin"
+                loading="eager"></iframe>
+      </div>
       <div class="px-5 py-3 flex items-center justify-between border-t border-gray-100">
         <span class="inline-flex items-center rounded-md bg-gray-50 px-1.5 py-0.5 text-xs font-medium text-gray-500 ring-1 ring-gray-500/10 ring-inset">16:9 · 1920×1080</span>
         <span class="text-xs text-gray-400">Live preview</span>

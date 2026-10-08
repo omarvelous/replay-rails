@@ -17,6 +17,7 @@ Rails.application.configure do
     policy.script_src  :self, "https://cdn.jsdelivr.net", "https://unpkg.com"
     policy.style_src   :self, "https://unpkg.com", :unsafe_inline
     policy.connect_src :self
+    policy.frame_src   :self, "http://play.replay.localhost:*", "https://play.replaytv.co"
     policy.form_action :self
     policy.frame_ancestors :none
   end

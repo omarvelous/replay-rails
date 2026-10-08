@@ -42,7 +42,10 @@ module App
 
   def preview
     authorize! @ad, to: :show?
-    render layout: "preview"
+    respond_to do |format|
+      format.html { render layout: "preview" }
+      format.json { render json: Ad::ManifestSerializer.new(@ad).as_json }
+    end
   end
 
   private
