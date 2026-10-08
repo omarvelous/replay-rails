@@ -13,6 +13,8 @@ import { TypePhotoLandscape } from "../listings/TypePhoto/Landscape"
 import { TypePhotoPortrait } from "../listings/TypePhoto/Portrait"
 import { StatGridLandscape } from "../listings/StatGrid/Landscape"
 import { StatGridPortrait } from "../listings/StatGrid/Portrait"
+import { MosaicLandscape } from "../listings/Mosaic/Landscape"
+import { MosaicPortrait } from "../listings/Mosaic/Portrait"
 import { AgentAd } from "../AgentAd"
 import { BrandAd } from "../BrandAd"
 import { CollectionAd } from "../CollectionAd"
@@ -41,6 +43,7 @@ const LISTING_COMPOSITIONS: Record<string, Record<Aspect, React.ComponentType<{ 
   type_photo:{ landscape: TypePhotoLandscape, portrait: TypePhotoPortrait },
   minimal:   { landscape: TypePhotoLandscape, portrait: TypePhotoPortrait }, // alias for old records
   stat_grid: { landscape: StatGridLandscape, portrait: StatGridPortrait },
+  mosaic:    { landscape: MosaicLandscape,  portrait: MosaicPortrait },
   hero:      { landscape: OverlayLandscape,  portrait: OverlayPortrait }, // alias for old records
 }
 
