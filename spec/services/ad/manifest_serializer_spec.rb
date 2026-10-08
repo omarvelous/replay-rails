@@ -8,7 +8,9 @@ RSpec.describe Ad::ManifestSerializer do
   let(:listing_ad) { create(:listing_ad, listing: listing) }
   let(:ad) { create(:ad, account: account, adable: listing_ad) }
 
-  before { ActsAsTenant.current_tenant = account }
+  around do |example|
+    ActsAsTenant.with_tenant(account) { example.run }
+  end
 
 
 
