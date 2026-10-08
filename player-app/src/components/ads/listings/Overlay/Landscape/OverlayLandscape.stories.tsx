@@ -1,12 +1,12 @@
 import type { Meta, StoryObj } from "@storybook/react-vite"
-import { SplitLandscape } from "."
-import { AdCanvas } from "../../AdCanvas"
-import { mockPlaylistAd, mockListingAd, mockListing, mockAttachment } from "../../../../__mocks__/manifest"
-import type { ManifestListingAd } from "../../../../types"
+import { OverlayLandscape } from "."
+import { AdCanvas } from "../../../AdCanvas"
+import { mockPlaylistAd, mockListingAd, mockListing, mockAttachment } from "../../../../../__mocks__/manifest"
+import type { ManifestListingAd } from "../../../../../types"
 
 const meta = {
-  title: "Ads/Split/Landscape",
-  component: SplitLandscape,
+  title: "Ads/Overlay/Landscape",
+  component: OverlayLandscape,
   decorators: [
     (Story, { globals }) => (
       <div style={{ width: 960, height: 540 }}>
@@ -17,14 +17,14 @@ const meta = {
     ),
   ],
   parameters: { layout: "centered", backgrounds: { default: "dark" } },
-} satisfies Meta<typeof SplitLandscape>
+} satisfies Meta<typeof OverlayLandscape>
 
 export default meta
 type Story = StoryObj<typeof meta>
 
 const baseAd = mockPlaylistAd({
-  layout: "split",
-  images: [mockAttachment({ url: "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=1920&h=1080&fit=crop" })],
+  layout: "overlay",
+  images: [mockAttachment({ url: "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=1920&h=1080&fit=crop" })],
 })
 
 export const Default: Story = {
@@ -42,13 +42,23 @@ export const PriceReduction: Story = {
   },
 }
 
+export const JustSold: Story = {
+  args: {
+    ad: baseAd,
+    listingAd: mockListingAd({
+      badge: "just_sold", badge_label: "Just Sold",
+      sold_price: 2600000,
+    }),
+  },
+}
+
 export const NoAgent: Story = {
   args: { ad: baseAd, listingAd: mockListingAd({ agent: undefined }) },
 }
 
 export const NoImage: Story = {
   args: {
-    ad: mockPlaylistAd({ layout: "split", images: [] }),
+    ad: mockPlaylistAd({ layout: "overlay", images: [] }),
     listingAd: baseAd.adable as ManifestListingAd,
   },
 }

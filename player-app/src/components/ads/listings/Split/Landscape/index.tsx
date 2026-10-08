@@ -1,25 +1,25 @@
-import { Badge } from "../../elements/Badge"
-import { Address } from "../../elements/Address"
-import { Specs } from "../../elements/Specs"
-import { Price } from "../../elements/Price"
-import { AgentStrip } from "../../elements/AgentStrip"
-import { QrCode } from "../../elements/QrCode"
-import type { ManifestPlaylistAd, ManifestListingAd } from "../../../../types"
+import { Badge } from "../../../elements/Badge"
+import { Address } from "../../../elements/Address"
+import { Specs } from "../../../elements/Specs"
+import { Price } from "../../../elements/Price"
+import { AgentStrip } from "../../../elements/AgentStrip"
+import { QrCode } from "../../../elements/QrCode"
+import type { ManifestPlaylistAd, ManifestListingAd } from "../../../../../types"
 
 interface Props {
   ad: ManifestPlaylistAd
   listingAd: ManifestListingAd
 }
 
-export function SplitPortrait({ ad, listingAd }: Props) {
+export function SplitLandscape({ ad, listingAd }: Props) {
   const listing = listingAd.listing
   const agent = listingAd.agent
   const imageUrl = ad.images[0]?.url
 
   return (
-    <div className="flex flex-col w-full h-full" style={{ background: "var(--ad-bg)", color: "var(--ad-text)" }}>
-      {/* Photo area — top 52% */}
-      <div className="relative overflow-hidden" style={{ height: "52%", flexShrink: 0 }}>
+    <div className="flex w-full h-full" style={{ background: "var(--ad-bg)", color: "var(--ad-text)" }}>
+      {/* Photo column — 58% */}
+      <div className="relative overflow-hidden" style={{ width: "58%", flexShrink: 0 }}>
         {imageUrl ? (
           <img src={imageUrl} alt="" className="absolute inset-0 w-full h-full object-cover" />
         ) : (
@@ -31,10 +31,10 @@ export function SplitPortrait({ ad, listingAd }: Props) {
         </div>
       </div>
 
-      {/* Text area — bottom 48% */}
+      {/* Text column — 42% */}
       <div
         className="flex flex-col justify-between"
-        style={{ height: "48%", padding: "var(--safe)" }}
+        style={{ width: "42%", padding: "var(--safe)" }}
       >
         {/* Top: listing details */}
         <div>

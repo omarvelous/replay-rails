@@ -1,11 +1,11 @@
-import { PhotoWrap } from "../../elements/PhotoWrap"
-import { Badge } from "../../elements/Badge"
-import { Address } from "../../elements/Address"
-import { Specs } from "../../elements/Specs"
-import { Price } from "../../elements/Price"
-import { AgentStrip } from "../../elements/AgentStrip"
-import { QrCode } from "../../elements/QrCode"
-import type { ManifestPlaylistAd, ManifestListingAd } from "../../../../types"
+import { PhotoWrap } from "../../../elements/PhotoWrap"
+import { Badge } from "../../../elements/Badge"
+import { Address } from "../../../elements/Address"
+import { Specs } from "../../../elements/Specs"
+import { Price } from "../../../elements/Price"
+import { AgentStrip } from "../../../elements/AgentStrip"
+import { QrCode } from "../../../elements/QrCode"
+import type { ManifestPlaylistAd, ManifestListingAd } from "../../../../../types"
 
 interface Props {
   ad: ManifestPlaylistAd

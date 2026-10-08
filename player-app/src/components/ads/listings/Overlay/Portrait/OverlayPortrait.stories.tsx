@@ -1,8 +1,8 @@
 import type { Meta, StoryObj } from "@storybook/react-vite"
 import { OverlayPortrait } from "."
-import { AdCanvas } from "../../AdCanvas"
-import { mockPlaylistAd, mockListingAd, mockAttachment } from "../../../../__mocks__/manifest"
-import type { ManifestListingAd } from "../../../../types"
+import { AdCanvas } from "../../../AdCanvas"
+import { mockPlaylistAd, mockListingAd, mockAttachment } from "../../../../../__mocks__/manifest"
+import type { ManifestListingAd } from "../../../../../types"
 
 const meta = {
   title: "Ads/Overlay/Portrait",
