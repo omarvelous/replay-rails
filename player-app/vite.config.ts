@@ -42,6 +42,21 @@ export default defineConfig({
         headers: {
           'Host': 'play.replay.localhost'
         }
+      },
+      '/app/ads': {
+        target: process.env.API_URL || 'http://localhost:3000',
+        changeOrigin: true,
+        headers: {
+          'Host': 'app.replay.localhost'
+        }
+      }
+    }
+  },
+  build: {
+    rollupOptions: {
+      input: {
+        main: path.resolve(dirname, 'index.html'),
+        preview: path.resolve(dirname, 'preview.html'),
       }
     }
   },
