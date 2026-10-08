@@ -15,6 +15,8 @@ import { StatGridLandscape } from "../listings/StatGrid/Landscape"
 import { StatGridPortrait } from "../listings/StatGrid/Portrait"
 import { MosaicLandscape } from "../listings/Mosaic/Landscape"
 import { MosaicPortrait } from "../listings/Mosaic/Portrait"
+import { DiptychLandscape } from "../listings/Diptych/Landscape"
+import { DiptychPortrait } from "../listings/Diptych/Portrait"
 import { AgentAd } from "../AgentAd"
 import { BrandAd } from "../BrandAd"
 import { CollectionAd } from "../CollectionAd"
@@ -44,6 +46,7 @@ const LISTING_COMPOSITIONS: Record<string, Record<Aspect, React.ComponentType<{ 
   minimal:   { landscape: TypePhotoLandscape, portrait: TypePhotoPortrait }, // alias for old records
   stat_grid: { landscape: StatGridLandscape, portrait: StatGridPortrait },
   mosaic:    { landscape: MosaicLandscape,  portrait: MosaicPortrait },
+  diptych:   { landscape: DiptychLandscape, portrait: DiptychPortrait },
   hero:      { landscape: OverlayLandscape,  portrait: OverlayPortrait }, // alias for old records
 }
 
