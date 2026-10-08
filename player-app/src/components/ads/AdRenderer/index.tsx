@@ -17,6 +17,8 @@ import { MosaicLandscape } from "../listings/Mosaic/Landscape"
 import { MosaicPortrait } from "../listings/Mosaic/Portrait"
 import { DiptychLandscape } from "../listings/Diptych/Landscape"
 import { DiptychPortrait } from "../listings/Diptych/Portrait"
+import { SequenceLandscape } from "../listings/Sequence/Landscape"
+import { SequencePortrait } from "../listings/Sequence/Portrait"
 import { AgentAd } from "../AgentAd"
 import { BrandAd } from "../BrandAd"
 import { CollectionAd } from "../CollectionAd"
@@ -47,6 +49,7 @@ const LISTING_COMPOSITIONS: Record<string, Record<Aspect, React.ComponentType<{ 
   stat_grid: { landscape: StatGridLandscape, portrait: StatGridPortrait },
   mosaic:    { landscape: MosaicLandscape,  portrait: MosaicPortrait },
   diptych:   { landscape: DiptychLandscape, portrait: DiptychPortrait },
+  sequence:  { landscape: SequenceLandscape, portrait: SequencePortrait },
   hero:      { landscape: OverlayLandscape,  portrait: OverlayPortrait }, // alias for old records
 }
 
