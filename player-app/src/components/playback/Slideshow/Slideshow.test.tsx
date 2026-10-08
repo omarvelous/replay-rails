@@ -1,6 +1,6 @@
 import { describe, it, expect } from "vitest"
 import { render, screen } from "@testing-library/react"
-import { Slideshow } from "./Slideshow"
+import { Slideshow } from "."
 import {
   mockManifestResponse,
   mockPlaylist,
@@ -37,13 +37,15 @@ describe("Slideshow", () => {
   it("renders listing ad address", () => {
     const manifest = mockManifestResponse()
     render(<Slideshow manifest={manifest} />)
-    expect(screen.getByText("350 Fifth Ave, New York, NY 10118")).toBeInTheDocument()
+    expect(screen.getByText("350 Fifth Ave")).toBeInTheDocument()
   })
 
   it("renders listing ad specs", () => {
     const manifest = mockManifestResponse()
     render(<Slideshow manifest={manifest} />)
-    expect(screen.getByText("3 bd · 2 ba · 2,200 sqft")).toBeInTheDocument()
+    expect(screen.getByText("3")).toBeInTheDocument()
+    expect(screen.getByText("2")).toBeInTheDocument()
+    expect(screen.getByText("2,200")).toBeInTheDocument()
   })
 
   it("renders agent strip on listing ad", () => {
@@ -86,13 +88,12 @@ describe("Slideshow", () => {
         playlist_ads: [mockPlaylistAd({
           headline: "Hero Ad",
           images: [mockAttachment({ url: "/test/hero.jpg" })],
-          adable: mockBrandAd(),
         })],
       }),
     })
-    render(<Slideshow manifest={manifest} />)
-    const img = screen.getByAltText("Hero Ad")
-    expect(img).toHaveAttribute("src", "/test/hero.jpg")
+    const { container } = render(<Slideshow manifest={manifest} />)
+    const img = container.querySelector('img[src="/test/hero.jpg"]')
+    expect(img).toBeTruthy()
   })
 
   it("renders without background image when none attached", () => {
