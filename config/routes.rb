@@ -158,10 +158,7 @@ Rails.application.routes.draw do
   # ---------------------------------------------------------------
   constraints subdomain: "play" do
     scope module: "play" do
-      root "players#show", as: :play_root
-      resource :player, only: %i[new show]
-
-      # Device API (JSON)
+      # Device API (JSON) — consumed by the React player app
       namespace :api do
         namespace :v1 do
           resources :players, only: :create
