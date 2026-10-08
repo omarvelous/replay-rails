@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react-vite"
-import { Slideshow } from "./Slideshow"
+import { Slideshow } from "."
 import {
   mockManifestResponse,
   mockPlaylist,
