@@ -43,9 +43,10 @@ export default defineConfig({
           'Host': 'play.replay.localhost'
         }
       },
-      '/app/ads': {
+      '/preview-api': {
         target: process.env.API_URL || 'http://localhost:3000',
         changeOrigin: true,
+        rewrite: (path: string) => path.replace(/^\/preview-api/, ''),
         headers: {
           'Host': 'app.replay.localhost'
         }

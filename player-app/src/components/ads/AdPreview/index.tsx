@@ -14,7 +14,7 @@ export function AdPreview() {
       return
     }
 
-    fetch(`/app/ads/${pid}/preview.json`, { credentials: "include" })
+    fetch(`/preview-api/ads/${pid}/preview.json`, { credentials: "include" })
       .then((res) => {
         if (!res.ok) throw new Error(`${res.status} ${res.statusText}`)
         return res.json()
