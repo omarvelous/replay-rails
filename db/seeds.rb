@@ -208,10 +208,11 @@ ActsAsTenant.with_tenant(remax_account) do
   attach_seed_image(tom, :photo, "agent-tom.jpg") if tom
 
   # -- Listings ----------------------------------------------------------
-  unless Listing.exists?(account: remax_account, address: "350 Fifth Ave, New York, NY 10118")
+  unless Listing.exists?(account: remax_account, street: "350 Fifth Ave")
     Listing.create!(
       account: remax_account,
-      address: "350 Fifth Ave, New York, NY 10118",
+      street: "350 Fifth Ave", city: "New York", state: "NY", zip: "10118",
+      neighborhood: "Midtown Manhattan",
       price: 2_500_000,
       beds: 3, baths: 2, sqft: 2200,
       status: "active",
@@ -220,13 +221,14 @@ ActsAsTenant.with_tenant(remax_account) do
     )
     puts "Created listing: 350 Fifth Ave"
   end
-  fifth_ave = Listing.find_by(account: remax_account, address: "350 Fifth Ave, New York, NY 10118")
+  fifth_ave = Listing.find_by(account: remax_account, street: "350 Fifth Ave")
   attach_seed_photos(fifth_ave, "house-1.jpg", "interior-1.jpg") if fifth_ave
 
-  unless Listing.exists?(account: remax_account, address: "20 W 34th St, New York, NY 10001")
+  unless Listing.exists?(account: remax_account, street: "20 W 34th St")
     Listing.create!(
       account: remax_account,
-      address: "20 W 34th St, New York, NY 10001",
+      street: "20 W 34th St", city: "New York", state: "NY", zip: "10001",
+      neighborhood: "Herald Square",
       price: 1_850_000,
       beds: 2, baths: 2, sqft: 1500,
       status: "pending",
@@ -235,13 +237,14 @@ ActsAsTenant.with_tenant(remax_account) do
     )
     puts "Created listing: 20 W 34th St"
   end
-  w34th = Listing.find_by(account: remax_account, address: "20 W 34th St, New York, NY 10001")
+  w34th = Listing.find_by(account: remax_account, street: "20 W 34th St")
   attach_seed_photos(w34th, "house-2.jpg", "interior-2.jpg") if w34th
 
-  unless Listing.exists?(account: remax_account, address: "88 Greenwich St, New York, NY 10006")
+  unless Listing.exists?(account: remax_account, street: "88 Greenwich St")
     Listing.create!(
       account: remax_account,
-      address: "88 Greenwich St, New York, NY 10006",
+      street: "88 Greenwich St", city: "New York", state: "NY", zip: "10006",
+      neighborhood: "Financial District",
       price: 4_200_000,
       beds: 4, baths: 3, sqft: 3100,
       status: "active",
@@ -250,13 +253,14 @@ ActsAsTenant.with_tenant(remax_account) do
     )
     puts "Created listing: 88 Greenwich St"
   end
-  greenwich = Listing.find_by(account: remax_account, address: "88 Greenwich St, New York, NY 10006")
+  greenwich = Listing.find_by(account: remax_account, street: "88 Greenwich St")
   attach_seed_photos(greenwich, "house-3.jpg") if greenwich
 
-  unless Listing.exists?(account: remax_account, address: "15 Hudson Yards, New York, NY 10001")
+  unless Listing.exists?(account: remax_account, street: "15 Hudson Yards")
     Listing.create!(
       account: remax_account,
-      address: "15 Hudson Yards, New York, NY 10001",
+      street: "15 Hudson Yards", city: "New York", state: "NY", zip: "10001",
+      neighborhood: "Hudson Yards",
       price: 6_750,
       beds: 1, baths: 1, sqft: 850,
       status: "active",
@@ -265,7 +269,7 @@ ActsAsTenant.with_tenant(remax_account) do
     )
     puts "Created listing: 15 Hudson Yards (rental)"
   end
-  hudson = Listing.find_by(account: remax_account, address: "15 Hudson Yards, New York, NY 10001")
+  hudson = Listing.find_by(account: remax_account, street: "15 Hudson Yards")
   attach_seed_photos(hudson, "house-4.jpg") if hudson
 
   # QR codes for listings
@@ -341,49 +345,6 @@ ActsAsTenant.with_tenant(remax_account) do
   price_reduced_ad = Ad.find_by(account: remax_account, headline: "Price Reduced")
   attach_seed_image(price_reduced_ad, :image, "house-3.jpg") if price_reduced_ad
 
-  # CollectionAd
-  unless Ad.exists?(account: remax_account, headline: "Featured Listings")
-    collection_ad = Ads::CollectionAd.create!(collection_title: "Featured Listings")
-    member_ads = Ad.where(account: remax_account, adable_type: "Ads::ListingAd").order(:id)
-    member_ads.each_with_index do |ad, i|
-      Ads::CollectionAdAd.create!(collection_ad: collection_ad, ad: ad, position: i)
-    end
-    Ad.create!(
-      account: remax_account, adable: collection_ad,
-      headline: "Featured Listings",
-      body: "Our top properties this week.",
-      layout: "grid", theme: "dark"
-    )
-    puts "Created CollectionAd: Featured Listings (#{member_ads.count} ads)"
-  end
-
-  # AgentAd
-  if jane && !Ad.exists?(account: remax_account, headline: "Jane Archer")
-    agent_ad = Ads::AgentAd.create!(agent: jane)
-    Ad.create!(
-      account: remax_account, adable: agent_ad,
-      headline: "Jane Archer",
-      body: "Your trusted real estate advisor.",
-      layout: "profile", theme: "dark"
-    )
-    puts "Created AgentAd: Jane Archer"
-  end
-  agent_ad_record = Ad.find_by(account: remax_account, headline: "Jane Archer")
-  attach_seed_image(agent_ad_record, :image, "agent-jane.jpg") if agent_ad_record
-
-  # BrandAd
-  unless Ad.exists?(account: remax_account, headline: "Your Window, Working 24/7")
-    brand_ad = Ads::BrandAd.create!
-    Ad.create!(
-      account: remax_account, adable: brand_ad,
-      headline: "Your Window, Working 24/7",
-      body: "Digital signage purpose-built for real estate.",
-      layout: "overlay", theme: "brand"
-    )
-    puts "Created BrandAd: Your Window, Working 24/7"
-  end
-  brand_ad_record = Ad.find_by(account: remax_account, headline: "Your Window, Working 24/7")
-  attach_seed_image(brand_ad_record, :image, "brand.jpg") if brand_ad_record
 
   # -- Playlist ----------------------------------------------------------
   unless Playlist.exists?(account: remax_account, name: "Evening Showcase")
@@ -566,10 +527,11 @@ ActsAsTenant.with_tenant(compass_account) do
   attach_seed_image(sofia, :photo, "agent-tom.jpg") if sofia
 
   # -- Listings ----------------------------------------------------------
-  unless Listing.exists?(account: compass_account, address: "72 Spring St, Unit 4A, New York, NY 10012")
+  unless Listing.exists?(account: compass_account, street: "72 Spring St, Unit 4A")
     Listing.create!(
       account: compass_account,
-      address: "72 Spring St, Unit 4A, New York, NY 10012",
+      street: "72 Spring St, Unit 4A", city: "New York", state: "NY", zip: "10012",
+      neighborhood: "SoHo",
       price: 1_950_000,
       beds: 2, baths: 1, sqft: 1100,
       status: "active",
@@ -578,13 +540,14 @@ ActsAsTenant.with_tenant(compass_account) do
     )
     puts "Created listing: 72 Spring St, Unit 4A"
   end
-  spring_st = Listing.find_by(account: compass_account, address: "72 Spring St, Unit 4A, New York, NY 10012")
+  spring_st = Listing.find_by(account: compass_account, street: "72 Spring St, Unit 4A")
   attach_seed_photos(spring_st, "house-3.jpg", "interior-1.jpg") if spring_st
 
-  unless Listing.exists?(account: compass_account, address: "210 Lafayette St, New York, NY 10012")
+  unless Listing.exists?(account: compass_account, street: "210 Lafayette St")
     Listing.create!(
       account: compass_account,
-      address: "210 Lafayette St, New York, NY 10012",
+      street: "210 Lafayette St", city: "New York", state: "NY", zip: "10012",
+      neighborhood: "NoHo",
       price: 5_200,
       beds: 1, baths: 1, sqft: 750,
       status: "active",
@@ -593,7 +556,7 @@ ActsAsTenant.with_tenant(compass_account) do
     )
     puts "Created listing: 210 Lafayette St (rental)"
   end
-  lafayette = Listing.find_by(account: compass_account, address: "210 Lafayette St, New York, NY 10012")
+  lafayette = Listing.find_by(account: compass_account, street: "210 Lafayette St")
   attach_seed_photos(lafayette, "house-4.jpg") if lafayette
 
   # QR codes
