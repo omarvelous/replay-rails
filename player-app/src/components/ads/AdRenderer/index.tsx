@@ -7,6 +7,8 @@ import { SplitLandscape } from "../listings/Split/Landscape"
 import { SplitPortrait } from "../listings/Split/Portrait"
 import { BandLandscape } from "../listings/Band/Landscape"
 import { BandPortrait } from "../listings/Band/Portrait"
+import { CardLandscape } from "../listings/Card/Landscape"
+import { CardPortrait } from "../listings/Card/Portrait"
 import { AgentAd } from "../AgentAd"
 import { BrandAd } from "../BrandAd"
 import { CollectionAd } from "../CollectionAd"
@@ -31,6 +33,7 @@ const LISTING_COMPOSITIONS: Record<string, Record<Aspect, React.ComponentType<{ 
   overlay:   { landscape: OverlayLandscape,  portrait: OverlayPortrait },
   split:     { landscape: SplitLandscape,    portrait: SplitPortrait },
   band:      { landscape: BandLandscape,    portrait: BandPortrait },
+  card:      { landscape: CardLandscape,    portrait: CardPortrait },
   hero:      { landscape: OverlayLandscape,  portrait: OverlayPortrait }, // alias for old records
 }
 
