@@ -40,7 +40,7 @@ RSpec.describe Ads::ListingAd do
 
   describe "constants" do
     it "defines LAYOUTS" do
-      expect(Ads::ListingAd::LAYOUTS).to eq(%w[overlay split band card type_photo stat_grid mosaic diptych sequence])
+      expect(Ads::ListingAd::LAYOUTS).to eq(%w[overlay split band card type_photo stat_grid mosaic diptych])
     end
 
     it "defines BADGES" do
