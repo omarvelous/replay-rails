@@ -5,6 +5,8 @@ import { OverlayLandscape } from "../listings/Overlay/Landscape"
 import { OverlayPortrait } from "../listings/Overlay/Portrait"
 import { SplitLandscape } from "../listings/Split/Landscape"
 import { SplitPortrait } from "../listings/Split/Portrait"
+import { BandLandscape } from "../listings/Band/Landscape"
+import { BandPortrait } from "../listings/Band/Portrait"
 import { AgentAd } from "../AgentAd"
 import { BrandAd } from "../BrandAd"
 import { CollectionAd } from "../CollectionAd"
@@ -28,6 +30,7 @@ export function AdRenderer({ ad }: AdRendererProps) {
 const LISTING_COMPOSITIONS: Record<string, Record<Aspect, React.ComponentType<{ ad: ManifestPlaylistAd; listingAd: ManifestListingAd }>>> = {
   overlay:   { landscape: OverlayLandscape,  portrait: OverlayPortrait },
   split:     { landscape: SplitLandscape,    portrait: SplitPortrait },
+  band:      { landscape: BandLandscape,    portrait: BandPortrait },
   hero:      { landscape: OverlayLandscape,  portrait: OverlayPortrait }, // alias for old records
 }
 
