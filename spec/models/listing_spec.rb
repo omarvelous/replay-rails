@@ -4,7 +4,9 @@ RSpec.describe Listing do
   subject(:listing) { build(:listing) }
 
   describe "validations" do
-    it { is_expected.to validate_presence_of(:address) }
+    it { is_expected.to validate_presence_of(:street) }
+    it { is_expected.to validate_presence_of(:city) }
+    it { is_expected.to validate_presence_of(:state) }
     it { is_expected.to validate_presence_of(:price) }
     it { is_expected.to validate_numericality_of(:price).is_greater_than(0) }
     it { is_expected.to validate_presence_of(:status) }
@@ -136,8 +138,8 @@ RSpec.describe Listing do
   describe "scopes" do
     describe ".search" do
       it "searches by address case-insensitively" do
-        match = create(:listing, address: "350 Fifth Ave")
-        create(:listing, address: "20 W 34th St")
+        match = create(:listing, street: "350 Fifth Ave", city: "New York", state: "NY")
+        create(:listing, street: "20 W 34th St", city: "New York", state: "NY")
         expect(described_class.search("fifth")).to eq([ match ])
       end
     end
@@ -168,7 +170,9 @@ RSpec.describe Listing do
       account = create(:account)
       ActsAsTenant.with_tenant(account) do
         listing = described_class.create!(
-          address: "123 Main St",
+          street: "123 Main St",
+          city: "Austin",
+          state: "TX",
           price: 500_000,
           status: "active"
         )

@@ -11,7 +11,7 @@ RSpec.describe "Go::Listings" do
     end
 
     it "displays listing details" do
-      listing = create(:listing, address: "350 Fifth Ave", price: 2_500_000)
+      listing = create(:listing, street: "350 Fifth Ave", city: "New York", state: "NY", price: 2_500_000)
       get go_listing_path(listing)
       expect(response.body).to include("350 Fifth Ave")
       expect(response.body).to include("$2,500,000")
@@ -46,7 +46,7 @@ RSpec.describe "Go::Listings" do
     end
 
     it "displays get directions link" do
-      listing = create(:listing, address: "350 Fifth Ave")
+      listing = create(:listing, street: "350 Fifth Ave", city: "New York", state: "NY")
       get go_listing_path(listing)
       expect(response.body).to include("maps.google.com")
     end

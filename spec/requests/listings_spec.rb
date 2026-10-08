@@ -16,8 +16,8 @@ RSpec.describe "Listings" do
     end
 
     it "lists listings for the current account" do
-      listing = create(:listing, account: account, address: "123 Main St")
-      other_listing = create(:listing, address: "999 Other Ave")
+      listing = create(:listing, account: account, street: "123 Main St", city: "Austin", state: "TX")
+      other_listing = create(:listing, street: "999 Other Ave", city: "Dallas", state: "TX")
 
       get listings_path
       expect(response.body).to include("123 Main St")
@@ -34,7 +34,7 @@ RSpec.describe "Listings" do
 
   describe "POST /listings" do
     let(:valid_params) do
-      { listing: { address: "100 Park Ave", price: 750_000, beds: 3, baths: 2, sqft: 1800, status: "active" } }
+      { listing: { street: "100 Park Ave", city: "New York", state: "NY", zip: "10016", price: 750_000, beds: 3, baths: 2, sqft: 1800, status: "active" } }
     end
 
     context "with valid params" do
@@ -79,7 +79,7 @@ RSpec.describe "Listings" do
 
   describe "GET /listings/:id" do
     it "shows the listing" do
-      listing = create(:listing, account: account, address: "123 Main St")
+      listing = create(:listing, account: account, street: "123 Main St", city: "Austin", state: "TX")
       get listing_path(listing)
       expect(response).to be_successful
       expect(response.body).to include("123 Main St")
@@ -101,23 +101,24 @@ RSpec.describe "Listings" do
   end
 
   describe "PATCH /listings/:id" do
-    let(:listing) { create(:listing, account: account, address: "Old Address") }
+    let(:listing) { create(:listing, account: account, street: "Old Street", city: "Austin", state: "TX") }
 
     context "with valid params" do
       it "updates the listing" do
-        patch listing_path(listing), params: { listing: { address: "New Address" } }
-        expect(listing.reload.address).to eq("New Address")
+        patch listing_path(listing), params: { listing: { street: "New Street" } }
+        expect(listing.reload.street).to eq("New Street")
+        expect(listing.reload.address).to start_with("New Street, Austin, TX")
       end
 
       it "redirects to the listing" do
-        patch listing_path(listing), params: { listing: { address: "New Address" } }
+        patch listing_path(listing), params: { listing: { street: "New Street" } }
         expect(response).to redirect_to(listing_path(listing))
       end
     end
 
     context "with invalid params" do
       it "returns 422" do
-        patch listing_path(listing), params: { listing: { address: "" } }
+        patch listing_path(listing), params: { listing: { street: "" } }
         expect(response).to have_http_status(:unprocessable_content)
       end
     end

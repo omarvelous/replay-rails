@@ -16,7 +16,7 @@ RSpec.describe "QrCodes" do
     end
 
     it "lists QR codes for the current account" do
-      listing = create(:listing, account: account, address: "350 Fifth Ave")
+      listing = create(:listing, account: account, street: "350 Fifth Ave", city: "New York", state: "NY")
       qr = create(:qr_code, account: account, destination_record: listing, label: "Fifth Ave QR")
       other_qr = create(:qr_code, label: "Other account QR")
 
