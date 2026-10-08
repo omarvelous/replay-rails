@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react-vite"
-import { Experience } from "./Experience"
+import { Experience } from "."
 import {
   mockManifestResponse,
   mockExperience,

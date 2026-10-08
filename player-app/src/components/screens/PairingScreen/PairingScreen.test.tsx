@@ -1,6 +1,6 @@
 import { describe, it, expect, vi } from "vitest"
 import { render, screen } from "@testing-library/react"
-import { PairingScreen } from "./PairingScreen"
+import { PairingScreen } from "."
 
 describe("PairingScreen", () => {
   const defaultProps = {

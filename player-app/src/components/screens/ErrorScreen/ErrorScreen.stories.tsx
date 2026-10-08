@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react-vite"
-import { ErrorScreen } from "./ErrorScreen"
+import { ErrorScreen } from "."
 
 const meta = {
   title: "Player/ErrorScreen",

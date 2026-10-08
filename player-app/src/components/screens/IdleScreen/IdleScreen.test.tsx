@@ -1,6 +1,6 @@
 import { describe, it, expect } from "vitest"
 import { render, screen } from "@testing-library/react"
-import { IdleScreen } from "./IdleScreen"
+import { IdleScreen } from "."
 
 describe("IdleScreen", () => {
   it("renders no content message", () => {

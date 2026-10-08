@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react-vite"
-import { IdleScreen } from "./IdleScreen"
+import { IdleScreen } from "."
 
 const meta = {
   title: "Player/IdleScreen",

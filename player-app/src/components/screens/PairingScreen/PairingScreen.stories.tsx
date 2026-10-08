@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react-vite"
-import { PairingScreen } from "./PairingScreen"
+import { PairingScreen } from "."
 
 const meta = {
   title: "Player/PairingScreen",
