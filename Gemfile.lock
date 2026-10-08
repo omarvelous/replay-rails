@@ -292,7 +292,7 @@ GEM
     nokogiri (1.19.4-x86_64-linux-gnu)
       racc (~> 1.4)
     ostruct (0.6.3)
-    pagy (43.6.3)
+    pagy (43.7.0)
       json
       uri
       yaml
@@ -574,7 +574,7 @@ DEPENDENCIES
   jbuilder
   kamal
   letter_opener_web
-  pagy (~> 43.6)
+  pagy (~> 43.7)
   paper_trail
   pg (~> 1.1)
   positioning
