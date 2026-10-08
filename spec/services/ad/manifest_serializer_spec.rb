@@ -1,15 +1,16 @@
 require "rails_helper"
 
 RSpec.describe Ad::ManifestSerializer do
+  subject(:json) { described_class.new(ad).as_json }
+
   let(:account) { create(:account) }
-
-  before { ActsAsTenant.current_tenant = account }
-
   let(:listing) { create(:listing, account: account) }
   let(:listing_ad) { create(:listing_ad, listing: listing) }
   let(:ad) { create(:ad, account: account, adable: listing_ad) }
 
-  subject(:json) { described_class.new(ad).as_json }
+  before { ActsAsTenant.current_tenant = account }
+
+
 
   describe "#as_json" do
     it "includes top-level ad fields" do
