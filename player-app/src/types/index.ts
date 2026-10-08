@@ -71,12 +71,8 @@ export interface ManifestPlaylistAd {
   adable: ManifestAdable
 }
 
-// Ad type variants
-export type ManifestAdable =
-  | ManifestListingAd
-  | ManifestAgentAd
-  | ManifestBrandAd
-  | ManifestCollectionAd
+// Ad type variant — only ListingAd
+export type ManifestAdable = ManifestListingAd
 
 export interface ManifestListingAd {
   type: "Ads::ListingAd"
@@ -91,26 +87,6 @@ export interface ManifestListingAd {
   sold_price: number | null
   listing: ManifestListing
   agent?: ManifestAgent
-}
-
-export interface ManifestAgentAd {
-  type: "Ads::AgentAd"
-  pid: string
-  updated_at: number
-  agent: ManifestAgent
-}
-
-export interface ManifestBrandAd {
-  type: "Ads::BrandAd"
-  pid: string
-  updated_at: number
-}
-
-export interface ManifestCollectionAd {
-  type: "Ads::CollectionAd"
-  pid: string
-  updated_at: number
-  collection_ads: ManifestPlaylistAd[]
 }
 
 // Shared

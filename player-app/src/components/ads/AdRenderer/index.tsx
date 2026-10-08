@@ -19,9 +19,6 @@ import { DiptychLandscape } from "../listings/Diptych/Landscape"
 import { DiptychPortrait } from "../listings/Diptych/Portrait"
 import { SequenceLandscape } from "../listings/Sequence/Landscape"
 import { SequencePortrait } from "../listings/Sequence/Portrait"
-import { AgentAd } from "../AgentAd"
-import { BrandAd } from "../BrandAd"
-import { CollectionAd } from "../CollectionAd"
 import type { ManifestPlaylistAd, ManifestListingAd } from "../../../types"
 
 interface AdRendererProps {
@@ -53,20 +50,11 @@ const LISTING_COMPOSITIONS: Record<string, Record<Aspect, React.ComponentType<{ 
 }
 
 function AdContent({ ad, aspect }: { ad: ManifestPlaylistAd; aspect: Aspect }) {
-  // Listing ads — dispatch by layout × aspect
-  if (ad.adable.type === "Ads::ListingAd") {
-    const comps = LISTING_COMPOSITIONS[ad.layout]
-    const Comp = comps?.[aspect]
-    if (Comp) return <Comp ad={ad} listingAd={ad.adable as ManifestListingAd} />
-  }
+  if (ad.adable.type !== "Ads::ListingAd") return null
 
-  // Other ad types — unchanged
-  switch (ad.adable.type) {
-    case "Ads::AgentAd":
-      return <AgentAd ad={ad} />
-    case "Ads::BrandAd":
-      return <BrandAd ad={ad} />
-    case "Ads::CollectionAd":
-      return <CollectionAd ad={ad} />
-  }
+  const comps = LISTING_COMPOSITIONS[ad.layout]
+  const Comp = comps?.[aspect]
+  if (!Comp) return null
+
+  return <Comp ad={ad} listingAd={ad.adable as ManifestListingAd} />
 }

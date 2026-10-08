@@ -3,8 +3,6 @@ import type {
   ManifestPlaylist,
   ManifestPlaylistAd,
   ManifestListingAd,
-  ManifestAgentAd,
-  ManifestBrandAd,
   ManifestListing,
   ManifestAgent,
   ManifestAttachment,
@@ -75,25 +73,6 @@ export function mockListingAd(overrides?: Partial<ManifestListingAd>): ManifestL
   }
 }
 
-export function mockAgentAd(overrides?: Partial<ManifestAgentAd>): ManifestAgentAd {
-  return {
-    type: "Ads::AgentAd",
-    pid: "agent-ad-001",
-    updated_at: 1700000000,
-    agent: mockAgent(),
-    ...overrides,
-  }
-}
-
-export function mockBrandAd(overrides?: Partial<ManifestBrandAd>): ManifestBrandAd {
-  return {
-    type: "Ads::BrandAd",
-    pid: "brand-ad-001",
-    updated_at: 1700000000,
-    ...overrides,
-  }
-}
-
 export function mockPlaylistAd(overrides?: Partial<ManifestPlaylistAd>): ManifestPlaylistAd {
   return {
     pid: "playlist-ad-001",
@@ -118,8 +97,8 @@ export function mockPlaylist(overrides?: Partial<ManifestPlaylist>): ManifestPla
     status: "published",
     playlist_ads: [
       mockPlaylistAd({ pid: "pa-1", position: 1, headline: "Just Listed" }),
-      mockPlaylistAd({ pid: "pa-2", position: 2, headline: "Open House", adable: mockListingAd({ badge: "open_house", badge_label: "Open House" }) }),
-      mockPlaylistAd({ pid: "pa-3", position: 3, headline: "Your Agent", adable: mockAgentAd(), layout: "profile" }),
+      mockPlaylistAd({ pid: "pa-2", position: 2, headline: "Open House", layout: "split", adable: mockListingAd({ badge: "open_house", badge_label: "Open House" }) }),
+      mockPlaylistAd({ pid: "pa-3", position: 3, headline: "Price Reduced", layout: "band", adable: mockListingAd({ badge: "price_reduction", badge_label: "Price Reduced" }) }),
     ],
     ...overrides,
   }

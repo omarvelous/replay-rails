@@ -6,8 +6,6 @@ import {
   mockPlaylist,
   mockPlaylistAd,
   mockListingAd,
-  mockAgentAd,
-  mockBrandAd,
   mockAttachment,
 } from "../../../__mocks__/manifest"
 
@@ -54,34 +52,6 @@ describe("Slideshow", () => {
     expect(screen.getByText("Jane Archer")).toBeInTheDocument()
   })
 
-  it("renders agent ad with agent name", () => {
-    const manifest = mockManifestResponse({
-      contentable: mockPlaylist({
-        playlist_ads: [mockPlaylistAd({
-          headline: "Your Agent",
-          adable: mockAgentAd(),
-        })],
-      }),
-    })
-    render(<Slideshow manifest={manifest} />)
-    expect(screen.getByText("Jane Archer")).toBeInTheDocument()
-  })
-
-  it("renders brand ad with headline only", () => {
-    const manifest = mockManifestResponse({
-      contentable: mockPlaylist({
-        playlist_ads: [mockPlaylistAd({
-          headline: "Your Window, Working 24/7",
-          body: "Digital signage for real estate.",
-          adable: mockBrandAd(),
-        })],
-      }),
-    })
-    render(<Slideshow manifest={manifest} />)
-    expect(screen.getByText("Your Window, Working 24/7")).toBeInTheDocument()
-    expect(screen.getByText("Digital signage for real estate.")).toBeInTheDocument()
-  })
-
   it("renders ad image", () => {
     const manifest = mockManifestResponse({
       contentable: mockPlaylist({
@@ -102,7 +72,6 @@ describe("Slideshow", () => {
         playlist_ads: [mockPlaylistAd({
           headline: "No Image",
           images: [],
-          adable: mockBrandAd(),
         })],
       }),
     })

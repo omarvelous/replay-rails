@@ -5,11 +5,8 @@ import {
   mockPlaylist,
   mockPlaylistAd,
   mockListingAd,
-  mockAgentAd,
-  mockBrandAd,
   mockAttachment,
   mockListing,
-  mockAgent,
 } from "../../../__mocks__/manifest"
 
 const meta = {
@@ -36,7 +33,6 @@ export const JustListed: Story = {
       contentable: mockPlaylist({
         playlist_ads: [mockPlaylistAd({
           headline: "Just Listed",
-          body: "Stunning 3BR with panoramic city views.",
           images: [mockAttachment({ url: "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=1920&h=1080&fit=crop" })],
           adable: mockListingAd({ badge: "just_listed", badge_label: "Just Listed" }),
         })],
@@ -51,7 +47,6 @@ export const OpenHouse: Story = {
       contentable: mockPlaylist({
         playlist_ads: [mockPlaylistAd({
           headline: "Open House",
-          body: "Visit this Saturday 1-3 PM.",
           layout: "split",
           images: [mockAttachment({ url: "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=1920&h=1080&fit=crop" })],
           adable: mockListingAd({
@@ -73,7 +68,7 @@ export const PriceReduction: Story = {
       contentable: mockPlaylist({
         playlist_ads: [mockPlaylistAd({
           headline: "Price Reduced",
-          body: "Now $300K below original asking.",
+          layout: "band",
           images: [mockAttachment({ url: "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=1920&h=1080&fit=crop" })],
           adable: mockListingAd({
             badge: "price_reduction",
@@ -87,48 +82,29 @@ export const PriceReduction: Story = {
   },
 }
 
-export const AgentAd: Story = {
+export const CardLayout: Story = {
   args: {
     manifest: mockManifestResponse({
       contentable: mockPlaylist({
         playlist_ads: [mockPlaylistAd({
-          headline: "Jane Archer",
-          body: "Your trusted real estate advisor.",
-          layout: "profile",
-          images: [mockAttachment({ url: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=1920&h=1080&fit=crop" })],
-          adable: mockAgentAd(),
+          headline: "Featured Listing",
+          layout: "card",
+          images: [mockAttachment({ url: "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=1920&h=1080&fit=crop" })],
         })],
       }),
     }),
   },
 }
 
-export const BrandAd: Story = {
+export const TypePhoto: Story = {
   args: {
     manifest: mockManifestResponse({
       contentable: mockPlaylist({
         playlist_ads: [mockPlaylistAd({
-          headline: "Your Window, Working 24/7",
-          body: "Digital signage purpose-built for real estate.",
-          layout: "hero",
-          theme: "brand",
+          headline: "Coming Soon",
+          layout: "type_photo",
           images: [],
-          adable: mockBrandAd(),
-        })],
-      }),
-    }),
-  },
-}
-
-export const NoImage: Story = {
-  args: {
-    manifest: mockManifestResponse({
-      contentable: mockPlaylist({
-        playlist_ads: [mockPlaylistAd({
-          headline: "No Image Available",
-          body: "This ad has no image attached.",
-          images: [],
-          adable: mockBrandAd(),
+          adable: mockListingAd({ badge: "coming_soon", badge_label: "Coming Soon" }),
         })],
       }),
     }),
