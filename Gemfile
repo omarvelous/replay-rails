@@ -6,7 +6,7 @@ gem "propshaft"
 gem "puma", ">= 5.0"
 
 # ── Database ──────────────────────────────────────────
-gem "pg", "~> 1.1"
+gem "pg", "~> 1.7"
 gem "solid_cable"
 gem "solid_cache"
 gem "solid_queue"
