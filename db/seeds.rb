@@ -301,7 +301,7 @@ ActsAsTenant.with_tenant(remax_account) do
       account: remax_account, adable: listing_ad,
       headline: "Just Listed",
       body: "Stunning 3BR with panoramic city views.",
-      layout: "hero", theme: "dark"
+      layout: "overlay", theme: "dark"
     )
     puts "Created ListingAd: Just Listed (350 Fifth Ave)"
   end
@@ -334,7 +334,7 @@ ActsAsTenant.with_tenant(remax_account) do
       account: remax_account, adable: listing_ad,
       headline: "Price Reduced",
       body: "Now $300K below original asking.",
-      layout: "hero", theme: "dark"
+      layout: "overlay", theme: "dark"
     )
     puts "Created ListingAd: Price Reduced (88 Greenwich St)"
   end
@@ -378,7 +378,7 @@ ActsAsTenant.with_tenant(remax_account) do
       account: remax_account, adable: brand_ad,
       headline: "Your Window, Working 24/7",
       body: "Digital signage purpose-built for real estate.",
-      layout: "hero", theme: "brand"
+      layout: "overlay", theme: "brand"
     )
     puts "Created BrandAd: Your Window, Working 24/7"
   end
@@ -616,7 +616,7 @@ ActsAsTenant.with_tenant(compass_account) do
       account: compass_account, adable: listing_ad,
       headline: "SoHo Gem",
       body: "Charming 2BR in the heart of SoHo.",
-      layout: "hero", theme: "dark"
+      layout: "overlay", theme: "dark"
     )
     puts "Created ListingAd: SoHo Gem"
   end

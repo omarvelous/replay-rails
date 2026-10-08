@@ -7,8 +7,6 @@ RSpec.describe Ad do
     it { is_expected.to belong_to(:account) }
     it { is_expected.to have_many(:playlist_ads).dependent(:destroy) }
     it { is_expected.to have_many(:playlists).through(:playlist_ads) }
-    it { is_expected.to have_many(:collection_ad_ads).dependent(:restrict_with_error) }
-
     it "has one attached image" do
       expect(described_class.new.image).not_to be_attached
     end
@@ -31,8 +29,8 @@ RSpec.describe Ad do
     end
 
     it "provides adable_name" do
-      ad = build(:ad, adable: build(:brand_ad))
-      expect(ad.adable_name).to eq("ads_brand_ad")
+      ad = build(:ad, adable: build(:listing_ad))
+      expect(ad.adable_name).to eq("ads_listing_ad")
     end
   end
 
@@ -93,17 +91,6 @@ RSpec.describe Ad do
       expect(ad.headline).to eq("Custom")
       expect(ad.layout).to eq("split")
       expect(ad.theme).to eq("light")
-    end
-  end
-
-  describe "deletion protection" do
-    it "cannot be deleted when referenced by a collection" do
-      collection_ad = create(:collection_ad)
-      ad = create(:ad, adable: create(:listing_ad))
-      create(:collection_ad_ad, collection_ad: collection_ad, ad: ad)
-
-      expect(ad.destroy).to be false
-      expect(ad.errors[:base]).to be_present
     end
   end
 

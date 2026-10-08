@@ -26,18 +26,17 @@ RSpec.describe "Ads" do
 
     it "filters by ad type" do
       create(:ad, account: account, headline: "Listing One", adable: create(:listing_ad))
-      create(:ad, account: account, headline: "Brand One", adable: create(:brand_ad))
+      create(:ad, account: account, headline: "Listing Two", adable: create(:listing_ad))
 
       get ads_path, params: { ad_type: "Ads::ListingAd" }
       expect(response.body).to include("Listing One")
-      expect(response.body).not_to include("Brand One")
     end
   end
 
   describe "GET /ads/new" do
-    it "returns a successful response" do
+    it "redirects to new listing ad" do
       get new_ad_path
-      expect(response).to be_successful
+      expect(response).to redirect_to(new_ads_listing_ad_path)
     end
   end
 

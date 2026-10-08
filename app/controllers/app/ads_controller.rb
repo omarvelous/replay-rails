@@ -17,7 +17,7 @@ module App
   end
 
   def new
-    authorize! Ad
+    redirect_to new_ads_listing_ad_path
     # Renders type chooser — links to ads/listing_ads/new, etc.
   end
 
