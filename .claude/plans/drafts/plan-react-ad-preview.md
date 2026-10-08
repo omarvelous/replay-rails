@@ -2,7 +2,7 @@
 
 ## Context
 
-Ad previews are rendered twice: Rails ERB partials for the admin (show page, standalone preview) and React components for the player. Every layout change requires updating both. This plan replaces the admin's ERB rendering with React via iframe — React becomes the single ad rendering engine for persisted ads. The form builder's live preview is out of scope for now.
+The admin show page and standalone preview render ads via ERB partials (`render "app/ads/layouts/#{@ad.layout}"`). Only `overlay`, `split`, and `stat_grid` have ERB partials — the 5 new layouts (`band`, `card`, `type_photo`, `mosaic`, `diptych`) will crash. Rather than create ERB partials for layouts that already have React compositions, embed the React player as an iframe. React is the single ad rendering engine.
 
 ## Architecture
 
@@ -20,48 +20,67 @@ Rails Admin                          React Player App
                                        └────────────────┘
 ```
 
-**Flow:** iframe loads `preview.html?pid=abc123` → React fetches ad data from a Rails API endpoint → renders with `AdRenderer`. Simple URL-based, no postMessage.
+**Flow:** iframe loads `preview.html?pid=abc123` → React fetches ad data from a Rails JSON endpoint → renders with `AdRenderer`.
 
 ---
 
 ## Phase 1: Preview API endpoint
 
-**Goal:** A Rails endpoint that returns a single ad as `ManifestPlaylistAd` JSON.
+**Goal:** A Rails endpoint that returns a single ad as ManifestPlaylistAd JSON.
 
 ### New files
-- **`app/services/ad/manifest_serializer.rb`** — Converts a persisted `Ad` to ManifestPlaylistAd JSON:
-  - `initialize(ad, position: 0, duration: 10)`
-  - `as_json` → Hash matching the ManifestPlaylistAd TypeScript type
-  - Handles all 4 ad types (ListingAd, AgentAd, BrandAd, CollectionAd)
-  - Uses `rails_storage_proxy_url` for image attachments
-  - CollectionAd: recursively serializes member ads
 
-- **`app/controllers/app/ads/previews_controller.rb`** — API endpoint:
-  ```ruby
-  # GET /app/ads/:id/preview.json
-  def show
-    @ad = Current.account.ads.find_by_param!(params[:ad_id])
-    authorize! @ad, to: :show?
-    render json: Ad::ManifestSerializer.new(@ad).as_json
+**`app/services/ad/manifest_serializer.rb`** — Only handles ListingAd (the only ad type):
+```ruby
+class Ad::ManifestSerializer
+  include Rails.application.routes.url_helpers
+
+  def initialize(ad, position: 0, duration: 10)
+    @ad = ad
+    @position = position
+    @duration = duration
   end
-  ```
 
-- **`spec/services/ad/manifest_serializer_spec.rb`** — Unit tests for each ad type
-
-### Modified files
-- **`config/routes.rb`** — Add JSON preview route nested under ads:
-  ```ruby
-  resources :ads do
-    resource :preview, only: :show, controller: "ads/previews"
+  def as_json(*)
+    {
+      pid: @ad.public_id,
+      updated_at: @ad.updated_at.to_i,
+      position: @position,
+      duration: @duration,
+      headline: @ad.headline,
+      body: @ad.body,
+      layout: @ad.layout,
+      theme: @ad.theme,
+      images: serialize_images(@ad),
+      adable: serialize_listing_ad(@ad.adable)
+    }
   end
-  ```
+end
+```
 
-### Reference — mirror these existing jbuilder partials:
+Mirror the existing jbuilder partials:
 - `app/views/api/v1/players/manifests/_ad.json.jbuilder`
 - `app/views/api/v1/players/manifests/ads/_listing_ad.json.jbuilder`
 - `app/views/api/v1/players/manifests/_listing.json.jbuilder`
 - `app/views/api/v1/players/manifests/_agent.json.jbuilder`
-- (and agent_ad, brand_ad, collection_ad variants)
+
+Include structured address fields: `street`, `city`, `state`, `zip`, `neighborhood`.
+
+**`app/controllers/app/ads_controller.rb`** — Update existing `preview` action to respond to JSON:
+```ruby
+def preview
+  authorize! @ad, to: :show?
+  respond_to do |format|
+    format.html { render layout: "preview" }
+    format.json { render json: Ad::ManifestSerializer.new(@ad).as_json }
+  end
+end
+```
+
+No route changes needed — the existing `member { get :preview }` handles both formats.
+
+### Tests
+- **`spec/services/ad/manifest_serializer_spec.rb`** — Verify JSON shape for a listing ad
 
 ---
 
@@ -70,16 +89,16 @@ Rails Admin                          React Player App
 **Goal:** A standalone React page that fetches an ad by PID and renders it.
 
 ### New files
-- **`player-app/preview.html`** — Minimal HTML page, mounts `<AdPreview />`
+- **`player-app/preview.html`** — Minimal HTML, mounts `<AdPreview />`
 - **`player-app/src/preview.tsx`** — Entry point: `createRoot` → `<AdPreview />`
 - **`player-app/src/components/ads/AdPreview/index.tsx`** — Core component:
   - Reads `pid` from URL search params
-  - Fetches ad data from `/app/ads/:pid/preview.json`
-  - Renders `<AdRenderer ad={ad} />` when data loaded
-  - Shows dark placeholder while loading
+  - Fetches from `/app/ads/:pid/preview.json` (with credentials for session auth)
+  - Renders `<AdRenderer ad={ad} />` when loaded
+  - Dark placeholder while loading
 
 ### Modified files
-- **`player-app/vite.config.ts`** — Add multi-page input + proxy for `/app/ads` preview endpoint:
+- **`player-app/vite.config.ts`** — Add multi-page build input:
   ```ts
   build: {
     rollupOptions: {
@@ -90,7 +109,7 @@ Rails Admin                          React Player App
     }
   }
   ```
-  Add proxy entry:
+  Add dev proxy for the preview endpoint:
   ```ts
   '/app/ads': {
     target: process.env.API_URL || 'http://localhost:3000',
@@ -100,13 +119,13 @@ Rails Admin                          React Player App
   ```
 
 ### Verification
-Open `http://play.replay.localhost:3100/preview.html?pid=<ad_public_id>` — should render the ad.
+Open `http://play.replay.localhost:3100/preview.html?pid=<ad_public_id>` — ad renders.
 
 ---
 
 ## Phase 3: Show page + standalone preview → iframe
 
-**Goal:** Replace ERB layout rendering on show page and standalone preview with React iframe.
+**Goal:** Replace ERB layout rendering with React iframe.
 
 ### Modified files
 - **`app/views/app/ads/show.html.erb`** — Replace `render "app/ads/layouts/#{@ad.layout}", ad: @ad` with:
@@ -114,7 +133,8 @@ Open `http://play.replay.localhost:3100/preview.html?pid=<ad_public_id>` — sho
   <div class="w-full aspect-video">
     <iframe src="<%= ad_preview_iframe_url(@ad) %>"
             class="w-full h-full border-0"
-            sandbox="allow-scripts" loading="eager" />
+            sandbox="allow-scripts allow-same-origin"
+            loading="eager"></iframe>
   </div>
   ```
 
@@ -122,7 +142,8 @@ Open `http://play.replay.localhost:3100/preview.html?pid=<ad_public_id>` — sho
   ```erb
   <iframe src="<%= ad_preview_iframe_url(@ad) %>"
           class="w-dvw h-dvh border-0"
-          sandbox="allow-scripts" loading="eager" />
+          sandbox="allow-scripts allow-same-origin"
+          loading="eager"></iframe>
   ```
 
 - **`app/helpers/ads_helper.rb`** — Add helper:
@@ -140,22 +161,25 @@ Open `http://play.replay.localhost:3100/preview.html?pid=<ad_public_id>` — sho
   ```
 
 ### Environment
-- Add `PLAYER_PREVIEW_URL` to dev/staging/production environments
-- Dev: `http://play.replay.localhost:3100`
-- Prod: `https://play.replaytv.co`
+- `PLAYER_PREVIEW_URL` — Dev: `http://play.replay.localhost:3100`, Prod: `https://play.replaytv.co`
+
+### Notes
+- `sandbox="allow-scripts allow-same-origin"` needed so the iframe can fetch from the Rails API with session cookies
+- The iframe fetches `/app/ads/:pid/preview.json` which requires authentication — the session cookie flows through since it's same-origin in production (both on `replaytv.co`)
+- In dev, the Vite proxy forwards `/app/ads` to Rails at `:3000`
 
 ---
 
 ## Out of scope
 
-- **Form builder live preview** — still uses ERB partials via Turbo Stream (migrate later)
-- **ERB partial deletion** — can't delete layout/content partials while form builder still references them
-- **Unsaved ad preview** — only persisted ads are supported via PID
+- **Form builder live preview** — still uses ERB partials via Turbo Stream
+- **ERB partial deletion** — form builder's `_preview_canvas.html.erb` still calls `render "app/ads/layouts/#{ad.layout}"`; partials stay for now
+- **Unsaved ad preview** — only persisted ads supported via PID
 
 ---
 
 ## Verification
 
-1. **Phase 1:** `make test-file FILE=spec/services/ad/manifest_serializer_spec.rb` — all green
-2. **Phase 2:** Open `preview.html?pid=<pid>` in browser — ad renders correctly
-3. **Phase 3:** View ad show page — preview renders in iframe; click Preview button — full-screen iframe
+1. **Phase 1:** `make test-file FILE=spec/services/ad/manifest_serializer_spec.rb`
+2. **Phase 2:** Open `preview.html?pid=<pid>` in browser — ad renders
+3. **Phase 3:** Ad show page renders preview in iframe; Preview button opens full-screen iframe

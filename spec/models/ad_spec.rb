@@ -7,6 +7,7 @@ RSpec.describe Ad do
     it { is_expected.to belong_to(:account) }
     it { is_expected.to have_many(:playlist_ads).dependent(:destroy) }
     it { is_expected.to have_many(:playlists).through(:playlist_ads) }
+
     it "has one attached image" do
       expect(described_class.new.image).not_to be_attached
     end
