@@ -102,7 +102,7 @@ export function mockPlaylistAd(overrides?: Partial<ManifestPlaylistAd>): Manifes
     duration: 15,
     headline: "Just Listed",
     body: "Stunning 3BR with panoramic city views.",
-    layout: "hero",
+    layout: "overlay",
     theme: "dark",
     images: [mockAttachment({ id: 30, url: "/test/ad-image.jpg" })],
     adable: mockListingAd(),

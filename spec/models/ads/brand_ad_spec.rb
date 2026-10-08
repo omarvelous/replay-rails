@@ -11,7 +11,7 @@ RSpec.describe Ads::BrandAd do
 
   describe "constants" do
     it "defines LAYOUTS" do
-      expect(Ads::BrandAd::LAYOUTS).to eq(%w[hero minimal])
+      expect(Ads::BrandAd::LAYOUTS).to eq(%w[overlay minimal])
     end
   end
 

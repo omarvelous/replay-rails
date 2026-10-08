@@ -49,7 +49,7 @@ RSpec.describe Ad do
 
     it "accepts a valid layout for the adable type" do
       listing_ad = build(:listing_ad)
-      ad = build(:ad, adable: listing_ad, layout: "hero")
+      ad = build(:ad, adable: listing_ad, layout: "overlay")
       expect(ad).to be_valid
     end
   end
@@ -60,10 +60,10 @@ RSpec.describe Ad do
       expect(ad.allowed_layouts).to eq(Ads::ListingAd::LAYOUTS)
     end
 
-    it "returns hero as default when adable is nil" do
+    it "returns overlay as default when adable is nil" do
       ad = build(:ad)
       ad.adable = nil
-      expect(ad.allowed_layouts).to eq(%w[hero])
+      expect(ad.allowed_layouts).to eq(%w[overlay])
     end
   end
 
@@ -78,7 +78,7 @@ RSpec.describe Ad do
     it "sets layout to first allowed layout when blank" do
       ad = build(:ad, adable: build(:listing_ad), layout: nil)
       ad.apply_defaults
-      expect(ad.layout).to eq("hero")
+      expect(ad.layout).to eq("overlay")
     end
 
     it "sets theme to dark when blank" do

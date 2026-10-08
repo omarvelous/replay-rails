@@ -16,7 +16,7 @@ RSpec.describe "Ads::BrandAds" do
   describe "POST /ads/brand_ads" do
     let(:valid_params) do
       {
-        ad: { headline: "Your Window, Working 24/7", body: "Digital signage for real estate.", layout: "hero", theme: "brand" },
+        ad: { headline: "Your Window, Working 24/7", body: "Digital signage for real estate.", layout: "overlay", theme: "brand" },
         brand_ad: {}
       }
     end
@@ -37,7 +37,7 @@ RSpec.describe "Ads::BrandAds" do
     context "with invalid params" do
       it "returns 422 when headline is blank" do
         post ads_brand_ads_path, params: {
-          ad: { headline: "", layout: "hero", theme: "brand" },
+          ad: { headline: "", layout: "overlay", theme: "brand" },
           brand_ad: {}
         }
         expect(response).to have_http_status(:unprocessable_content)

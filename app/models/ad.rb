@@ -28,7 +28,7 @@ class Ad < ApplicationRecord
   end
 
   def allowed_layouts
-    adable ? adable.class::LAYOUTS : %w[hero]
+    adable ? adable.class::LAYOUTS : %w[overlay]
   end
 
   def adable_partial_path

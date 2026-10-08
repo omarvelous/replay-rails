@@ -50,7 +50,6 @@ const LISTING_COMPOSITIONS: Record<string, Record<Aspect, React.ComponentType<{ 
   mosaic:    { landscape: MosaicLandscape,  portrait: MosaicPortrait },
   diptych:   { landscape: DiptychLandscape, portrait: DiptychPortrait },
   sequence:  { landscape: SequenceLandscape, portrait: SequencePortrait },
-  hero:      { landscape: OverlayLandscape,  portrait: OverlayPortrait }, // alias for old records
 }
 
 function AdContent({ ad, aspect }: { ad: ManifestPlaylistAd; aspect: Aspect }) {

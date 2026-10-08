@@ -4,7 +4,7 @@ FactoryBot.define do
     adable { association :listing_ad, listing: association(:listing, account: instance.account) }
     headline { Faker::Marketing.buzzwords.capitalize }
     body { Faker::Lorem.sentence }
-    layout { "hero" }
+    layout { "overlay" }
     theme { "dark" }
   end
 end

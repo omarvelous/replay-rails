@@ -3,7 +3,7 @@ class ListingAd < ApplicationRecord
   include PublicIdentifiable
 
   BADGES  = %w[just_listed open_house just_sold price_reduction coming_soon].freeze
-  LAYOUTS = %w[hero split minimal stat_grid].freeze
+  LAYOUTS = %w[overlay split band card type_photo stat_grid mosaic diptych sequence].freeze
 
   BADGE_LABELS = {
     "just_listed"     => "Just Listed",

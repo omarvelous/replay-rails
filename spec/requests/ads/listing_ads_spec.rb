@@ -17,7 +17,7 @@ RSpec.describe "Ads::ListingAds" do
   describe "POST /ads/listing_ads" do
     let(:valid_params) do
       {
-        ad: { headline: "Just Listed on Fifth", body: "Beautiful property.", layout: "hero", theme: "dark" },
+        ad: { headline: "Just Listed on Fifth", body: "Beautiful property.", layout: "overlay", theme: "dark" },
         listing_ad: { listing_id: listing.id, badge: "just_listed" }
       }
     end
@@ -41,7 +41,7 @@ RSpec.describe "Ads::ListingAds" do
 
       it "creates an open_house with event fields" do
         params = {
-          ad: { headline: "Open House", layout: "hero", theme: "dark" },
+          ad: { headline: "Open House", layout: "overlay", theme: "dark" },
           listing_ad: {
             listing_id: listing.id, badge: "open_house",
             event_date: 1.week.from_now.to_date,
@@ -63,7 +63,7 @@ RSpec.describe "Ads::ListingAds" do
     context "with invalid params" do
       it "returns 422 when headline is blank" do
         post ads_listing_ads_path, params: {
-          ad: { headline: "", layout: "hero", theme: "dark" },
+          ad: { headline: "", layout: "overlay", theme: "dark" },
           listing_ad: { listing_id: listing.id, badge: "just_listed" }
         }
         expect(response).to have_http_status(:unprocessable_content)
@@ -71,7 +71,7 @@ RSpec.describe "Ads::ListingAds" do
 
       it "returns 422 when listing is missing" do
         post ads_listing_ads_path, params: {
-          ad: { headline: "Test", layout: "hero", theme: "dark" },
+          ad: { headline: "Test", layout: "overlay", theme: "dark" },
           listing_ad: { listing_id: "", badge: "just_listed" }
         }
         expect(response).to have_http_status(:unprocessable_content)
@@ -125,7 +125,7 @@ RSpec.describe "Ads::ListingAds" do
     it "returns a turbo stream with the preview" do
       post preview_ads_listing_ads_path,
         params: { listing_ad: { listing_id: listing.id, badge: "just_listed" },
-                  ad: { headline: "Test", layout: "hero", theme: "dark" } },
+                  ad: { headline: "Test", layout: "overlay", theme: "dark" } },
         headers: turbo_headers
 
       expect(response).to be_successful
@@ -136,7 +136,7 @@ RSpec.describe "Ads::ListingAds" do
     it "renders the ad layout when listing is selected" do
       post preview_ads_listing_ads_path,
         params: { listing_ad: { listing_id: listing.id, badge: "just_listed" },
-                  ad: { headline: "Beautiful Home", layout: "hero", theme: "dark" } },
+                  ad: { headline: "Beautiful Home", layout: "overlay", theme: "dark" } },
         headers: turbo_headers
 
       expect(response).to be_successful
@@ -148,7 +148,7 @@ RSpec.describe "Ads::ListingAds" do
     it "renders placeholder when listing not selected" do
       post preview_ads_listing_ads_path,
         params: { listing_ad: { badge: "just_listed" },
-                  ad: { headline: "Test", layout: "hero", theme: "dark" } },
+                  ad: { headline: "Test", layout: "overlay", theme: "dark" } },
         headers: turbo_headers
 
       expect(response).to be_successful
