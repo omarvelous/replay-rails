@@ -7,7 +7,8 @@ Rails.application.configure do
 
   config.hosts = [
     "replaytv.dev",
-    /.*\.replaytv\.dev/
+    /.*\.replaytv\.dev/,
+    /.*\.onrender\.com/
   ]
 
   config.action_controller.default_url_options = {
