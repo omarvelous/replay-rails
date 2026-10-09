@@ -1,7 +1,3 @@
-previews:
-  generation: automatic
-  expireAfterDays: 3
-
 projects:
   - name: replay
     environments:
@@ -52,10 +48,6 @@ projects:
                 - lib/**
                 - Gemfile*
                 - Dockerfile
-            previews:
-              plan: 0.5c-512mb
-              generation: manual
-
           - type: worker
             name: replay-worker
             runtime: docker

@@ -6,6 +6,15 @@ bundle check || bundle install
 # If running the rails server, prepare the database
 if [ "${1}" == "./bin/thrust" ] || [ "${1}" == "./bin/rails" ]; then
   ./bin/rails db:prepare
+
+  # Ensure Solid Queue/Cache/Cable tables exist.
+  # All three share the primary database connection in production/staging.
+  # db:prepare only loads db/schema.rb — the Solid schemas need loading separately.
+  for schema in db/queue_schema.rb db/cache_schema.rb db/cable_schema.rb; do
+    if [ -f "$schema" ]; then
+      ./bin/rails runner "load '$schema'" 2>/dev/null || true
+    fi
+  done
 fi
 
 exec "$@"
