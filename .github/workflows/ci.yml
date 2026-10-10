@@ -41,7 +41,7 @@ jobs:
           bundler-cache: true
 
       - name: Create database
-        run: bin/rails db:schema:load
+        run: bin/rails db:create db:schema:load
 
       - name: RuboCop
         run: bin/rubocop --parallel
