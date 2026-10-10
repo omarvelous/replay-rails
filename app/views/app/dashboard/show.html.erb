@@ -54,13 +54,13 @@
   <div class="flex items-center gap-2 text-sm">
     <span class="font-bold tabular-nums"><%= number_with_delimiter(@dashboard.impressions_month) %></span>
     <span class="text-gray-400">impressions</span>
-    <span class="text-gray-300">&rarr;</span>
+    <span class="text-gray-400">&rarr;</span>
     <span class="font-bold tabular-nums"><%= @dashboard.scans_month %></span>
     <span class="text-gray-400">scans</span>
     <% if @dashboard.impressions_month > 0 %>
       <span class="text-xs text-gray-400">(<%= number_to_percentage(@dashboard.scans_month.to_f / @dashboard.impressions_month * 100, precision: 1) %>)</span>
     <% end %>
-    <span class="text-gray-300">&rarr;</span>
+    <span class="text-gray-400">&rarr;</span>
     <span class="font-bold tabular-nums"><%= @dashboard.leads_month %></span>
     <span class="text-gray-400">leads</span>
     <% if @dashboard.scans_month > 0 %>
