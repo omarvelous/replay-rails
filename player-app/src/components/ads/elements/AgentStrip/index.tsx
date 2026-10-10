@@ -6,7 +6,12 @@ interface AgentStripProps {
 }
 
 export function AgentStrip({ agent, pill }: AgentStripProps) {
-  const initials = agent.name.split(" ").map(w => w[0]).join("").slice(0, 2).toUpperCase()
+  const initials = agent.name
+    .split(" ")
+    .map((w) => w[0])
+    .join("")
+    .slice(0, 2)
+    .toUpperCase()
 
   const wrapStyle: React.CSSProperties = pill
     ? { background: "var(--ad-surface)", padding: "0.5cqw 1.0cqw", borderRadius: "2cqw" }
@@ -27,9 +32,7 @@ export function AgentStrip({ agent, pill }: AgentStripProps) {
         )}
       </div>
       <div>
-        <div style={{ fontSize: "var(--t-agent-name)", fontWeight: 600, color: "var(--ad-text)" }}>
-          {agent.name}
-        </div>
+        <div style={{ fontSize: "var(--t-agent-name)", fontWeight: 600, color: "var(--ad-text)" }}>{agent.name}</div>
         {agent.phone && (
           <div style={{ fontSize: "var(--t-agent-detail)", fontWeight: 500, color: "var(--ad-text-muted)" }}>
             {agent.phone}

@@ -29,9 +29,12 @@ export function CardLandscape({ ad, listingAd }: Props) {
       <div
         className="absolute flex flex-col"
         style={{
-          bottom: "var(--safe)", left: "var(--safe)",
-          width: "46cqw", padding: "calc(var(--gap) * 1.5)",
-          background: "var(--ad-surface)", borderRadius: "0.8cqw",
+          bottom: "var(--safe)",
+          left: "var(--safe)",
+          width: "46cqw",
+          padding: "calc(var(--gap) * 1.5)",
+          background: "var(--ad-surface)",
+          borderRadius: "0.8cqw",
           gap: "var(--gap-sm)",
         }}
       >
@@ -42,8 +45,10 @@ export function CardLandscape({ ad, listingAd }: Props) {
         )}
         <Badge badge={listingAd.badge} label={listingAd.badge_label} />
         <Address
-          street={listing.street} city={listing.city}
-          state={listing.state} neighborhood={listing.neighborhood}
+          street={listing.street}
+          city={listing.city}
+          state={listing.state}
+          neighborhood={listing.neighborhood}
           address={listing.address}
         />
         <Specs beds={listing.beds} baths={listing.baths} sqft={listing.sqft} />

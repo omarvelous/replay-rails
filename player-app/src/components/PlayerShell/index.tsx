@@ -25,9 +25,7 @@ export function PlayerShell() {
   const queryClient = useQueryClient()
 
   // Check player status on load when authenticated
-  const { data: playerStatus, error: playerError } = usePlayerQuery(
-    isAuthenticated && state.status === "loading"
-  )
+  const { data: playerStatus, error: playerError } = usePlayerQuery(isAuthenticated && state.status === "loading")
 
   // Handle initial status check
   useEffect(() => {
@@ -87,7 +85,7 @@ export function PlayerShell() {
 
   // Fetch manifest when loading_manifest
   const { data: manifest, error: manifestError } = useManifestQuery(
-    state.status === "loading_manifest" || state.status === "playing" || state.status === "idle"
+    state.status === "loading_manifest" || state.status === "playing" || state.status === "idle",
   )
 
   useEffect(() => {
@@ -146,9 +144,7 @@ export function PlayerShell() {
   }, [state.status === "playing" ? state.manifest : null])
 
   // Heartbeat — only when playing or idle
-  const contentVersion = (state.status === "playing" || state.status === "idle")
-    ? state.contentVersion
-    : null
+  const contentVersion = state.status === "playing" || state.status === "idle" ? state.contentVersion : null
   useHeartbeat(state.status === "playing" || state.status === "idle", contentVersion)
 
   // Pairing channel
@@ -175,10 +171,9 @@ export function PlayerShell() {
 
   async function refreshPairingCode() {
     try {
-      const res = await api<ApiResponse<{ pairing_code: string; expires_at: string }>>(
-        "/api/v1/player/pairing_code",
-        { method: "POST" }
-      )
+      const res = await api<ApiResponse<{ pairing_code: string; expires_at: string }>>("/api/v1/player/pairing_code", {
+        method: "POST",
+      })
       dispatch({
         type: state.status === "pairing" ? "CODE_EXPIRED" : "REGISTERED",
         code: res.data.pairing_code,
@@ -201,13 +196,7 @@ export function PlayerShell() {
       )
 
     case "pairing":
-      return (
-        <PairingScreen
-          code={state.code}
-          expiresAt={state.expiresAt}
-          onCodeExpired={onCodeExpired}
-        />
-      )
+      return <PairingScreen code={state.code} expiresAt={state.expiresAt} onCodeExpired={onCodeExpired} />
 
     case "playing": {
       const { contentable } = state.manifest
@@ -225,9 +214,7 @@ export function PlayerShell() {
 
     case "unpaired":
       // Brief unpaired screen, then transition to pairing
-      return (
-        <UnpairedTransition onComplete={() => refreshPairingCode()} />
-      )
+      return <UnpairedTransition onComplete={() => refreshPairingCode()} />
 
     case "error":
       return <ErrorScreen error={state.error} />

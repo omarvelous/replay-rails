@@ -28,16 +28,15 @@ export function StatGridPortrait({ ad, listingAd }: Props) {
       </div>
 
       {/* Content — bottom 64% */}
-      <div
-        className="flex flex-col justify-between"
-        style={{ height: "64%", padding: "var(--safe)" }}
-      >
+      <div className="flex flex-col justify-between" style={{ height: "64%", padding: "var(--safe)" }}>
         <div>
           <Badge badge={listingAd.badge} label={listingAd.badge_label} />
           <div style={{ marginTop: "var(--gap-sm)" }}>
             <Address
-              street={listing.street} city={listing.city}
-              state={listing.state} neighborhood={listing.neighborhood}
+              street={listing.street}
+              city={listing.city}
+              state={listing.state}
+              neighborhood={listing.neighborhood}
               address={listing.address}
             />
           </div>

@@ -19,7 +19,7 @@ export function usePairingChannel({ consumer, code, onPaired }: UsePairingChanne
         received(data: { paired?: boolean }) {
           if (data.paired) onPaired()
         },
-      }
+      },
     )
 
     return () => {

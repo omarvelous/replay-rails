@@ -16,10 +16,7 @@ export function Badge({ badge, label }: BadgeProps) {
   }
 
   return (
-    <span
-      className="inline-flex items-center font-semibold uppercase"
-      style={style}
-    >
+    <span className="inline-flex items-center font-semibold uppercase" style={style}>
       {label}
     </span>
   )
@@ -27,11 +24,11 @@ export function Badge({ badge, label }: BadgeProps) {
 
 // Per visual spec: most badges use --ad-accent, sold/coming soon use teal
 const BADGE_COLORS: Record<string, string> = {
-  just_sold:   "#0FB5A6",
+  just_sold: "#0FB5A6",
   coming_soon: "#0FB5A6",
 }
 
 const BADGE_TEXT: Record<string, string> = {
-  just_sold:   "#0B0D12",
+  just_sold: "#0B0D12",
   coming_soon: "#0B0D12",
 }

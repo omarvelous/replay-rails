@@ -43,8 +43,10 @@ export function BandLandscape({ ad, listingAd }: Props) {
         {/* Left: address + specs */}
         <div style={{ flex: 1, minWidth: 0 }}>
           <Address
-            street={listing.street} city={listing.city}
-            state={listing.state} neighborhood={listing.neighborhood}
+            street={listing.street}
+            city={listing.city}
+            state={listing.state}
+            neighborhood={listing.neighborhood}
             address={listing.address}
           />
           <Specs beds={listing.beds} baths={listing.baths} sqft={listing.sqft} />

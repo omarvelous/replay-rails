@@ -35,7 +35,11 @@ export const WithPhoto: Story = {
       contentable: mockExperience({
         experienceable: mockListingExperience({
           listing: mockListing({
-            photos: [mockAttachment({ url: "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=1920&h=1080&fit=crop" })],
+            photos: [
+              mockAttachment({
+                url: "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=1920&h=1080&fit=crop",
+              }),
+            ],
           }),
         }),
       }),
@@ -65,7 +69,11 @@ export const Rental: Story = {
             sqft: 850,
             listing_type: "for_rent",
             address: "15 Hudson Yards, New York, NY 10001",
-            photos: [mockAttachment({ url: "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=1920&h=1080&fit=crop" })],
+            photos: [
+              mockAttachment({
+                url: "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=1920&h=1080&fit=crop",
+              }),
+            ],
           }),
         }),
       }),

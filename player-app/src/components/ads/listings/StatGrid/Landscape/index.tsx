@@ -19,16 +19,15 @@ export function StatGridLandscape({ ad, listingAd }: Props) {
   return (
     <div className="flex w-full h-full" style={{ background: "var(--ad-bg)", color: "var(--ad-text)" }}>
       {/* Text column — left 60% */}
-      <div
-        className="flex flex-col justify-between"
-        style={{ width: "60%", padding: "var(--safe)" }}
-      >
+      <div className="flex flex-col justify-between" style={{ width: "60%", padding: "var(--safe)" }}>
         <div>
           <Badge badge={listingAd.badge} label={listingAd.badge_label} />
           <div style={{ marginTop: "var(--gap-sm)" }}>
             <Address
-              street={listing.street} city={listing.city}
-              state={listing.state} neighborhood={listing.neighborhood}
+              street={listing.street}
+              city={listing.city}
+              state={listing.state}
+              neighborhood={listing.neighborhood}
               address={listing.address}
               style={{ fontSize: "3cqw" }}
             />

@@ -34,7 +34,7 @@ export function useScreenChannel({ consumer, enabled, onContentChanged, onUnpair
         rejected() {
           onUnpaired()
         },
-      }
+      },
     )
 
     return () => {

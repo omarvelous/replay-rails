@@ -21,8 +21,11 @@ export function MosaicPortrait({ listingAd }: Props) {
       {/* Photos — top 55%: 1 large on top, 2 side by side below */}
       <div
         style={{
-          height: "55%", flexShrink: 0, display: "grid",
-          gridTemplateColumns: "1fr 1fr", gridTemplateRows: "1.5fr 1fr",
+          height: "55%",
+          flexShrink: 0,
+          display: "grid",
+          gridTemplateColumns: "1fr 1fr",
+          gridTemplateRows: "1.5fr 1fr",
           gap: "0.4cqw",
         }}
       >
@@ -41,16 +44,15 @@ export function MosaicPortrait({ listingAd }: Props) {
       </div>
 
       {/* Text — bottom 45% */}
-      <div
-        className="flex flex-col justify-between"
-        style={{ height: "45%", padding: "var(--safe)" }}
-      >
+      <div className="flex flex-col justify-between" style={{ height: "45%", padding: "var(--safe)" }}>
         <div>
           <Badge badge={listingAd.badge} label={listingAd.badge_label} />
           <div style={{ marginTop: "var(--gap-sm)" }}>
             <Address
-              street={listing.street} city={listing.city}
-              state={listing.state} neighborhood={listing.neighborhood}
+              street={listing.street}
+              city={listing.city}
+              state={listing.state}
+              neighborhood={listing.neighborhood}
               address={listing.address}
             />
           </div>

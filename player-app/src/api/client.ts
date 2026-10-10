@@ -21,7 +21,7 @@ export class ApiError extends Error {
 export async function api<T>(path: string, options: RequestInit = {}): Promise<T> {
   const headers: Record<string, string> = {
     "Content-Type": "application/json",
-    ...options.headers as Record<string, string>,
+    ...(options.headers as Record<string, string>),
   }
 
   if (authToken) {

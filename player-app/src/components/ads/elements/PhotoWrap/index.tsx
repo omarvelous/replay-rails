@@ -11,9 +11,7 @@ export function PhotoWrap({ src, scrim }: PhotoWrapProps) {
       ) : (
         <div className="absolute inset-0" style={{ background: "var(--ad-surface)" }} />
       )}
-      {scrim && (
-        <div className="absolute inset-0" style={{ background: "var(--scrim)" }} />
-      )}
+      {scrim && <div className="absolute inset-0" style={{ background: "var(--scrim)" }} />}
     </div>
   )
 }

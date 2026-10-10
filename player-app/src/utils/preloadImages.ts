@@ -5,11 +5,14 @@ export async function preloadManifestImages(manifest: ManifestResponse): Promise
   if (urls.length === 0) return
 
   await Promise.all(
-    urls.map((url) => new Promise<void>((resolve) => {
-      const img = new Image()
-      img.onload = img.onerror = () => resolve()
-      img.src = url
-    }))
+    urls.map(
+      (url) =>
+        new Promise<void>((resolve) => {
+          const img = new Image()
+          img.onload = img.onerror = () => resolve()
+          img.src = url
+        }),
+    ),
   )
 }
 
@@ -41,5 +44,4 @@ function addAdImages(ad: ManifestPlaylistAd, urls: string[]): void {
       urls.push(ad.adable.agent.photos[0].url)
     }
   }
-
 }

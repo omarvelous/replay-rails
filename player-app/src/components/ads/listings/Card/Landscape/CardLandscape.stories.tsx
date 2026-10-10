@@ -24,7 +24,9 @@ type Story = StoryObj<typeof meta>
 
 const baseAd = mockPlaylistAd({
   layout: "card",
-  images: [mockAttachment({ url: "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=1920&h=1080&fit=crop" })],
+  images: [
+    mockAttachment({ url: "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=1920&h=1080&fit=crop" }),
+  ],
 })
 
 export const Default: Story = {

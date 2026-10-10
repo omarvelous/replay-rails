@@ -32,15 +32,18 @@ export function SplitLandscape({ ad, listingAd }: Props) {
       </div>
 
       {/* Text column — 42% */}
-      <div
-        className="flex flex-col justify-between"
-        style={{ width: "42%", padding: "var(--safe)" }}
-      >
+      <div className="flex flex-col justify-between" style={{ width: "42%", padding: "var(--safe)" }}>
         {/* Top: listing details */}
         <div>
           <Badge badge={listingAd.badge} label={listingAd.badge_label} />
           <div style={{ marginTop: "var(--gap-sm)" }}>
-            <Address street={listing.street} city={listing.city} state={listing.state} neighborhood={listing.neighborhood} address={listing.address} />
+            <Address
+              street={listing.street}
+              city={listing.city}
+              state={listing.state}
+              neighborhood={listing.neighborhood}
+              address={listing.address}
+            />
           </div>
           <Specs beds={listing.beds} baths={listing.baths} sqft={listing.sqft} />
         </div>
@@ -54,7 +57,9 @@ export function SplitLandscape({ ad, listingAd }: Props) {
             badge={listingAd.badge}
           />
           {agent && (
-            <div style={{ marginTop: "var(--gap)", paddingTop: "var(--gap)", borderTop: "1px solid var(--ad-text-faint)" }}>
+            <div
+              style={{ marginTop: "var(--gap)", paddingTop: "var(--gap)", borderTop: "1px solid var(--ad-text-faint)" }}
+            >
               <AgentStrip agent={agent} />
             </div>
           )}

@@ -26,7 +26,14 @@ export function Address({ street, city, state, neighborhood, address, style }: A
         {mainLine}
       </div>
       {subLine && (
-        <div style={{ fontSize: "var(--t-sub)", fontWeight: 500, color: "var(--ad-text-muted)", marginTop: "var(--gap-sm)" }}>
+        <div
+          style={{
+            fontSize: "var(--t-sub)",
+            fontWeight: 500,
+            color: "var(--ad-text-muted)",
+            marginTop: "var(--gap-sm)",
+          }}
+        >
           {subLine}
         </div>
       )}

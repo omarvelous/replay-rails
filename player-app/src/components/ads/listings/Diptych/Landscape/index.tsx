@@ -47,15 +47,22 @@ export function DiptychLandscape({ ad, listingAd }: Props) {
       <div
         className="absolute flex items-center justify-between"
         style={{
-          bottom: "var(--safe)", left: "50%", transform: "translateX(-50%)",
-          width: "72cqw", padding: "1.6cqw 2cqw",
-          background: "var(--ad-bg)", borderRadius: "0.5cqw", zIndex: 1,
+          bottom: "var(--safe)",
+          left: "50%",
+          transform: "translateX(-50%)",
+          width: "72cqw",
+          padding: "1.6cqw 2cqw",
+          background: "var(--ad-bg)",
+          borderRadius: "0.5cqw",
+          zIndex: 1,
         }}
       >
         <div>
           <Address
-            street={listing.street} city={listing.city}
-            state={listing.state} neighborhood={listing.neighborhood}
+            street={listing.street}
+            city={listing.city}
+            state={listing.state}
+            neighborhood={listing.neighborhood}
             address={listing.address}
           />
           <Specs beds={listing.beds} baths={listing.baths} sqft={listing.sqft} />

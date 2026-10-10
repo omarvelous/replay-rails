@@ -17,17 +17,15 @@ export function Experience({ manifest }: ExperienceProps) {
     listing.beds ? `${listing.beds} bed` : null,
     listing.baths ? `${listing.baths} bath` : null,
     listing.sqft ? `${listing.sqft.toLocaleString()} sqft` : null,
-  ].filter(Boolean).join(" · ")
+  ]
+    .filter(Boolean)
+    .join(" · ")
 
   return (
     <div className="h-dvh w-full bg-black text-white overflow-hidden flex flex-col">
       {listing.photos.length > 0 && (
         <div className="relative flex-1 min-h-0">
-          <img
-            src={listing.photos[0].url}
-            alt={listing.address}
-            className="w-full h-full object-cover"
-          />
+          <img src={listing.photos[0].url} alt={listing.address} className="w-full h-full object-cover" />
           <div className="absolute inset-0 bg-linear-to-t from-black/80 via-transparent to-transparent" />
         </div>
       )}
