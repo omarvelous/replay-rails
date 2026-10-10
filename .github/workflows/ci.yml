@@ -53,7 +53,7 @@ jobs:
         run: bundle exec bundler-audit check --update
 
       - name: RSpec
-        run: bin/rspec
+        run: bundle exec rspec
 
   player:
     name: Player
