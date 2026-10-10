@@ -180,14 +180,4 @@ Rails.application.routes.draw do
   get "/s/:token", to: "scans#show", as: :qr_scan
 
   get "up" => "rails/health#show", as: :rails_health_check
-
-  # ---------------------------------------------------------------
-  # Render preview deploys — single hostname, no subdomains.
-  # Route root to app dashboard so previews are usable.
-  # ---------------------------------------------------------------
-  constraints(->(req) { req.host.end_with?(".onrender.com") }) do
-    scope module: "app" do
-      root "dashboard#show", as: :preview_root
-    end
-  end
 end
