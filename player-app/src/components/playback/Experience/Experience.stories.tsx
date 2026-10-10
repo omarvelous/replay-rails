@@ -5,7 +5,6 @@ import {
   mockExperience,
   mockListingExperience,
   mockListing,
-  
   mockAttachment,
 } from "../../../__mocks__/manifest"
 
