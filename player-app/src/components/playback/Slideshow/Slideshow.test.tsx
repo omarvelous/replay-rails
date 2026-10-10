@@ -55,10 +55,12 @@ describe("Slideshow", () => {
   it("renders ad image", () => {
     const manifest = mockManifestResponse({
       contentable: mockPlaylist({
-        playlist_ads: [mockPlaylistAd({
-          headline: "Hero Ad",
-          images: [mockAttachment({ url: "/test/hero.jpg" })],
-        })],
+        playlist_ads: [
+          mockPlaylistAd({
+            headline: "Hero Ad",
+            images: [mockAttachment({ url: "/test/hero.jpg" })],
+          }),
+        ],
       }),
     })
     const { container } = render(<Slideshow manifest={manifest} />)
@@ -69,10 +71,12 @@ describe("Slideshow", () => {
   it("renders without background image when none attached", () => {
     const manifest = mockManifestResponse({
       contentable: mockPlaylist({
-        playlist_ads: [mockPlaylistAd({
-          headline: "No Image",
-          images: [],
-        })],
+        playlist_ads: [
+          mockPlaylistAd({
+            headline: "No Image",
+            images: [],
+          }),
+        ],
       }),
     })
     render(<Slideshow manifest={manifest} />)
@@ -82,14 +86,16 @@ describe("Slideshow", () => {
   it("renders price reduction with original price", () => {
     const manifest = mockManifestResponse({
       contentable: mockPlaylist({
-        playlist_ads: [mockPlaylistAd({
-          headline: "Price Reduced",
-          adable: mockListingAd({
-            badge: "price_reduction",
-            badge_label: "Price Reduced",
-            original_price: 3000000,
+        playlist_ads: [
+          mockPlaylistAd({
+            headline: "Price Reduced",
+            adable: mockListingAd({
+              badge: "price_reduction",
+              badge_label: "Price Reduced",
+              original_price: 3000000,
+            }),
           }),
-        })],
+        ],
       }),
     })
     render(<Slideshow manifest={manifest} />)

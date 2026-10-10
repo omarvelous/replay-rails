@@ -19,16 +19,11 @@ export function TypePhotoLandscape({ ad, listingAd }: Props) {
   return (
     <div className="relative w-full h-full" style={{ background: "var(--ad-bg)", color: "var(--ad-text)" }}>
       {/* Optional photo as texture under wash */}
-      {imageUrl && (
-        <img src={imageUrl} alt="" className="absolute inset-0 w-full h-full object-cover" />
-      )}
+      {imageUrl && <img src={imageUrl} alt="" className="absolute inset-0 w-full h-full object-cover" />}
       <div className="absolute inset-0" style={{ background: "var(--ad-bg)", opacity: 0.78 }} />
 
       {/* Content */}
-      <div
-        className="relative flex flex-col justify-between h-full"
-        style={{ padding: "var(--safe)" }}
-      >
+      <div className="relative flex flex-col justify-between h-full" style={{ padding: "var(--safe)" }}>
         {/* Top: badge */}
         <div>
           <Badge badge={listingAd.badge} label={listingAd.badge_label} />
@@ -37,8 +32,10 @@ export function TypePhotoLandscape({ ad, listingAd }: Props) {
         {/* Middle: large address + specs */}
         <div>
           <Address
-            street={listing.street} city={listing.city}
-            state={listing.state} neighborhood={listing.neighborhood}
+            street={listing.street}
+            city={listing.city}
+            state={listing.state}
+            neighborhood={listing.neighborhood}
             address={listing.address}
             style={{ fontSize: "5.2cqw" }}
           />

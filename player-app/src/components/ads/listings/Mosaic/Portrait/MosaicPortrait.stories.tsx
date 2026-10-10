@@ -2,7 +2,6 @@ import type { Meta, StoryObj } from "@storybook/react-vite"
 import { MosaicPortrait } from "."
 import { AdCanvas } from "../../../AdCanvas"
 import { mockPlaylistAd, mockListingAd, mockListing, mockAttachment } from "../../../../../__mocks__/manifest"
-import type { ManifestListingAd } from "../../../../../types"
 
 const meta = {
   title: "Ads/Mosaic/Portrait",

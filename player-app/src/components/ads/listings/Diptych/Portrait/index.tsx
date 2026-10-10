@@ -18,7 +18,10 @@ export function DiptychPortrait({ ad, listingAd }: Props) {
   const adImage = ad.images[0]?.url
 
   return (
-    <div className="relative flex flex-col w-full h-full" style={{ background: "var(--ad-bg)", color: "var(--ad-text)" }}>
+    <div
+      className="relative flex flex-col w-full h-full"
+      style={{ background: "var(--ad-bg)", color: "var(--ad-text)" }}
+    >
       {/* Two photos stacked, each 50% */}
       <div className="relative overflow-hidden" style={{ height: "50%" }}>
         {(photos[0] || adImage) && (
@@ -40,17 +43,23 @@ export function DiptychPortrait({ ad, listingAd }: Props) {
       <div
         className="absolute flex flex-col"
         style={{
-          top: "50%", transform: "translateY(-50%)",
-          left: "var(--safe)", right: "var(--safe)",
+          top: "50%",
+          transform: "translateY(-50%)",
+          left: "var(--safe)",
+          right: "var(--safe)",
           padding: "1.6cqw 2cqw",
-          background: "var(--ad-bg)", borderRadius: "0.5cqw", zIndex: 1,
+          background: "var(--ad-bg)",
+          borderRadius: "0.5cqw",
+          zIndex: 1,
           gap: "var(--gap-sm)",
         }}
       >
         <div>
           <Address
-            street={listing.street} city={listing.city}
-            state={listing.state} neighborhood={listing.neighborhood}
+            street={listing.street}
+            city={listing.city}
+            state={listing.state}
+            neighborhood={listing.neighborhood}
             address={listing.address}
           />
           <Specs beds={listing.beds} baths={listing.baths} sqft={listing.sqft} />

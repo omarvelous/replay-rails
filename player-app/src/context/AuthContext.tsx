@@ -18,9 +18,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     if (stored) setApiToken(stored)
     return stored
   })
-  const [publicId, setPublicId] = useState<string | null>(
-    () => localStorage.getItem("player_public_id")
-  )
+  const [publicId, setPublicId] = useState<string | null>(() => localStorage.getItem("player_public_id"))
 
   useEffect(() => {
     setApiToken(token)
@@ -42,13 +40,15 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, [])
 
   return (
-    <AuthContext.Provider value={{
-      token,
-      publicId,
-      isAuthenticated: token !== null,
-      register,
-      clear,
-    }}>
+    <AuthContext.Provider
+      value={{
+        token,
+        publicId,
+        isAuthenticated: token !== null,
+        register,
+        clear,
+      }}
+    >
       {children}
     </AuthContext.Provider>
   )

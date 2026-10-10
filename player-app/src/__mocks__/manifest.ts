@@ -97,8 +97,20 @@ export function mockPlaylist(overrides?: Partial<ManifestPlaylist>): ManifestPla
     status: "published",
     playlist_ads: [
       mockPlaylistAd({ pid: "pa-1", position: 1, headline: "Just Listed" }),
-      mockPlaylistAd({ pid: "pa-2", position: 2, headline: "Open House", layout: "split", adable: mockListingAd({ badge: "open_house", badge_label: "Open House" }) }),
-      mockPlaylistAd({ pid: "pa-3", position: 3, headline: "Price Reduced", layout: "band", adable: mockListingAd({ badge: "price_reduction", badge_label: "Price Reduced" }) }),
+      mockPlaylistAd({
+        pid: "pa-2",
+        position: 2,
+        headline: "Open House",
+        layout: "split",
+        adable: mockListingAd({ badge: "open_house", badge_label: "Open House" }),
+      }),
+      mockPlaylistAd({
+        pid: "pa-3",
+        position: 3,
+        headline: "Price Reduced",
+        layout: "band",
+        adable: mockListingAd({ badge: "price_reduction", badge_label: "Price Reduced" }),
+      }),
     ],
     ...overrides,
   }

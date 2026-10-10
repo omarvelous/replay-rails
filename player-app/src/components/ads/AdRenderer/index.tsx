@@ -34,16 +34,19 @@ export function AdRenderer({ ad }: AdRendererProps) {
 }
 
 // Listing ad compositions: layout × aspect
-const LISTING_COMPOSITIONS: Record<string, Record<Aspect, React.ComponentType<{ ad: ManifestPlaylistAd; listingAd: ManifestListingAd }>>> = {
-  overlay:   { landscape: OverlayLandscape,  portrait: OverlayPortrait },
-  split:     { landscape: SplitLandscape,    portrait: SplitPortrait },
-  band:      { landscape: BandLandscape,    portrait: BandPortrait },
-  card:      { landscape: CardLandscape,    portrait: CardPortrait },
-  type_photo:{ landscape: TypePhotoLandscape, portrait: TypePhotoPortrait },
-  minimal:   { landscape: TypePhotoLandscape, portrait: TypePhotoPortrait }, // alias for old records
+const LISTING_COMPOSITIONS: Record<
+  string,
+  Record<Aspect, React.ComponentType<{ ad: ManifestPlaylistAd; listingAd: ManifestListingAd }>>
+> = {
+  overlay: { landscape: OverlayLandscape, portrait: OverlayPortrait },
+  split: { landscape: SplitLandscape, portrait: SplitPortrait },
+  band: { landscape: BandLandscape, portrait: BandPortrait },
+  card: { landscape: CardLandscape, portrait: CardPortrait },
+  type_photo: { landscape: TypePhotoLandscape, portrait: TypePhotoPortrait },
+  minimal: { landscape: TypePhotoLandscape, portrait: TypePhotoPortrait }, // alias for old records
   stat_grid: { landscape: StatGridLandscape, portrait: StatGridPortrait },
-  mosaic:    { landscape: MosaicLandscape,  portrait: MosaicPortrait },
-  diptych:   { landscape: DiptychLandscape, portrait: DiptychPortrait },
+  mosaic: { landscape: MosaicLandscape, portrait: MosaicPortrait },
+  diptych: { landscape: DiptychLandscape, portrait: DiptychPortrait },
 }
 
 function AdContent({ ad, aspect }: { ad: ManifestPlaylistAd; aspect: Aspect }) {

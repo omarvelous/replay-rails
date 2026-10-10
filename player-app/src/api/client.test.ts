@@ -10,25 +10,34 @@ describe("API client", () => {
   it("includes bearer token in Authorization header", async () => {
     setToken("test-token-123")
 
-    vi.stubGlobal("fetch", vi.fn().mockResolvedValue({
-      ok: true,
-      json: () => Promise.resolve({ data: "ok" }),
-    }))
+    vi.stubGlobal(
+      "fetch",
+      vi.fn().mockResolvedValue({
+        ok: true,
+        json: () => Promise.resolve({ data: "ok" }),
+      }),
+    )
 
     await api("/api/v1/player")
 
-    expect(fetch).toHaveBeenCalledWith("/api/v1/player", expect.objectContaining({
-      headers: expect.objectContaining({
-        Authorization: "Bearer test-token-123",
+    expect(fetch).toHaveBeenCalledWith(
+      "/api/v1/player",
+      expect.objectContaining({
+        headers: expect.objectContaining({
+          Authorization: "Bearer test-token-123",
+        }),
       }),
-    }))
+    )
   })
 
   it("does not include Authorization when no token set", async () => {
-    vi.stubGlobal("fetch", vi.fn().mockResolvedValue({
-      ok: true,
-      json: () => Promise.resolve({ data: "ok" }),
-    }))
+    vi.stubGlobal(
+      "fetch",
+      vi.fn().mockResolvedValue({
+        ok: true,
+        json: () => Promise.resolve({ data: "ok" }),
+      }),
+    )
 
     await api("/api/v1/player")
 
@@ -37,21 +46,27 @@ describe("API client", () => {
   })
 
   it("throws ApiError on non-2xx response", async () => {
-    vi.stubGlobal("fetch", vi.fn().mockResolvedValue({
-      ok: false,
-      status: 401,
-      text: () => Promise.resolve("Unauthorized"),
-    }))
+    vi.stubGlobal(
+      "fetch",
+      vi.fn().mockResolvedValue({
+        ok: false,
+        status: 401,
+        text: () => Promise.resolve("Unauthorized"),
+      }),
+    )
 
     await expect(api("/api/v1/player")).rejects.toThrow(ApiError)
     await expect(api("/api/v1/player")).rejects.toThrow("API error: 401")
   })
 
   it("parses JSON response body", async () => {
-    vi.stubGlobal("fetch", vi.fn().mockResolvedValue({
-      ok: true,
-      json: () => Promise.resolve({ data: { paired: true } }),
-    }))
+    vi.stubGlobal(
+      "fetch",
+      vi.fn().mockResolvedValue({
+        ok: true,
+        json: () => Promise.resolve({ data: { paired: true } }),
+      }),
+    )
 
     const result = await api("/api/v1/player")
     expect(result).toEqual({ data: { paired: true } })

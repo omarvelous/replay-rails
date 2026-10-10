@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/react-vite"
 import { StatGridPortrait } from "."
 import { AdCanvas } from "../../../AdCanvas"
-import { mockPlaylistAd, mockListingAd, mockAttachment } from "../../../../../__mocks__/manifest"
+import { mockPlaylistAd, mockAttachment } from "../../../../../__mocks__/manifest"
 import type { ManifestListingAd } from "../../../../../types"
 
 const meta = {
@@ -24,7 +24,9 @@ type Story = StoryObj<typeof meta>
 
 const baseAd = mockPlaylistAd({
   layout: "stat_grid",
-  images: [mockAttachment({ url: "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=1920&h=1080&fit=crop" })],
+  images: [
+    mockAttachment({ url: "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=1920&h=1080&fit=crop" }),
+  ],
 })
 
 export const Default: Story = {

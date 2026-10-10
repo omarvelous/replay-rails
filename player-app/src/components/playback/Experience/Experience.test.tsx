@@ -1,7 +1,7 @@
 import { describe, it, expect } from "vitest"
 import { render, screen } from "@testing-library/react"
 import { Experience } from "."
-import { mockManifestResponse, mockExperience, mockListing, mockAgent, mockListingExperience } from "../../../__mocks__/manifest"
+import { mockManifestResponse, mockExperience, mockListingExperience } from "../../../__mocks__/manifest"
 
 describe("Experience", () => {
   it("renders listing address", () => {

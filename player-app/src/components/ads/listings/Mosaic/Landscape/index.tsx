@@ -21,8 +21,10 @@ export function MosaicLandscape({ listingAd }: Props) {
       {/* Photos — left 64%, grid: 1 large + 2 stacked */}
       <div
         style={{
-          width: "64%", display: "grid",
-          gridTemplateColumns: "2fr 1fr", gridTemplateRows: "1fr 1fr",
+          width: "64%",
+          display: "grid",
+          gridTemplateColumns: "2fr 1fr",
+          gridTemplateRows: "1fr 1fr",
           gap: "0.4cqw",
         }}
       >
@@ -41,16 +43,15 @@ export function MosaicLandscape({ listingAd }: Props) {
       </div>
 
       {/* Text column — right 36% */}
-      <div
-        className="flex flex-col justify-between"
-        style={{ width: "36%", padding: "var(--safe)" }}
-      >
+      <div className="flex flex-col justify-between" style={{ width: "36%", padding: "var(--safe)" }}>
         <div>
           <Badge badge={listingAd.badge} label={listingAd.badge_label} />
           <div style={{ marginTop: "var(--gap-sm)" }}>
             <Address
-              street={listing.street} city={listing.city}
-              state={listing.state} neighborhood={listing.neighborhood}
+              street={listing.street}
+              city={listing.city}
+              state={listing.state}
+              neighborhood={listing.neighborhood}
               address={listing.address}
             />
           </div>

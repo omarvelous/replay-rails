@@ -16,11 +16,19 @@ export function Specs({ beds, baths, sqft }: SpecsProps) {
   return (
     <div
       className="flex items-center"
-      style={{ gap: "0.8cqw", fontSize: "var(--t-spec)", fontWeight: 600, color: "var(--ad-text)", marginTop: "var(--gap-sm)" }}
+      style={{
+        gap: "0.8cqw",
+        fontSize: "var(--t-spec)",
+        fontWeight: 600,
+        color: "var(--ad-text)",
+        marginTop: "var(--gap-sm)",
+      }}
     >
       {items.map((item, i) => (
         <span key={item.label} className="flex items-center" style={{ gap: "0.8cqw" }}>
-          {i > 0 && <span style={{ width: "1px", height: "1.2cqw", background: "var(--ad-text-faint)", opacity: 0.3 }} />}
+          {i > 0 && (
+            <span style={{ width: "1px", height: "1.2cqw", background: "var(--ad-text-faint)", opacity: 0.3 }} />
+          )}
           <span>{item.value}</span>
           <span style={{ fontWeight: 500, color: "var(--ad-text-faint)" }}>{item.label}</span>
         </span>

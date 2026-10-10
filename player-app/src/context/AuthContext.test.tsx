@@ -24,7 +24,11 @@ describe("AuthContext", () => {
   })
 
   it("returns isAuthenticated: false when no token", () => {
-    render(<AuthProvider><TestConsumer /></AuthProvider>)
+    render(
+      <AuthProvider>
+        <TestConsumer />
+      </AuthProvider>,
+    )
     expect(screen.getByTestId("isAuthenticated").textContent).toBe("false")
     expect(screen.getByTestId("token").textContent).toBe("null")
   })
@@ -32,7 +36,11 @@ describe("AuthContext", () => {
   it("hydrates token from localStorage on mount", () => {
     localStorage.setItem("player_token", "stored-token")
     localStorage.setItem("player_public_id", "stored-pid")
-    render(<AuthProvider><TestConsumer /></AuthProvider>)
+    render(
+      <AuthProvider>
+        <TestConsumer />
+      </AuthProvider>,
+    )
     expect(screen.getByTestId("token").textContent).toBe("stored-token")
     expect(screen.getByTestId("publicId").textContent).toBe("stored-pid")
     expect(screen.getByTestId("isAuthenticated").textContent).toBe("true")
@@ -40,12 +48,20 @@ describe("AuthContext", () => {
 
   it("sets API client token on mount", () => {
     localStorage.setItem("player_token", "api-token")
-    render(<AuthProvider><TestConsumer /></AuthProvider>)
+    render(
+      <AuthProvider>
+        <TestConsumer />
+      </AuthProvider>,
+    )
     expect(getToken()).toBe("api-token")
   })
 
   it("register() stores token in state and localStorage", () => {
-    render(<AuthProvider><TestConsumer /></AuthProvider>)
+    render(
+      <AuthProvider>
+        <TestConsumer />
+      </AuthProvider>,
+    )
 
     act(() => {
       screen.getByText("Register").click()
@@ -60,7 +76,11 @@ describe("AuthContext", () => {
   it("clear() removes token from state and localStorage", () => {
     localStorage.setItem("player_token", "to-clear")
     localStorage.setItem("player_public_id", "to-clear-pid")
-    render(<AuthProvider><TestConsumer /></AuthProvider>)
+    render(
+      <AuthProvider>
+        <TestConsumer />
+      </AuthProvider>,
+    )
 
     act(() => {
       screen.getByText("Clear").click()

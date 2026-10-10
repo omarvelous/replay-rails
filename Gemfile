@@ -88,3 +88,8 @@ group :test do
   gem "shoulda-matchers", "~> 8.0"
   gem "simplecov", require: false
 end
+
+gem "strong_migrations", "~> 2.8"
+
+gem "sentry-ruby", "~> 7.1"
+gem "sentry-rails", "~> 7.1"

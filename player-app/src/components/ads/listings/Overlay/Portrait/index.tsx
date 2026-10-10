@@ -30,13 +30,16 @@ export function OverlayPortrait({ ad, listingAd }: Props) {
       </div>
 
       {/* Bottom content — stacked full-width */}
-      <div
-        className="relative flex flex-col justify-end h-full"
-        style={{ padding: "var(--safe)" }}
-      >
+      <div className="relative flex flex-col justify-end h-full" style={{ padding: "var(--safe)" }}>
         <Badge badge={listingAd.badge} label={listingAd.badge_label} />
         <div style={{ marginTop: "var(--gap-sm)" }}>
-          <Address street={listing.street} city={listing.city} state={listing.state} neighborhood={listing.neighborhood} address={listing.address} />
+          <Address
+            street={listing.street}
+            city={listing.city}
+            state={listing.state}
+            neighborhood={listing.neighborhood}
+            address={listing.address}
+          />
         </div>
         <Specs beds={listing.beds} baths={listing.baths} sqft={listing.sqft} />
         <div style={{ marginTop: "calc(var(--gap) * 3)" }}>

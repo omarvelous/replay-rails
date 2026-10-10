@@ -37,14 +37,16 @@ export function StatBlock({ beds, baths, sqft, yearBuilt }: StatBlockProps) {
           <div style={{ fontSize: "var(--t-price)", fontWeight: 600, color: "var(--ad-text)", lineHeight: 1 }}>
             {stat.value}
           </div>
-          <div style={{
-            fontSize: "var(--t-spec-label, var(--t-spec))",
-            fontWeight: 600,
-            textTransform: "uppercase",
-            letterSpacing: "0.14em",
-            color: "var(--ad-text-faint)",
-            marginTop: "0.3cqw",
-          }}>
+          <div
+            style={{
+              fontSize: "var(--t-spec-label, var(--t-spec))",
+              fontWeight: 600,
+              textTransform: "uppercase",
+              letterSpacing: "0.14em",
+              color: "var(--ad-text-faint)",
+              marginTop: "0.3cqw",
+            }}
+          >
             {stat.label}
           </div>
         </div>

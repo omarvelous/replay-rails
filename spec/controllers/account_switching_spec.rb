@@ -16,7 +16,7 @@ RSpec.describe "Account switching", type: :request do
 
       get listings_path
       expect(response).to be_successful
-      expect(response.body).to include(listing_a.address)
+      expect(response.body).to include(ERB::Util.html_escape(listing_a.address))
     end
 
     it "resolves current account from session[:account_id]" do

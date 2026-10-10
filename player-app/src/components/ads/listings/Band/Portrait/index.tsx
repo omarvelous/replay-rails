@@ -35,14 +35,13 @@ export function BandPortrait({ ad, listingAd }: Props) {
       </div>
 
       {/* Band — bottom 42%, stacked */}
-      <div
-        className="flex flex-col justify-between"
-        style={{ height: "42%", padding: "var(--safe)" }}
-      >
+      <div className="flex flex-col justify-between" style={{ height: "42%", padding: "var(--safe)" }}>
         <div>
           <Address
-            street={listing.street} city={listing.city}
-            state={listing.state} neighborhood={listing.neighborhood}
+            street={listing.street}
+            city={listing.city}
+            state={listing.state}
+            neighborhood={listing.neighborhood}
             address={listing.address}
           />
           <Specs beds={listing.beds} baths={listing.baths} sqft={listing.sqft} />
