@@ -12,7 +12,7 @@
 <%# Site photo or tinted hero %>
 <div class="rounded-xl relative overflow-hidden mb-5" style="height: 170px; background: <%= tone %>18;">
   <% if @site.photo.attached? %>
-    <%= image_tag @site.photo, class: "absolute inset-0 w-full h-full object-cover" %>
+    <%= image_tag @site.photo, alt: @site.name, class: "absolute inset-0 w-full h-full object-cover" %>
     <div class="absolute inset-0" style="background: linear-gradient(to top, rgba(0,0,0,0.3), transparent);"></div>
   <% else %>
     <div class="absolute inset-0" style="background: linear-gradient(135deg, <%= tone %>30, transparent);"></div>

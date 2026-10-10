@@ -97,7 +97,7 @@
     <% if listing.photos.any? %>
       <div class="flex flex-wrap gap-2 mb-3">
         <% listing.photos.each do |photo| %>
-          <%= image_tag photo.variant(:thumb), class: "w-24 h-16 object-cover rounded-lg ring-1 ring-gray-200" %>
+          <%= image_tag photo.variant(:thumb), alt: "Property photo", class: "w-24 h-16 object-cover rounded-lg ring-1 ring-gray-200" %>
         <% end %>
       </div>
     <% end %>

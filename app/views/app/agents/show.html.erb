@@ -13,7 +13,7 @@
       <div class="flex items-start gap-4">
         <div class="size-16 rounded-full bg-indigo-50 grid place-items-center text-xl font-bold text-indigo-600 shrink-0 overflow-hidden">
           <% if @agent.photo.attached? %>
-            <%= image_tag @agent.photo, class: "w-full h-full object-cover" %>
+            <%= image_tag @agent.photo, alt: @agent.name, class: "w-full h-full object-cover" %>
           <% else %>
             <%= @agent.name.split.map(&:first).join.first(2).upcase %>
           <% end %>

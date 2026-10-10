@@ -4,7 +4,7 @@
     <div class="rounded-full flex-none overflow-hidden grid place-items-center"
          style="width: var(--s-3xl); height: var(--s-3xl); background: var(--ad-surface);">
       <% if agent.photo.attached? %>
-        <%= image_tag agent.photo, class: "w-full h-full object-cover" %>
+        <%= image_tag agent.photo, alt: agent.name, class: "w-full h-full object-cover" %>
       <% else %>
         <span class="font-bold" style="font-size: var(--s-sm); color: var(--ad-text-faint);"><%= agent.name.split.map(&:first).join.first(2).upcase %></span>
       <% end %>

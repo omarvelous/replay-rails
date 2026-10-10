@@ -4,7 +4,7 @@
   <%= link_to listing_path(listing) do %>
     <div class="h-36 relative overflow-hidden" style="background: <%= tone %>22;">
       <% if listing.photos.any? %>
-        <%= image_tag listing.photos.first, class: "absolute inset-0 w-full h-full object-cover" %>
+        <%= image_tag listing.photos.first, alt: listing.address, class: "absolute inset-0 w-full h-full object-cover" %>
       <% else %>
         <div class="absolute inset-0" style="background: linear-gradient(160deg, <%= tone %>33, transparent 70%);"></div>
       <% end %>

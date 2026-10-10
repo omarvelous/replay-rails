@@ -40,7 +40,7 @@
         <h3 class="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-4">Listing</h3>
         <%= link_to listing_path(@lead.listing), class: "flex items-center gap-4 p-3 -m-1 rounded-lg hover:bg-gray-50 transition-colors" do %>
           <% if @lead.listing.photos.any? %>
-            <%= image_tag @lead.listing.photos.first.variant(:thumb), class: "w-20 h-14 rounded-md object-cover flex-none" %>
+            <%= image_tag @lead.listing.photos.first.variant(:thumb), alt: @lead.listing.address, class: "w-20 h-14 rounded-md object-cover flex-none" %>
           <% else %>
             <div class="w-20 h-14 rounded-md bg-gray-100 flex-none"></div>
           <% end %>
@@ -115,7 +115,7 @@
         <div class="flex items-center gap-3 mb-3">
           <div class="w-9 h-9 rounded-full bg-indigo-50 grid place-items-center text-xs font-bold text-indigo-600 shrink-0 overflow-hidden">
             <% if @lead.current_agent.photo.attached? %>
-              <%= image_tag @lead.current_agent.photo, class: "w-full h-full object-cover" %>
+              <%= image_tag @lead.current_agent.photo, alt: @lead.current_agent.name, class: "w-full h-full object-cover" %>
             <% else %>
               <%= @lead.current_agent.name.split.map(&:first).join.first(2).upcase %>
             <% end %>
