@@ -12,13 +12,15 @@ RSpec.describe QrCode do
 
   describe "scopes" do
     it ".contextual returns QR codes with a creative" do
-      contextual = create(:qr_code, creative: create(:ad))
+      account = create(:account)
+      contextual = create(:qr_code, account: account, creative: create(:ad, account: account))
       create(:qr_code) # standalone
       expect(described_class.contextual).to eq([ contextual ])
     end
 
     it ".standalone returns QR codes without a creative" do
-      create(:qr_code, creative: create(:ad))
+      account = create(:account)
+      create(:qr_code, account: account, creative: create(:ad, account: account))
       standalone = create(:qr_code)
       expect(described_class.standalone).to eq([ standalone ])
     end
