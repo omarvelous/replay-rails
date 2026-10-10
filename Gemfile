@@ -90,3 +90,6 @@ group :test do
 end
 
 gem "strong_migrations", "~> 2.8"
+
+gem "sentry-ruby", "~> 7.1"
+gem "sentry-rails", "~> 7.1"
