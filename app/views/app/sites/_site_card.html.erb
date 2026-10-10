@@ -3,7 +3,7 @@
   <%# Site photo or tinted header %>
   <div class="relative overflow-hidden" style="height: 124px; background: <%= tone %>14;">
     <% if site.photo.attached? %>
-      <%= image_tag site.photo, class: "absolute inset-0 w-full h-full object-cover" %>
+      <%= image_tag site.photo, alt: site.name, class: "absolute inset-0 w-full h-full object-cover" %>
     <% else %>
       <div class="absolute inset-0" style="background: linear-gradient(135deg, <%= tone %>26, transparent);"></div>
     <% end %>
