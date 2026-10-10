@@ -25,16 +25,16 @@ RSpec.describe "Account switching", type: :request do
 
       # Default: should see account_a's listing
       get listings_path
-      expect(response.body).to include(listing_a.address)
-      expect(response.body).not_to include(listing_b.address)
+      expect(response.body).to include(ERB::Util.html_escape(listing_a.address))
+      expect(response.body).not_to include(ERB::Util.html_escape(listing_b.address))
 
       # Switch to account_b
       post account_switch_path, params: { account_id: account_b.public_id }
 
       # Now should see account_b's listing
       get listings_path
-      expect(response.body).to include(listing_b.address)
-      expect(response.body).not_to include(listing_a.address)
+      expect(response.body).to include(ERB::Util.html_escape(listing_b.address))
+      expect(response.body).not_to include(ERB::Util.html_escape(listing_a.address))
     end
   end
 
@@ -77,7 +77,7 @@ RSpec.describe "Account switching", type: :request do
       # Next request should still be on target_account (not fall back to admin's own account)
       get listings_path
       expect(response).to be_successful
-      expect(response.body).to include(listing.address)
+      expect(response.body).to include(ERB::Util.html_escape(listing.address))
     end
   end
 
