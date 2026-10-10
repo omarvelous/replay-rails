@@ -12,11 +12,13 @@ RSpec.describe "Account switching", type: :request do
 
   describe "session-based account resolution" do
     it "defaults to the user's first account when no account_id in session" do
-      listing_a = ActsAsTenant.with_tenant(account_a) { create(:listing, account: account_a) }
+      listing_a = ActsAsTenant.with_tenant(account_a) do
+        create(:listing, account: account_a, street: "100 Alpha St", city: "Austin", state: "TX")
+      end
 
       get listings_path
       expect(response).to be_successful
-      expect(response.body).to include(listing_a.address)
+      expect(response.body).to include("100 Alpha St")
     end
 
     it "resolves current account from session[:account_id]" do
