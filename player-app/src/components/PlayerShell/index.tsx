@@ -76,7 +76,7 @@ export function PlayerShell() {
           code: res.data.pairing_code,
           expiresAt: new Date(res.data.expires_at),
         })
-      } catch (err) {
+      } catch {
         dispatch({ type: "ERROR", error: "Failed to register device" })
       }
     }

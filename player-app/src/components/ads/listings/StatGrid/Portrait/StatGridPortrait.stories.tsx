@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/react-vite"
 import { StatGridPortrait } from "."
 import { AdCanvas } from "../../../AdCanvas"
-import { mockPlaylistAd, mockListingAd, mockAttachment } from "../../../../../__mocks__/manifest"
+import { mockPlaylistAd, mockAttachment } from "../../../../../__mocks__/manifest"
 import type { ManifestListingAd } from "../../../../../types"
 
 const meta = {

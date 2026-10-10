@@ -4,8 +4,6 @@ import { Experience } from "."
 import {
   mockManifestResponse,
   mockExperience,
-  mockListing,
-  mockAgent,
   mockListingExperience,
 } from "../../../__mocks__/manifest"
 
