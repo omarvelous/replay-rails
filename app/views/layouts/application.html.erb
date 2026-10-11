@@ -20,6 +20,7 @@
   </head>
 
   <body class="h-full">
+    <a href="#main-content" class="sr-only focus:not-sr-only focus:absolute focus:z-50 focus:p-4 focus:bg-white focus:text-indigo-600 focus:font-semibold focus:shadow-lg">Skip to main content</a>
     <% if authenticated? %>
       <%# Mobile sidebar dialog %>
       <el-dialog>
@@ -54,7 +55,7 @@
       </div>
 
       <%# Main content %>
-      <main class="lg:pl-72">
+      <main id="main-content" class="lg:pl-72">
         <%# Desktop topbar — global, fixed across all views %>
         <div class="sticky top-0 z-40 hidden lg:flex items-center justify-between border-b border-gray-200 bg-white/80 backdrop-blur-sm px-6 h-14">
           <div class="flex items-center gap-3">
@@ -80,7 +81,7 @@
         </div>
       </main>
     <% else %>
-      <main class="min-h-screen flex items-center justify-center p-5 bg-gray-50">
+      <main id="main-content" class="min-h-screen flex items-center justify-center p-5 bg-gray-50">
         <div class="w-full max-w-md">
           <%= yield %>
         </div>

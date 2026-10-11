@@ -3,7 +3,7 @@
     <div class="flex overflow-x-auto snap-x snap-mandatory scroll-smooth" style="scroll-snap-type: x mandatory; -webkit-overflow-scrolling: touch;">
       <% listing.photos.each do |photo| %>
         <div class="flex-none w-full snap-center">
-          <%= image_tag photo, class: "w-full aspect-video object-cover" %>
+          <%= image_tag photo, alt: "Property photo", class: "w-full aspect-video object-cover" %>
         </div>
       <% end %>
     </div>

@@ -17,22 +17,26 @@
     </div>
 
     <div>
+      <%= f.label :name, "Your name", class: "sr-only" %>
       <%= f.text_field :name, required: true, placeholder: "Your name",
           class: "block w-full rounded-lg bg-white px-3 py-2.5 text-sm text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600" %>
     </div>
 
     <div class="grid grid-cols-2 gap-3">
       <div>
+        <%= f.label :email, "Email", class: "sr-only" %>
         <%= f.email_field :email, placeholder: "Email",
             class: "block w-full rounded-lg bg-white px-3 py-2.5 text-sm text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600" %>
       </div>
       <div>
+        <%= f.label :phone, "Phone", class: "sr-only" %>
         <%= f.telephone_field :phone, placeholder: "Phone",
             class: "block w-full rounded-lg bg-white px-3 py-2.5 text-sm text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600" %>
       </div>
     </div>
 
     <div>
+      <%= f.label :lead_type, "Inquiry type", class: "sr-only" %>
       <%= f.select :lead_type,
           [["I'm interested in buying", "buyer_inquiry"],
            ["I'm interested in renting", "renter_inquiry"],
@@ -44,6 +48,7 @@
     </div>
 
     <div>
+      <%= f.label :message, "Message", class: "sr-only" %>
       <%= f.text_area :message, rows: 3,
           placeholder: "I'd like to schedule a viewing...",
           class: "block w-full rounded-lg bg-white px-3 py-2.5 text-sm text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600" %>

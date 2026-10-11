@@ -3,7 +3,7 @@
   <%# Left: image/gradient area %>
   <div class="w-1/2 relative overflow-hidden" style="background: linear-gradient(135deg, var(--ad-bg), color-mix(in srgb, var(--ad-accent) 20%, transparent));">
     <% if ad.image.attached? %>
-      <%= image_tag ad.image.variant(:preview), class: "absolute inset-0 w-full h-full object-cover" %>
+      <%= image_tag ad.image.variant(:preview), alt: ad.headline, class: "absolute inset-0 w-full h-full object-cover" %>
     <% end %>
     <% qr = ad.persisted? ? ad.listing&.qr_code_for(creative: ad, screen_content: @screen_content) : nil %>
     <% if qr %>

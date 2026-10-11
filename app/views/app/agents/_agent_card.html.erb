@@ -2,7 +2,7 @@
   <div class="p-4 flex flex-row items-center gap-3">
     <div class="w-10 h-10 rounded-full flex-none grid place-items-center text-sm font-bold bg-indigo-50 text-indigo-600 overflow-hidden">
       <% if agent.photo.attached? %>
-        <%= image_tag agent.photo, class: "w-full h-full object-cover" %>
+        <%= image_tag agent.photo, alt: agent.name, class: "w-full h-full object-cover" %>
       <% else %>
         <%= agent.name.split.map(&:first).join.first(2).upcase %>
       <% end %>

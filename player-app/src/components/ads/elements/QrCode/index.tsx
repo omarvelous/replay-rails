@@ -1,6 +1,8 @@
 export function QrCode() {
   return (
     <div
+      role="img"
+      aria-label="QR code"
       className="grid place-items-center"
       style={{
         width: "var(--qr-size)",

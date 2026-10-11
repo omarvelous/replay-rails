@@ -30,7 +30,7 @@
         <%= link_to agent_path(@agent_profile), class: "flex items-center gap-3 p-3 -m-1 rounded-lg hover:bg-gray-50 transition-colors" do %>
           <div class="w-10 h-10 rounded-full bg-indigo-50 grid place-items-center text-xs font-bold text-indigo-600 shrink-0 overflow-hidden">
             <% if @agent_profile.photo.attached? %>
-              <%= image_tag @agent_profile.photo, class: "w-full h-full object-cover" %>
+              <%= image_tag @agent_profile.photo, alt: @agent_profile.name, class: "w-full h-full object-cover" %>
             <% else %>
               <%= @agent_profile.name.split.map(&:first).join.first(2).upcase %>
             <% end %>

@@ -2,7 +2,7 @@
 <div class="flex items-center gap-5 mb-6">
   <div class="w-20 h-20 rounded-full bg-indigo-50 grid place-items-center text-xl font-bold text-indigo-600 shrink-0 overflow-hidden">
     <% if @agent.photo.attached? %>
-      <%= image_tag @agent.photo, class: "w-full h-full object-cover" %>
+      <%= image_tag @agent.photo, alt: @agent.name, class: "w-full h-full object-cover" %>
     <% else %>
       <%= @agent.name.split.map(&:first).join.first(2).upcase %>
     <% end %>
@@ -31,7 +31,7 @@
       <% @listings.each do |listing| %>
         <%= link_to go_listing_path(listing), class: "rounded-lg bg-white ring-1 ring-gray-200 p-4 hover:shadow-md transition-shadow" do %>
           <% if listing.photos.any? %>
-            <%= image_tag listing.photos.first.variant(:thumb), class: "w-full aspect-video object-cover rounded-md mb-3" %>
+            <%= image_tag listing.photos.first.variant(:thumb), alt: listing.address, class: "w-full aspect-video object-cover rounded-md mb-3" %>
           <% else %>
             <div class="w-full aspect-video rounded-md mb-3 bg-gray-100"></div>
           <% end %>
