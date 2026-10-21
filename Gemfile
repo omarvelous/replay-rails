@@ -36,7 +36,7 @@ gem "chartkick"
 gem "groupdate"
 gem "aws-sdk-s3", require: false
 gem "image_processing", "~> 2.2"
-gem "pagy", "~> 43.7"
+gem "pagy", "~> 43.8"
 gem "paper_trail"
 gem "positioning"
 gem "rqrcode", "~> 3.2"
